@@ -48,7 +48,7 @@ public abstract class RelationModel {
     }
     relation = rel;
     methodName = method;
-    relationName = Util.any(relation.name(), methodName);
+    relationName = Util.any(relation.name(), Util.makeSqlFriendly(methodName));
   }
 
   protected void initColumns(final Collection<? extends ColumnModel> allFields)

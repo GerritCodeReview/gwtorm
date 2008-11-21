@@ -40,7 +40,7 @@ public abstract class ColumnModel {
           + Column.class.getName() + " annotation");
     }
     column = col;
-    origName = Util.any(column.name(), fieldName);
+    origName = Util.any(column.name(), Util.makeSqlFriendly(fieldName));
     columnName = origName;
   }
 

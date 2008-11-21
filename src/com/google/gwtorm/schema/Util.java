@@ -22,6 +22,28 @@ public class Util {
     return "GwtOrm$$" + nameCounter++;
   }
 
+  public static String makeSqlFriendly(final String name) {
+    final StringBuilder r = new StringBuilder(name.length() + 8);
+    boolean lastWasCap = true;
+    for (int i = 0; i < name.length(); i++) {
+      final char c = name.charAt(i);
+      if (Character.isUpperCase(c)) {
+        if (!lastWasCap) {
+          r.append('_');
+          lastWasCap = true;
+        }
+        r.append(Character.toLowerCase(c));
+      } else if (c == '_') {
+        lastWasCap = true;
+        r.append(c);
+      } else {
+        lastWasCap = false;
+        r.append(c);
+      }
+    }
+    return r.toString();
+  }
+
   public static String any(final String a, final String b) {
     if (a != null && a.length() > 0) {
       return a;

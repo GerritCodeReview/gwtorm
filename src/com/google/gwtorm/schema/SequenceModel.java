@@ -40,11 +40,11 @@ public class SequenceModel {
 
     final String n;
     if (methodName.startsWith("next")) {
-      n = methodName.substring(4).toLowerCase();
+      n = methodName.substring(4);
     } else {
       n = methodName;
     }
-    name = Util.any(sequence.name(), n);
+    name = Util.any(sequence.name(), Util.makeSqlFriendly(n));
     returnType = type;
   }
 
