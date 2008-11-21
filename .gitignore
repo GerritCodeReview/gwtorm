@@ -1,0 +1,9 @@
+/.bin
+/classes
+/lib/*_src.zip
+/lib/gwtorm.jar
+/config.mak
+/src/com/google/gwtorm/schema/Query.tokens
+/src/com/google/gwtorm/schema/QueryLexer.java
+/src/com/google/gwtorm/schema/QueryParser.java
+/src/com/google/gwtorm/schema/Query__.g

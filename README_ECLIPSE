@@ -1,0 +1,21 @@
+Eclipse Setup
+=============
+
+Compile once using "make" to ensure the ANTLR parser is generated.
+
+
+User Library
+------------
+
+  Window > Preferences
+  Java > Build Path > User Libraries
+
+Create a User Library called "GWT":
+
+  New
+
+  Name: GWT
+  Add JARs...
+
+  * Select gwt-user.jar from the $(GWT_SDK) directory.
+  * Select gwt-dev-$(GWT_OS).jar from the $(GWT_SDK) directory.
