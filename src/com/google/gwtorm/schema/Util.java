@@ -73,6 +73,9 @@ public class Util {
     if (type == String.class) {
       return true;
     }
+    if (type == java.sql.Timestamp.class) {
+      return true;
+    }
     return false;
   }
 
