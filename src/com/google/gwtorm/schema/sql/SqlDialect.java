@@ -27,6 +27,7 @@ public abstract class SqlDialect {
   protected SqlDialect() {
     types = new HashMap<Class<?>, SqlTypeInfo>();
     types.put(Boolean.TYPE, new SqlBooleanTypeInfo());
+    types.put(Short.TYPE, new SqlShortTypeInfo());
     types.put(Integer.TYPE, new SqlIntTypeInfo());
     types.put(Long.TYPE, new SqlLongTypeInfo());
     types.put(String.class, new SqlStringTypeInfo());
