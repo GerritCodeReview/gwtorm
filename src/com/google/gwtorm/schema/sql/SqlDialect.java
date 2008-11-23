@@ -30,6 +30,7 @@ public abstract class SqlDialect {
     types.put(Integer.TYPE, new SqlIntTypeInfo());
     types.put(Long.TYPE, new SqlLongTypeInfo());
     types.put(String.class, new SqlStringTypeInfo());
+    types.put(java.sql.Date.class, new SqlDateTypeInfo());
     types.put(java.sql.Timestamp.class, new SqlTimestampTypeInfo());
   }
 
