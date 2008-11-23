@@ -78,14 +78,16 @@ public class CodeGenSupport implements Opcodes {
   }
 
   public void setFieldReference(final ColumnModel cm) {
-    setFieldReference(cm, true);
+    col = cm;
+    columnIdx++;
   }
 
-  public void setFieldReference(final ColumnModel cm, boolean incr) {
-    col = cm;
-    if (incr) {
-      columnIdx++;
-    }
+  public void resetColumnIndex(final int s) {
+    columnIdx = s;
+  }
+
+  public int getColumnIndex() {
+    return columnIdx;
   }
 
   public ColumnModel getFieldReference() {

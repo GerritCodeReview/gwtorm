@@ -273,12 +273,14 @@ public class AccessGen implements Opcodes {
     if (type != DmlType.DELETE) {
       for (final ColumnModel field : model.getDependentFields()) {
         if (field.isNested()) {
+          final int colIdx = cgs.getColumnIndex();
           final Label isnull = new Label();
           final Label end = new Label();
 
-          cgs.setFieldReference(field, false);
+          cgs.setFieldReference(field);
           cgs.pushFieldValue();
           mv.visitJumpInsn(IFNULL, isnull);
+          cgs.resetColumnIndex(colIdx);
           for (final ColumnModel c : field.getAllLeafColumns()) {
             cgs.setFieldReference(c);
             dialect.getSqlTypeInfo(c).generatePreparedStatementSet(cgs);
@@ -286,6 +288,7 @@ public class AccessGen implements Opcodes {
           mv.visitJumpInsn(GOTO, end);
 
           mv.visitLabel(isnull);
+          cgs.resetColumnIndex(colIdx);
           for (final ColumnModel c : field.getAllLeafColumns()) {
             cgs.setFieldReference(c);
             dialect.getSqlTypeInfo(c).generatePreparedStatementNull(cgs);
@@ -329,21 +332,24 @@ public class AccessGen implements Opcodes {
         && model.getPrimaryKey().getField().isNested()) {
       final ColumnModel pkf = model.getPrimaryKey().getField();
       final Type vType = CodeGenSupport.toType(pkf);
-      cgs.setFieldReference(pkf, false);
+      final int oldIdx = cgs.getColumnIndex();
+      cgs.setFieldReference(pkf);
       cgs.fieldSetBegin();
       mv.visitTypeInsn(NEW, vType.getInternalName());
       mv.visitInsn(DUP);
       mv.visitMethodInsn(INVOKESPECIAL, vType.getInternalName(), "<init>", Type
           .getMethodDescriptor(Type.VOID_TYPE, new Type[] {}));
       cgs.fieldSetEnd();
+      cgs.resetColumnIndex(oldIdx);
     }
 
     for (final ColumnModel field : model.getDependentFields()) {
       if (field.isNested()) {
+        int oldIdx = cgs.getColumnIndex();
         final Type vType = CodeGenSupport.toType(field);
         final Label islive = new Label();
 
-        cgs.setFieldReference(field, false);
+        cgs.setFieldReference(field);
         cgs.fieldSetBegin();
         mv.visitTypeInsn(NEW, vType.getInternalName());
         mv.visitInsn(DUP);
@@ -351,6 +357,7 @@ public class AccessGen implements Opcodes {
             Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {}));
         cgs.fieldSetEnd();
 
+        cgs.resetColumnIndex(oldIdx);
         for (final ColumnModel c : field.getAllLeafColumns()) {
           cgs.setFieldReference(c);
           dialect.getSqlTypeInfo(c).generateResultSetGet(cgs);
@@ -361,10 +368,12 @@ public class AccessGen implements Opcodes {
             .getInternalName(), "wasNull", Type.getMethodDescriptor(
             Type.BOOLEAN_TYPE, new Type[] {}));
         mv.visitJumpInsn(IFEQ, islive);
-        cgs.setFieldReference(field, false);
+        oldIdx = cgs.getColumnIndex();
+        cgs.setFieldReference(field);
         cgs.fieldSetBegin();
         mv.visitInsn(ACONST_NULL);
         cgs.fieldSetEnd();
+        cgs.resetColumnIndex(oldIdx);
         mv.visitLabel(islive);
       } else {
         cgs.setFieldReference(field);
