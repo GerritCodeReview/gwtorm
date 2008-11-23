@@ -272,7 +272,12 @@ public class AccessGen implements Opcodes {
     cgs.setEntityType(entityType);
     if (type != DmlType.DELETE) {
       for (final ColumnModel field : model.getDependentFields()) {
-        if (field.isNested()) {
+        if (field.isNested() && field.getColumnAnnotation().notNull()) {
+          for (final ColumnModel c : field.getAllLeafColumns()) {
+            cgs.setFieldReference(c);
+            dialect.getSqlTypeInfo(c).generatePreparedStatementSet(cgs);
+          }
+        } else if (field.isNested()) {
           final int colIdx = cgs.getColumnIndex();
           final Label isnull = new Label();
           final Label end = new Label();
@@ -347,7 +352,6 @@ public class AccessGen implements Opcodes {
       if (field.isNested()) {
         int oldIdx = cgs.getColumnIndex();
         final Type vType = CodeGenSupport.toType(field);
-        final Label islive = new Label();
 
         cgs.setFieldReference(field);
         cgs.fieldSetBegin();
@@ -363,18 +367,21 @@ public class AccessGen implements Opcodes {
           dialect.getSqlTypeInfo(c).generateResultSetGet(cgs);
         }
 
-        cgs.pushSqlHandle();
-        mv.visitMethodInsn(INVOKEINTERFACE, Type.getType(ResultSet.class)
-            .getInternalName(), "wasNull", Type.getMethodDescriptor(
-            Type.BOOLEAN_TYPE, new Type[] {}));
-        mv.visitJumpInsn(IFEQ, islive);
-        oldIdx = cgs.getColumnIndex();
-        cgs.setFieldReference(field);
-        cgs.fieldSetBegin();
-        mv.visitInsn(ACONST_NULL);
-        cgs.fieldSetEnd();
-        cgs.resetColumnIndex(oldIdx);
-        mv.visitLabel(islive);
+        if (!field.getColumnAnnotation().notNull()) {
+          final Label islive = new Label();
+          cgs.pushSqlHandle();
+          mv.visitMethodInsn(INVOKEINTERFACE, Type.getType(ResultSet.class)
+              .getInternalName(), "wasNull", Type.getMethodDescriptor(
+              Type.BOOLEAN_TYPE, new Type[] {}));
+          mv.visitJumpInsn(IFEQ, islive);
+          oldIdx = cgs.getColumnIndex();
+          cgs.setFieldReference(field);
+          cgs.fieldSetBegin();
+          mv.visitInsn(ACONST_NULL);
+          cgs.fieldSetEnd();
+          cgs.resetColumnIndex(oldIdx);
+          mv.visitLabel(islive);
+        }
       } else {
         cgs.setFieldReference(field);
         dialect.getSqlTypeInfo(field).generateResultSetGet(cgs);
