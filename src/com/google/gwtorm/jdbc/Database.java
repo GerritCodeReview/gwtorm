@@ -16,6 +16,7 @@ package com.google.gwtorm.jdbc;
 
 import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.client.Schema;
+import com.google.gwtorm.client.SchemaFactory;
 import com.google.gwtorm.jdbc.gen.GeneratedClassLoader;
 import com.google.gwtorm.jdbc.gen.SchemaFactoryGen;
 import com.google.gwtorm.jdbc.gen.SchemaGen;
@@ -48,7 +49,7 @@ import java.util.WeakHashMap;
  * 
  * @param <T>
  */
-public class Database<T extends Schema> {
+public class Database<T extends Schema> implements SchemaFactory<T> {
   private static final Map<Class<?>, String> schemaFactoryNames =
       Collections.synchronizedMap(new WeakHashMap<Class<?>, String>());
 
