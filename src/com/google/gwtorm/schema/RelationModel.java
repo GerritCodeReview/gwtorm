@@ -17,6 +17,7 @@ package com.google.gwtorm.schema;
 import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.client.PrimaryKey;
 import com.google.gwtorm.client.Relation;
+import com.google.gwtorm.client.SecondaryKey;
 import com.google.gwtorm.schema.sql.SqlDialect;
 
 import java.util.ArrayList;
@@ -32,11 +33,13 @@ public abstract class RelationModel {
   protected final LinkedHashMap<String, ColumnModel> fieldsByFieldName;
   protected final LinkedHashMap<String, ColumnModel> columnsByColumnName;
   protected KeyModel primaryKey;
+  protected Collection<KeyModel> secondaryKeys;
   protected Collection<QueryModel> queries;
 
   protected RelationModel() {
     fieldsByFieldName = new LinkedHashMap<String, ColumnModel>();
     columnsByColumnName = new LinkedHashMap<String, ColumnModel>();
+    secondaryKeys = new ArrayList<KeyModel>();
     queries = new ArrayList<QueryModel>();
   }
 
@@ -95,6 +98,17 @@ public abstract class RelationModel {
     }
   }
 
+  protected void addSecondaryKey(final String name,
+      final SecondaryKey annotation) throws OrmException {
+    final ColumnModel field = getField(annotation.value());
+    if (field == null) {
+      throw new OrmException("Field " + annotation.value() + " not in "
+          + getEntityTypeClassName());
+    }
+
+    secondaryKeys.add(new KeyModel(name, field));
+  }
+
   protected void addQuery(final QueryModel q) {
     queries.add(q);
   }
@@ -139,6 +153,10 @@ public abstract class RelationModel {
     return Collections.<ColumnModel> emptyList();
   }
 
+  public Collection<KeyModel> getSecondaryKeys() {
+    return secondaryKeys;
+  }
+
   public Collection<QueryModel> getQueries() {
     return queries;
   }
@@ -171,15 +189,26 @@ public abstract class RelationModel {
       r.append(dialect.getSqlTypeInfo(col).getSqlType(col));
       if (i.hasNext()) {
         r.append(",");
-      } else if (!getPrimaryKeyColumns().isEmpty()) {
-        r.append(",");
       }
       r.append("\n");
     }
 
     if (!getPrimaryKeyColumns().isEmpty()) {
-      r.append("PRIMARY KEY(");
+      r.append(",PRIMARY KEY(");
       for (final Iterator<ColumnModel> i = getPrimaryKeyColumns().iterator(); i
+          .hasNext();) {
+        final ColumnModel col = i.next();
+        r.append(col.getColumnName());
+        if (i.hasNext()) {
+          r.append(",");
+        }
+      }
+      r.append(")\n");
+    }
+
+    for (final KeyModel key : secondaryKeys) {
+      r.append(",UNIQUE(");
+      for (final Iterator<ColumnModel> i = key.getAllLeafColumns().iterator(); i
           .hasNext();) {
         final ColumnModel col = i.next();
         r.append(col.getColumnName());

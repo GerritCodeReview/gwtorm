@@ -24,6 +24,7 @@ import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.client.PrimaryKey;
 import com.google.gwtorm.client.Query;
 import com.google.gwtorm.client.Relation;
+import com.google.gwtorm.client.SecondaryKey;
 import com.google.gwtorm.schema.QueryModel;
 import com.google.gwtorm.schema.RelationModel;
 
@@ -89,6 +90,13 @@ class GwtRelationModel extends RelationModel {
               + entityType.getName());
         }
         initPrimaryKey(m.getName(), m.getAnnotation(PrimaryKey.class));
+      } else if (m.getAnnotation(SecondaryKey.class) != null) {
+        if (!m.getReturnType().getQualifiedSourceName().equals(
+            entityType.getQualifiedSourceName())) {
+          throw new OrmException("SecondaryKey " + m.getName() + " must return "
+              + entityType.getName());
+        }
+        addSecondaryKey(m.getName(), m.getAnnotation(SecondaryKey.class));
 
       } else if (m.getAnnotation(Query.class) != null) {
         addQuery(new QueryModel(this, m.getName(), m.getAnnotation(Query.class)));

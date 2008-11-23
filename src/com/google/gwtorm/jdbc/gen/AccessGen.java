@@ -108,6 +108,9 @@ public class AccessGen implements Opcodes {
     if (model.getPrimaryKey() != null) {
       implementKeyQuery(model.getPrimaryKey());
     }
+    for (final KeyModel key : model.getSecondaryKeys()) {
+      implementKeyQuery(key);
+    }
 
     for (final QueryModel q : model.getQueries()) {
       implementQuery(q);
