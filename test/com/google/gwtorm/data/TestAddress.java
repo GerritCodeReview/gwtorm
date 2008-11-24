@@ -51,6 +51,9 @@ public class TestAddress {
   @Column(length = Integer.MAX_VALUE)
   protected String location;
 
+  @Column(notNull = false)
+  protected byte[] photo;
+
   protected TestAddress() {
   }
 

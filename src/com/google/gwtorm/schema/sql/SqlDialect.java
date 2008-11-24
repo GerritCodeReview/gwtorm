@@ -33,6 +33,7 @@ public abstract class SqlDialect {
     types.put(String.class, new SqlStringTypeInfo());
     types.put(java.sql.Date.class, new SqlDateTypeInfo());
     types.put(java.sql.Timestamp.class, new SqlTimestampTypeInfo());
+    types.put(byte[].class, new SqlByteArrayTypeInfo());
   }
 
   public SqlTypeInfo getSqlTypeInfo(final ColumnModel col) {

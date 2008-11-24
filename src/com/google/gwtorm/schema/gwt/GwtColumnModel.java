@@ -60,6 +60,11 @@ class GwtColumnModel extends ColumnModel {
       return Double.TYPE;
     }
 
+    if (type.isArray() != null && type.isArray().getRank() == 1
+        && type.isArray().getComponentType() == JPrimitiveType.BYTE) {
+      return byte[].class;
+    }
+
     if (type.isClass() != null
         && type.getQualifiedSourceName().startsWith("java.")) {
       try {

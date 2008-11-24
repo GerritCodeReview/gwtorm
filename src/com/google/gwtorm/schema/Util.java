@@ -79,6 +79,9 @@ public class Util {
     if (type == java.sql.Timestamp.class) {
       return true;
     }
+    if (type == byte[].class) {
+      return true;
+    }
     return false;
   }
 
