@@ -16,6 +16,7 @@ package com.google.gwtorm.schema.java;
 
 import com.google.gwtorm.client.Column;
 import com.google.gwtorm.client.OrmException;
+import com.google.gwtorm.client.RowVersion;
 import com.google.gwtorm.schema.ColumnModel;
 import com.google.gwtorm.schema.Util;
 
@@ -39,6 +40,12 @@ class JavaColumnModel extends ColumnModel {
     if (Modifier.isFinal(field.getModifiers())) {
       throw new OrmException("Field " + field.getName() + " of "
           + field.getDeclaringClass().getName() + " must not be final");
+    }
+
+    rowVersion = field.getAnnotation(RowVersion.class) != null;
+    if (rowVersion && field.getType() != Integer.TYPE) {
+      throw new OrmException("Field " + field.getName() + " of "
+          + field.getDeclaringClass().getName() + " must have type 'int'");
     }
 
     if (isNested()) {

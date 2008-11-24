@@ -20,6 +20,7 @@ import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwtorm.client.Column;
 import com.google.gwtorm.client.OrmException;
+import com.google.gwtorm.client.RowVersion;
 import com.google.gwtorm.schema.ColumnModel;
 
 import java.util.ArrayList;
@@ -96,6 +97,12 @@ class GwtColumnModel extends ColumnModel {
     }
 
     primitiveType = toClass(field.getType());
+    rowVersion = field.getAnnotation(RowVersion.class) != null;
+    if (rowVersion && primitiveType != Integer.TYPE) {
+      throw new OrmException("Field " + field.getName() + " of "
+          + field.getEnclosingType().getQualifiedSourceName()
+          + " must have type 'int'");
+    }
 
     if (isNested()) {
       final List<GwtColumnModel> col = new ArrayList<GwtColumnModel>();

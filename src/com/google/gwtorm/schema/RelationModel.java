@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 public abstract class RelationModel {
   protected String methodName;
@@ -125,7 +126,7 @@ public abstract class RelationModel {
   public Collection<ColumnModel> getDependentFields() {
     final ArrayList<ColumnModel> r = new ArrayList<ColumnModel>();
     for (final ColumnModel c : fieldsByFieldName.values()) {
-      if (primaryKey == null || primaryKey.getField() != c) {
+      if (!c.rowVersion && (primaryKey == null || primaryKey.getField() != c)) {
         r.add(c);
       }
     }
@@ -135,7 +136,27 @@ public abstract class RelationModel {
   public Collection<ColumnModel> getDependentColumns() {
     final ArrayList<ColumnModel> r = new ArrayList<ColumnModel>();
     for (final ColumnModel c : columnsByColumnName.values()) {
-      if (!c.inPrimaryKey) {
+      if (!c.inPrimaryKey && !c.rowVersion) {
+        r.add(c);
+      }
+    }
+    return r;
+  }
+
+  public Collection<ColumnModel> getRowVersionFields() {
+    final ArrayList<ColumnModel> r = new ArrayList<ColumnModel>();
+    for (final ColumnModel c : fieldsByFieldName.values()) {
+      if (c.rowVersion) {
+        r.add(c);
+      }
+    }
+    return r;
+  }
+
+  public Collection<ColumnModel> getRowVersionColumns() {
+    final ArrayList<ColumnModel> r = new ArrayList<ColumnModel>();
+    for (final ColumnModel c : columnsByColumnName.values()) {
+      if (c.rowVersion) {
         r.add(c);
       }
     }
@@ -164,6 +185,7 @@ public abstract class RelationModel {
   public Collection<ColumnModel> getColumns() {
     final ArrayList<ColumnModel> r = new ArrayList<ColumnModel>();
     r.addAll(getDependentColumns());
+    r.addAll(getRowVersionColumns());
     r.addAll(getPrimaryKeyColumns());
     return r;
   }
@@ -272,9 +294,13 @@ public abstract class RelationModel {
     r.append("UPDATE ");
     r.append(relationName);
     r.append(" SET ");
+    List<ColumnModel> cols;
     int nth = 1;
-    for (final Iterator<ColumnModel> i = getDependentColumns().iterator(); i
-        .hasNext();) {
+
+    cols = new ArrayList<ColumnModel>();
+    cols.addAll(getDependentColumns());
+    cols.addAll(getRowVersionColumns());
+    for (final Iterator<ColumnModel> i = cols.iterator(); i.hasNext();) {
       final ColumnModel col = i.next();
       r.append(col.getColumnName());
       r.append("=");
@@ -283,9 +309,12 @@ public abstract class RelationModel {
         r.append(",");
       }
     }
+
     r.append(" WHERE ");
-    for (final Iterator<ColumnModel> i = getPrimaryKeyColumns().iterator(); i
-        .hasNext();) {
+    cols = new ArrayList<ColumnModel>();
+    cols.addAll(getPrimaryKeyColumns());
+    cols.addAll(getRowVersionColumns());
+    for (final Iterator<ColumnModel> i = cols.iterator(); i.hasNext();) {
       final ColumnModel col = i.next();
       r.append(col.getColumnName());
       r.append("=");
@@ -303,8 +332,10 @@ public abstract class RelationModel {
     r.append(relationName);
     int nth = 1;
     r.append(" WHERE ");
-    for (final Iterator<ColumnModel> i = getPrimaryKeyColumns().iterator(); i
-        .hasNext();) {
+    final List<ColumnModel> cols = new ArrayList<ColumnModel>();
+    cols.addAll(getPrimaryKeyColumns());
+    cols.addAll(getRowVersionColumns());
+    for (final Iterator<ColumnModel> i = cols.iterator(); i.hasNext();) {
       final ColumnModel col = i.next();
       r.append(col.getColumnName());
       r.append("=");

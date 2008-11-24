@@ -27,6 +27,7 @@ public abstract class ColumnModel {
   protected String columnName;
   protected Column column;
   protected Collection<ColumnModel> nestedColumns;
+  protected boolean rowVersion;
   protected boolean inPrimaryKey;
 
   protected ColumnModel() {
@@ -118,6 +119,10 @@ public abstract class ColumnModel {
 
   public boolean isNested() {
     return getPrimitiveType() == null;
+  }
+
+  public boolean isRowVersion() {
+    return rowVersion;
   }
 
   public Column getColumnAnnotation() {

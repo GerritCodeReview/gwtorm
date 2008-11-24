@@ -36,6 +36,7 @@ import org.objectweb.asm.Type;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -270,8 +271,22 @@ public class AccessGen implements Opcodes {
 
     final CodeGenSupport cgs = new CodeGenSupport(mv);
     cgs.setEntityType(entityType);
+
+    for (final ColumnModel col : model.getRowVersionColumns()) {
+      cgs.setFieldReference(col);
+      cgs.fieldSetBegin();
+      cgs.pushFieldValue();
+      mv.visitInsn(ICONST_1);
+      mv.visitInsn(IADD);
+      cgs.fieldSetEnd();
+    }
+    cgs.resetColumnIndex(0);
+
     if (type != DmlType.DELETE) {
-      for (final ColumnModel field : model.getDependentFields()) {
+      final List<ColumnModel> cols = new ArrayList<ColumnModel>();
+      cols.addAll(model.getDependentFields());
+      cols.addAll(model.getRowVersionFields());
+      for (final ColumnModel field : cols) {
         if (field.isNested() && field.getColumnAnnotation().notNull()) {
           for (final ColumnModel c : field.getAllLeafColumns()) {
             cgs.setFieldReference(c);
@@ -311,6 +326,17 @@ public class AccessGen implements Opcodes {
       cgs.setFieldReference(col);
       dialect.getSqlTypeInfo(col).generatePreparedStatementSet(cgs);
     }
+    if (type != DmlType.INSERT) {
+      for (final ColumnModel col : model.getRowVersionColumns()) {
+        cgs.setFieldReference(col);
+        cgs.pushSqlHandle();
+        cgs.pushColumnIndex();
+        cgs.pushFieldValue();
+        mv.visitInsn(ICONST_1);
+        mv.visitInsn(ISUB);
+        cgs.invokePreparedStatementSet("Int");
+      }
+    }
 
     mv.visitInsn(RETURN);
     mv.visitMaxs(-1, -1);
@@ -348,7 +374,11 @@ public class AccessGen implements Opcodes {
       cgs.resetColumnIndex(oldIdx);
     }
 
-    for (final ColumnModel field : model.getDependentFields()) {
+    final List<ColumnModel> cols = new ArrayList<ColumnModel>();
+    cols.addAll(model.getDependentFields());
+    cols.addAll(model.getRowVersionFields());
+    cols.addAll(model.getPrimaryKeyColumns());
+    for (final ColumnModel field : cols) {
       if (field.isNested()) {
         int oldIdx = cgs.getColumnIndex();
         final Type vType = CodeGenSupport.toType(field);
@@ -386,10 +416,6 @@ public class AccessGen implements Opcodes {
         cgs.setFieldReference(field);
         dialect.getSqlTypeInfo(field).generateResultSetGet(cgs);
       }
-    }
-    for (final ColumnModel col : model.getPrimaryKeyColumns()) {
-      cgs.setFieldReference(col);
-      dialect.getSqlTypeInfo(col).generateResultSetGet(cgs);
     }
 
     mv.visitInsn(RETURN);
