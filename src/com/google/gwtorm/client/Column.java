@@ -30,6 +30,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface Column {
+  /** Special value for {@link #name()} to indicate the name is empty. */
+  public static final String NONE = "--NONE--";
+
   /**
    * @return name of the column in the data store. Defaults to the field name.
    */

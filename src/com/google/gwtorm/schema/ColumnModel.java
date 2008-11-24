@@ -56,12 +56,17 @@ public abstract class ColumnModel {
   }
 
   private void recomputeColumnNames() {
+    final boolean thisHasName = !columnName.equals(Column.NONE);
     for (final ColumnModel c : nestedColumns) {
       c.parent = this;
       if (nestedColumns.size() == 1) {
-        c.columnName = columnName;
+        c.columnName = thisHasName ? columnName : c.origName;
       } else {
-        c.columnName = columnName + "_" + c.origName;
+        if (thisHasName) {
+          c.columnName = columnName + "_" + c.origName;
+        } else {
+          c.columnName = c.origName;
+        }
       }
       c.recomputeColumnNames();
     }
