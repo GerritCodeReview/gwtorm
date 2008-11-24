@@ -15,8 +15,19 @@
 package com.google.gwtorm.schema.sql;
 
 import com.google.gwtorm.client.Column;
+import com.google.gwtorm.jdbc.gen.CodeGenSupport;
 import com.google.gwtorm.schema.ColumnModel;
 
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
+
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Types;
 
 public class SqlStringTypeInfo extends SqlTypeInfo {
@@ -37,8 +48,10 @@ public class SqlStringTypeInfo extends SqlTypeInfo {
 
     if (column.length() <= 0) {
       r.append("VARCHAR(255)");
-    } else if (column.length() < 255) {
+    } else if (column.length() <= 255) {
       r.append("VARCHAR(" + column.length() + ")");
+    } else {
+      r.append("TEXT");
     }
 
     if (column.notNull()) {
@@ -47,5 +60,69 @@ public class SqlStringTypeInfo extends SqlTypeInfo {
     }
 
     return r.toString();
+  }
+
+  @Override
+  public void generatePreparedStatementSet(final CodeGenSupport cgs) {
+    if (cgs.getFieldReference().getColumnAnnotation().length() <= 255) {
+      super.generatePreparedStatementSet(cgs);
+    } else {
+      cgs.pushSqlHandle();
+      cgs.pushColumnIndex();
+      cgs.pushFieldValue();
+      cgs.mv.visitMethodInsn(Opcodes.INVOKESTATIC, Type
+          .getInternalName(SqlStringTypeInfo.class), "toPreparedStatement",
+          Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {
+              Type.getType(PreparedStatement.class), Type.INT_TYPE,
+              Type.getType(String.class)}));
+    }
+  }
+
+  @Override
+  public void generateResultSetGet(final CodeGenSupport cgs) {
+    if (cgs.getFieldReference().getColumnAnnotation().length() <= 255) {
+      super.generateResultSetGet(cgs);
+    } else {
+      cgs.fieldSetBegin();
+      cgs.pushSqlHandle();
+      cgs.pushColumnIndex();
+      cgs.mv.visitMethodInsn(Opcodes.INVOKESTATIC, Type
+          .getInternalName(SqlStringTypeInfo.class), "fromResultSet", Type
+          .getMethodDescriptor(Type.getType(String.class), new Type[] {
+              Type.getType(ResultSet.class), Type.INT_TYPE}));
+      cgs.fieldSetEnd();
+    }
+  }
+
+  public static String fromResultSet(final ResultSet rs, final int col)
+      throws SQLException {
+    final Reader r = rs.getCharacterStream(col);
+    if (r == null) {
+      return null;
+    }
+    try {
+      try {
+        final StringWriter w = new StringWriter();
+        final char[] buf = new char[1024];
+        int n;
+        while ((n = r.read(buf)) > 0) {
+          w.write(buf, 0, n);
+        }
+        return w.toString();
+      } finally {
+        r.close();
+      }
+    } catch (IOException e) {
+      throw new SQLException("Unable to read CharacterStream in column " + col);
+    }
+  }
+
+  public static void toPreparedStatement(final PreparedStatement ps,
+      final int col, final String txt) throws SQLException {
+    if (txt != null) {
+      ps.setCharacterStream(col, new StringReader(txt), txt.length());
+    } else {
+      ps.setNull(col, Types.LONGVARCHAR);
+    }
   }
 }

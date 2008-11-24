@@ -48,14 +48,22 @@ public class TestAddress {
   @Column
   protected Key city;
 
+  @Column(length = Integer.MAX_VALUE)
+  protected String location;
+
   protected TestAddress() {
   }
 
-  public TestAddress(final TestAddress.Key city) {
+  public TestAddress(final TestAddress.Key city, final String where) {
     this.city = city;
+    this.location = where;
   }
 
   public String city() {
     return city.name;
+  }
+
+  public String location() {
+    return location;
   }
 }
