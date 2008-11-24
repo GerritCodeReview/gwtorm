@@ -26,4 +26,7 @@ public interface AddressAccess extends Access<TestAddress, TestAddress.Key> {
 
   @Query()
   ResultSet<TestAddress> all() throws OrmException;
+
+  @Query("WHERE city.owner = ?")
+  ResultSet<TestAddress> byOwner(TestPerson.Key owner) throws OrmException;
 }

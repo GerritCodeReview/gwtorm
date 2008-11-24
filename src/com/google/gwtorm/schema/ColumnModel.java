@@ -71,6 +71,15 @@ public abstract class ColumnModel {
     return nestedColumns;
   }
 
+  public ColumnModel getField(final String name) {
+    for (final ColumnModel c : nestedColumns) {
+      if (c.getFieldName().equals(name)) {
+        return c;
+      }
+    }
+    return null;
+  }
+
   public Collection<ColumnModel> getAllLeafColumns() {
     final ArrayList<ColumnModel> r = new ArrayList<ColumnModel>();
     for (final ColumnModel c : nestedColumns) {

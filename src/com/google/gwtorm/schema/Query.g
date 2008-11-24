@@ -65,14 +65,43 @@ package com.google.gwtorm.schema;
     }
 
     public static class Column extends CommonTree {
+      private static ColumnModel resolve(Tree node, RelationModel model) {
+        ColumnModel c;
+        if (node.getType() == ID) {
+          c = model.getField(node.getText());
+        } else {
+          c = resolve(node.getChild(0), model);
+        }
+        if (c == null) {
+          throw new QueryParseInternalException("No field " + node.getText());
+        }
+        if (node.getType() == DOT) {
+          c = resolve(node.getChild(1), c);
+        }
+        return c;
+      }
+      
+      private static ColumnModel resolve(Tree node, ColumnModel model) {
+        ColumnModel c;
+        if (node.getType() == ID) {
+          c = model.getField(node.getText());
+        } else {
+          c = resolve(node.getChild(0), model);
+        }
+        if (c == null) {
+          throw new QueryParseInternalException("No field " + node.getText());
+        }
+        if (node.getType() == DOT) {
+          c = resolve(node.getChild(1), c);
+        }
+        return c;
+      }
+
       private final ColumnModel field;
 
-      public Column(int ttype, Token t, final RelationModel relationModel) {
-        token = t;
-        field = relationModel.getField(t.getText());
-        if (field == null) {
-          throw new QueryParseInternalException("No field " + t.getText());
-        }
+      public Column(int ttype, Tree tree, final RelationModel relationModel) {
+        field = resolve(tree, relationModel);
+        token = new CommonToken(ID, field.getPathToFieldName());
       }
 
       public Column(final Column o, final ColumnModel f) {
@@ -161,8 +190,12 @@ compare_op
  | NE
  ;
 
-field
-  : ID -> ID<Column>[$ID, relationModel]
+field 
+  : n=qualifiedFieldName -> ID<Column>[(Tree)n.tree, relationModel]
+  ;
+
+qualifiedFieldName
+  : ID (DOT^ ID)*
   ;
 
 conditionValue
@@ -196,6 +229,7 @@ NE : '!=' ;
 
 PLACEHOLDER: '?' ;
 COMMA: ',' ;
+DOT: '.' ;
 
 CONSTANT_INTEGER
   : '0'
