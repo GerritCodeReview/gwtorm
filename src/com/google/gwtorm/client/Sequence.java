@@ -48,7 +48,7 @@ public @interface Sequence {
    *         database dialect defaults to if the sequence starting value is not
    *         supplied in the sequence declaration.
    */
-  long startsWith() default 0;
+  long startWith() default 0;
 
   /**
    * @return maximum number of values to cache in memory from the sequence.

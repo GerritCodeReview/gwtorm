@@ -58,9 +58,9 @@ public abstract class SqlDialect {
     r.append("CREATE SEQUENCE ");
     r.append(seq.getSequenceName());
 
-    if (s.startsWith() > 0) {
-      r.append(" STARTS WITH ");
-      r.append(s.startsWith());
+    if (s.startWith() > 0) {
+      r.append(" START WITH ");
+      r.append(s.startWith());
     }
 
     if (s.cache() > 0) {
