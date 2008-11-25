@@ -90,7 +90,7 @@ public abstract class ColumnModel {
     final ArrayList<ColumnModel> r = new ArrayList<ColumnModel>();
     for (final ColumnModel c : nestedColumns) {
       if (c.isNested()) {
-        r.addAll(c.getNestedColumns());
+        r.addAll(c.getAllLeafColumns());
       } else {
         r.add(c);
       }
