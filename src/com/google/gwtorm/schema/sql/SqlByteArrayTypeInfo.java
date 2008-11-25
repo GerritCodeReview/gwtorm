@@ -42,10 +42,10 @@ public class SqlByteArrayTypeInfo extends SqlTypeInfo {
   }
 
   @Override
-  public String getSqlType(final ColumnModel col) {
+  public String getSqlType(final ColumnModel col, final SqlDialect dialect) {
     final Column column = col.getColumnAnnotation();
     final StringBuilder r = new StringBuilder();
-    r.append("BLOB");
+    r.append(dialect.getSqlTypeName(getSqlTypeConstant()));
     if (column.notNull()) {
       r.append(" DEFAULT ''");
       r.append(" NOT NULL");

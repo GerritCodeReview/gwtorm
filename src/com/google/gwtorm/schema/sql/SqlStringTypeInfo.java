@@ -42,7 +42,7 @@ public class SqlStringTypeInfo extends SqlTypeInfo {
   }
 
   @Override
-  public String getSqlType(final ColumnModel col) {
+  public String getSqlType(final ColumnModel col, final SqlDialect dialect) {
     final Column column = col.getColumnAnnotation();
     final StringBuilder r = new StringBuilder();
 
@@ -51,7 +51,7 @@ public class SqlStringTypeInfo extends SqlTypeInfo {
     } else if (column.length() <= 255) {
       r.append("VARCHAR(" + column.length() + ")");
     } else {
-      r.append("TEXT");
+      r.append(dialect.getSqlTypeName(Types.LONGVARCHAR));
     }
 
     if (column.notNull()) {

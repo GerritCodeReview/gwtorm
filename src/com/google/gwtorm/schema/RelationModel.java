@@ -208,7 +208,7 @@ public abstract class RelationModel {
       final ColumnModel col = i.next();
       r.append(col.getColumnName());
       r.append(" ");
-      r.append(dialect.getSqlTypeInfo(col).getSqlType(col));
+      r.append(dialect.getSqlTypeInfo(col).getSqlType(col, dialect));
       if (i.hasNext()) {
         r.append(",");
       }

@@ -27,7 +27,7 @@ public abstract class SqlTypeInfo {
   protected SqlTypeInfo() {
   }
 
-  public abstract String getSqlType(ColumnModel column);
+  public abstract String getSqlType(ColumnModel column, SqlDialect dialect);
 
   protected abstract String getJavaSqlTypeAlias();
 

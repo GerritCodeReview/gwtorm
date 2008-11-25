@@ -30,7 +30,7 @@ public class SqlLongTypeInfo extends SqlTypeInfo {
   }
 
   @Override
-  public String getSqlType(final ColumnModel column) {
-    return "BIGINT DEFAULT 0 NOT NULL";
+  public String getSqlType(final ColumnModel column, final SqlDialect dialect) {
+    return dialect.getSqlTypeName(getSqlTypeConstant()) + " DEFAULT 0 NOT NULL";
   }
 }

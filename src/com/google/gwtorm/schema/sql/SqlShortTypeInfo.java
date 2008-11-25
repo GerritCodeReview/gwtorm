@@ -30,7 +30,7 @@ public class SqlShortTypeInfo extends SqlTypeInfo {
   }
 
   @Override
-  public String getSqlType(final ColumnModel column) {
-    return "SMALLINT DEFAULT 0 NOT NULL";
+  public String getSqlType(final ColumnModel column, final SqlDialect dialect) {
+    return dialect.getSqlTypeName(getSqlTypeConstant()) + " DEFAULT 0 NOT NULL";
   }
 }

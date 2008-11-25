@@ -18,11 +18,13 @@ import com.google.gwtorm.client.Sequence;
 import com.google.gwtorm.schema.ColumnModel;
 import com.google.gwtorm.schema.SequenceModel;
 
+import java.sql.Types;
 import java.util.HashMap;
 import java.util.Map;
 
 public abstract class SqlDialect {
   protected final Map<Class<?>, SqlTypeInfo> types;
+  protected final Map<Integer, String> typeNames;
 
   protected SqlDialect() {
     types = new HashMap<Class<?>, SqlTypeInfo>();
@@ -35,6 +37,20 @@ public abstract class SqlDialect {
     types.put(java.sql.Date.class, new SqlDateTypeInfo());
     types.put(java.sql.Timestamp.class, new SqlTimestampTypeInfo());
     types.put(byte[].class, new SqlByteArrayTypeInfo());
+
+    typeNames = new HashMap<Integer, String>();
+    typeNames.put(Types.VARBINARY, "BLOB");
+    typeNames.put(Types.DATE, "DATE");
+    typeNames.put(Types.SMALLINT, "SMALLINT");
+    typeNames.put(Types.INTEGER, "INT");
+    typeNames.put(Types.BIGINT, "BIGINT");
+    typeNames.put(Types.LONGVARCHAR, "TEXT");
+    typeNames.put(Types.TIMESTAMP, "TIMESTAMP");
+  }
+
+  public String getSqlTypeName(final int typeCode) {
+    final String r = typeNames.get(typeCode);
+    return r != null ? r : "UNKNOWNTYPE";
   }
 
   public SqlTypeInfo getSqlTypeInfo(final ColumnModel col) {

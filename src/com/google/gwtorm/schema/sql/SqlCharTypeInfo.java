@@ -24,7 +24,7 @@ import java.sql.Types;
 
 public class SqlCharTypeInfo extends SqlTypeInfo {
   @Override
-  public String getSqlType(final ColumnModel column) {
+  public String getSqlType(final ColumnModel column, final SqlDialect dialect) {
     final StringBuilder r = new StringBuilder();
     r.append("CHAR(1)");
     r.append(" DEFAULT ' '");
