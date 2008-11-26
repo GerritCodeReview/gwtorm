@@ -14,7 +14,6 @@
 
 package com.google.gwtorm.schema.sql;
 
-import com.google.gwtorm.client.Column;
 import com.google.gwtorm.schema.ColumnModel;
 
 import java.sql.Types;
@@ -32,10 +31,9 @@ public class SqlDateTypeInfo extends SqlTypeInfo {
 
   @Override
   public String getSqlType(final ColumnModel col, final SqlDialect dialect) {
-    final Column column = col.getColumnAnnotation();
     final StringBuilder r = new StringBuilder();
     r.append(dialect.getSqlTypeName(getSqlTypeConstant()));
-    if (column.notNull()) {
+    if (col.isNotNull()) {
       r.append(" DEFAULT '1900-01-01'");
       r.append(" NOT NULL");
     }

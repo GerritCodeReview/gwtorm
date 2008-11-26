@@ -54,7 +54,7 @@ public class SqlStringTypeInfo extends SqlTypeInfo {
       r.append(dialect.getSqlTypeName(Types.LONGVARCHAR));
     }
 
-    if (column.notNull()) {
+    if (col.isNotNull()) {
       r.append(" DEFAULT ''");
       r.append(" NOT NULL");
     }

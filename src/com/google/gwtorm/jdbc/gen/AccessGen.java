@@ -287,7 +287,7 @@ public class AccessGen implements Opcodes {
       cols.addAll(model.getDependentFields());
       cols.addAll(model.getRowVersionFields());
       for (final ColumnModel field : cols) {
-        if (field.isNested() && field.getColumnAnnotation().notNull()) {
+        if (field.isNested() && field.isNotNull()) {
           for (final ColumnModel c : field.getAllLeafColumns()) {
             cgs.setFieldReference(c);
             dialect.getSqlTypeInfo(c).generatePreparedStatementSet(cgs);
@@ -397,7 +397,7 @@ public class AccessGen implements Opcodes {
           dialect.getSqlTypeInfo(c).generateResultSetGet(cgs);
         }
 
-        if (!field.getColumnAnnotation().notNull()) {
+        if (!field.isNotNull()) {
           final Label islive = new Label();
           cgs.pushSqlHandle();
           mv.visitMethodInsn(INVOKEINTERFACE, Type.getType(ResultSet.class)

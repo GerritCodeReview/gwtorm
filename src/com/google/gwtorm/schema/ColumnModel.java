@@ -29,6 +29,7 @@ public abstract class ColumnModel {
   protected Collection<ColumnModel> nestedColumns;
   protected boolean rowVersion;
   protected boolean inPrimaryKey;
+  protected boolean notNull;
 
   protected ColumnModel() {
     nestedColumns = Collections.<ColumnModel> emptyList();
@@ -43,6 +44,7 @@ public abstract class ColumnModel {
     column = col;
     origName = Util.any(column.name(), Util.makeSqlFriendly(fieldName));
     columnName = origName;
+    notNull = column.notNull();
   }
 
   protected void initNestedColumns(final Collection<? extends ColumnModel> col)
@@ -54,6 +56,14 @@ public abstract class ColumnModel {
 
     nestedColumns = new ArrayList<ColumnModel>(col);
     recomputeColumnNames();
+    if (!isNotNull()) {
+      // If we permit NULL we need to make sure our contained columns
+      // would also accept NULL, even if they wouldn't otherwise.
+      //
+      for (final ColumnModel c : getAllLeafColumns()) {
+        c.notNull = false;
+      }
+    }
   }
 
   private void recomputeColumnNames() {
@@ -127,6 +137,10 @@ public abstract class ColumnModel {
 
   public Column getColumnAnnotation() {
     return column;
+  }
+
+  public boolean isNotNull() {
+    return notNull;
   }
 
   public abstract String getFieldName();

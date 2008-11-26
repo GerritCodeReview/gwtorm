@@ -14,7 +14,6 @@
 
 package com.google.gwtorm.schema.sql;
 
-import com.google.gwtorm.client.Column;
 import com.google.gwtorm.jdbc.gen.CodeGenSupport;
 import com.google.gwtorm.schema.ColumnModel;
 
@@ -43,10 +42,9 @@ public class SqlByteArrayTypeInfo extends SqlTypeInfo {
 
   @Override
   public String getSqlType(final ColumnModel col, final SqlDialect dialect) {
-    final Column column = col.getColumnAnnotation();
     final StringBuilder r = new StringBuilder();
     r.append(dialect.getSqlTypeName(getSqlTypeConstant()));
-    if (column.notNull()) {
+    if (col.isNotNull()) {
       r.append(" DEFAULT ''");
       r.append(" NOT NULL");
     }
