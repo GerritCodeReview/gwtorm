@@ -31,6 +31,12 @@ public class SqlLongTypeInfo extends SqlTypeInfo {
 
   @Override
   public String getSqlType(final ColumnModel column, final SqlDialect dialect) {
-    return dialect.getSqlTypeName(getSqlTypeConstant()) + " DEFAULT 0 NOT NULL";
+    final StringBuilder r = new StringBuilder();
+    r.append(dialect.getSqlTypeName(getSqlTypeConstant()));
+    if (column.isNotNull()) {
+      r.append(" DEFAULT 0");
+      r.append(" NOT NULL");
+    }
+    return r.toString();
   }
 }

@@ -29,8 +29,14 @@ public class SqlBooleanTypeInfo extends SqlTypeInfo {
     final String name = column.getColumnName();
     final String t = getTrueLiteralValue();
     final String f = getFalseLiteralValue();
-    return "CHAR(1) NOT NULL DEFAULT " + f + " CHECK (" + name + " IN (" + t
-        + "," + f + "))";
+    final StringBuilder r = new StringBuilder();
+    r.append("CHAR(1)");
+    if (column.isNotNull()) {
+      r.append(" DEFAULT " + f);
+      r.append(" NOT NULL");
+    }
+    r.append(" CHECK (" + name + " IN (" + t + "," + f + "))");
+    return r.toString();
   }
 
   @Override
