@@ -14,6 +14,8 @@
 
 package com.google.gwtorm.client;
 
+import java.util.Map;
+
 /**
  * Data access interface for an entity type.
  * <p>
@@ -53,6 +55,14 @@ public interface Access<T extends Object, K extends Key<?>> {
    *         or if the primary key does not implement the Key interface.
    */
   K primaryKey(T entity);
+
+  /**
+   * Convert a collection of objects into a map, keyed by their primary key.
+   * 
+   * @param c the collection
+   * @return a map of the objects, indexed by their primary key.
+   */
+  Map<K, T> toMap(Iterable<T> c);
 
   /**
    * Lookup a single entity via its primary key.

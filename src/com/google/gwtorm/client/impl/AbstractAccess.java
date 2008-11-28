@@ -21,6 +21,8 @@ import com.google.gwtorm.client.ResultSet;
 import com.google.gwtorm.client.Transaction;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class AbstractAccess<E, K extends Key<?>, T extends AbstractTransaction>
     implements Access<E, K> {
@@ -33,6 +35,20 @@ public abstract class AbstractAccess<E, K extends Key<?>, T extends AbstractTran
       }
     }
     return new ListResultSet<E>(r);
+  }
+
+  public Map<K, E> toMap(final Iterable<E> c) {
+    try {
+      final HashMap<K, E> r = new HashMap<K, E>();
+      for (final E e : c) {
+        r.put(primaryKey(e), e);
+      }
+      return r;
+    } finally {
+      if (c instanceof ResultSet) {
+        ((ResultSet<?>) c).close();
+      }
+    }
   }
 
   public final void insert(final Iterable<E> instances) throws OrmException {
