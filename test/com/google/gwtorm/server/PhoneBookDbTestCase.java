@@ -21,6 +21,7 @@ import com.google.gwtorm.data.PhoneBookDb;
 import com.google.gwtorm.data.TestPerson;
 import com.google.gwtorm.jdbc.Database;
 import com.google.gwtorm.jdbc.JdbcSchema;
+import com.google.gwtorm.jdbc.SimpleDataSource;
 
 import junit.framework.TestCase;
 
@@ -44,7 +45,7 @@ public class PhoneBookDbTestCase extends TestCase {
     final Properties p = new Properties();
     p.setProperty("driver", org.h2.Driver.class.getName());
     p.setProperty("url", "jdbc:h2:mem:PhoneBookDb" + (runCount++));
-    db = new Database<PhoneBookDb>(p, PhoneBookDb.class);
+    db = new Database<PhoneBookDb>(new SimpleDataSource(p), PhoneBookDb.class);
     openSchemas = new ArrayList<PhoneBookDb>();
   }
 
