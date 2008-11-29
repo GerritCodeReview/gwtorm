@@ -27,12 +27,12 @@ import com.google.gwtorm.schema.sql.DialectPostgreSQL;
 import com.google.gwtorm.schema.sql.SqlDialect;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Map;
-import java.util.Properties;
 import java.util.WeakHashMap;
+
+import javax.sql.DataSource;
 
 /**
  * Constructor for application {@link Schema} extensions.
@@ -53,56 +53,37 @@ public class Database<T extends Schema> implements SchemaFactory<T> {
   private static final Map<Class<?>, String> schemaFactoryNames =
       Collections.synchronizedMap(new WeakHashMap<Class<?>, String>());
 
-  private final Properties connectionInfo;
-  private final String url;
+  private final DataSource dataSource;
   private final JavaSchemaModel schemaModel;
   private final AbstractSchemaFactory<T> implFactory;
   private final SqlDialect implDialect;
 
   /**
    * Create a new database interface, generating the interface implementations.
-   * <p>
-   * The JDBC properties information must define at least <code>url</code> and
-   * <code>driver</code>, but may also include driver specific properties such
-   * as <code>username</code> and <code>password</code>.
    * 
-   * @param dbInfo JDBC connection information. The property table is copied.
+   * @param ds JDBC connection information
    * @param schema application extension of the Schema interface to implement.
    * @throws OrmException the schema interface is incorrectly defined, or the
    *         driver class is not available through the current class loader.
    */
-  public Database(final Properties dbInfo, final Class<T> schema)
+  public Database(final DataSource ds, final Class<T> schema)
       throws OrmException {
-    connectionInfo = new Properties();
-    connectionInfo.putAll(dbInfo);
+    dataSource = ds;
 
-    url = (String) connectionInfo.remove("url");
-    if (url == null) {
-      throw new OrmException("Required property 'url' not defined");
-    }
-
-    final String driver = (String) connectionInfo.remove("driver");
-    if (driver != null) {
-      loadDriver(driver);
+    final String url;
+    try {
+      final Connection c = ds.getConnection();
+      try {
+        url = c.getMetaData().getURL();
+      } finally {
+        c.close();
+      }
+    } catch (SQLException e) {
+      throw new OrmException("Unable to determine driver URL", e);
     }
 
     final SqlDialect dialect;
-    String dialectName = (String) connectionInfo.remove("dialect");
-    if (dialectName != null) {
-      if (!dialectName.contains(".")) {
-        final String n = SqlDialect.class.getName();
-        dialectName = n.substring(0, n.lastIndexOf('.') + 1) + dialectName;
-      }
-      try {
-        dialect = (SqlDialect) Class.forName(dialectName).newInstance();
-      } catch (InstantiationException e) {
-        throw new OrmException("Dialect " + dialectName + " not available", e);
-      } catch (IllegalAccessException e) {
-        throw new OrmException("Dialect " + dialectName + " not available", e);
-      } catch (ClassNotFoundException e) {
-        throw new OrmException("Dialect " + dialectName + " not found", e);
-      }
-    } else if (url.startsWith("jdbc:postgresql:")) {
+    if (url.startsWith("jdbc:postgresql:")) {
       dialect = new DialectPostgreSQL();
     } else if (url.startsWith("jdbc:h2:")) {
       dialect = new DialectH2();
@@ -161,7 +142,7 @@ public class Database<T extends Schema> implements SchemaFactory<T> {
   public T open() throws OrmException {
     final Connection conn;
     try {
-      conn = DriverManager.getConnection(url, connectionInfo);
+      conn = dataSource.getConnection();
     } catch (SQLException e) {
       throw new OrmException("Cannot open database connection", e);
     }
@@ -183,28 +164,5 @@ public class Database<T extends Schema> implements SchemaFactory<T> {
 
   private static <T> GeneratedClassLoader newLoader(final Class<T> schema) {
     return new GeneratedClassLoader(schema.getClassLoader());
-  }
-
-  private static synchronized void loadDriver(final String driver)
-      throws OrmException {
-    // I've seen some drivers (*cough* Informix *cough*) which won't load
-    // on multiple threads at the same time. Forcing our code to synchronize
-    // around loading the driver ensures we won't ever ask for the same driver
-    // to initialize from different threads. Of course that could still happen
-    // in other parts of the same JVM, but its quite unlikely.
-    //
-    try {
-      Class.forName(driver, true, threadCL());
-    } catch (ClassNotFoundException err) {
-      throw new OrmException("Driver class " + driver + " not available", err);
-    }
-  }
-
-  private static ClassLoader threadCL() {
-    try {
-      return Thread.currentThread().getContextClassLoader();
-    } catch (SecurityException e) {
-      return Database.class.getClassLoader();
-    }
   }
 }
