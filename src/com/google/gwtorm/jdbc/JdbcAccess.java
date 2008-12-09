@@ -24,6 +24,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 /** Internal base class for implementations of {@link Access}. */
 public abstract class JdbcAccess<T, K extends Key<?>> extends
@@ -34,6 +36,45 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
     schema = s;
   }
 
+  @Override
+  public final com.google.gwtorm.client.ResultSet<T> get(final Iterable<K> keys)
+      throws OrmException {
+    final Collection<K> keySet;
+    if (keys instanceof Collection) {
+      keySet = (Collection<K>) keys;
+    } else {
+      keySet = new ArrayList<K>();
+      for (final K k : keys) {
+        keySet.add(k);
+      }
+    }
+
+    switch (keySet.size()) {
+      case 0:
+        // Nothing requested, nothing to return.
+        //
+        return new ListResultSet<T>(Collections.<T> emptyList());
+
+      case 1: {
+        // Only one key requested, use a faster equality lookup.
+        //
+        final T entity = get(keySet.iterator().next());
+        if (entity != null) {
+          return new ListResultSet<T>(Collections.singletonList(entity));
+        }
+        return new ListResultSet<T>(Collections.<T> emptyList());
+      }
+
+      default:
+        return getBySqlIn(keySet);
+    }
+  }
+
+  protected com.google.gwtorm.client.ResultSet<T> getBySqlIn(
+      final Collection<K> keys) throws OrmException {
+    return super.get(keys);
+  }
+
   protected PreparedStatement prepareStatement(final String sql)
       throws OrmException {
     try {
@@ -41,6 +82,22 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
     } catch (SQLException e) {
       throw new OrmException("Prepare failure\n" + sql, e);
     }
+  }
+
+  protected PreparedStatement prepareBySqlIn(final String sql,
+      final Collection<K> keys) throws OrmException {
+    final int n = keys.size();
+    final StringBuilder buf = new StringBuilder(sql.length() + n << 1 + 1);
+    buf.append(sql);
+    buf.append('(');
+    for (int i = 0; i < n; i++) {
+      if (i > 0) {
+        buf.append(',');
+      }
+      buf.append('?');
+    }
+    buf.append(')');
+    return prepareStatement(buf.toString());
   }
 
   protected T queryOne(final PreparedStatement ps) throws OrmException {

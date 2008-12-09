@@ -37,6 +37,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -108,6 +109,11 @@ public class AccessGen implements Opcodes {
 
     if (model.getPrimaryKey() != null) {
       implementKeyQuery(model.getPrimaryKey());
+      if ((model.getPrimaryKey().getField().isNested() || !model
+          .getPrimaryKey().getField().getPrimitiveType().isPrimitive())
+          && model.getPrimaryKey().getAllLeafColumns().size() == 1) {
+        overrideGetMany();
+      }
     }
     for (final KeyModel key : model.getSecondaryKeys()) {
       implementKeyQuery(key);
@@ -487,6 +493,106 @@ public class AccessGen implements Opcodes {
         .getMethodDescriptor(Type.getType(Object.class), new Type[] {Type
             .getType(PreparedStatement.class)}));
     mv.visitTypeInsn(CHECKCAST, entityType.getInternalName());
+    mv.visitInsn(ARETURN);
+    mv.visitMaxs(-1, -1);
+    mv.visitEnd();
+  }
+
+  private void overrideGetMany() {
+    final KeyModel pk = model.getPrimaryKey();
+    final StringBuilder query = new StringBuilder();
+    query.append(model.getSelectSql(dialect, REL_ALIAS));
+    query.append(" WHERE ");
+    final ColumnModel pkcol = pk.getAllLeafColumns().iterator().next();
+    query.append(REL_ALIAS);
+    query.append('.');
+    query.append(pkcol.getColumnName());
+    query.append(" IN");
+
+    final MethodVisitor mv =
+        cw.visitMethod(ACC_PUBLIC | ACC_FINAL, "getBySqlIn", Type
+            .getMethodDescriptor(Type
+                .getType(com.google.gwtorm.client.ResultSet.class),
+                new Type[] {Type.getType(Collection.class)}), null,
+            new String[] {Type.getType(OrmException.class).getInternalName()});
+    mv.visitCode();
+
+    final int keyset = 1;
+    final int psvar = 2;
+    final int itrvar = 3;
+    final int colvar = 4;
+    final int keyvar = 5;
+
+    mv.visitVarInsn(ALOAD, 0);
+    mv.visitLdcInsn(query.toString());
+    mv.visitVarInsn(ALOAD, keyset);
+    mv.visitMethodInsn(INVOKEVIRTUAL, superTypeName, "prepareBySqlIn", Type
+        .getMethodDescriptor(Type.getType(PreparedStatement.class), new Type[] {
+            Type.getType(String.class), Type.getType(Collection.class)}));
+    mv.visitVarInsn(ASTORE, psvar);
+
+    mv.visitVarInsn(ALOAD, keyset);
+    mv.visitMethodInsn(INVOKEINTERFACE, Type.getInternalName(Collection.class),
+        "iterator", Type.getMethodDescriptor(Type.getType(Iterator.class),
+            new Type[] {}));
+    mv.visitVarInsn(ASTORE, itrvar);
+
+    mv.visitInsn(ICONST_1);
+    mv.visitVarInsn(ISTORE, colvar);
+
+    final Label endbind = new Label();
+    final Label again = new Label();
+    mv.visitLabel(again);
+    mv.visitVarInsn(ALOAD, itrvar);
+    mv.visitMethodInsn(INVOKEINTERFACE, Type.getInternalName(Iterator.class),
+        "hasNext", Type.getMethodDescriptor(Type.BOOLEAN_TYPE, new Type[] {}));
+    mv.visitJumpInsn(IFEQ, endbind);
+
+    mv.visitVarInsn(ALOAD, itrvar);
+    mv.visitMethodInsn(INVOKEINTERFACE, Type.getInternalName(Iterator.class),
+        "next", Type.getMethodDescriptor(Type.getType(Object.class),
+            new Type[] {}));
+    mv.visitTypeInsn(CHECKCAST, CodeGenSupport.toType(pk.getField())
+        .getInternalName());
+    mv.visitVarInsn(ASTORE, keyvar);
+
+    final CodeGenSupport cgs = new CodeGenSupport(mv) {
+      @Override
+      public void pushSqlHandle() {
+        mv.visitVarInsn(ALOAD, psvar);
+      }
+
+      @Override
+      public void pushFieldValue() {
+        appendGetField(getFieldReference());
+      }
+
+      @Override
+      public void pushColumnIndex() {
+        mv.visitVarInsn(ILOAD, colvar);
+      }
+
+      @Override
+      protected void appendGetField(final ColumnModel c) {
+        if (c.getParent() == null) {
+          mv.visitVarInsn(ALOAD, keyvar);
+        } else {
+          super.appendGetField(c);
+        }
+      }
+    };
+
+    cgs.setFieldReference(pkcol);
+    dialect.getSqlTypeInfo(pkcol).generatePreparedStatementSet(cgs);
+    mv.visitIincInsn(colvar, 1);
+    mv.visitJumpInsn(GOTO, again);
+
+    mv.visitLabel(endbind);
+    mv.visitVarInsn(ALOAD, 0);
+    mv.visitVarInsn(ALOAD, psvar);
+    mv.visitMethodInsn(INVOKEVIRTUAL, superTypeName, "queryList", Type
+        .getMethodDescriptor(Type.getType(ListResultSet.class),
+            new Type[] {Type.getType(PreparedStatement.class)}));
     mv.visitInsn(ARETURN);
     mv.visitMaxs(-1, -1);
     mv.visitEnd();
