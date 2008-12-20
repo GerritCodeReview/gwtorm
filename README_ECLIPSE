@@ -1,21 +1,12 @@
 Eclipse Setup
 =============
 
-Compile once using "make" to ensure the ANTLR parser is generated.
+- Install the Maven Integration plugins:
 
+  http://m2eclipse.codehaus.org/
 
-User Library
-------------
+- Import the project using the General -> Maven Projects
 
-  Window > Preferences
-  Java > Build Path > User Libraries
-
-Create a User Library called "GWT":
-
-  New
-
-  Name: GWT
-  Add JARs...
-
-  * Select gwt-user.jar from the $(GWT_SDK) directory.
-  * Select gwt-dev-$(GWT_OS).jar from the $(GWT_SDK) directory.
+- Use right click, Maven -> Update Project Configuration
+  to force a compile of the generted ANTLR sources.  This
+  fixes the compile errors identified after import.

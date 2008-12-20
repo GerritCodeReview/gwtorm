@@ -19,7 +19,7 @@ import com.google.gwtorm.client.StringKey;
 
 
 public class TestPerson {
-  public static class Key extends StringKey {
+  public static class Key extends StringKey<com.google.gwtorm.client.Key<?>> {
     @Column(length = 20)
     protected String name;
 
