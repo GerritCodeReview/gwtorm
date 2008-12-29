@@ -55,14 +55,7 @@ public abstract class ShortKey<P extends Key<?>> implements Key<P>,
     }
 
     final ShortKey<P> q = cast(b);
-    if (get() == q.get()) {
-      if (getParentKey() != null) {
-        return getParentKey().equals(q.getParentKey());
-      }
-      return true;
-    }
-
-    return false;
+    return get() == q.get() && KeyUtil.eq(getParentKey(), q.getParentKey());
   }
 
   @Override

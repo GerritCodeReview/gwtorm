@@ -54,14 +54,7 @@ public abstract class IntKey<P extends Key<?>> implements Key<P>, Serializable {
     }
 
     final IntKey<P> q = cast(b);
-    if (get() == q.get()) {
-      if (getParentKey() != null) {
-        return getParentKey().equals(q.getParentKey());
-      }
-      return true;
-    }
-
-    return false;
+    return get() == q.get() && KeyUtil.eq(getParentKey(), q.getParentKey());
   }
 
   @Override

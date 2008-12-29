@@ -55,14 +55,8 @@ public abstract class StringKey<P extends Key<?>> implements Key<P>,
     }
 
     final StringKey<P> q = cast(b);
-    if (get().equals(q.get())) {
-      if (getParentKey() != null) {
-        return getParentKey().equals(q.getParentKey());
-      }
-      return true;
-    }
-
-    return false;
+    return get().equals(q.get())
+        && KeyUtil.eq(getParentKey(), q.getParentKey());
   }
 
   @Override
