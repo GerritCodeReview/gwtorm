@@ -1,4 +1,5 @@
 /target
+/generated_classes
 /.classpath
 /.project
 /.settings/org.maven.ide.eclipse.prefs
