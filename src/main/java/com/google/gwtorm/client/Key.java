@@ -30,4 +30,14 @@ public interface Key<P extends Key<?>> {
    * @return the parent key; null if this entity key is a root-level key.
    */
   public P getParentKey();
+
+  public int hashCode();
+
+  public boolean equals(Object o);
+
+  /** @return the key, encoded in a string format . */
+  public String toString();
+
+  /** Reset this key instance to represent the data in the supplied string. */
+  public void fromString(String in);
 }

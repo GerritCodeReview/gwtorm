@@ -34,6 +34,11 @@ public class TestPerson {
     public String get() {
       return name;
     }
+
+    @Override
+    protected void set(String newValue) {
+      name = newValue;
+    }
   }
 
   @Column

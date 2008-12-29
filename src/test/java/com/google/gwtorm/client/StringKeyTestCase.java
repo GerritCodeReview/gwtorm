@@ -14,6 +14,8 @@
 
 package com.google.gwtorm.client;
 
+import com.google.gwtorm.server.StandardKeyEncoder;
+
 import junit.framework.TestCase;
 
 
@@ -30,6 +32,11 @@ public class StringKeyTestCase extends TestCase {
     @Override
     public String get() {
       return name;
+    }
+
+    @Override
+    protected void set(String newValue) {
+      name = newValue;
     }
   }
 
@@ -57,6 +64,11 @@ public class StringKeyTestCase extends TestCase {
     public Parent getParentKey() {
       return parent;
     }
+  }
+
+  @Override
+  protected void setUp() throws Exception {
+    KeyUtil.setEncoderImpl(new StandardKeyEncoder());
   }
 
   public void testHashCodeWhenNull() {
@@ -109,5 +121,26 @@ public class StringKeyTestCase extends TestCase {
     final UnrelatedEntity u = new UnrelatedEntity("bar");
     assertFalse(c1.equals(u));
     assertFalse(u.equals(c1));
+  }
+
+  public void testParentString() {
+    final String pv = "foo,bar/ at %here";
+    final Parent p1 = new Parent(pv);
+    assertEquals("foo%2Cbar/+at+%25here", p1.toString());
+
+    final Parent p2 = new Parent("");
+    p2.fromString(p1.toString());
+    assertEquals(p1, p2);
+  }
+
+  public void testChildString() {
+    final String pv = "foo,bar/ at %here";
+    final String cv = "x";
+    final Child c1 = new Child(new Parent(pv), cv);
+    assertEquals("foo%2Cbar/+at+%25here,x", c1.toString());
+
+    final Child c2 = new Child(new Parent(""), "");
+    c2.fromString(c1.toString());
+    assertEquals(c1, c2);
   }
 }

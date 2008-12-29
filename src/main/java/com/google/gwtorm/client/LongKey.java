@@ -30,6 +30,9 @@ public abstract class LongKey<P extends Key<?>> implements Key<P>, Serializable 
    */
   public abstract long get();
 
+  /** @param newValue the new value of this key. */
+  protected abstract void set(long newValue);
+
   /**
    * @return the parent key instance; null if this is a root level key.
    */
@@ -66,6 +69,10 @@ public abstract class LongKey<P extends Key<?>> implements Key<P>, Serializable 
     }
     r.append(get());
     return r.toString();
+  }
+
+  public void fromString(final String in) {
+    set(Long.parseLong(KeyUtil.parseFromString(getParentKey(), in)));
   }
 
   @SuppressWarnings("unchecked")

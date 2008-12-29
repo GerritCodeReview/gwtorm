@@ -31,6 +31,9 @@ public abstract class StringKey<P extends Key<?>> implements Key<P>,
    */
   public abstract String get();
 
+  /** @param newValue the new value of this key. */
+  protected abstract void set(String newValue);
+
   /**
    * @return the parent key instance; null if this is a root level key.
    */
@@ -68,6 +71,10 @@ public abstract class StringKey<P extends Key<?>> implements Key<P>,
     }
     r.append(KeyUtil.encode(get()));
     return r.toString();
+  }
+
+  public void fromString(final String in) {
+    set(KeyUtil.parseFromString(getParentKey(), in));
   }
 
   @SuppressWarnings("unchecked")

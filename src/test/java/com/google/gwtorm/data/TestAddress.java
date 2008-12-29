@@ -43,6 +43,11 @@ public class TestAddress {
     public TestPerson.Key getParentKey() {
       return owner;
     }
+
+    @Override
+    protected void set(String newValue) {
+      name = newValue;
+    }
   }
 
   @Column

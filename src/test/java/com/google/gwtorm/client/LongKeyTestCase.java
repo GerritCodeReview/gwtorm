@@ -14,6 +14,8 @@
 
 package com.google.gwtorm.client;
 
+import com.google.gwtorm.server.StandardKeyEncoder;
+
 import junit.framework.TestCase;
 
 
@@ -30,6 +32,11 @@ public class LongKeyTestCase extends TestCase {
     @Override
     public long get() {
       return id;
+    }
+
+    @Override
+    protected void set(long newValue) {
+      id = newValue;
     }
   }
 
@@ -57,6 +64,11 @@ public class LongKeyTestCase extends TestCase {
     public Parent getParentKey() {
       return parent;
     }
+  }
+
+  @Override
+  protected void setUp() throws Exception {
+    KeyUtil.setEncoderImpl(new StandardKeyEncoder());
   }
 
   public void testHashCodeWhenNull() {
@@ -109,5 +121,26 @@ public class LongKeyTestCase extends TestCase {
     final UnrelatedEntity u = new UnrelatedEntity(cId);
     assertFalse(c1.equals(u));
     assertFalse(u.equals(c1));
+  }
+
+  public void testParentString() {
+    final long pId = 21281821821821881L;
+    final Parent p1 = new Parent(pId);
+    assertEquals("" + pId, p1.toString());
+
+    final Parent p2 = new Parent(0);
+    p2.fromString(p1.toString());
+    assertEquals(p1, p2);
+  }
+
+  public void testChildString() {
+    final long pId = 21281821821821881L;
+    final long cId = 18218181281818888L;
+    final Child c1 = new Child(new Parent(pId), cId);
+    assertEquals(pId + "," + cId, c1.toString());
+
+    final Child c2 = new Child(new Parent(0), 0);
+    c2.fromString(c1.toString());
+    assertEquals(c1, c2);
   }
 }

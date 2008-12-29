@@ -14,6 +14,8 @@
 
 package com.google.gwtorm.client;
 
+import com.google.gwtorm.server.StandardKeyEncoder;
+
 import junit.framework.TestCase;
 
 
@@ -29,6 +31,11 @@ public class IntKeyTestCase extends TestCase {
     @Override
     public int get() {
       return id;
+    }
+
+    @Override
+    protected void set(int newValue) {
+      id = newValue;
     }
   }
 
@@ -56,6 +63,11 @@ public class IntKeyTestCase extends TestCase {
     public Parent getParentKey() {
       return parent;
     }
+  }
+
+  @Override
+  protected void setUp() throws Exception {
+    KeyUtil.setEncoderImpl(new StandardKeyEncoder());
   }
 
   public void testHashCodeWhenNull() {
@@ -108,5 +120,23 @@ public class IntKeyTestCase extends TestCase {
     final UnrelatedEntity u = new UnrelatedEntity(cId);
     assertFalse(c1.equals(u));
     assertFalse(u.equals(c1));
+  }
+
+  public void testParentString() {
+    final Parent p1 = new Parent(1);
+    assertEquals("1", p1.toString());
+
+    final Parent p2 = new Parent(0);
+    p2.fromString(p1.toString());
+    assertEquals(p1, p2);
+  }
+
+  public void testChildString() {
+    final Child c1 = new Child(new Parent(1), 2);
+    assertEquals("1,2", c1.toString());
+
+    final Child c2 = new Child(new Parent(0), 0);
+    c2.fromString(c1.toString());
+    assertEquals(c1, c2);
   }
 }

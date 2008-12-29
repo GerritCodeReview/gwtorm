@@ -84,6 +84,25 @@ public class KeyUtil {
     return ENCODER_IMPL.decode(e);
   }
 
+  /**
+   * Split a string along the last comma and parse into the parent.
+   * 
+   * @param parent parent key; <code>parent.fromString(in[0..comma])</code>.
+   * @param in the input string.
+   * @return text (if any) after the last comma in the input.
+   */
+  public static String parseFromString(final Key<?> parent, final String in) {
+    final int comma = in.lastIndexOf(',');
+    if (comma < 0 && parent == null) {
+      return decode(in);
+    }
+    if (comma < 0 && parent != null) {
+      throw new IllegalArgumentException("Not enough components: " + in);
+    }
+    parent.fromString(in.substring(0, comma));
+    return decode(in.substring(comma + 1));
+  }
+
   public static abstract class Encoder {
     public abstract String encode(String e);
 

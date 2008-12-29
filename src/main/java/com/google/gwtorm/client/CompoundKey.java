@@ -91,6 +91,17 @@ public abstract class CompoundKey<P extends Key<?>> implements Key<P>,
     return r.toString();
   }
 
+  public void fromString(final String in) {
+    final String[] parts = in.split(",");
+    int p = 0;
+    if (getParentKey() != null) {
+      getParentKey().fromString(parts[p++]);
+    }
+    for (final Key<?> k : members()) {
+      k.fromString(parts[p++]);
+    }
+  }
+
   @SuppressWarnings("unchecked")
   private static <A extends Key<?>> CompoundKey<A> cast(final Object b) {
     return (CompoundKey<A>) b;

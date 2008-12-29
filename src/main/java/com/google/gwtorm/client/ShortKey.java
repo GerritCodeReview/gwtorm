@@ -31,6 +31,9 @@ public abstract class ShortKey<P extends Key<?>> implements Key<P>,
    */
   public abstract short get();
 
+  /** @param newValue the new value of this key. */
+  protected abstract void set(short newValue);
+
   /**
    * @return the parent key instance; null if this is a root level key.
    */
@@ -67,6 +70,10 @@ public abstract class ShortKey<P extends Key<?>> implements Key<P>,
     }
     r.append(get());
     return r.toString();
+  }
+
+  public void fromString(final String in) {
+    set(Short.parseShort(KeyUtil.parseFromString(getParentKey(), in)));
   }
 
   @SuppressWarnings("unchecked")
