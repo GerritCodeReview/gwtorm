@@ -61,14 +61,11 @@ public abstract class ShortKey<P extends Key<?>> implements Key<P>,
   @Override
   public String toString() {
     final StringBuffer r = new StringBuffer();
-    r.append(getClass().getName());
-    r.append('[');
     if (getParentKey() != null) {
       r.append(getParentKey().toString());
-      r.append(", ");
+      r.append(',');
     }
     r.append(get());
-    r.append(']');
     return r.toString();
   }
 

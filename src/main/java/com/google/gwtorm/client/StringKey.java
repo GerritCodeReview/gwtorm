@@ -62,14 +62,11 @@ public abstract class StringKey<P extends Key<?>> implements Key<P>,
   @Override
   public String toString() {
     final StringBuffer r = new StringBuffer();
-    r.append(getClass().getName());
-    r.append('[');
     if (getParentKey() != null) {
       r.append(getParentKey().toString());
-      r.append(", ");
+      r.append(',');
     }
-    r.append(get());
-    r.append(']');
+    r.append(KeyUtil.encode(get()));
     return r.toString();
   }
 

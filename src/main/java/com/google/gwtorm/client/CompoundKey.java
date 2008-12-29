@@ -76,21 +76,18 @@ public abstract class CompoundKey<P extends Key<?>> implements Key<P>,
   @Override
   public String toString() {
     final StringBuffer r = new StringBuffer();
-    r.append(getClass().getName());
-    r.append('[');
     boolean first = true;
     if (getParentKey() != null) {
-      r.append(getParentKey().toString());
+      r.append(KeyUtil.encode(getParentKey().toString()));
       first = false;
     }
-    for (final Key<?> k : members()){
+    for (final Key<?> k : members()) {
       if (!first) {
-        r.append(", ");
+        r.append(',');
       }
-      r.append(k.toString());
+      r.append(KeyUtil.encode(k.toString()));
       first = false;
     }
-    r.append(']');
     return r.toString();
   }
 

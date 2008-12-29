@@ -14,6 +14,7 @@
 
 package com.google.gwtorm.jdbc;
 
+import com.google.gwtorm.client.KeyUtil;
 import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.client.Schema;
 import com.google.gwtorm.client.SchemaFactory;
@@ -25,6 +26,7 @@ import com.google.gwtorm.schema.java.JavaSchemaModel;
 import com.google.gwtorm.schema.sql.DialectH2;
 import com.google.gwtorm.schema.sql.DialectPostgreSQL;
 import com.google.gwtorm.schema.sql.SqlDialect;
+import com.google.gwtorm.server.StandardKeyEncoder;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -52,6 +54,10 @@ import javax.sql.DataSource;
 public class Database<T extends Schema> implements SchemaFactory<T> {
   private static final Map<Class<?>, String> schemaFactoryNames =
       Collections.synchronizedMap(new WeakHashMap<Class<?>, String>());
+
+  static {
+    KeyUtil.setEncoderImpl(new StandardKeyEncoder());
+  }
 
   private final DataSource dataSource;
   private final JavaSchemaModel schemaModel;

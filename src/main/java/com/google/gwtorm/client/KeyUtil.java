@@ -14,8 +14,42 @@
 
 package com.google.gwtorm.client;
 
-class KeyUtil {
-  static <T extends Key<?>> boolean eq(final T a, final T b) {
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.URL;
+import com.google.gwtorm.server.StandardKeyEncoder;
+
+
+/** Common utility functions for {@link Key} implementors. */
+public class KeyUtil {
+  private static Encoder ENCODER_IMPL;
+
+  static {
+    if (GWT.isClient()) {
+      ENCODER_IMPL = new GwtEncoder();
+    }
+  }
+
+  /**
+   * Set the encoder implementation to a valid implementation.
+   * <p>
+   * Server-side code needs to set the encoder to a {@link StandardKeyEncoder}
+   * instance prior to invoking any methods in this class. Typically this is
+   * done by the {@link SchemaFactory} implementation's static initializer.
+   */
+  public static void setEncoderImpl(final Encoder e) {
+    ENCODER_IMPL = e;
+  }
+
+  /**
+   * Determine if two keys are equal, supporting null references.
+   * 
+   * @param <T> type of the key entity.
+   * @param a first key to test; may be null.
+   * @param b second key to test; may be null.
+   * @return true if both <code>a</code> and <code>b</code> are null, or if both
+   *         are not-null and <code>a.equals(b)</code> is true. Otherwise false.
+   */
+  public static <T extends Key<?>> boolean eq(final T a, final T b) {
     if (a == b) {
       return true;
     }
@@ -23,6 +57,51 @@ class KeyUtil {
       return false;
     }
     return a.equals(b);
+  }
+
+  /**
+   * Encode a string to be safe for use within a URL like string.
+   * <p>
+   * The returned encoded string has URL component characters escaped with hex
+   * escapes (e.g. ' ' is '+' and '%' is '%25'). The special character '/' is
+   * left literal. The comma character (',') is always encoded, permitting
+   * multiple encoded string values to be joined together safely.
+   * 
+   * @param e the string to encode, must not be null.
+   * @return the encoded string.
+   */
+  public static String encode(final String e) {
+    return ENCODER_IMPL.encode(e);
+  }
+
+  /**
+   * Decode a string previously encoded by {@link #encode(String)}.
+   * 
+   * @param e the string to decode, must not be null.
+   * @return the decoded string.
+   */
+  public static String decode(final String e) {
+    return ENCODER_IMPL.decode(e);
+  }
+
+  public static abstract class Encoder {
+    public abstract String encode(String e);
+
+    public abstract String decode(String e);
+  }
+
+  private static class GwtEncoder extends Encoder {
+    @Override
+    public String encode(final String e) {
+      return fixPathImpl(URL.encodeComponent(e));
+    }
+
+    @Override
+    public String decode(final String e) {
+      return URL.decodeComponent(e);
+    }
+
+    private static native String fixPathImpl(String path) /*-{ return path.replace(/%2F/g, "/"); }-*/;
   }
 
   private KeyUtil() {
