@@ -14,11 +14,40 @@
 
 package com.google.gwtorm.schema.sql;
 
+import com.google.gwtorm.jdbc.gen.CodeGenSupport;
 import com.google.gwtorm.schema.ColumnModel;
 
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.sql.Types;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 public class SqlTimestampTypeInfo extends SqlTypeInfo {
+  private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
+
+  public static void setAsUTC(final PreparedStatement ps, final int col,
+      final Timestamp val) throws SQLException {
+    ps.setTimestamp(col, val, Calendar.getInstance(UTC));
+  }
+
+  public static Timestamp getAsUTC(final ResultSet rs, final int col)
+      throws SQLException {
+    Timestamp s = rs.getTimestamp(col);
+    if (s != null) {
+      final int o = s.getTimezoneOffset();
+      if (o != 0) {
+        s = new Timestamp(s.getTime() + (o * 60 * 1000L));
+      }
+    }
+    return s;
+  }
+
   @Override
   protected String getJavaSqlTypeAlias() {
     return "Timestamp";
@@ -27,6 +56,31 @@ public class SqlTimestampTypeInfo extends SqlTypeInfo {
   @Override
   protected int getSqlTypeConstant() {
     return Types.TIMESTAMP;
+  }
+
+  @Override
+  public void generateResultSetGet(CodeGenSupport cgs) {
+    final Type typeCalendar = Type.getType(java.util.Calendar.class);
+    cgs.fieldSetBegin();
+    cgs.pushSqlHandle();
+    cgs.pushColumnIndex();
+    cgs.mv.visitMethodInsn(Opcodes.INVOKESTATIC, Type.getType(
+        SqlTimestampTypeInfo.class).getInternalName(), "getAsUTC", Type
+        .getMethodDescriptor(Type.getType(Timestamp.class), new Type[] {
+            Type.getType(ResultSet.class), Type.INT_TYPE}));
+    cgs.fieldSetEnd();
+  }
+
+  @Override
+  public void generatePreparedStatementSet(final CodeGenSupport cgs) {
+    cgs.pushSqlHandle();
+    cgs.pushColumnIndex();
+    cgs.pushFieldValue();
+    cgs.mv.visitMethodInsn(Opcodes.INVOKESTATIC, Type.getType(
+        SqlTimestampTypeInfo.class).getInternalName(), "setAsUTC", Type
+        .getMethodDescriptor(Type.VOID_TYPE, new Type[] {
+            Type.getType(PreparedStatement.class), Type.INT_TYPE,
+            Type.getType(Timestamp.class)}));
   }
 
   @Override

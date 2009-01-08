@@ -6,6 +6,7 @@ import java.sql.Types;
 public class DialectPostgreSQL extends SqlDialect {
   public DialectPostgreSQL() {
     typeNames.put(Types.VARBINARY, "BYTEA");
+    typeNames.put(Types.TIMESTAMP, "TIMESTAMP WITH TIME ZONE");
   }
 
   @Override
