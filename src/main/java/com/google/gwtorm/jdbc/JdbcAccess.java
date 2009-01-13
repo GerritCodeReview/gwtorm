@@ -80,6 +80,7 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
     try {
       return schema.getConnection().prepareStatement(sql);
     } catch (SQLException e) {
+      linkCause(e);
       throw new OrmException("Prepare failure\n" + sql, e);
     }
   }
@@ -121,6 +122,7 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
         ps.close();
       }
     } catch (SQLException e) {
+      linkCause(e);
       throw new OrmException("Fetch failure: " + getRelationName(), e);
     }
   }
@@ -145,6 +147,7 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
         ps.close();
       }
     } catch (SQLException e) {
+      linkCause(e);
       throw new OrmException("Fetch failure: " + getRelationName(), e);
     }
   }
@@ -168,6 +171,7 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
         ps.close();
       }
     } catch (SQLException e) {
+      linkCause(e);
       throw new OrmException("Insert failure: " + getRelationName(), e);
     }
   }
@@ -191,6 +195,7 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
         ps.close();
       }
     } catch (SQLException e) {
+      linkCause(e);
       throw new OrmException("Update failure: " + getRelationName(), e);
     }
   }
@@ -214,6 +219,7 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
         ps.close();
       }
     } catch (SQLException e) {
+      linkCause(e);
       throw new OrmException("Delete failure: " + getRelationName(), e);
     }
   }
@@ -236,6 +242,12 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
       if (states[i] != 1) {
         throw new SQLException("Entity " + (i + 1) + " not affected by update");
       }
+    }
+  }
+
+  private static void linkCause(final SQLException e) {
+    if (e.getCause() == null && e.getNextException() != null) {
+      e.initCause(e.getNextException());
     }
   }
 
