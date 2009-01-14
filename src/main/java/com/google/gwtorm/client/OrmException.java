@@ -25,4 +25,8 @@ public class OrmException extends Exception {
   public OrmException(final String message, final Throwable why) {
     super(message, why);
   }
+
+  public OrmException(final Throwable why) {
+    super(why);
+  }
 }
