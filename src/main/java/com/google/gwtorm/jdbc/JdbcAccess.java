@@ -16,6 +16,7 @@ package com.google.gwtorm.jdbc;
 
 import com.google.gwtorm.client.Access;
 import com.google.gwtorm.client.Key;
+import com.google.gwtorm.client.OrmConcurrencyException;
 import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.client.impl.AbstractAccess;
 import com.google.gwtorm.client.impl.ListResultSet;
@@ -225,7 +226,7 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
   }
 
   private static void execute(final PreparedStatement ps, final int cnt)
-      throws SQLException {
+      throws SQLException, OrmConcurrencyException {
     if (cnt == 0) {
       return;
     }
@@ -234,13 +235,9 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
     if (states == null) {
       throw new SQLException("No rows affected; expected " + cnt + " rows");
     }
-    if (states.length != cnt) {
-      throw new SQLException("Expected " + cnt + " rows affected, received "
-          + states.length + " instead");
-    }
     for (int i = 0; i < cnt; i++) {
-      if (states[i] != 1) {
-        throw new SQLException("Entity " + (i + 1) + " not affected by update");
+      if (states.length <= i || states[i] != 1) {
+        throw new OrmConcurrencyException();
       }
     }
   }

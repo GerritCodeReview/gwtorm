@@ -14,6 +14,7 @@
 
 package com.google.gwtorm.server;
 
+import com.google.gwtorm.client.OrmConcurrencyException;
 import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.client.Transaction;
 import com.google.gwtorm.data.PersonAccess;
@@ -261,10 +262,8 @@ public class PhoneBookDbTestCase extends TestCase {
     try {
       schema.people().update(Collections.singleton(bob));
       fail("Update of missing person succeeded");
-    } catch (OrmException e) {
-      assertEquals("Update failure: people", e.getMessage());
-      assertTrue(e.getCause() instanceof SQLException);
-      assertEquals("Entity 1 not affected by update", e.getCause().getMessage());
+    } catch (OrmConcurrencyException e) {
+      assertEquals("Concurrent modification detected", e.getMessage());
     }
   }
 
