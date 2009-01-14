@@ -14,7 +14,9 @@
 
 package com.google.gwtorm.jdbc;
 
+import com.google.gwtorm.client.OrmConcurrencyException;
 import com.google.gwtorm.client.OrmException;
+import com.google.gwtorm.client.OrmRunnable;
 import com.google.gwtorm.client.Schema;
 import com.google.gwtorm.client.Transaction;
 import com.google.gwtorm.schema.RelationModel;
@@ -29,6 +31,7 @@ import java.sql.Statement;
 
 /** Internal base class for implementations of {@link Schema}. */
 public abstract class JdbcSchema implements Schema {
+  private static final int MAX_TRIES = 10;
   private final Database<?> dbDef;
   private Connection conn;
 
@@ -43,6 +46,27 @@ public abstract class JdbcSchema implements Schema {
 
   public final SqlDialect getDialect() {
     return dbDef.getDialect();
+  }
+
+  public <T, S extends Schema> T run(final OrmRunnable<T, S> task)
+      throws OrmException {
+    for (int attempts = 1;; attempts++) {
+      try {
+        final Transaction txn = beginTransaction();
+        try {
+          return task.run((S) this, txn, attempts > 1);
+        } finally {
+          txn.commit();
+        }
+      } catch (OrmConcurrencyException err) {
+        // If the commit failed, our implementation rolled back automatically.
+        //
+        if (attempts < MAX_TRIES) {
+          continue;
+        }
+        throw err;
+      }
+    }
   }
 
   public void createSchema() throws OrmException {

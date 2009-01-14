@@ -77,6 +77,17 @@ public interface Schema {
   Transaction beginTransaction() throws OrmException;
 
   /**
+   * Execute a task within a transaction, restarting it if necessary.
+   * 
+   * @param <T> type of return value for the task.
+   * @param <S> type of <code>this</code>.
+   * @param task the task to execute.
+   * @return the return value of the task.
+   * @throws OrmException the task could not be completed successfully.
+   */
+  <T, S extends Schema> T run(OrmRunnable<T, S> task) throws OrmException;
+
+  /**
    * Close the schema and release all resources.
    */
   void close();
