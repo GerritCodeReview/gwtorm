@@ -81,8 +81,7 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
     try {
       return schema.getConnection().prepareStatement(sql);
     } catch (SQLException e) {
-      linkCause(e);
-      throw new OrmException("Prepare failure\n" + sql, e);
+      throw convertError("prepare SQL\n" + sql + "\n", e);
     }
   }
 
@@ -123,8 +122,7 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
         ps.close();
       }
     } catch (SQLException e) {
-      linkCause(e);
-      throw new OrmException("Fetch failure: " + getRelationName(), e);
+      throw convertError("fetch", e);
     }
   }
 
@@ -148,8 +146,7 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
         ps.close();
       }
     } catch (SQLException e) {
-      linkCause(e);
-      throw new OrmException("Fetch failure: " + getRelationName(), e);
+      throw convertError("fetch", e);
     }
   }
 
@@ -172,8 +169,7 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
         ps.close();
       }
     } catch (SQLException e) {
-      linkCause(e);
-      throw new OrmException("Insert failure: " + getRelationName(), e);
+      throw convertError("insert", e);
     }
   }
 
@@ -196,8 +192,7 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
         ps.close();
       }
     } catch (SQLException e) {
-      linkCause(e);
-      throw new OrmException("Update failure: " + getRelationName(), e);
+      throw convertError("update", e);
     }
   }
 
@@ -220,8 +215,7 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
         ps.close();
       }
     } catch (SQLException e) {
-      linkCause(e);
-      throw new OrmException("Delete failure: " + getRelationName(), e);
+      throw convertError("delete", e);
     }
   }
 
@@ -242,10 +236,11 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
     }
   }
 
-  private static void linkCause(final SQLException e) {
-    if (e.getCause() == null && e.getNextException() != null) {
-      e.initCause(e.getNextException());
+  private OrmException convertError(final String op, final SQLException err) {
+    if (err.getCause() == null && err.getNextException() != null) {
+      err.initCause(err.getNextException());
     }
+    return schema.getDialect().convertError(op, getRelationName(), err);
   }
 
   protected abstract T newEntityInstance();

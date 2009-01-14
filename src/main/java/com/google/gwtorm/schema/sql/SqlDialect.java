@@ -14,10 +14,12 @@
 
 package com.google.gwtorm.schema.sql;
 
+import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.client.Sequence;
 import com.google.gwtorm.schema.ColumnModel;
 import com.google.gwtorm.schema.SequenceModel;
 
+import java.sql.SQLException;
 import java.sql.Types;
 import java.util.HashMap;
 import java.util.Map;
@@ -67,6 +69,41 @@ public abstract class SqlDialect {
 
   public boolean selectHasLimit() {
     return true;
+  }
+
+  protected static String getSQLState(SQLException err) {
+    String ec;
+    SQLException next = err;
+    do {
+      ec = next.getSQLState();
+      next = next.getNextException();
+    } while (ec == null && next != null);
+    return ec;
+  }
+
+  protected static int getSQLStateInt(SQLException err) {
+    final String s = getSQLState(err);
+    if (s != null) {
+      try {
+        return Integer.parseInt(s);
+      } catch (NumberFormatException e) {
+        return -1;
+      }
+    }
+    return 0;
+  }
+
+  /**
+   * Convert a driver specific exception into an {@link OrmException}.
+   * 
+   * @param op short description of the operation, e.g. "update" or "fetch".
+   * @param entity name of the entity being accessed by the operation.
+   * @param err the driver specific exception.
+   * @return an OrmException the caller can throw.
+   */
+  public OrmException convertError(final String op, final String entity,
+      final SQLException err) {
+    return new OrmException(op + " failure on " + entity, err);
   }
 
   public String getCreateSequenceSql(final SequenceModel seq) {

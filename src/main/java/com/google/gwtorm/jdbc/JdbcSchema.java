@@ -41,6 +41,10 @@ public abstract class JdbcSchema implements Schema {
     return conn;
   }
 
+  public final SqlDialect getDialect() {
+    return dbDef.getDialect();
+  }
+
   public void createSchema() throws OrmException {
     final SqlDialect dialect = dbDef.getDialect();
     final SchemaModel model = dbDef.getSchemaModel();
@@ -84,7 +88,7 @@ public abstract class JdbcSchema implements Schema {
         st.close();
       }
     } catch (SQLException e) {
-      throw new OrmException("Sequence query failed", e);
+      throw convertError("sequence", query, e);
     }
   }
 
@@ -101,5 +105,13 @@ public abstract class JdbcSchema implements Schema {
       }
       conn = null;
     }
+  }
+
+  private OrmException convertError(final String op, final String what,
+      final SQLException err) {
+    if (err.getCause() == null && err.getNextException() != null) {
+      err.initCause(err.getNextException());
+    }
+    return getDialect().convertError(op, what, err);
   }
 }
