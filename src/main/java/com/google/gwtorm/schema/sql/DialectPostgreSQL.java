@@ -2,7 +2,9 @@ package com.google.gwtorm.schema.sql;
 
 import com.google.gwtorm.client.OrmDuplicateKeyException;
 import com.google.gwtorm.client.OrmException;
+import com.google.gwtorm.schema.RelationModel;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Types;
 
@@ -11,6 +13,16 @@ public class DialectPostgreSQL extends SqlDialect {
   public DialectPostgreSQL() {
     typeNames.put(Types.VARBINARY, "BYTEA");
     typeNames.put(Types.TIMESTAMP, "TIMESTAMP WITH TIME ZONE");
+  }
+
+  @Override
+  public SqlDialect refine(final Connection c) throws SQLException {
+    final int major = c.getMetaData().getDatabaseMajorVersion();
+    final int minor = c.getMetaData().getDatabaseMinorVersion();
+    if (major < 8 || (major == 8 && minor < 2)) {
+      return new Pre82();
+    }
+    return this;
   }
 
   @Override
@@ -32,5 +44,19 @@ public class DialectPostgreSQL extends SqlDialect {
   @Override
   public String getNextSequenceValueSql(final String seqname) {
     return "SELECT nextval('" + seqname + "')";
+  }
+
+  @Override
+  public void appendCreateTableStorage(final StringBuilder sqlBuffer,
+      final RelationModel relationModel) {
+    sqlBuffer.append("WITH (OIDS = FALSE)");
+  }
+
+  private static class Pre82 extends DialectPostgreSQL {
+    @Override
+    public void appendCreateTableStorage(final StringBuilder sqlBuffer,
+        final RelationModel relationModel) {
+      sqlBuffer.append("WITHOUT OIDS");
+    }
   }
 }
