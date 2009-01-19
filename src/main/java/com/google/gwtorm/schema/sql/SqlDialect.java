@@ -19,6 +19,7 @@ import com.google.gwtorm.client.Sequence;
 import com.google.gwtorm.schema.ColumnModel;
 import com.google.gwtorm.schema.SequenceModel;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.HashMap;
@@ -48,6 +49,11 @@ public abstract class SqlDialect {
     typeNames.put(Types.BIGINT, "BIGINT");
     typeNames.put(Types.LONGVARCHAR, "TEXT");
     typeNames.put(Types.TIMESTAMP, "TIMESTAMP");
+  }
+
+  /** Select a better dialect definition for this connection */
+  public SqlDialect refine(final Connection c) throws SQLException {
+    return this;
   }
 
   public String getSqlTypeName(final int typeCode) {

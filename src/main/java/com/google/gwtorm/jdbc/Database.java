@@ -76,25 +76,27 @@ public class Database<T extends Schema> implements SchemaFactory<T> {
       throws OrmException {
     dataSource = ds;
 
-    final String url;
+    SqlDialect dialect;
     try {
       final Connection c = ds.getConnection();
       try {
-        url = c.getMetaData().getURL();
+        final String url = c.getMetaData().getURL();
+        if (url.startsWith("jdbc:postgresql:")) {
+          dialect = new DialectPostgreSQL();
+
+        } else if (url.startsWith("jdbc:h2:")) {
+          dialect = new DialectH2();
+
+        } else {
+          throw new OrmException("No dialect known for " + url);
+        }
+
+        dialect = dialect.refine(c);
       } finally {
         c.close();
       }
     } catch (SQLException e) {
       throw new OrmException("Unable to determine driver URL", e);
-    }
-
-    final SqlDialect dialect;
-    if (url.startsWith("jdbc:postgresql:")) {
-      dialect = new DialectPostgreSQL();
-    } else if (url.startsWith("jdbc:h2:")) {
-      dialect = new DialectH2();
-    } else {
-      throw new OrmException("No dialect known for " + url);
     }
 
     schemaModel = new JavaSchemaModel(schema);
