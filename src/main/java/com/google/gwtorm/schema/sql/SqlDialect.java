@@ -17,6 +17,7 @@ package com.google.gwtorm.schema.sql;
 import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.client.Sequence;
 import com.google.gwtorm.schema.ColumnModel;
+import com.google.gwtorm.schema.RelationModel;
 import com.google.gwtorm.schema.SequenceModel;
 
 import java.sql.Connection;
@@ -129,6 +130,17 @@ public abstract class SqlDialect {
     }
 
     return r.toString();
+  }
+
+  /**
+   * Append driver specific storage parameters to a CREATE TABLE statement.
+   * 
+   * @param sqlBuffer buffer holding the CREATE TABLE, just after the closing
+   *        parenthesis after the column list.
+   * @param relationModel the model of the table being generated.
+   */
+  public void appendCreateTableStorage(final StringBuilder sqlBuffer,
+      final RelationModel relationModel) {
   }
 
   public abstract String getNextSequenceValueSql(String seqname);

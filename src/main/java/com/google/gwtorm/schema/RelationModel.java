@@ -242,6 +242,7 @@ public abstract class RelationModel {
     }
 
     r.append(")");
+    dialect.appendCreateTableStorage(r, this);
     return r.toString();
   }
 
