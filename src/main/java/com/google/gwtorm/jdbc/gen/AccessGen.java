@@ -293,38 +293,7 @@ public class AccessGen implements Opcodes {
       cols.addAll(model.getDependentFields());
       cols.addAll(model.getRowVersionFields());
       for (final ColumnModel field : cols) {
-        if (field.isNested() && field.isNotNull()) {
-          for (final ColumnModel c : field.getAllLeafColumns()) {
-            cgs.setFieldReference(c);
-            dialect.getSqlTypeInfo(c).generatePreparedStatementSet(cgs);
-          }
-        } else if (field.isNested()) {
-          final int colIdx = cgs.getColumnIndex();
-          final Label isnull = new Label();
-          final Label end = new Label();
-
-          cgs.setFieldReference(field);
-          cgs.pushFieldValue();
-          mv.visitJumpInsn(IFNULL, isnull);
-          cgs.resetColumnIndex(colIdx);
-          for (final ColumnModel c : field.getAllLeafColumns()) {
-            cgs.setFieldReference(c);
-            dialect.getSqlTypeInfo(c).generatePreparedStatementSet(cgs);
-          }
-          mv.visitJumpInsn(GOTO, end);
-
-          mv.visitLabel(isnull);
-          cgs.resetColumnIndex(colIdx);
-          for (final ColumnModel c : field.getAllLeafColumns()) {
-            cgs.setFieldReference(c);
-            dialect.getSqlTypeInfo(c).generatePreparedStatementNull(cgs);
-          }
-
-          mv.visitLabel(end);
-        } else {
-          cgs.setFieldReference(field);
-          dialect.getSqlTypeInfo(field).generatePreparedStatementSet(cgs);
-        }
+        doBindOne(mv, cgs, field);
       }
     }
 
@@ -347,6 +316,41 @@ public class AccessGen implements Opcodes {
     mv.visitInsn(RETURN);
     mv.visitMaxs(-1, -1);
     mv.visitEnd();
+  }
+
+  private void doBindOne(final MethodVisitor mv, final CodeGenSupport cgs,
+      final ColumnModel field) {
+    if (field.isNested() && field.isNotNull()) {
+      for (final ColumnModel c : field.getAllLeafColumns()) {
+        doBindOne(mv, cgs, c);
+      }
+
+    } else if (field.isNested()) {
+      final int colIdx = cgs.getColumnIndex();
+      final Label isnull = new Label();
+      final Label end = new Label();
+
+      cgs.setFieldReference(field);
+      cgs.pushFieldValue();
+      mv.visitJumpInsn(IFNULL, isnull);
+      cgs.resetColumnIndex(colIdx);
+      for (final ColumnModel c : field.getNestedColumns()) {
+        doBindOne(mv, cgs, c);
+      }
+      mv.visitJumpInsn(GOTO, end);
+
+      mv.visitLabel(isnull);
+      cgs.resetColumnIndex(colIdx);
+      for (final ColumnModel c : field.getAllLeafColumns()) {
+        cgs.setFieldReference(c);
+        dialect.getSqlTypeInfo(c).generatePreparedStatementNull(cgs);
+      }
+
+      mv.visitLabel(end);
+    } else {
+      cgs.setFieldReference(field);
+      dialect.getSqlTypeInfo(field).generatePreparedStatementSet(cgs);
+    }
   }
 
   private void implementBindOneFetch() {
@@ -385,48 +389,97 @@ public class AccessGen implements Opcodes {
     cols.addAll(model.getRowVersionFields());
     cols.addAll(model.getPrimaryKeyColumns());
     for (final ColumnModel field : cols) {
-      if (field.isNested()) {
-        int oldIdx = cgs.getColumnIndex();
-        final Type vType = CodeGenSupport.toType(field);
-
-        cgs.setFieldReference(field);
-        cgs.fieldSetBegin();
-        mv.visitTypeInsn(NEW, vType.getInternalName());
-        mv.visitInsn(DUP);
-        mv.visitMethodInsn(INVOKESPECIAL, vType.getInternalName(), "<init>",
-            Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {}));
-        cgs.fieldSetEnd();
-
-        cgs.resetColumnIndex(oldIdx);
-        for (final ColumnModel c : field.getAllLeafColumns()) {
-          cgs.setFieldReference(c);
-          dialect.getSqlTypeInfo(c).generateResultSetGet(cgs);
-        }
-
-        if (!field.isNotNull()) {
-          final Label islive = new Label();
-          cgs.pushSqlHandle();
-          mv.visitMethodInsn(INVOKEINTERFACE, Type.getType(ResultSet.class)
-              .getInternalName(), "wasNull", Type.getMethodDescriptor(
-              Type.BOOLEAN_TYPE, new Type[] {}));
-          mv.visitJumpInsn(IFEQ, islive);
-          oldIdx = cgs.getColumnIndex();
-          cgs.setFieldReference(field);
-          cgs.fieldSetBegin();
-          mv.visitInsn(ACONST_NULL);
-          cgs.fieldSetEnd();
-          cgs.resetColumnIndex(oldIdx);
-          mv.visitLabel(islive);
-        }
-      } else {
-        cgs.setFieldReference(field);
-        dialect.getSqlTypeInfo(field).generateResultSetGet(cgs);
-      }
+      doFetchOne(mv, cgs, field, -1);
     }
 
     mv.visitInsn(RETURN);
     mv.visitMaxs(-1, -1);
     mv.visitEnd();
+  }
+
+  private void doFetchOne(final MethodVisitor mv, final CodeGenSupport cgs,
+      final ColumnModel field, final int reportLiveInto) {
+    if (field.isNested()) {
+      int oldIdx = cgs.getColumnIndex();
+      final Type vType = CodeGenSupport.toType(field);
+      final int livecnt;
+
+      if (field.isNotNull()) {
+        livecnt = -1;
+      } else {
+        livecnt = cgs.newLocal();
+        cgs.push(0);
+        mv.visitVarInsn(ISTORE, livecnt);
+      }
+
+      cgs.setFieldReference(field);
+      cgs.fieldSetBegin();
+      mv.visitTypeInsn(NEW, vType.getInternalName());
+      mv.visitInsn(DUP);
+      mv.visitMethodInsn(INVOKESPECIAL, vType.getInternalName(), "<init>", Type
+          .getMethodDescriptor(Type.VOID_TYPE, new Type[] {}));
+      cgs.fieldSetEnd();
+
+      cgs.resetColumnIndex(oldIdx);
+      for (final ColumnModel c : field.getNestedColumns()) {
+        doFetchOne(mv, cgs, c, livecnt);
+      }
+
+      if (livecnt >= 0) {
+        oldIdx = cgs.getColumnIndex();
+
+        final Label islive = new Label();
+        mv.visitVarInsn(ILOAD, livecnt);
+        mv.visitJumpInsn(IFNE, islive);
+        cgs.setFieldReference(field);
+        cgs.fieldSetBegin();
+        mv.visitInsn(ACONST_NULL);
+        cgs.fieldSetEnd();
+
+        if (reportLiveInto >= 0) {
+          final Label end = new Label();
+          mv.visitJumpInsn(GOTO, end);
+          mv.visitLabel(islive);
+          mv.visitIincInsn(reportLiveInto, 1);
+          mv.visitLabel(end);
+        } else {
+          mv.visitLabel(islive);
+        }
+
+        cgs.resetColumnIndex(oldIdx);
+        cgs.freeLocal(livecnt);
+      }
+
+    } else {
+      final int dupTo;
+      if (reportLiveInto >= 0
+          && CodeGenSupport.toType(field).getSort() == Type.OBJECT) {
+        dupTo = cgs.newLocal();
+      } else {
+        dupTo = -1;
+      }
+
+      cgs.setFieldReference(field);
+      cgs.setDupOnFieldSetEnd(dupTo);
+      dialect.getSqlTypeInfo(field).generateResultSetGet(cgs);
+
+      if (reportLiveInto >= 0) {
+        final Label wasnull = new Label();
+        if (dupTo >= 0) {
+          mv.visitVarInsn(ALOAD, dupTo);
+          mv.visitJumpInsn(IFNULL, wasnull);
+          cgs.freeLocal(dupTo);
+        } else {
+          cgs.pushSqlHandle();
+          mv.visitMethodInsn(INVOKEINTERFACE, Type.getType(ResultSet.class)
+              .getInternalName(), "wasNull", Type.getMethodDescriptor(
+              Type.BOOLEAN_TYPE, new Type[] {}));
+          mv.visitJumpInsn(IFNE, wasnull);
+        }
+        mv.visitIincInsn(reportLiveInto, 1);
+        mv.visitLabel(wasnull);
+      }
+    }
   }
 
   private void implementKeyQuery(final KeyModel info) {

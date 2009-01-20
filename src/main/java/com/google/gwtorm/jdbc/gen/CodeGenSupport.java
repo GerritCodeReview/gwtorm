@@ -23,12 +23,18 @@ import org.objectweb.asm.Type;
 import java.lang.reflect.Method;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CodeGenSupport implements Opcodes {
   public final MethodVisitor mv;
   private ColumnModel col;
+  private int dupOnSet;
   private int columnIdx;
   private Type entityType;
+
+  private int lastLocal = 2;
+  private List<Integer> freeLocals = new ArrayList<Integer>(4);
 
   public CodeGenSupport(final MethodVisitor method) {
     mv = method;
@@ -73,12 +79,24 @@ public class CodeGenSupport implements Opcodes {
     mv.visitVarInsn(type.getOpcode(ILOAD), index);
   }
 
+  public int newLocal() {
+    if (freeLocals.isEmpty()) {
+      return ++lastLocal;
+    }
+    return freeLocals.remove(freeLocals.size() - 1);
+  }
+
+  public void freeLocal(final int index) {
+    freeLocals.add(index);
+  }
+
   public void setEntityType(final Type et) {
     entityType = et;
   }
 
   public void setFieldReference(final ColumnModel cm) {
     col = cm;
+    dupOnSet = -1;
     columnIdx++;
   }
 
@@ -145,8 +163,16 @@ public class CodeGenSupport implements Opcodes {
 
   public void fieldSetEnd() {
     final Type c = containerClass(col);
+    if (dupOnSet >= 0) {
+      mv.visitInsn(DUP);
+      mv.visitVarInsn(ASTORE, dupOnSet);
+    }
     mv.visitFieldInsn(PUTFIELD, c.getInternalName(), col.getFieldName(),
         toType(col).getDescriptor());
+  }
+
+  public void setDupOnFieldSetEnd(final int varIdx) {
+    dupOnSet = varIdx;
   }
 
   public void pushFieldValue() {
