@@ -95,10 +95,10 @@ public abstract class CompoundKey<P extends Key<?>> implements Key<P>,
     final String[] parts = in.split(",");
     int p = 0;
     if (getParentKey() != null) {
-      getParentKey().fromString(parts[p++]);
+      getParentKey().fromString(KeyUtil.decode(parts[p++]));
     }
     for (final Key<?> k : members()) {
-      k.fromString(parts[p++]);
+      k.fromString(KeyUtil.decode(parts[p++]));
     }
   }
 
