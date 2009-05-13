@@ -10,3 +10,10 @@ Eclipse Setup
 - Use right click, Maven -> Update Project Configuration
   to force a compile of the generted ANTLR sources.  This
   fixes the compile errors identified after import.
+
+- Right click on the project, Properties
+
+- Select Java Code Style -> Formatter
+
+- Import... and select GoogleFormat.xml
+
