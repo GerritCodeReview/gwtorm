@@ -14,10 +14,17 @@
 
 package com.google.gwtorm.jdbc;
 
+import java.io.File;
 import java.io.PrintWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.sql.Connection;
+import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import javax.sql.DataSource;
@@ -26,6 +33,7 @@ import javax.sql.DataSource;
 public class SimpleDataSource implements DataSource {
   private final Properties connectionInfo;
   private final String url;
+  private final Driver driver;
   private PrintWriter logWriter;
 
   /**
@@ -48,21 +56,66 @@ public class SimpleDataSource implements DataSource {
       throw new SQLException("Required property 'url' not defined");
     }
 
-    final String driver = (String) connectionInfo.remove("driver");
-    if (driver != null) {
-      loadDriver(driver);
+    final String driverName = (String) connectionInfo.remove("driver");
+    final String classpath = (String) connectionInfo.remove("classpath");
+    if (driverName != null) {
+      ClassLoader cl = threadCL();
+      if (classpath != null && classpath.length() > 0) {
+        final List<URL> urls = new ArrayList<URL>();
+        for (final String path : classpath.split(File.pathSeparator)) {
+          try {
+            urls.add(new URL(path));
+          } catch (MalformedURLException e1) {
+            final File f = new File(path);
+            if (f.exists()) {
+              try {
+                urls.add(f.getAbsoluteFile().toURI().toURL());
+              } catch (MalformedURLException e2) {
+                throw badClasspath(classpath, e2);
+              }
+            } else {
+              throw badClasspath(classpath, e1);
+            }
+          }
+        }
+        cl = new URLClassLoader(urls.toArray(new URL[urls.size()]), cl);
+      }
+      driver = loadDriver(driverName, cl);
+    } else {
+      driver = null;
     }
 
     logWriter = new PrintWriter(System.out);
   }
 
+  private static SQLException badClasspath(final String classpath,
+      final MalformedURLException e1) {
+    final SQLException sqle;
+    sqle = new SQLException("Invalid driver classpath " + classpath);
+    sqle.initCause(e1);
+    return sqle;
+  }
+
   public Connection getConnection() throws SQLException {
+    if (driver != null) {
+      return driver.connect(url, connectionInfo);
+    }
     return DriverManager.getConnection(url, connectionInfo);
   }
 
-  public Connection getConnection(String username, String password)
+  public Connection getConnection(String user, String password)
       throws SQLException {
-    return DriverManager.getConnection(url, username, password);
+    if (driver != null) {
+      final Properties info = new Properties(connectionInfo);
+      if (user != null) {
+        info.put("user", user);
+      }
+      if (password != null) {
+        info.put("password", password);
+      }
+      return driver.connect(url, info);
+    }
+    return DriverManager.getConnection(url, user, password);
   }
 
   public PrintWriter getLogWriter() {
@@ -88,8 +141,8 @@ public class SimpleDataSource implements DataSource {
     throw new SQLException(getClass().getName() + " wraps nothing");
   }
 
-  private static synchronized void loadDriver(final String driver)
-      throws SQLException {
+  private static synchronized Driver loadDriver(final String driver,
+      final ClassLoader loader) throws SQLException {
     // I've seen some drivers (*cough* Informix *cough*) which won't load
     // on multiple threads at the same time. Forcing our code to synchronize
     // around loading the driver ensures we won't ever ask for the same driver
@@ -97,8 +150,8 @@ public class SimpleDataSource implements DataSource {
     // in other parts of the same JVM, but its quite unlikely.
     //
     try {
-      Class.forName(driver, true, threadCL());
-    } catch (ClassNotFoundException err) {
+      return (Driver) Class.forName(driver, true, loader).newInstance();
+    } catch (Throwable err) {
       final SQLException e;
       e = new SQLException("Driver class " + driver + " not available");
       e.initCause(err);
@@ -110,7 +163,7 @@ public class SimpleDataSource implements DataSource {
     try {
       return Thread.currentThread().getContextClassLoader();
     } catch (SecurityException e) {
-      return Database.class.getClassLoader();
+      return SimpleDataSource.class.getClassLoader();
     }
   }
 }
