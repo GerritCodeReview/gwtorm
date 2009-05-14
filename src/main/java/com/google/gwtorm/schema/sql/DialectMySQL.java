@@ -18,7 +18,6 @@ import com.google.gwtorm.client.Column;
 import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.client.Sequence;
 import com.google.gwtorm.schema.ColumnModel;
-import com.google.gwtorm.schema.RelationModel;
 import com.google.gwtorm.schema.SequenceModel;
 
 import java.sql.Connection;
