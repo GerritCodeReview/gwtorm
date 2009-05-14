@@ -24,6 +24,7 @@ import com.google.gwtorm.jdbc.gen.SchemaGen;
 import com.google.gwtorm.schema.SchemaModel;
 import com.google.gwtorm.schema.java.JavaSchemaModel;
 import com.google.gwtorm.schema.sql.DialectH2;
+import com.google.gwtorm.schema.sql.DialectMySQL;
 import com.google.gwtorm.schema.sql.DialectPostgreSQL;
 import com.google.gwtorm.schema.sql.SqlDialect;
 import com.google.gwtorm.server.StandardKeyEncoder;
@@ -86,6 +87,9 @@ public class Database<T extends Schema> implements SchemaFactory<T> {
 
         } else if (url.startsWith("jdbc:h2:")) {
           dialect = new DialectH2();
+
+        } else if (url.startsWith("jdbc:mysql:")) {
+          dialect = new DialectMySQL();
 
         } else {
           throw new OrmException("No dialect known for " + url);

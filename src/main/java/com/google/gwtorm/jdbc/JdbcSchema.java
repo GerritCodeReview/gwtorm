@@ -25,7 +25,6 @@ import com.google.gwtorm.schema.SequenceModel;
 import com.google.gwtorm.schema.sql.SqlDialect;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -92,28 +91,7 @@ public abstract class JdbcSchema implements Schema {
   }
 
   protected long nextLong(final String query) throws OrmException {
-    try {
-      final Statement st = getConnection().createStatement();
-      try {
-        final ResultSet rs = st.executeQuery(query);
-        try {
-          if (!rs.next()) {
-            throw new SQLException("No result row for sequence query");
-          }
-          final long r = rs.getLong(1);
-          if (rs.next()) {
-            throw new SQLException("Too many results from sequence query");
-          }
-          return r;
-        } finally {
-          rs.close();
-        }
-      } finally {
-        st.close();
-      }
-    } catch (SQLException e) {
-      throw convertError("sequence", query, e);
-    }
+    return getDialect().nextLong(getConnection(), query);
   }
 
   public Transaction beginTransaction() {
@@ -129,13 +107,5 @@ public abstract class JdbcSchema implements Schema {
       }
       conn = null;
     }
-  }
-
-  private OrmException convertError(final String op, final String what,
-      final SQLException err) {
-    if (err.getCause() == null && err.getNextException() != null) {
-      err.initCause(err.getNextException());
-    }
-    return getDialect().convertError(op, what, err);
   }
 }

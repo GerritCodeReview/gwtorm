@@ -21,7 +21,9 @@ import com.google.gwtorm.schema.RelationModel;
 import com.google.gwtorm.schema.SequenceModel;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Types;
 import java.util.HashMap;
 import java.util.Map;
@@ -110,7 +112,36 @@ public abstract class SqlDialect {
    */
   public OrmException convertError(final String op, final String entity,
       final SQLException err) {
+    if (err.getCause() == null && err.getNextException() != null) {
+      err.initCause(err.getNextException());
+    }
     return new OrmException(op + " failure on " + entity, err);
+  }
+
+  public long nextLong(final Connection conn, final String query)
+      throws OrmException {
+    try {
+      final Statement st = conn.createStatement();
+      try {
+        final ResultSet rs = st.executeQuery(query);
+        try {
+          if (!rs.next()) {
+            throw new SQLException("No result row for sequence query");
+          }
+          final long r = rs.getLong(1);
+          if (rs.next()) {
+            throw new SQLException("Too many results from sequence query");
+          }
+          return r;
+        } finally {
+          rs.close();
+        }
+      } finally {
+        st.close();
+      }
+    } catch (SQLException e) {
+      throw convertError("sequence", query, e);
+    }
   }
 
   public String getCreateSequenceSql(final SequenceModel seq) {

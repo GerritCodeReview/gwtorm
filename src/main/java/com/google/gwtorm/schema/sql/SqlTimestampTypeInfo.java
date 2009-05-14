@@ -34,9 +34,14 @@ public class SqlTimestampTypeInfo extends SqlTypeInfo {
     final StringBuilder r = new StringBuilder();
     r.append(dialect.getSqlTypeName(getSqlTypeConstant()));
     if (col.isNotNull()) {
-      r.append(" DEFAULT '1900-01-01 00:00:00'");
+      r.append(" DEFAULT ");
+      r.append(getSqlDefault());
       r.append(" NOT NULL");
     }
     return r.toString();
+  }
+
+  public String getSqlDefault() {
+    return "'1900-01-01 00:00:00'";
   }
 }
