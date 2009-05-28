@@ -57,12 +57,6 @@ public class DialectMySQL extends SqlDialect {
         return r.toString();
       }
     });
-    types.put(java.sql.Timestamp.class, new SqlTimestampTypeInfo() {
-      @Override
-      public String getSqlDefault() {
-        return "'1970-01-01 00:00:01'";
-      }
-    });
   }
 
   @Override
