@@ -80,7 +80,8 @@ public class DialectMySQL extends SqlDialect {
     try {
       final Statement st = conn.createStatement();
       try {
-        st.execute("INSERT INTO " + seqname + "(s)VALUES(NULL)");
+        st.execute("INSERT INTO " + seqname + "(s)VALUES(NULL)",
+            Statement.RETURN_GENERATED_KEYS);
         final long r;
         final ResultSet rs = st.getGeneratedKeys();
         try {
