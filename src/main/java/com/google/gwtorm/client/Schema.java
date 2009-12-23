@@ -56,11 +56,24 @@ package com.google.gwtorm.client;
  */
 public interface Schema {
   /**
-   * Automatically create the database tables.
+   * Add any missing columns, create any missing tables or sequences.
+   * <p>
+   * This method does not drop any unused columns or tables, leaving them intact
+   * for applications to continue to query after the update. Any unused columns
+   * that are NOT NULL are altered to accept NULL.
    *
-   * @throws OrmException tables already exist or create permission is denied.
+   * @throws OrmException one or more objects could not be added to the schema.
    */
-  void createSchema() throws OrmException;
+  void updateSchema() throws OrmException;
+
+  /**
+   * Drop any unused columns, tables, or sequences.
+   * <p>
+   * This method destroys data, as columns may be removed entirely.
+   *
+   * @throws OrmException one or more drops could not be completed.
+   */
+  void pruneSchema() throws OrmException;
 
   /**
    * Begin a new transaction.

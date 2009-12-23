@@ -16,8 +16,14 @@ package com.google.gwtorm.schema.sql;
 
 import com.google.gwtorm.client.OrmDuplicateKeyException;
 import com.google.gwtorm.client.OrmException;
+import com.google.gwtorm.schema.ColumnModel;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.HashSet;
+import java.util.Set;
 
 /** Dialect for <a href="http://www.h2database.com/">H2</a> */
 public class DialectH2 extends SqlDialect {
@@ -37,5 +43,52 @@ public class DialectH2 extends SqlDialect {
   @Override
   public String getNextSequenceValueSql(final String seqname) {
     return "SELECT NEXT VALUE FOR " + seqname;
+  }
+
+  @Override
+  public Set<String> listSequences(Connection db) throws SQLException {
+    Statement s = db.createStatement();
+    try {
+      ResultSet rs =
+          s.executeQuery("SELECT SEQUENCE_NAME"
+              + " FROM INFORMATION_SCHEMA.SEQUENCES"
+              + " WHERE SEQUENCE_SCHEMA = 'PUBLIC'");
+      try {
+        HashSet<String> sequences = new HashSet<String>();
+        while (rs.next()) {
+          sequences.add(rs.getString(1).toLowerCase());
+        }
+        return sequences;
+      } finally {
+        rs.close();
+      }
+    } finally {
+      s.close();
+    }
+  }
+
+  @Override
+  public void addColumn(Statement stmt, String tableName, ColumnModel col)
+      throws SQLException {
+    final StringBuilder r = new StringBuilder();
+    r.append("ALTER TABLE ");
+    r.append(tableName);
+    r.append(" ADD ");
+    r.append(col.getColumnName());
+    r.append(" ");
+    r.append(getSqlTypeInfo(col).getSqlType(col, this));
+    stmt.execute(r.toString());
+
+    String check = getSqlTypeInfo(col).getCheckConstraint(col, this);
+    if (check != null) {
+      r.setLength(0);
+      r.append("ALTER TABLE ");
+      r.append(tableName);
+      r.append(" ADD CONSTRAINT ");
+      r.append(col.getColumnName() + "_check");
+      r.append(' ');
+      r.append(check);
+      stmt.execute(r.toString());
+    }
   }
 }

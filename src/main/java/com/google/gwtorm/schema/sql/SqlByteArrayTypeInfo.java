@@ -103,7 +103,7 @@ public class SqlByteArrayTypeInfo extends SqlTypeInfo {
     if (raw != null) {
       ps.setBinaryStream(col, new ByteArrayInputStream(raw), raw.length);
     } else {
-      ps.setNull(col, Types.LONGVARCHAR);
+      ps.setNull(col, Types.VARBINARY);
     }
   }
 }

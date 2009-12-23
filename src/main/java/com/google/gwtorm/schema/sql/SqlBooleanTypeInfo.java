@@ -35,8 +35,16 @@ public class SqlBooleanTypeInfo extends SqlTypeInfo {
       r.append(" DEFAULT " + f);
       r.append(" NOT NULL");
     }
-    r.append(" CHECK (" + name + " IN (" + t + "," + f + "))");
     return r.toString();
+  }
+
+  @Override
+  public String getCheckConstraint(final ColumnModel column,
+      final SqlDialect dialect) {
+    final String name = column.getColumnName();
+    final String t = getTrueLiteralValue();
+    final String f = getFalseLiteralValue();
+    return " CHECK (" + name + " IN (" + t + "," + f + "))";
   }
 
   @Override

@@ -19,6 +19,7 @@ import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.client.OrmRunnable;
 import com.google.gwtorm.client.Schema;
 import com.google.gwtorm.client.Transaction;
+import com.google.gwtorm.schema.ColumnModel;
 import com.google.gwtorm.schema.RelationModel;
 import com.google.gwtorm.schema.SchemaModel;
 import com.google.gwtorm.schema.SequenceModel;
@@ -27,6 +28,8 @@ import com.google.gwtorm.schema.sql.SqlDialect;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashSet;
+import java.util.Set;
 
 /** Internal base class for implementations of {@link Schema}. */
 public abstract class JdbcSchema implements Schema {
@@ -68,25 +71,136 @@ public abstract class JdbcSchema implements Schema {
     }
   }
 
-  public void createSchema() throws OrmException {
-    final SqlDialect dialect = dbDef.getDialect();
-    final SchemaModel model = dbDef.getSchemaModel();
+  public void updateSchema() throws OrmException {
     try {
-      final Statement stmt;
+      createSequences();
+      createRelations();
 
-      stmt = getConnection().createStatement();
-      try {
-        for (final SequenceModel s : model.getSequences()) {
-          stmt.execute(s.getCreateSequenceSql(dialect));
-        }
-        for (final RelationModel r : model.getRelations()) {
-          stmt.execute(r.getCreateTableSql(dialect));
-        }
-      } finally {
-        stmt.close();
+      for (final RelationModel rel : dbDef.getSchemaModel().getRelations()) {
+        addColumns(rel);
       }
     } catch (SQLException e) {
-      throw new OrmException("Schema creation failure", e);
+      throw new OrmException("Schema update failure", e);
+    }
+  }
+
+  private void createSequences() throws SQLException {
+    final SqlDialect dialect = dbDef.getDialect();
+    final SchemaModel model = dbDef.getSchemaModel();
+    final Statement stmt = getConnection().createStatement();
+    try {
+      Set<String> have = dialect.listSequences(getConnection());
+      for (final SequenceModel s : model.getSequences()) {
+        if (!have.contains(s.getSequenceName().toLowerCase())) {
+          stmt.execute(s.getCreateSequenceSql(dialect));
+        }
+      }
+    } finally {
+      stmt.close();
+    }
+  }
+
+  private void createRelations() throws SQLException {
+    final SqlDialect dialect = dbDef.getDialect();
+    final SchemaModel model = dbDef.getSchemaModel();
+    final Statement stmt = getConnection().createStatement();
+    try {
+      Set<String> have = dialect.listTables(getConnection());
+      for (final RelationModel r : model.getRelations()) {
+        if (!have.contains(r.getRelationName().toLowerCase())) {
+          stmt.execute(r.getCreateTableSql(dialect));
+        }
+      }
+    } finally {
+      stmt.close();
+    }
+  }
+
+  private void addColumns(final RelationModel rel) throws SQLException {
+    final SqlDialect dialect = dbDef.getDialect();
+    final SchemaModel model = dbDef.getSchemaModel();
+    final Statement stmt = getConnection().createStatement();
+    try {
+      Set<String> have = dialect.listColumns( //
+          getConnection(), rel.getRelationName().toLowerCase());
+      for (final ColumnModel c : rel.getColumns()) {
+        if (!have.contains(c.getColumnName().toLowerCase())) {
+          dialect.addColumn(stmt, rel.getRelationName(), c);
+        }
+      }
+    } finally {
+      stmt.close();
+    }
+  }
+
+  public void pruneSchema() throws OrmException {
+    try {
+      pruneSequences();
+      pruneRelations();
+
+      for (final RelationModel rel : dbDef.getSchemaModel().getRelations()) {
+        pruneColumns(rel);
+      }
+    } catch (SQLException e) {
+      throw new OrmException("Schema prune failure", e);
+    }
+  }
+
+  private void pruneSequences() throws SQLException {
+    final SqlDialect dialect = dbDef.getDialect();
+    final SchemaModel model = dbDef.getSchemaModel();
+    final Statement stmt = getConnection().createStatement();
+    try {
+      HashSet<String> want = new HashSet<String>();
+      for (final SequenceModel s : model.getSequences()) {
+        want.add(s.getSequenceName().toLowerCase());
+      }
+      for (final String sequence : dialect.listSequences(getConnection())) {
+        if (!want.contains(sequence)) {
+          stmt.execute(dialect.getDropSequenceSql(sequence));
+        }
+      }
+    } finally {
+      stmt.close();
+    }
+  }
+
+  private void pruneRelations() throws SQLException {
+    final SqlDialect dialect = dbDef.getDialect();
+    final SchemaModel model = dbDef.getSchemaModel();
+    final Statement stmt = getConnection().createStatement();
+    try {
+      HashSet<String> want = new HashSet<String>();
+      for (final RelationModel r : model.getRelations()) {
+        want.add(r.getRelationName().toLowerCase());
+      }
+      for (final String table : dialect.listTables(getConnection())) {
+        if (!want.contains(table)) {
+          stmt.execute("DROP TABLE " + table);
+        }
+      }
+    } finally {
+      stmt.close();
+    }
+  }
+
+  private void pruneColumns(final RelationModel rel) throws SQLException {
+    final SqlDialect dialect = dbDef.getDialect();
+    final SchemaModel model = dbDef.getSchemaModel();
+    final Statement stmt = getConnection().createStatement();
+    try {
+      HashSet<String> want = new HashSet<String>();
+      for (final ColumnModel c : rel.getColumns()) {
+        want.add(c.getColumnName().toLowerCase());
+      }
+      for (String column : dialect.listColumns( //
+          getConnection(), rel.getRelationName().toLowerCase())) {
+        if (!want.contains(column)) {
+          dialect.dropColumn(stmt, rel.getRelationName(), column);
+        }
+      }
+    } finally {
+      stmt.close();
     }
   }
 

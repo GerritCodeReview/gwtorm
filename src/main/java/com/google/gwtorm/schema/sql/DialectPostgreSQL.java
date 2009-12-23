@@ -19,8 +19,12 @@ import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.schema.RelationModel;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Types;
+import java.util.HashSet;
+import java.util.Set;
 
 /** Dialect for <a href="http://www.postgresql.org/>PostgreSQL</a> */
 public class DialectPostgreSQL extends SqlDialect {
@@ -64,6 +68,26 @@ public class DialectPostgreSQL extends SqlDialect {
   public void appendCreateTableStorage(final StringBuilder sqlBuffer,
       final RelationModel relationModel) {
     sqlBuffer.append("WITH (OIDS = FALSE)");
+  }
+
+  @Override
+  public Set<String> listSequences(Connection db) throws SQLException {
+    Statement s = db.createStatement();
+    try {
+      ResultSet rs =
+          s.executeQuery("SELECT relname FROM pg_class WHERE relkind = 'S'");
+      try {
+        HashSet<String> sequences = new HashSet<String>();
+        while (rs.next()) {
+          sequences.add(rs.getString(1).toLowerCase());
+        }
+        return sequences;
+      } finally {
+        rs.close();
+      }
+    } finally {
+      s.close();
+    }
   }
 
   private static class Pre82 extends DialectPostgreSQL {

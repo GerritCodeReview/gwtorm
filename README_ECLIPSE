@@ -17,3 +17,25 @@ Eclipse Setup
 
 - Import... and select GoogleFormat.xml
 
+
+Unit Tests
+==========
+
+The unit tests assume there is a local PostgreSQL and MySQL server
+listening on their respective default ports, with the following
+database configuration:
+
+PostgreSQL:
+
+  createuser -S -D -R -E -P gwtorm
+  Password: gwtorm
+
+  createdb -E UTF-8 -O gwtorm gwtorm
+
+MySQL:
+
+  create user 'gwtorm'@'localhost' identified by 'gwtorm';
+  create database gwtorm;
+  alter database gwtorm charset=utf8;
+  grant all on gwtorm.* to 'gwtorm'@'localhost';
+  flush privileges;

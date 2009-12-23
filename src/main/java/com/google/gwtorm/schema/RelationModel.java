@@ -209,6 +209,13 @@ public abstract class RelationModel {
       r.append(col.getColumnName());
       r.append(" ");
       r.append(dialect.getSqlTypeInfo(col).getSqlType(col, dialect));
+
+      String check =
+          dialect.getSqlTypeInfo(col).getCheckConstraint(col, dialect);
+      if (check != null) {
+        r.append(' ');
+        r.append(check);
+      }
       if (i.hasNext()) {
         r.append(",");
       }

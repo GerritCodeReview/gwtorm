@@ -16,15 +16,17 @@ package com.google.gwtorm.schema.sql;
 
 import com.google.gwtorm.client.Column;
 import com.google.gwtorm.client.OrmException;
-import com.google.gwtorm.client.Sequence;
 import com.google.gwtorm.schema.ColumnModel;
 import com.google.gwtorm.schema.SequenceModel;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
+import java.util.HashSet;
+import java.util.Set;
 
 /** Dialect for <a href="http://www.mysql.com/">MySQL</a> */
 public class DialectMySQL extends SqlDialect {
@@ -61,12 +63,16 @@ public class DialectMySQL extends SqlDialect {
 
   @Override
   public String getCreateSequenceSql(final SequenceModel seq) {
-    final Sequence s = seq.getSequence();
     final StringBuilder r = new StringBuilder();
     r.append("CREATE TABLE ");
     r.append(seq.getSequenceName());
     r.append("(s SERIAL)");
     return r.toString();
+  }
+
+  @Override
+  public String getDropSequenceSql(String name) {
+    return "DROP TABLE " + name;
   }
 
   @Override
@@ -99,6 +105,68 @@ public class DialectMySQL extends SqlDialect {
       }
     } catch (SQLException e) {
       throw convertError("sequence", seqname, e);
+    }
+  }
+
+  @Override
+  public Set<String> listTables(final Connection db) throws SQLException {
+    final String[] types = new String[] {"TABLE"};
+    final ResultSet rs = db.getMetaData().getTables(null, null, null, types);
+    try {
+      HashSet<String> tables = new HashSet<String>();
+      while (rs.next()) {
+        final String name = rs.getString("TABLE_NAME");
+        if (!isSequence(db, name)) {
+          tables.add(name.toLowerCase());
+        }
+      }
+      return tables;
+    } finally {
+      rs.close();
+    }
+  }
+
+  @Override
+  public Set<String> listSequences(final Connection db) throws SQLException {
+    final String[] types = new String[] {"TABLE"};
+    final ResultSet rs = db.getMetaData().getTables(null, null, null, types);
+    try {
+      HashSet<String> sequences = new HashSet<String>();
+      while (rs.next()) {
+        final String name = rs.getString("TABLE_NAME");
+        if (isSequence(db, name)) {
+          sequences.add(name.toLowerCase());
+        }
+      }
+      return sequences;
+    } finally {
+      rs.close();
+    }
+  }
+
+  private boolean isSequence(Connection db, String tableName)
+      throws SQLException {
+    final DatabaseMetaData meta = db.getMetaData();
+    if (meta.storesUpperCaseIdentifiers()) {
+      tableName = tableName.toUpperCase();
+    } else if (meta.storesLowerCaseIdentifiers()) {
+      tableName = tableName.toLowerCase();
+    }
+
+    ResultSet rs = meta.getColumns(null, null, tableName, null);
+    try {
+      int cnt = 0;
+      boolean serial = false;
+      while (rs.next()) {
+        cnt++;
+        if (rs.getInt("DATA_TYPE") == Types.BIGINT
+            && "YES".equalsIgnoreCase(rs.getString("IS_AUTOINCREMENT"))) {
+          serial = true;
+        }
+      }
+      return cnt == 1 && serial;
+    } finally {
+      rs.close();
     }
   }
 }

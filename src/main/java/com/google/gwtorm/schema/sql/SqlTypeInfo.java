@@ -29,6 +29,11 @@ public abstract class SqlTypeInfo {
 
   public abstract String getSqlType(ColumnModel column, SqlDialect dialect);
 
+  public String getCheckConstraint(final ColumnModel column,
+      final SqlDialect dialect) {
+    return null;
+  }
+
   protected abstract String getJavaSqlTypeAlias();
 
   protected abstract int getSqlTypeConstant();

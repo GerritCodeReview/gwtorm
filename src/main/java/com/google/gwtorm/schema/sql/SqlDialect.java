@@ -21,12 +21,15 @@ import com.google.gwtorm.schema.RelationModel;
 import com.google.gwtorm.schema.SequenceModel;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public abstract class SqlDialect {
   protected final Map<Class<?>, SqlTypeInfo> types;
@@ -163,6 +166,10 @@ public abstract class SqlDialect {
     return r.toString();
   }
 
+  public String getDropSequenceSql(final String name) {
+    return "DROP SEQUENCE " + name;
+  }
+
   /**
    * Append driver specific storage parameters to a CREATE TABLE statement.
    *
@@ -172,6 +179,109 @@ public abstract class SqlDialect {
    */
   public void appendCreateTableStorage(final StringBuilder sqlBuffer,
       final RelationModel relationModel) {
+  }
+
+  /**
+   * List all tables in the current database schema.
+   *
+   * @param db connection to the schema.
+   * @return set of declared tables, in lowercase.
+   * @throws SQLException the tables cannot be listed.
+   */
+  public Set<String> listTables(final Connection db) throws SQLException {
+    final String[] types = new String[] {"TABLE"};
+    final ResultSet rs = db.getMetaData().getTables(null, null, null, types);
+    try {
+      HashSet<String> tables = new HashSet<String>();
+      while (rs.next()) {
+        tables.add(rs.getString("TABLE_NAME").toLowerCase());
+      }
+      return tables;
+    } finally {
+      rs.close();
+    }
+  }
+
+  /**
+   * List all sequences in the current database schema.
+   *
+   * @param db connection to the schema.
+   * @return set of declared sequences, in lowercase.
+   * @throws SQLException the sequence objects cannot be listed.
+   */
+  public abstract Set<String> listSequences(final Connection db)
+      throws SQLException;
+
+  /**
+   * List all columns in the given table name.
+   *
+   * @param db connection to the schema.
+   * @param tableName the table to list columns from, in lowercase.
+   * @return set of declared columns, in lowercase.
+   * @throws SQLException the columns cannot be listed from the relation.
+   */
+  public Set<String> listColumns(final Connection db, String tableName)
+      throws SQLException {
+    final DatabaseMetaData meta = db.getMetaData();
+    if (meta.storesUpperCaseIdentifiers()) {
+      tableName = tableName.toUpperCase();
+    } else if (meta.storesLowerCaseIdentifiers()) {
+      tableName = tableName.toLowerCase();
+    }
+
+    ResultSet rs = meta.getColumns(null, null, tableName, null);
+    try {
+      HashSet<String> columns = new HashSet<String>();
+      while (rs.next()) {
+        columns.add(rs.getString("COLUMN_NAME").toLowerCase());
+      }
+      return columns;
+    } finally {
+      rs.close();
+    }
+  }
+
+  /**
+   * Add one column to an existing table.
+   *
+   * @param stmt statement to use to execute the SQL command(s).
+   * @param tableName table to add the column onto.
+   * @param col definition of the column.
+   * @throws SQLException the column could not be added.
+   */
+  public void addColumn(Statement stmt, String tableName, ColumnModel col)
+      throws SQLException {
+    final StringBuilder r = new StringBuilder();
+    r.append("ALTER TABLE ");
+    r.append(tableName);
+    r.append(" ADD ");
+    r.append(col.getColumnName());
+    r.append(" ");
+    r.append(getSqlTypeInfo(col).getSqlType(col, this));
+    String check = getSqlTypeInfo(col).getCheckConstraint(col, this);
+    if (check != null) {
+      r.append(' ');
+      r.append(check);
+    }
+    stmt.execute(r.toString());
+  }
+
+  /**
+   * Drop one column from an existing table.
+   *
+   * @param stmt statement to use to execute the SQL command(s).
+   * @param tableName table to add the column onto.
+   * @param column name of the column to drop.
+   * @throws SQLException the column could not be added.
+   */
+  public void dropColumn(Statement stmt, String tableName, String column)
+      throws SQLException {
+    final StringBuilder r = new StringBuilder();
+    r.append("ALTER TABLE ");
+    r.append(tableName);
+    r.append(" DROP COLUMN ");
+    r.append(column);
+    stmt.execute(r.toString());
   }
 
   public abstract String getNextSequenceValueSql(String seqname);

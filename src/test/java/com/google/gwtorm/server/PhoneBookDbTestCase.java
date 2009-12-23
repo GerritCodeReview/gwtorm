@@ -71,7 +71,7 @@ public class PhoneBookDbTestCase extends TestCase {
 
   protected PhoneBookDb openAndCreate() throws OrmException {
     final PhoneBookDb schema = open();
-    schema.createSchema();
+    schema.updateSchema();
     return schema;
   }
 
@@ -104,7 +104,7 @@ public class PhoneBookDbTestCase extends TestCase {
 
   public void testCreateSchema() throws Exception {
     final PhoneBookDb schema = open();
-    schema.createSchema();
+    schema.updateSchema();
   }
 
   public void testNextAddressId() throws Exception {
