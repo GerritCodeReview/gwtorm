@@ -53,8 +53,35 @@ import javax.sql.DataSource;
  * @param <T>
  */
 public class Database<T extends Schema> implements SchemaFactory<T> {
-  private static final Map<Class<?>, String> schemaFactoryNames =
-      Collections.synchronizedMap(new WeakHashMap<Class<?>, String>());
+  private static final Map<SchemaKey, String> schemaFactoryNames =
+      Collections.synchronizedMap(new WeakHashMap<SchemaKey, String>());
+
+  private static class SchemaKey {
+    final Class<?> schema;
+    final SqlDialect dialect;
+
+    SchemaKey(Class<?> s, SqlDialect d) {
+      schema = s;
+      dialect = d;
+    }
+
+    @Override
+    public int hashCode() {
+      return schema.hashCode() * 31 + dialect.getClass().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (o instanceof SchemaKey) {
+        SchemaKey a = this;
+        SchemaKey b = (SchemaKey) o;
+
+        return a.schema == b.schema
+            && a.dialect.getClass() == b.dialect.getClass();
+      }
+      return false;
+    }
+  }
 
   static {
     KeyUtil.setEncoderImpl(new StandardKeyEncoder());
@@ -105,7 +132,8 @@ public class Database<T extends Schema> implements SchemaFactory<T> {
 
     schemaModel = new JavaSchemaModel(schema);
     final GeneratedClassLoader loader = newLoader(schema);
-    final String cachedName = schemaFactoryNames.get(schema);
+    final SchemaKey key = new SchemaKey(schema, dialect);
+    final String cachedName = schemaFactoryNames.get(key);
     AbstractSchemaFactory<T> factory = null;
     if (cachedName != null) {
       factory = newFactory(loader, cachedName);
@@ -114,7 +142,7 @@ public class Database<T extends Schema> implements SchemaFactory<T> {
       final SchemaGen gen = new SchemaGen(loader, schemaModel, dialect);
       gen.defineClass();
       factory = new SchemaFactoryGen<T>(loader, gen).create();
-      schemaFactoryNames.put(schema, factory.getClass().getName());
+      schemaFactoryNames.put(key, factory.getClass().getName());
     }
     implFactory = factory;
     implDialect = dialect;
