@@ -29,7 +29,7 @@ import java.util.Map;
  * <p>
  * Applications should implement a query method using the {@link PrimaryKey}
  * annotation, for example:
- * 
+ *
  * <pre>
  * public interface FooAccess extends Access&lt;Foo, Foo.Key&gt; {
  *   &#064;PrimaryKey(&quot;key&quot;)
@@ -39,7 +39,7 @@ import java.util.Map;
  *<p>
  * otherwise the primaryKey, get, update and delete operations declared by this
  * interface will be unsupported.
- * 
+ *
  * @param <T> type of the entity. Any object type is suitable, so long as at
  *        least one field uses a {@link Column} annotation.
  * @param <K> type of the primary key of entity. If the primary key is a
@@ -49,7 +49,7 @@ import java.util.Map;
 public interface Access<T extends Object, K extends Key<?>> {
   /**
    * Obtain the primary key of an entity instance.
-   * 
+   *
    * @param entity the entity to get the key of; must not be null.
    * @return the primary key. Null if this entity has no primary key declared,
    *         or if the primary key does not implement the Key interface.
@@ -58,7 +58,7 @@ public interface Access<T extends Object, K extends Key<?>> {
 
   /**
    * Convert a collection of objects into a map, keyed by their primary key.
-   * 
+   *
    * @param c the collection
    * @return a map of the objects, indexed by their primary key.
    */
@@ -70,7 +70,7 @@ public interface Access<T extends Object, K extends Key<?>> {
    * This method is only implemented if the entity's primary key is defined to
    * be an implementation of the {@link Key} interface. Otherwise the method
    * throws {@link UnsupportedOperationException}.
-   * 
+   *
    * @param key the primary key instance; must not be null.
    * @return the entity; null if no entity has this key.
    * @throws OrmException the data lookup failed.
@@ -87,7 +87,7 @@ public interface Access<T extends Object, K extends Key<?>> {
    * <p>
    * This method is a batch form of {@link #get(Key)} and may be optimized to
    * reduce round-trips to the data store.
-   * 
+   *
    * @param keys collection of zero or more keys to perform lookup with.
    * @return collection of all matching entities; this may be a smaller result
    *         than the keys supplied if one or more of the keys does not match an
@@ -99,7 +99,7 @@ public interface Access<T extends Object, K extends Key<?>> {
 
   /**
    * Immediately insert new entities into the data store.
-   * 
+   *
    * @param instances the instances to insert. The iteration occurs only once.
    * @throws OrmException data insertion failed.
    */
@@ -107,7 +107,7 @@ public interface Access<T extends Object, K extends Key<?>> {
 
   /**
    * Insert new entities into the data store.
-   * 
+   *
    * @param instances the instances to insert. The iteration occurs only once.
    * @param txn transaction to batch the operation into. If not null the data
    *        store changes will be delayed to {@link Transaction#commit()} is
@@ -118,7 +118,7 @@ public interface Access<T extends Object, K extends Key<?>> {
 
   /**
    * Immediately update existing entities in the data store.
-   * 
+   *
    * @param instances the instances to update. The iteration occurs only once.
    * @throws OrmException data modification failed.
    * @throws UnsupportedOperationException no PrimaryKey was declared.
@@ -127,7 +127,7 @@ public interface Access<T extends Object, K extends Key<?>> {
 
   /**
    * Update existing entities in the data store.
-   * 
+   *
    * @param instances the instances to update. The iteration occurs only once.
    * @param txn transaction to batch the operation into. If not null the data
    *        store changes will be delayed to {@link Transaction#commit()} is
@@ -139,7 +139,7 @@ public interface Access<T extends Object, K extends Key<?>> {
 
   /**
    * Immediately delete existing entities from the data store.
-   * 
+   *
    * @param instances the instances to delete. The iteration occurs only once.
    * @throws OrmException data removal failed.
    * @throws UnsupportedOperationException no PrimaryKey was declared.
@@ -148,7 +148,7 @@ public interface Access<T extends Object, K extends Key<?>> {
 
   /**
    * Delete existing entities from the data store.
-   * 
+   *
    * @param instances the instances to delete. The iteration occurs only once.
    * @param txn transaction to batch the operation into. If not null the data
    *        store changes will be delayed to {@link Transaction#commit()} is

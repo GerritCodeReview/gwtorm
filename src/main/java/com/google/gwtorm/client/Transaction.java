@@ -26,13 +26,13 @@ package com.google.gwtorm.client;
  * <li>{@link Access#update(Iterable, Transaction)}</li>
  * <li>{@link Access#delete(Iterable, Transaction)}</li>
  * <ul>
- * 
+ *
  * @see Schema#beginTransaction()
  */
 public interface Transaction {
   /**
    * Commit this transaction, finishing all actions.
-   * 
+   *
    * @throws OrmException data store refused/rejected one or more actions.
    */
   void commit() throws OrmException;
@@ -41,7 +41,7 @@ public interface Transaction {
    * Rollback (abort) this transaction, performing none of the actions.
    * <p>
    * This method has no affect if the transaction has not made any changes.
-   * 
+   *
    * @throws OrmException data store couldn't undo the transaction, as it is
    *         already committed.
    */

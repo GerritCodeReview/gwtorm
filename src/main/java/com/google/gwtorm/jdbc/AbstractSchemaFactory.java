@@ -24,13 +24,13 @@ import java.sql.Connection;
  * Applications should not use this interface. It is automatically implemented
  * at runtime to provide fast construction for new Schema instances within
  * {@link Database#open()}.
- * 
+ *
  * @param <T> type of the application schema.
  */
 public abstract class AbstractSchemaFactory<T extends Schema> {
   /**
    * Create a new schema instance.
-   * 
+   *
    * @param db the database instance which created the connection.
    * @param c the JDBC connection the instance will talk to the database on.
    * @return the new schema instance, wrapping the connection.

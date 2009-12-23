@@ -39,17 +39,16 @@ package com.google.gwtorm.client;
  * <p>
  * For example the OurDb schema creates two tables (identical structure) named
  * <code>someFoos</code> and <code>otherFoos</code>:
- * 
+ *
  * <pre>
  * public interface FooAccess extends Access&lt;Foo, Foo.Key&gt; {
  *   &#064;PrimaryKey(&quot;key&quot;)
  *   Foo byKey(Foo.Key k) throws OrmException;
  * }
- * 
  * public interface OurDb extends Schema {
  *   &#064;Relation
  *   FooAccess someFoos();
- * 
+ *
  *   &#064;Relation
  *   FooAccess otherFoos();
  * }
@@ -58,7 +57,7 @@ package com.google.gwtorm.client;
 public interface Schema {
   /**
    * Automatically create the database tables.
-   * 
+   *
    * @throws OrmException tables already exist or create permission is denied.
    */
   void createSchema() throws OrmException;
@@ -69,7 +68,7 @@ public interface Schema {
    * Only one transaction can be in-flight at a time on any given Schema
    * instance. Applications must commit or rollback a previously created
    * transaction before beginning another transaction on the same Schema.
-   * 
+   *
    * @return the new transaction.
    * @throws OrmException the schema has been closed or another transaction has
    *         already been begun on this schema instance.
@@ -78,7 +77,7 @@ public interface Schema {
 
   /**
    * Execute a task within a transaction, restarting it if necessary.
-   * 
+   *
    * @param <T> type of return value for the task.
    * @param <S> type of <code>this</code>.
    * @param task the task to execute.

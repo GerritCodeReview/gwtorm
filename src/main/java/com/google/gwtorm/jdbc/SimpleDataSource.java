@@ -42,7 +42,7 @@ public class SimpleDataSource implements DataSource {
    * The JDBC properties information must define at least <code>url</code> and
    * <code>driver</code>, but may also include driver specific properties such
    * as <code>username</code> and <code>password</code>.
-   * 
+   *
    * @param dbInfo JDBC connection information. The property table is copied.
    * @throws SQLException the driver class is not available through the current
    *         class loader.

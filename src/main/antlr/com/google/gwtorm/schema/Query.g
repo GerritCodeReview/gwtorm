@@ -80,7 +80,7 @@ package com.google.gwtorm.schema;
         }
         return c;
       }
-      
+
       private static ColumnModel resolve(Tree node, ColumnModel model) {
         ColumnModel c;
         if (node.getType() == ID) {
@@ -190,7 +190,7 @@ compare_op
  | NE
  ;
 
-field 
+field
   : n=qualifiedFieldName -> ID<Column>[(Tree)n.tree, relationModel]
   ;
 

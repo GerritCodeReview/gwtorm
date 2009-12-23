@@ -21,7 +21,7 @@ import java.io.Serializable;
  * <p>
  * Applications should subclass this type to create their own entity-specific
  * key classes.
- * 
+ *
  * @param <P> the parent key type. Use {@link Key} if no parent key is needed.
  */
 public abstract class LongKey<P extends Key<?>> implements Key<P>, Serializable {

@@ -49,7 +49,7 @@ import javax.sql.DataSource;
  * the application.
  * <p>
  * Database instances are thread-safe, but returned Schema instances are not.
- * 
+ *
  * @param <T>
  */
 public class Database<T extends Schema> implements SchemaFactory<T> {
@@ -67,7 +67,7 @@ public class Database<T extends Schema> implements SchemaFactory<T> {
 
   /**
    * Create a new database interface, generating the interface implementations.
-   * 
+   *
    * @param ds JDBC connection information
    * @param schema application extension of the Schema interface to implement.
    * @throws OrmException the schema interface is incorrectly defined, or the
@@ -145,7 +145,7 @@ public class Database<T extends Schema> implements SchemaFactory<T> {
 
   /**
    * Open a new connection to the database and get a Schema wrapper.
-   * 
+   *
    * @return a new JDBC connection, wrapped up in the application's Schema.
    * @throws OrmException the connection could not be opened to the database.
    *         The JDBC exception detail should be examined to determine the root

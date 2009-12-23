@@ -20,13 +20,13 @@ package com.google.gwtorm.client;
  * Although not required, entities should make their primary key type implement
  * this interface, permitting traversal up through the containment hierarchy of
  * the entity keys.
- * 
+ *
  * @param <P> type of the parent key. If no parent, use {@link Key} itself.
  */
 public interface Key<P extends Key<?>> {
   /**
    * Get the parent key instance.
-   * 
+   *
    * @return the parent key; null if this entity key is a root-level key.
    */
   public P getParentKey();

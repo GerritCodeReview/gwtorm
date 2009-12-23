@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
  * <p>
  * Sequence methods must return a primitive <code>int</code> or
  * <code>long</code> type.
- * 
+ *
  * <pre>
  * public interface BarSchema extends Schema {
  *   &#064;Sequence

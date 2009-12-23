@@ -42,7 +42,7 @@ public class KeyUtil {
 
   /**
    * Determine if two keys are equal, supporting null references.
-   * 
+   *
    * @param <T> type of the key entity.
    * @param a first key to test; may be null.
    * @param b second key to test; may be null.
@@ -66,7 +66,7 @@ public class KeyUtil {
    * escapes (e.g. ' ' is '+' and '%' is '%25'). The special character '/' is
    * left literal. The comma character (',') is always encoded, permitting
    * multiple encoded string values to be joined together safely.
-   * 
+   *
    * @param e the string to encode, must not be null.
    * @return the encoded string.
    */
@@ -76,7 +76,7 @@ public class KeyUtil {
 
   /**
    * Decode a string previously encoded by {@link #encode(String)}.
-   * 
+   *
    * @param e the string to decode, must not be null.
    * @return the decoded string.
    */
@@ -86,7 +86,7 @@ public class KeyUtil {
 
   /**
    * Split a string along the last comma and parse into the parent.
-   * 
+   *
    * @param parent parent key; <code>parent.fromString(in[0..comma])</code>.
    * @param in the input string.
    * @return text (if any) after the last comma in the input.

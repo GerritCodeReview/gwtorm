@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
  * Annotation marking a query function in a {@link Access} interface as a key.
  * <p>
  * SecondaryKey is gwtorm's concept of SQL UNIQUE.
- * 
+ *
  * @see Access
  */
 @Retention(RetentionPolicy.RUNTIME)

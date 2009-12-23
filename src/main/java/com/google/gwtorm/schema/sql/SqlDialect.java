@@ -104,7 +104,7 @@ public abstract class SqlDialect {
 
   /**
    * Convert a driver specific exception into an {@link OrmException}.
-   * 
+   *
    * @param op short description of the operation, e.g. "update" or "fetch".
    * @param entity name of the entity being accessed by the operation.
    * @param err the driver specific exception.
@@ -165,7 +165,7 @@ public abstract class SqlDialect {
 
   /**
    * Append driver specific storage parameters to a CREATE TABLE statement.
-   * 
+   *
    * @param sqlBuffer buffer holding the CREATE TABLE, just after the closing
    *        parenthesis after the column list.
    * @param relationModel the model of the table being generated.

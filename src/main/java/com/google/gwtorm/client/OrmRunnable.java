@@ -19,7 +19,7 @@ package com.google.gwtorm.client;
  * <p>
  * The {@link Schema} is free to invoke this runnable multiple times if an
  * {@link OrmConcurrencyException} is thrown by the run method.
- * 
+ *
  * @param <T> type of object the run method returns.
  * @param <S> type of schema the run method needs to perform its work.
  */
@@ -31,7 +31,7 @@ public interface OrmRunnable<T, S extends Schema> {
    * ensure they are looking at the most current copy of the data from the
    * database. If a method is invoked a second time to recover from a
    * concurrency error it would need to read the data again.
-   * 
+   *
    * @param db active schema handle to query through, and make updates on.
    * @param txn the current transaction handle. Commit is invoked by the caller.
    * @param retry true if this is not the first attempt to execute this task.

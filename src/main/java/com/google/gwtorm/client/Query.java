@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
  * Annotation marking a method in an {@link Access} interface as a query.
  * <p>
  * Query methods must return a parameterized {@link ResultSet}, for example:
- * 
+ *
  * <pre>
  * public interface FooAccess extends Access&lt;Foo, Foo.Key&gt; {
  *   &#064;Query(&quot;WHERE a=?&quot;)
@@ -32,12 +32,12 @@ import java.lang.annotation.Target;
  *</pre>
  *<p>
  * Query strings must conform to the following grammar:
- * 
+ *
  * <pre>
  * [WHERE &lt;condition&gt; [AND &lt;condition&gt; ...]]
  * [ORDER BY &lt;property&gt; [ASC | DESC] [, &lt;property&gt; [ASC | DESC] ...]]
  * [LIMIT { &lt;count&gt; | ? }]
- * 
+ *
  * &lt;condition&gt; := &lt;property&gt; { &lt; | &lt;= | &gt; | &gt;= | = | != } &lt;value&gt;
  * &lt;value&gt; := { ? | true | false | &lt;int&gt; | &lt;string&gt; }
  * </pre>

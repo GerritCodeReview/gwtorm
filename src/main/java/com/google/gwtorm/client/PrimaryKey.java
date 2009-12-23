@@ -21,7 +21,7 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation marking a query function in a {@link Access} interface as the key.
- * 
+ *
  * @see Access
  */
 @Retention(RetentionPolicy.RUNTIME)

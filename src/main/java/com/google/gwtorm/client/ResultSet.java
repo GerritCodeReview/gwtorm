@@ -19,7 +19,7 @@ import java.util.List;
 
 /**
  * Result from any data store query function.
- * 
+ *
  * @param <T> type of entity being returned by the query.
  */
 public interface ResultSet<T> extends Iterable<T> {
@@ -37,7 +37,7 @@ public interface ResultSet<T> extends Iterable<T> {
    * <p>
    * Prior to returning {@link #close()} is invoked. This method must not be
    * combined with {@link #iterator()} on the same instance.
-   * 
+   *
    * @return list of the complete results.
    */
   List<T> toList();

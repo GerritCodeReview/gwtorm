@@ -24,11 +24,11 @@ import java.lang.annotation.Target;
  * <p>
  * Access methods must return an interface extending {@link Access}, for
  * example:
- * 
+ *
  * <pre>
  * public interface FooAccess extends Access&lt;Foo, Foo.Key&gt; {
  * }
- * 
+ *
  * public interface BarSchema extends Schema {
  *   &#064;Relation
  *   FooAccess foos();

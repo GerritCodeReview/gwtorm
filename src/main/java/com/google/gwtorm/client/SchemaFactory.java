@@ -16,13 +16,13 @@ package com.google.gwtorm.client;
 
 /**
  * Creates new application Schema instances on demand.
- * 
+ *
  * @param <S> schema type which defines the application database's.
  */
 public interface SchemaFactory<S extends Schema> {
   /**
    * Open a new connection to the database and get a Schema wrapper.
-   * 
+   *
    * @return a new connection, wrapped up in the application's Schema.
    * @throws OrmException the connection could not be opened to the database.
    *         The exception detail should be examined to determine the root cause
