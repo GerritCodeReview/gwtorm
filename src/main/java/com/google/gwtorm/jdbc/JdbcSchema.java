@@ -133,6 +133,38 @@ public abstract class JdbcSchema implements Schema {
     }
   }
 
+  public void renameField(String table, String from, String to)
+      throws OrmException {
+    final RelationModel rel = findRelationModel(table);
+    if (rel == null) {
+      throw new OrmException("Relation " + table + " not defined");
+    }
+    final ColumnModel col = rel.getField(to);
+    if (col == null) {
+      throw new OrmException("Relation " + table + " does not have " + to);
+    }
+    try {
+      final Statement s = getConnection().createStatement();
+      try {
+        getDialect().renameColumn(s, table, from, col);
+      } finally {
+        s.close();
+      }
+    } catch (SQLException e) {
+      throw new OrmException("Cannot rename " + table + "." + from + " to "
+          + to, e);
+    }
+  }
+
+  private RelationModel findRelationModel(String table) throws OrmException {
+    for (final RelationModel rel : dbDef.getSchemaModel().getRelations()) {
+      if (table.equalsIgnoreCase(rel.getRelationName())) {
+        return rel;
+      }
+    }
+    return null;
+  }
+
   public void pruneSchema() throws OrmException {
     try {
       pruneSequences();

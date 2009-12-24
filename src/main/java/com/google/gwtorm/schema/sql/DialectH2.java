@@ -91,4 +91,17 @@ public class DialectH2 extends SqlDialect {
       stmt.execute(r.toString());
     }
   }
+
+  @Override
+  public void renameColumn(Statement stmt, String tableName, String fromColumn,
+      ColumnModel col) throws SQLException {
+    final StringBuilder r = new StringBuilder();
+    r.append("ALTER TABLE ");
+    r.append(tableName);
+    r.append(" ALTER COLUMN ");
+    r.append(fromColumn);
+    r.append(" RENAME TO ");
+    r.append(col.getColumnName());
+    stmt.execute(r.toString());
+  }
 }

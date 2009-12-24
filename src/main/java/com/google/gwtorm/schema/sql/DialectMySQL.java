@@ -169,4 +169,19 @@ public class DialectMySQL extends SqlDialect {
       rs.close();
     }
   }
+
+  @Override
+  public void renameColumn(Statement stmt, String tableName, String fromColumn,
+      ColumnModel col) throws SQLException {
+    StringBuffer r = new StringBuffer();
+    r.append("ALTER TABLE ");
+    r.append(tableName);
+    r.append(" CHANGE ");
+    r.append(fromColumn);
+    r.append(" ");
+    r.append(col.getColumnName());
+    r.append(" ");
+    r.append(getSqlTypeInfo(col).getSqlType(col, this));
+    stmt.execute(r.toString());
+  }
 }

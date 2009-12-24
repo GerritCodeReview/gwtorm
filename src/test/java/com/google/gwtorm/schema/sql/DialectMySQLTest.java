@@ -17,9 +17,11 @@ package com.google.gwtorm.schema.sql;
 
 import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.data.PhoneBookDb;
+import com.google.gwtorm.data.PhoneBookDb2;
 import com.google.gwtorm.data.TestAddress;
 import com.google.gwtorm.data.TestPerson;
 import com.google.gwtorm.jdbc.Database;
+import com.google.gwtorm.jdbc.JdbcSchema;
 import com.google.gwtorm.jdbc.SimpleDataSource;
 
 import junit.framework.TestCase;
@@ -36,6 +38,7 @@ public class DialectMySQLTest extends TestCase {
   private Connection db;
   private SqlDialect dialect;
   private Database<PhoneBookDb> phoneBook;
+  private Database<PhoneBookDb2> phoneBook2;
 
   @Override
   protected void setUp() throws Exception {
@@ -58,6 +61,8 @@ public class DialectMySQLTest extends TestCase {
     p.setProperty("password", pass);
     phoneBook =
         new Database<PhoneBookDb>(new SimpleDataSource(p), PhoneBookDb.class);
+    phoneBook2 =
+      new Database<PhoneBookDb2>(new SimpleDataSource(p), PhoneBookDb2.class);
 
     drop("TABLE address_id");
     drop("TABLE addresses");
@@ -157,6 +162,13 @@ public class DialectMySQLTest extends TestCase {
       p.addresses().insert(Collections.singleton(addr));
     } finally {
       p.close();
+    }
+
+    final PhoneBookDb2 p2 = phoneBook2.open();
+    try {
+      ((JdbcSchema)p2).renameField("people", "registered", "isRegistered");
+    } finally {
+      p2.close();
     }
   }
 }

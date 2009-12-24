@@ -284,5 +284,17 @@ public abstract class SqlDialect {
     stmt.execute(r.toString());
   }
 
+  /**
+   * Rename an existing column in a table.
+   *
+   * @param stmt statement to use to execute the SQL command(s).
+   * @param tableName table to add the column onto.
+   * @param fromColumn source column name
+   * @param col destination column definition
+   * @throws SQLException the column could not be renamed.
+   */
+  public abstract void renameColumn(Statement stmt, String tableName,
+      String fromColumn, ColumnModel col) throws SQLException;
+
   public abstract String getNextSequenceValueSql(String seqname);
 }

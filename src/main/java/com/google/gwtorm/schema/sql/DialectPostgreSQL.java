@@ -16,6 +16,7 @@ package com.google.gwtorm.schema.sql;
 
 import com.google.gwtorm.client.OrmDuplicateKeyException;
 import com.google.gwtorm.client.OrmException;
+import com.google.gwtorm.schema.ColumnModel;
 import com.google.gwtorm.schema.RelationModel;
 
 import java.sql.Connection;
@@ -68,6 +69,19 @@ public class DialectPostgreSQL extends SqlDialect {
   public void appendCreateTableStorage(final StringBuilder sqlBuffer,
       final RelationModel relationModel) {
     sqlBuffer.append("WITH (OIDS = FALSE)");
+  }
+
+  @Override
+  public void renameColumn(Statement stmt, String tableName, String fromColumn,
+      ColumnModel col) throws SQLException {
+    final StringBuilder r = new StringBuilder();
+    r.append("ALTER TABLE ");
+    r.append(tableName);
+    r.append(" RENAME COLUMN ");
+    r.append(fromColumn);
+    r.append(" TO ");
+    r.append(col.getColumnName());
+    stmt.execute(r.toString());
   }
 
   @Override
