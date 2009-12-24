@@ -18,6 +18,7 @@ import com.google.gwtorm.client.OrmConcurrencyException;
 import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.client.OrmRunnable;
 import com.google.gwtorm.client.Schema;
+import com.google.gwtorm.client.StatementExecutor;
 import com.google.gwtorm.client.Transaction;
 import com.google.gwtorm.schema.ColumnModel;
 import com.google.gwtorm.schema.RelationModel;
@@ -71,70 +72,59 @@ public abstract class JdbcSchema implements Schema {
     }
   }
 
-  public void updateSchema() throws OrmException {
+  public void updateSchema(final StatementExecutor e) throws OrmException {
     try {
-      createSequences();
-      createRelations();
+      createSequences(e);
+      createRelations(e);
 
       for (final RelationModel rel : dbDef.getSchemaModel().getRelations()) {
-        addColumns(rel);
+        addColumns(e, rel);
       }
-    } catch (SQLException e) {
-      throw new OrmException("Schema update failure", e);
+    } catch (SQLException err) {
+      throw new OrmException("Cannot update schema", err);
     }
   }
 
-  private void createSequences() throws SQLException {
+  private void createSequences(final StatementExecutor e) throws OrmException,
+      SQLException {
     final SqlDialect dialect = dbDef.getDialect();
     final SchemaModel model = dbDef.getSchemaModel();
-    final Statement stmt = getConnection().createStatement();
-    try {
-      Set<String> have = dialect.listSequences(getConnection());
-      for (final SequenceModel s : model.getSequences()) {
-        if (!have.contains(s.getSequenceName().toLowerCase())) {
-          stmt.execute(s.getCreateSequenceSql(dialect));
-        }
+
+    Set<String> have = dialect.listSequences(getConnection());
+    for (final SequenceModel s : model.getSequences()) {
+      if (!have.contains(s.getSequenceName().toLowerCase())) {
+        e.execute(s.getCreateSequenceSql(dialect));
       }
-    } finally {
-      stmt.close();
     }
   }
 
-  private void createRelations() throws SQLException {
+  private void createRelations(final StatementExecutor e) throws SQLException,
+      OrmException {
     final SqlDialect dialect = dbDef.getDialect();
     final SchemaModel model = dbDef.getSchemaModel();
-    final Statement stmt = getConnection().createStatement();
-    try {
-      Set<String> have = dialect.listTables(getConnection());
-      for (final RelationModel r : model.getRelations()) {
-        if (!have.contains(r.getRelationName().toLowerCase())) {
-          stmt.execute(r.getCreateTableSql(dialect));
-        }
+    Set<String> have = dialect.listTables(getConnection());
+    for (final RelationModel r : model.getRelations()) {
+      if (!have.contains(r.getRelationName().toLowerCase())) {
+        e.execute(r.getCreateTableSql(dialect));
       }
-    } finally {
-      stmt.close();
     }
   }
 
-  private void addColumns(final RelationModel rel) throws SQLException {
+  private void addColumns(final StatementExecutor e, final RelationModel rel)
+      throws SQLException, OrmException {
     final SqlDialect dialect = dbDef.getDialect();
     final SchemaModel model = dbDef.getSchemaModel();
-    final Statement stmt = getConnection().createStatement();
-    try {
-      Set<String> have = dialect.listColumns( //
-          getConnection(), rel.getRelationName().toLowerCase());
-      for (final ColumnModel c : rel.getColumns()) {
-        if (!have.contains(c.getColumnName().toLowerCase())) {
-          dialect.addColumn(stmt, rel.getRelationName(), c);
-        }
+    Set<String> have = dialect.listColumns( //
+        getConnection(), rel.getRelationName().toLowerCase());
+    for (final ColumnModel c : rel.getColumns()) {
+      if (!have.contains(c.getColumnName().toLowerCase())) {
+        dialect.addColumn(e, rel.getRelationName(), c);
       }
-    } finally {
-      stmt.close();
     }
   }
 
-  public void renameField(String table, String from, String to)
-      throws OrmException {
+  public void renameField(final StatementExecutor e, String table, String from,
+      String to) throws OrmException {
     final RelationModel rel = findRelationModel(table);
     if (rel == null) {
       throw new OrmException("Relation " + table + " not defined");
@@ -146,17 +136,17 @@ public abstract class JdbcSchema implements Schema {
     try {
       final Statement s = getConnection().createStatement();
       try {
-        getDialect().renameColumn(s, table, from, col);
+        getDialect().renameColumn(e, table, from, col);
       } finally {
         s.close();
       }
-    } catch (SQLException e) {
+    } catch (SQLException err) {
       throw new OrmException("Cannot rename " + table + "." + from + " to "
-          + to, e);
+          + to, err);
     }
   }
 
-  private RelationModel findRelationModel(String table) throws OrmException {
+  private RelationModel findRelationModel(String table) {
     for (final RelationModel rel : dbDef.getSchemaModel().getRelations()) {
       if (table.equalsIgnoreCase(rel.getRelationName())) {
         return rel;
@@ -165,74 +155,62 @@ public abstract class JdbcSchema implements Schema {
     return null;
   }
 
-  public void pruneSchema() throws OrmException {
+  public void pruneSchema(final StatementExecutor e) throws OrmException {
     try {
-      pruneSequences();
-      pruneRelations();
+      pruneSequences(e);
+      pruneRelations(e);
 
       for (final RelationModel rel : dbDef.getSchemaModel().getRelations()) {
-        pruneColumns(rel);
+        pruneColumns(e, rel);
       }
-    } catch (SQLException e) {
-      throw new OrmException("Schema prune failure", e);
+    } catch (SQLException err) {
+      throw new OrmException("Schema prune failure", err);
     }
   }
 
-  private void pruneSequences() throws SQLException {
+  private void pruneSequences(final StatementExecutor e) throws SQLException,
+      OrmException {
     final SqlDialect dialect = dbDef.getDialect();
     final SchemaModel model = dbDef.getSchemaModel();
-    final Statement stmt = getConnection().createStatement();
-    try {
-      HashSet<String> want = new HashSet<String>();
-      for (final SequenceModel s : model.getSequences()) {
-        want.add(s.getSequenceName().toLowerCase());
+    HashSet<String> want = new HashSet<String>();
+    for (final SequenceModel s : model.getSequences()) {
+      want.add(s.getSequenceName().toLowerCase());
+    }
+    for (final String sequence : dialect.listSequences(getConnection())) {
+      if (!want.contains(sequence)) {
+        e.execute(dialect.getDropSequenceSql(sequence));
       }
-      for (final String sequence : dialect.listSequences(getConnection())) {
-        if (!want.contains(sequence)) {
-          stmt.execute(dialect.getDropSequenceSql(sequence));
-        }
-      }
-    } finally {
-      stmt.close();
     }
   }
 
-  private void pruneRelations() throws SQLException {
+  private void pruneRelations(final StatementExecutor e) throws SQLException,
+      OrmException {
     final SqlDialect dialect = dbDef.getDialect();
     final SchemaModel model = dbDef.getSchemaModel();
-    final Statement stmt = getConnection().createStatement();
-    try {
-      HashSet<String> want = new HashSet<String>();
-      for (final RelationModel r : model.getRelations()) {
-        want.add(r.getRelationName().toLowerCase());
+    HashSet<String> want = new HashSet<String>();
+    for (final RelationModel r : model.getRelations()) {
+      want.add(r.getRelationName().toLowerCase());
+    }
+    for (final String table : dialect.listTables(getConnection())) {
+      if (!want.contains(table)) {
+        e.execute("DROP TABLE " + table);
       }
-      for (final String table : dialect.listTables(getConnection())) {
-        if (!want.contains(table)) {
-          stmt.execute("DROP TABLE " + table);
-        }
-      }
-    } finally {
-      stmt.close();
     }
   }
 
-  private void pruneColumns(final RelationModel rel) throws SQLException {
+  private void pruneColumns(final StatementExecutor e, final RelationModel rel)
+      throws SQLException, OrmException {
     final SqlDialect dialect = dbDef.getDialect();
     final SchemaModel model = dbDef.getSchemaModel();
-    final Statement stmt = getConnection().createStatement();
-    try {
-      HashSet<String> want = new HashSet<String>();
-      for (final ColumnModel c : rel.getColumns()) {
-        want.add(c.getColumnName().toLowerCase());
+    HashSet<String> want = new HashSet<String>();
+    for (final ColumnModel c : rel.getColumns()) {
+      want.add(c.getColumnName().toLowerCase());
+    }
+    for (String column : dialect.listColumns( //
+        getConnection(), rel.getRelationName().toLowerCase())) {
+      if (!want.contains(column)) {
+        dialect.dropColumn(e, rel.getRelationName(), column);
       }
-      for (String column : dialect.listColumns( //
-          getConnection(), rel.getRelationName().toLowerCase())) {
-        if (!want.contains(column)) {
-          dialect.dropColumn(stmt, rel.getRelationName(), column);
-        }
-      }
-    } finally {
-      stmt.close();
     }
   }
 

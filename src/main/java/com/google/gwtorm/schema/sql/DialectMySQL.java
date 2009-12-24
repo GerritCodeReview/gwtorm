@@ -16,6 +16,7 @@ package com.google.gwtorm.schema.sql;
 
 import com.google.gwtorm.client.Column;
 import com.google.gwtorm.client.OrmException;
+import com.google.gwtorm.client.StatementExecutor;
 import com.google.gwtorm.schema.ColumnModel;
 import com.google.gwtorm.schema.SequenceModel;
 
@@ -171,8 +172,8 @@ public class DialectMySQL extends SqlDialect {
   }
 
   @Override
-  public void renameColumn(Statement stmt, String tableName, String fromColumn,
-      ColumnModel col) throws SQLException {
+  public void renameColumn(StatementExecutor stmt, String tableName,
+      String fromColumn, ColumnModel col) throws OrmException {
     StringBuffer r = new StringBuffer();
     r.append("ALTER TABLE ");
     r.append(tableName);

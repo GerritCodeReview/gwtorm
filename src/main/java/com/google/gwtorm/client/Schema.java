@@ -62,18 +62,20 @@ public interface Schema {
    * for applications to continue to query after the update. Any unused columns
    * that are NOT NULL are altered to accept NULL.
    *
+   * @param e executor to perform (or log) the statements.
    * @throws OrmException one or more objects could not be added to the schema.
    */
-  void updateSchema() throws OrmException;
+  void updateSchema(StatementExecutor e) throws OrmException;
 
   /**
    * Drop any unused columns, tables, or sequences.
    * <p>
    * This method destroys data, as columns may be removed entirely.
    *
+   * @param e executor to perform (or log) the statements.
    * @throws OrmException one or more drops could not be completed.
    */
-  void pruneSchema() throws OrmException;
+  void pruneSchema(StatementExecutor e) throws OrmException;
 
   /**
    * Begin a new transaction.

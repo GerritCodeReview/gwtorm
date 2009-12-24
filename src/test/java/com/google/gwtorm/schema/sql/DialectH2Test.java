@@ -20,6 +20,7 @@ import com.google.gwtorm.data.PhoneBookDb2;
 import com.google.gwtorm.data.TestAddress;
 import com.google.gwtorm.data.TestPerson;
 import com.google.gwtorm.jdbc.Database;
+import com.google.gwtorm.jdbc.JdbcExecutor;
 import com.google.gwtorm.jdbc.JdbcSchema;
 import com.google.gwtorm.jdbc.SimpleDataSource;
 
@@ -28,13 +29,13 @@ import junit.framework.TestCase;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Collections;
 import java.util.Properties;
 import java.util.Set;
 
 public class DialectH2Test extends TestCase {
   private Connection db;
+  private JdbcExecutor executor;
   private SqlDialect dialect;
   private Database<PhoneBookDb> phoneBook;
   private Database<PhoneBookDb2> phoneBook2;
@@ -44,6 +45,7 @@ public class DialectH2Test extends TestCase {
     super.setUp();
     org.h2.Driver.load();
     db = DriverManager.getConnection("jdbc:h2:mem:DialectH2Test");
+    executor = new JdbcExecutor(db);
     dialect = new DialectH2().refine(db);
 
     final Properties p = new Properties();
@@ -57,6 +59,11 @@ public class DialectH2Test extends TestCase {
 
   @Override
   protected void tearDown() {
+    if (executor != null) {
+      executor.close();
+    }
+    executor = null;
+
     if (db != null) {
       try {
         db.close();
@@ -67,16 +74,11 @@ public class DialectH2Test extends TestCase {
     db = null;
   }
 
-  private void execute(final String sql) throws SQLException {
-    final Statement stmt = db.createStatement();
-    try {
-      stmt.execute(sql);
-    } finally {
-      stmt.close();
-    }
+  private void execute(final String sql) throws OrmException {
+    executor.execute(sql);
   }
 
-  public void testListSequences() throws SQLException {
+  public void testListSequences() throws OrmException, SQLException {
     assertTrue(dialect.listSequences(db).isEmpty());
 
     execute("CREATE SEQUENCE cnt");
@@ -88,7 +90,7 @@ public class DialectH2Test extends TestCase {
     assertFalse(s.contains("foo"));
   }
 
-  public void testListTables() throws SQLException {
+  public void testListTables() throws OrmException,SQLException {
     assertTrue(dialect.listTables(db).isEmpty());
 
     execute("CREATE SEQUENCE cnt");
@@ -103,7 +105,7 @@ public class DialectH2Test extends TestCase {
   public void testUpgradeSchema() throws SQLException, OrmException {
     final PhoneBookDb p = phoneBook.open();
     try {
-      p.updateSchema();
+      p.updateSchema(executor);
 
       execute("CREATE SEQUENCE cnt");
       execute("CREATE TABLE foo (cnt INT)");
@@ -115,7 +117,7 @@ public class DialectH2Test extends TestCase {
 
       Set<String> sequences, tables;
 
-      p.updateSchema();
+      p.updateSchema(executor);
       sequences = dialect.listSequences(db);
       tables = dialect.listTables(db);
       assertTrue(sequences.contains("cnt"));
@@ -124,7 +126,7 @@ public class DialectH2Test extends TestCase {
       assertTrue(sequences.contains("address_id"));
       assertTrue(tables.contains("addresses"));
 
-      p.pruneSchema();
+      p.pruneSchema(executor);
       sequences = dialect.listSequences(db);
       tables = dialect.listTables(db);
       assertFalse(sequences.contains("cnt"));
@@ -143,7 +145,8 @@ public class DialectH2Test extends TestCase {
 
     final PhoneBookDb2 p2 = phoneBook2.open();
     try {
-      ((JdbcSchema)p2).renameField("people", "registered", "isRegistered");
+      ((JdbcSchema) p2).renameField(executor, "people", "registered",
+          "isRegistered");
     } finally {
       p2.close();
     }

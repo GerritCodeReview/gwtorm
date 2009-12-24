@@ -21,6 +21,7 @@ import com.google.gwtorm.data.PersonAccess;
 import com.google.gwtorm.data.PhoneBookDb;
 import com.google.gwtorm.data.TestPerson;
 import com.google.gwtorm.jdbc.Database;
+import com.google.gwtorm.jdbc.JdbcExecutor;
 import com.google.gwtorm.jdbc.JdbcSchema;
 import com.google.gwtorm.jdbc.SimpleDataSource;
 
@@ -71,7 +72,12 @@ public class PhoneBookDbTestCase extends TestCase {
 
   protected PhoneBookDb openAndCreate() throws OrmException {
     final PhoneBookDb schema = open();
-    schema.updateSchema();
+    final JdbcExecutor e = new JdbcExecutor((JdbcSchema) schema);
+    try {
+      schema.updateSchema(e);
+    } finally {
+      e.close();
+    }
     return schema;
   }
 
@@ -104,7 +110,12 @@ public class PhoneBookDbTestCase extends TestCase {
 
   public void testCreateSchema() throws Exception {
     final PhoneBookDb schema = open();
-    schema.updateSchema();
+    final JdbcExecutor e = new JdbcExecutor((JdbcSchema) schema);
+    try {
+      schema.updateSchema(e);
+    } finally {
+      e.close();
+    }
   }
 
   public void testNextAddressId() throws Exception {

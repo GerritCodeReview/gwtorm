@@ -16,6 +16,7 @@ package com.google.gwtorm.schema.sql;
 
 import com.google.gwtorm.client.OrmDuplicateKeyException;
 import com.google.gwtorm.client.OrmException;
+import com.google.gwtorm.client.StatementExecutor;
 import com.google.gwtorm.schema.ColumnModel;
 
 import java.sql.Connection;
@@ -68,8 +69,8 @@ public class DialectH2 extends SqlDialect {
   }
 
   @Override
-  public void addColumn(Statement stmt, String tableName, ColumnModel col)
-      throws SQLException {
+  public void addColumn(StatementExecutor stmt, String tableName,
+      ColumnModel col) throws OrmException {
     final StringBuilder r = new StringBuilder();
     r.append("ALTER TABLE ");
     r.append(tableName);
@@ -93,8 +94,8 @@ public class DialectH2 extends SqlDialect {
   }
 
   @Override
-  public void renameColumn(Statement stmt, String tableName, String fromColumn,
-      ColumnModel col) throws SQLException {
+  public void renameColumn(StatementExecutor stmt, String tableName,
+      String fromColumn, ColumnModel col) throws OrmException {
     final StringBuilder r = new StringBuilder();
     r.append("ALTER TABLE ");
     r.append(tableName);

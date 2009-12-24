@@ -16,6 +16,7 @@ package com.google.gwtorm.schema.sql;
 
 import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.client.Sequence;
+import com.google.gwtorm.client.StatementExecutor;
 import com.google.gwtorm.schema.ColumnModel;
 import com.google.gwtorm.schema.RelationModel;
 import com.google.gwtorm.schema.SequenceModel;
@@ -244,13 +245,13 @@ public abstract class SqlDialect {
   /**
    * Add one column to an existing table.
    *
-   * @param stmt statement to use to execute the SQL command(s).
+   * @param e statement to use to execute the SQL command(s).
    * @param tableName table to add the column onto.
    * @param col definition of the column.
-   * @throws SQLException the column could not be added.
+   * @throws OrmException the column could not be added.
    */
-  public void addColumn(Statement stmt, String tableName, ColumnModel col)
-      throws SQLException {
+  public void addColumn(StatementExecutor e, String tableName, ColumnModel col)
+      throws OrmException {
     final StringBuilder r = new StringBuilder();
     r.append("ALTER TABLE ");
     r.append(tableName);
@@ -263,38 +264,38 @@ public abstract class SqlDialect {
       r.append(' ');
       r.append(check);
     }
-    stmt.execute(r.toString());
+    e.execute(r.toString());
   }
 
   /**
    * Drop one column from an existing table.
    *
-   * @param stmt statement to use to execute the SQL command(s).
+   * @param e statement to use to execute the SQL command(s).
    * @param tableName table to add the column onto.
    * @param column name of the column to drop.
-   * @throws SQLException the column could not be added.
+   * @throws OrmException the column could not be added.
    */
-  public void dropColumn(Statement stmt, String tableName, String column)
-      throws SQLException {
+  public void dropColumn(StatementExecutor e, String tableName, String column)
+      throws OrmException {
     final StringBuilder r = new StringBuilder();
     r.append("ALTER TABLE ");
     r.append(tableName);
     r.append(" DROP COLUMN ");
     r.append(column);
-    stmt.execute(r.toString());
+    e.execute(r.toString());
   }
 
   /**
    * Rename an existing column in a table.
    *
-   * @param stmt statement to use to execute the SQL command(s).
+   * @param e statement to use to execute the SQL command(s).
    * @param tableName table to add the column onto.
    * @param fromColumn source column name
    * @param col destination column definition
-   * @throws SQLException the column could not be renamed.
+   * @throws OrmException the column could not be renamed.
    */
-  public abstract void renameColumn(Statement stmt, String tableName,
-      String fromColumn, ColumnModel col) throws SQLException;
+  public abstract void renameColumn(StatementExecutor e, String tableName,
+      String fromColumn, ColumnModel col) throws OrmException;
 
   public abstract String getNextSequenceValueSql(String seqname);
 }
