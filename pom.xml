@@ -409,10 +409,6 @@ limitations under the License.
       <id>objectweb-repository</id>
       <url>http://maven.objectweb.org/maven2</url>
     </repository>
-    <repository>
-      <id>gwt-maven</id>
-      <url>http://gwt-maven.googlecode.com/svn/trunk/mavenrepo/</url>
-    </repository>
   </repositories>
 
   <distributionManagement>
