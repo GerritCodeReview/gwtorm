@@ -197,6 +197,55 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
   }
 
   @Override
+  protected void doUpsert(final Iterable<T> instances, final JdbcTransaction txn)
+      throws OrmException {
+    // Assume update first, it will cheaply tell us if the row is missing.
+    //
+    Collection<T> inserts = null;
+    try {
+      final PreparedStatement ps;
+
+      ps = schema.getConnection().prepareStatement(getUpdateOneSql());
+      try {
+        int cnt = 0;
+        for (final T o : instances) {
+          bindOneUpdate(ps, o);
+          ps.addBatch();
+          cnt++;
+        }
+
+        final int[] states = ps.executeBatch();
+        if (states == null) {
+          inserts = new ArrayList<T>(cnt);
+          for(T o : instances){
+            inserts.add(o);
+          }
+        } else {
+          int i = 0;
+          for (T o : instances) {
+            if (states.length <= i || states[i] != 1) {
+              if (inserts == null) {
+                inserts = new ArrayList<T>(cnt - i);
+              }
+              inserts.add(o);
+            }
+            i++;
+          }
+        }
+
+      } finally {
+        ps.close();
+      }
+    } catch (SQLException e) {
+      throw convertError("update", e);
+    }
+
+    if (inserts != null) {
+      doInsert(inserts, txn);
+    }
+  }
+
+  @Override
   protected void doDelete(final Iterable<T> instances, final JdbcTransaction txn)
       throws OrmException {
     try {

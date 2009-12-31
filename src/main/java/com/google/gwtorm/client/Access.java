@@ -138,6 +138,27 @@ public interface Access<T extends Object, K extends Key<?>> {
   void update(Iterable<T> instances, Transaction txn) throws OrmException;
 
   /**
+   * Immediately update or insert entities in the data store.
+   *
+   * @param instances the instances to update. The iteration occurs only once.
+   * @throws OrmException data modification failed.
+   * @throws UnsupportedOperationException no PrimaryKey was declared.
+   */
+  void upsert(Iterable<T> instances) throws OrmException;
+
+  /**
+   * Update or insert entities in the data store.
+   *
+   * @param instances the instances to update. The iteration occurs only once.
+   * @param txn transaction to batch the operation into. If not null the data
+   *        store changes will be delayed to {@link Transaction#commit()} is
+   *        invoked; if null the operation occurs immediately.
+   * @throws OrmException data modification failed.
+   * @throws UnsupportedOperationException no PrimaryKey was declared.
+   */
+  void upsert(Iterable<T> instances, Transaction txn) throws OrmException;
+
+  /**
    * Immediately delete existing entities from the data store.
    *
    * @param instances the instances to delete. The iteration occurs only once.

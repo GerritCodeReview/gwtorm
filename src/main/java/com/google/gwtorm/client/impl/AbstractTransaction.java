@@ -30,11 +30,13 @@ public abstract class AbstractTransaction implements Transaction {
 
   protected final Map<Object, Action<?, Key<?>, AbstractTransaction>> pendingInsert;
   protected final Map<Object, Action<?, Key<?>, AbstractTransaction>> pendingUpdate;
+  protected final Map<Object, Action<?, Key<?>, AbstractTransaction>> pendingUpsert;
   protected final Map<Object, Action<?, Key<?>, AbstractTransaction>> pendingDelete;
 
   protected AbstractTransaction() {
     pendingInsert = newMap();
     pendingUpdate = newMap();
+    pendingUpsert = newMap();
     pendingDelete = newMap();
   }
 
@@ -48,6 +50,9 @@ public abstract class AbstractTransaction implements Transaction {
     for (Action<?, Key<?>, AbstractTransaction> a : pendingUpdate.values()) {
       a.doUpdate(this);
     }
+    for (Action<?, Key<?>, AbstractTransaction> a : pendingUpsert.values()) {
+      a.doUpsert(this);
+    }
   }
 
   <E, K extends Key<?>, T extends AbstractTransaction> void queueInsert(
@@ -58,6 +63,11 @@ public abstract class AbstractTransaction implements Transaction {
   <E, K extends Key<?>, T extends AbstractTransaction> void queueUpdate(
       final AbstractAccess<E, ?, T> access, final Iterable<E> list) {
     queue(pendingUpdate, access, list);
+  }
+
+  <E, K extends Key<?>, T extends AbstractTransaction> void queueUpsert(
+      final AbstractAccess<E, ?, T> access, final Iterable<E> list) {
+    queue(pendingUpsert, access, list);
   }
 
   <E, K extends Key<?>, T extends AbstractTransaction> void queueDelete(
@@ -115,6 +125,10 @@ public abstract class AbstractTransaction implements Transaction {
 
     void doUpdate(final T t) throws OrmException {
       access.doUpdate(instances, t);
+    }
+
+    void doUpsert(final T t) throws OrmException {
+      access.doUpsert(instances, t);
     }
 
     void doDelete(final T t) throws OrmException {

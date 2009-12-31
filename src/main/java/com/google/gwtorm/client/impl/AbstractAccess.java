@@ -77,6 +77,19 @@ public abstract class AbstractAccess<E, K extends Key<?>, T extends AbstractTran
     }
   }
 
+  public final void upsert(final Iterable<E> instances) throws OrmException {
+    doUpsert(instances, null);
+  }
+
+  public final void upsert(final Iterable<E> instances, final Transaction txn)
+      throws OrmException {
+    if (txn != null) {
+      cast(txn).queueUpsert(this, instances);
+    } else {
+      upsert(instances);
+    }
+  }
+
   public final void delete(final Iterable<E> instances) throws OrmException {
     doDelete(instances, null);
   }
@@ -94,6 +107,9 @@ public abstract class AbstractAccess<E, K extends Key<?>, T extends AbstractTran
       throws OrmException;
 
   protected abstract void doUpdate(Iterable<E> instances, T txn)
+      throws OrmException;
+
+  protected abstract void doUpsert(Iterable<E> instances, T txn)
       throws OrmException;
 
   protected abstract void doDelete(Iterable<E> instances, T txn)
