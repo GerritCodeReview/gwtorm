@@ -14,20 +14,12 @@
 
 package com.google.gwtorm.client;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.http.client.URL;
 import com.google.gwtorm.server.StandardKeyEncoder;
 
 
 /** Common utility functions for {@link Key} implementors. */
 public class KeyUtil {
   private static Encoder ENCODER_IMPL;
-
-  static {
-    if (GWT.isClient()) {
-      ENCODER_IMPL = new GwtEncoder();
-    }
-  }
 
   /**
    * Set the encoder implementation to a valid implementation.
@@ -107,20 +99,6 @@ public class KeyUtil {
     public abstract String encode(String e);
 
     public abstract String decode(String e);
-  }
-
-  private static class GwtEncoder extends Encoder {
-    @Override
-    public String encode(final String e) {
-      return fixPathImpl(URL.encodeComponent(e));
-    }
-
-    @Override
-    public String decode(final String e) {
-      return URL.decodeComponent(e);
-    }
-
-    private static native String fixPathImpl(String path) /*-{ return path.replace(/%2F/g, "/"); }-*/;
   }
 
   private KeyUtil() {
