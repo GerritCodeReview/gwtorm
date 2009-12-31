@@ -157,19 +157,22 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
   protected void doInsert(final Iterable<T> instances, final JdbcTransaction txn)
       throws OrmException {
     try {
-      final PreparedStatement ps;
-
-      ps = schema.getConnection().prepareStatement(getInsertOneSql());
+      PreparedStatement ps = null;
       try {
         int cnt = 0;
         for (final T o : instances) {
+          if (ps == null) {
+            ps = schema.getConnection().prepareStatement(getInsertOneSql());
+          }
           bindOneInsert(ps, o);
           ps.addBatch();
           cnt++;
         }
         execute(ps, cnt);
       } finally {
-        ps.close();
+        if (ps != null) {
+          ps.close();
+        }
       }
     } catch (SQLException e) {
       throw convertError("insert", e);
@@ -180,19 +183,22 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
   protected void doUpdate(final Iterable<T> instances, final JdbcTransaction txn)
       throws OrmException {
     try {
-      final PreparedStatement ps;
-
-      ps = schema.getConnection().prepareStatement(getUpdateOneSql());
+      PreparedStatement ps = null;
       try {
         int cnt = 0;
         for (final T o : instances) {
+          if (ps == null) {
+            ps = schema.getConnection().prepareStatement(getUpdateOneSql());
+          }
           bindOneUpdate(ps, o);
           ps.addBatch();
           cnt++;
         }
         execute(ps, cnt);
       } finally {
-        ps.close();
+        if (ps != null) {
+          ps.close();
+        }
       }
     } catch (SQLException e) {
       throw convertError("update", e);
@@ -206,38 +212,42 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
     //
     Collection<T> inserts = null;
     try {
-      final PreparedStatement ps;
-
-      ps = schema.getConnection().prepareStatement(getUpdateOneSql());
+      PreparedStatement ps = null;
       try {
         int cnt = 0;
         for (final T o : instances) {
+          if (ps == null) {
+            ps = schema.getConnection().prepareStatement(getUpdateOneSql());
+          }
           bindOneUpdate(ps, o);
           ps.addBatch();
           cnt++;
         }
 
-        final int[] states = ps.executeBatch();
-        if (states == null) {
-          inserts = new ArrayList<T>(cnt);
-          for (T o : instances) {
-            inserts.add(o);
-          }
-        } else {
-          int i = 0;
-          for (T o : instances) {
-            if (states.length <= i || states[i] != 1) {
-              if (inserts == null) {
-                inserts = new ArrayList<T>(cnt - i);
-              }
+        if (0 < cnt) {
+          final int[] states = ps.executeBatch();
+          if (states == null) {
+            inserts = new ArrayList<T>(cnt);
+            for (T o : instances) {
               inserts.add(o);
             }
-            i++;
+          } else {
+            int i = 0;
+            for (T o : instances) {
+              if (states.length <= i || states[i] != 1) {
+                if (inserts == null) {
+                  inserts = new ArrayList<T>(cnt - i);
+                }
+                inserts.add(o);
+              }
+              i++;
+            }
           }
         }
-
       } finally {
-        ps.close();
+        if (ps != null) {
+          ps.close();
+        }
       }
     } catch (SQLException e) {
       throw convertError("update", e);
@@ -252,19 +262,22 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
   protected void doDelete(final Iterable<T> instances, final JdbcTransaction txn)
       throws OrmException {
     try {
-      final PreparedStatement ps;
-
-      ps = schema.getConnection().prepareStatement(getDeleteOneSql());
+      PreparedStatement ps = null;
       try {
         int cnt = 0;
         for (final T o : instances) {
+          if (ps == null) {
+            ps = schema.getConnection().prepareStatement(getDeleteOneSql());
+          }
           bindOneDelete(ps, o);
           ps.addBatch();
           cnt++;
         }
         execute(ps, cnt);
       } finally {
-        ps.close();
+        if (ps != null) {
+          ps.close();
+        }
       }
     } catch (SQLException e) {
       throw convertError("delete", e);
