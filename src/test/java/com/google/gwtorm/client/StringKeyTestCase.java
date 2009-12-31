@@ -22,7 +22,7 @@ import junit.framework.TestCase;
 public class StringKeyTestCase extends TestCase {
   private abstract static class StringKeyImpl<T extends Key<?>> extends
       StringKey<T> {
-    @Column
+    @Column(id = 1)
     String name;
 
     public StringKeyImpl(String n) {

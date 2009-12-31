@@ -22,7 +22,7 @@ import junit.framework.TestCase;
 public class LongKeyTestCase extends TestCase {
   private abstract static class LongKeyImpl<T extends Key<?>> extends
       LongKey<T> {
-    @Column
+    @Column(id = 1)
     long id;
 
     public LongKeyImpl(long n) {

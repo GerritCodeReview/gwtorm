@@ -27,7 +27,8 @@ public class QueryParserTest extends TestCase {
   private final class DummyColumn extends ColumnModel {
     private String name;
 
-    DummyColumn(final String n) {
+    DummyColumn(final int id, final String n) {
+      columnId = id;
       name = n;
       columnName = n;
     }
@@ -53,10 +54,10 @@ public class QueryParserTest extends TestCase {
       {
         final Collection<ColumnModel> c = new ArrayList<ColumnModel>();
         try {
-          c.add(new DummyColumn("name"));
-          c.add(new DummyColumn("a"));
-          c.add(new DummyColumn("b"));
-          c.add(new DummyColumn("c"));
+          c.add(new DummyColumn(1, "name"));
+          c.add(new DummyColumn(2, "a"));
+          c.add(new DummyColumn(3, "b"));
+          c.add(new DummyColumn(4, "c"));
           initColumns(c);
         } catch (OrmException e) {
           throw new RuntimeException("init columns failure", e);

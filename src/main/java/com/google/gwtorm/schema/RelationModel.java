@@ -26,6 +26,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 public abstract class RelationModel {
   protected String methodName;
@@ -33,6 +35,7 @@ public abstract class RelationModel {
   protected Relation relation;
   protected final LinkedHashMap<String, ColumnModel> fieldsByFieldName;
   protected final LinkedHashMap<String, ColumnModel> columnsByColumnName;
+  protected final SortedMap<Integer, ColumnModel> columnsById;
   protected KeyModel primaryKey;
   protected Collection<KeyModel> secondaryKeys;
   protected Collection<QueryModel> queries;
@@ -40,6 +43,7 @@ public abstract class RelationModel {
   protected RelationModel() {
     fieldsByFieldName = new LinkedHashMap<String, ColumnModel>();
     columnsByColumnName = new LinkedHashMap<String, ColumnModel>();
+    columnsById = new TreeMap<Integer, ColumnModel>();
     secondaryKeys = new ArrayList<KeyModel>();
     queries = new ArrayList<QueryModel>();
   }
@@ -61,6 +65,10 @@ public abstract class RelationModel {
       if (fieldsByFieldName.put(field.getFieldName(), field) != null) {
         throw new OrmException("Duplicate fields " + field.getFieldName());
       }
+      if (columnsById.put(field.getColumnID(), field) != null) {
+        throw new OrmException("Duplicate @Column id " + field.getColumnID()
+            + " in " + field.getPathToFieldName());
+      }
 
       if (field.isNested()) {
         for (final ColumnModel newCol : field.getAllLeafColumns()) {
@@ -73,10 +81,10 @@ public abstract class RelationModel {
   }
 
   private void registerColumn(final ColumnModel nc) throws OrmException {
-    final ColumnModel oc = columnsByColumnName.put(nc.getColumnName(), nc);
-    if (oc != null) {
+    final ColumnModel name = columnsByColumnName.put(nc.getColumnName(), nc);
+    if (name != null) {
       throw new OrmException("Duplicate columns " + nc.getColumnName() + " in "
-          + getMethodName() + ":\n" + "prior " + oc.getPathToFieldName()
+          + getMethodName() + ":\n" + "prior " + name.getPathToFieldName()
           + "\n next  " + nc.getPathToFieldName());
     }
   }

@@ -19,10 +19,10 @@ import com.google.gwtorm.client.StringKey;
 
 public class TestAddress {
   public static class Key extends StringKey<TestPerson.Key> {
-    @Column
+    @Column(id = 1)
     protected TestPerson.Key owner;
 
-    @Column
+    @Column(id = 2)
     protected String name;
 
     protected Key() {
@@ -50,13 +50,13 @@ public class TestAddress {
     }
   }
 
-  @Column
+  @Column(id = 1)
   protected Key city;
 
-  @Column(length = Integer.MAX_VALUE)
+  @Column(id = 2, length = Integer.MAX_VALUE)
   protected String location;
 
-  @Column(notNull = false)
+  @Column(id = 3, notNull = false)
   protected byte[] photo;
 
   protected TestAddress() {

@@ -20,7 +20,7 @@ import com.google.gwtorm.client.StringKey;
 
 public class TestPerson {
   public static class Key extends StringKey<com.google.gwtorm.client.Key<?>> {
-    @Column(length = 20)
+    @Column(id = 1, length = 20)
     protected String name;
 
     protected Key() {
@@ -41,13 +41,13 @@ public class TestPerson {
     }
   }
 
-  @Column
+  @Column(id = 1)
   protected Key name;
 
-  @Column
+  @Column(id = 2)
   protected int age;
 
-  @Column
+  @Column(id = 3)
   protected boolean registered;
 
   protected TestPerson() {

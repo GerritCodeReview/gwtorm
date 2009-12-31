@@ -21,7 +21,7 @@ import junit.framework.TestCase;
 
 public class IntKeyTestCase extends TestCase {
   private abstract static class IntKeyImpl<T extends Key<?>> extends IntKey<T> {
-    @Column
+    @Column(id = 1)
     int id;
 
     public IntKeyImpl(int n) {

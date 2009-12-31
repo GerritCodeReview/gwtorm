@@ -33,6 +33,9 @@ public @interface Column {
   /** Special value for {@link #name()} to indicate the name is empty. */
   public static final String NONE = "--NONE--";
 
+  /** @return unique identity of this field within its parent object. */
+  int id();
+
   /**
    * @return name of the column in the data store. Defaults to the field name.
    */

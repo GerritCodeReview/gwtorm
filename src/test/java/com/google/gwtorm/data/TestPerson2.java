@@ -18,12 +18,12 @@ import com.google.gwtorm.client.Column;
 
 
 public class TestPerson2 {
-  @Column
+  @Column(id = 1)
   protected TestPerson.Key name;
 
-  @Column
+  @Column(id = 2)
   protected int age;
 
-  @Column
+  @Column(id = 3)
   protected boolean isRegistered;
 }

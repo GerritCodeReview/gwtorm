@@ -20,10 +20,13 @@ import com.google.gwtorm.client.OrmException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 public abstract class ColumnModel {
   protected ColumnModel parent;
   private String origName;
+  protected int columnId;
   protected String columnName;
   protected Column column;
   protected Collection<ColumnModel> nestedColumns;
@@ -44,6 +47,10 @@ public abstract class ColumnModel {
     column = col;
     origName = Util.any(column.name(), Util.makeSqlFriendly(fieldName));
     columnName = origName;
+    columnId = column.id();
+    if (columnId < 1) {
+      throw new OrmException("Field " + fieldName + " cannot have id < 1");
+    }
     notNull = column.notNull();
   }
 
@@ -62,6 +69,14 @@ public abstract class ColumnModel {
       //
       for (final ColumnModel c : getAllLeafColumns()) {
         c.notNull = false;
+      }
+    }
+
+    Set<Integer> ids = new HashSet<Integer>();
+    for (final ColumnModel c : nestedColumns) {
+      if (!ids.add(c.columnId)) {
+        throw new OrmException("Duplicate @Column id " + c.columnId + " in "
+            + c.getPathToFieldName());
       }
     }
   }
@@ -119,6 +134,10 @@ public abstract class ColumnModel {
     return getParent().getPathToFieldName() + "." + getFieldName();
   }
 
+  public int getColumnID() {
+    return columnId;
+  }
+
   public String getColumnName() {
     return columnName;
   }
@@ -153,6 +172,7 @@ public abstract class ColumnModel {
   public String toString() {
     final StringBuilder r = new StringBuilder();
     r.append("Column[\n");
+    r.append("  id:       " + getColumnID() + "\n");
     r.append("  field:    " + getPathToFieldName() + "\n");
     r.append("  column:   " + getColumnName() + "\n");
     if (isSqlPrimitive()) {
