@@ -178,4 +178,22 @@ public interface Access<T extends Object, K extends Key<?>> {
    * @throws UnsupportedOperationException no PrimaryKey was declared.
    */
   void delete(Iterable<T> instances, Transaction txn) throws OrmException;
+
+  /**
+   * Atomically update a single entity.
+   * <p>
+   * If the entity does not exist, the method returns {@code null} without
+   * invoking {@code update}.
+   * <p>
+   * If the entity exists, the method invokes {@code update} with a current copy
+   * of the entity. The update function should edit the passed instance
+   * in-place. The return value will be returned to the caller, but is otherwise
+   * ignored by this update function.
+   *
+   * @param key key which identifies the entity.
+   * @param update the update function.
+   * @return the updated copy of the entity; or {@code null}.
+   * @throws OrmException data update failed.
+   */
+  T atomicUpdate(K key, AtomicUpdate<T> update) throws OrmException;
 }

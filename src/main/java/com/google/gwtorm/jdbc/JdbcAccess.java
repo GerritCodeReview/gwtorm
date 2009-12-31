@@ -15,9 +15,12 @@
 package com.google.gwtorm.jdbc;
 
 import com.google.gwtorm.client.Access;
+import com.google.gwtorm.client.AtomicUpdate;
 import com.google.gwtorm.client.Key;
 import com.google.gwtorm.client.OrmConcurrencyException;
 import com.google.gwtorm.client.OrmException;
+import com.google.gwtorm.client.OrmRunnable;
+import com.google.gwtorm.client.Transaction;
 import com.google.gwtorm.client.impl.AbstractAccess;
 import com.google.gwtorm.client.impl.ListResultSet;
 
@@ -217,7 +220,7 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
         final int[] states = ps.executeBatch();
         if (states == null) {
           inserts = new ArrayList<T>(cnt);
-          for(T o : instances){
+          for (T o : instances) {
             inserts.add(o);
           }
         } else {
@@ -283,6 +286,24 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
         throw new OrmConcurrencyException();
       }
     }
+  }
+
+  @Override
+  public T atomicUpdate(final K key, final AtomicUpdate<T> update)
+      throws OrmException {
+    return schema.run(new OrmRunnable<T, JdbcSchema>() {
+      @Override
+      public T run(JdbcSchema db, Transaction txn, boolean retry)
+          throws OrmException {
+        final T obj = get(key);
+        if (obj == null) {
+          return null;
+        }
+        final T res = update.update(obj);
+        update(Collections.singleton(obj), txn);
+        return res;
+      }
+    });
   }
 
   private OrmException convertError(final String op, final SQLException err) {

@@ -15,6 +15,7 @@
 package com.google.gwtorm.client.impl;
 
 import com.google.gwtorm.client.Access;
+import com.google.gwtorm.client.AtomicUpdate;
 import com.google.gwtorm.client.Key;
 import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.client.ResultSet;
