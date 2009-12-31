@@ -161,6 +161,15 @@ public interface Access<T extends Object, K extends Key<?>> {
   /**
    * Immediately delete existing entities from the data store.
    *
+   * @param keys the keys to delete. The iteration occurs only once.
+   * @throws OrmException data removal failed.
+   * @throws UnsupportedOperationException no PrimaryKey was declared.
+   */
+  void deleteKeys(Iterable<K> keys) throws OrmException;
+
+  /**
+   * Immediately delete existing entities from the data store.
+   *
    * @param instances the instances to delete. The iteration occurs only once.
    * @throws OrmException data removal failed.
    * @throws UnsupportedOperationException no PrimaryKey was declared.

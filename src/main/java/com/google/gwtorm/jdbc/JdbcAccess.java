@@ -319,6 +319,11 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
     });
   }
 
+  @Override
+  public void deleteKeys(Iterable<K> keys) throws OrmException {
+    delete(get(keys));
+  }
+
   private OrmException convertError(final String op, final SQLException err) {
     if (err.getCause() == null && err.getNextException() != null) {
       err.initCause(err.getNextException());
