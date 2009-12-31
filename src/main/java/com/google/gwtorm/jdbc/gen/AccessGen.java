@@ -115,9 +115,6 @@ public class AccessGen implements Opcodes {
         overrideGetMany();
       }
     }
-    for (final KeyModel key : model.getSecondaryKeys()) {
-      implementKeyQuery(key);
-    }
 
     for (final QueryModel q : model.getQueries()) {
       implementQuery(q);

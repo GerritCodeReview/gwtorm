@@ -19,14 +19,10 @@ import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.client.PrimaryKey;
 import com.google.gwtorm.client.Query;
 import com.google.gwtorm.client.ResultSet;
-import com.google.gwtorm.client.SecondaryKey;
 
 public interface PersonAccess extends Access<TestPerson, TestPerson.Key> {
   @PrimaryKey("name")
   TestPerson get(TestPerson.Key key) throws OrmException;
-
-  @SecondaryKey("age")
-  TestPerson byAge(int age) throws OrmException;
 
   @Query
   ResultSet<TestPerson> all() throws OrmException;

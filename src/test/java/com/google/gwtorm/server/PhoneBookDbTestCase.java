@@ -159,18 +159,6 @@ public class PhoneBookDbTestCase extends TestCase {
     assertEquals(sp.primaryKey(p1), sp.primaryKey(p2));
   }
 
-  public void testGetByAge() throws Exception {
-    final PhoneBookDb schema = openAndCreate();
-    final PersonAccess sp = schema.people();
-    final TestPerson p1 = new TestPerson(new TestPerson.Key("Bob"), 18);
-    sp.insert(Collections.singleton(p1));
-
-    final TestPerson p2 = sp.byAge(p1.age());
-    assertNotNull(p2);
-    assertNotSame(p1, p2);
-    assertEquals(sp.primaryKey(p1), sp.primaryKey(p2));
-  }
-
   public void testGetOnePersonIterator() throws Exception {
     final PhoneBookDb schema = openAndCreate();
     final PersonAccess sp = schema.people();
