@@ -26,10 +26,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-class JavaColumnModel extends ColumnModel {
+public class JavaColumnModel extends ColumnModel {
   private final Field field;
 
-  JavaColumnModel(final Field columnField) throws OrmException {
+  public JavaColumnModel(final Field columnField) throws OrmException {
     field = columnField;
     initName(field.getName(), field.getAnnotation(Column.class));
 
@@ -76,6 +76,10 @@ class JavaColumnModel extends ColumnModel {
   @Override
   public String getNestedClassName() {
     return isPrimitive() ? null : field.getType().getName();
+  }
+
+  public Class<?> getNestedClass() {
+    return field.getType();
   }
 
   private boolean isPrimitive() {

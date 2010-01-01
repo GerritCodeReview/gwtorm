@@ -57,7 +57,8 @@ public class GeneratedClassLoader extends ClassLoader {
     super(parent);
   }
 
-  void defineClass(final String name, final byte[] code) throws OrmException {
+  public void defineClass(final String name, final byte[] code)
+      throws OrmException {
     if (debugCodeGen) {
       final File outClassFile =
           new File("generated_classes/" + name.replace('.', '/') + ".class");

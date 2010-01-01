@@ -74,4 +74,8 @@ public class TestAddress {
   public String location() {
     return location;
   }
+
+  public TestAddress.Key key() {
+    return city;
+  }
 }
