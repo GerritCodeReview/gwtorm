@@ -25,6 +25,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.HashSet;
 import java.util.Set;
@@ -57,6 +58,19 @@ public class DialectMySQL extends SqlDialect {
           r.append(" NOT NULL");
         }
 
+        return r.toString();
+      }
+    });
+    types.put(Timestamp.class, new SqlTimestampTypeInfo() {
+      @Override
+      public String getSqlType(ColumnModel col, SqlDialect dialect) {
+        final StringBuilder r = new StringBuilder();
+        r.append(dialect.getSqlTypeName(getSqlTypeConstant()));
+        if (col.isNotNull()) {
+          r.append(" NOT NULL");
+        } else {
+          r.append(" NULL DEFAULT NULL");
+        }
         return r.toString();
       }
     });
