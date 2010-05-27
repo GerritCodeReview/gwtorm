@@ -16,7 +16,6 @@ package com.google.gwtorm.server;
 
 import com.google.gwtorm.client.OrmConcurrencyException;
 import com.google.gwtorm.client.OrmException;
-import com.google.gwtorm.client.Transaction;
 import com.google.gwtorm.data.PersonAccess;
 import com.google.gwtorm.data.PhoneBookDb;
 import com.google.gwtorm.data.TestPerson;
@@ -186,34 +185,6 @@ public class PhoneBookDbTestCase extends TestCase {
 
     final Statement st = statement(schema);
     final ResultSet rs;
-    rs = st.executeQuery("SELECT name,age FROM people ORDER BY name");
-    for (int rowIdx = 0; rowIdx < all.size(); rowIdx++) {
-      assertTrue(rs.next());
-      assertEquals(all.get(rowIdx).name(), rs.getString(1));
-      assertEquals(all.get(rowIdx).age(), rs.getInt(2));
-    }
-    assertFalse(rs.next());
-    rs.close();
-    st.close();
-  }
-
-  public void testInsertManyPeopleByTransaction() throws Exception {
-    final PhoneBookDb schema = openAndCreate();
-    final Transaction txn = schema.beginTransaction();
-    final ArrayList<TestPerson> all = new ArrayList<TestPerson>();
-    all.add(new TestPerson(new TestPerson.Key("Bob"), 18));
-    all.add(new TestPerson(new TestPerson.Key("Mary"), 22));
-    all.add(new TestPerson(new TestPerson.Key("Zak"), 33));
-    schema.people().insert(all, txn);
-
-    final Statement st = statement(schema);
-    ResultSet rs;
-
-    rs = st.executeQuery("SELECT name,age FROM people ORDER BY name");
-    assertFalse(rs.next());
-    rs.close();
-
-    txn.commit();
     rs = st.executeQuery("SELECT name,age FROM people ORDER BY name");
     for (int rowIdx = 0; rowIdx < all.size(); rowIdx++) {
       assertTrue(rs.next());

@@ -78,30 +78,6 @@ public interface Schema {
   void pruneSchema(StatementExecutor e) throws OrmException;
 
   /**
-   * Begin a new transaction.
-   * <p>
-   * Only one transaction can be in-flight at a time on any given Schema
-   * instance. Applications must commit or rollback a previously created
-   * transaction before beginning another transaction on the same Schema.
-   *
-   * @return the new transaction.
-   * @throws OrmException the schema has been closed or another transaction has
-   *         already been begun on this schema instance.
-   */
-  Transaction beginTransaction() throws OrmException;
-
-  /**
-   * Execute a task within a transaction, restarting it if necessary.
-   *
-   * @param <T> type of return value for the task.
-   * @param <S> type of <code>this</code>.
-   * @param task the task to execute.
-   * @return the return value of the task.
-   * @throws OrmException the task could not be completed successfully.
-   */
-  <T, S extends Schema> T run(OrmRunnable<T, S> task) throws OrmException;
-
-  /**
    * Close the schema and release all resources.
    */
   void close();
