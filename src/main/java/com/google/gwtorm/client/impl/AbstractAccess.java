@@ -15,17 +15,15 @@
 package com.google.gwtorm.client.impl;
 
 import com.google.gwtorm.client.Access;
-import com.google.gwtorm.client.AtomicUpdate;
 import com.google.gwtorm.client.Key;
 import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.client.ResultSet;
-import com.google.gwtorm.client.Transaction;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class AbstractAccess<E, K extends Key<?>, T extends AbstractTransaction>
+public abstract class AbstractAccess<E, K extends Key<?>>
     implements Access<E, K> {
   public ResultSet<E> get(final Iterable<K> keys) throws OrmException {
     final ArrayList<E> r = new ArrayList<E>();
@@ -53,71 +51,31 @@ public abstract class AbstractAccess<E, K extends Key<?>, T extends AbstractTran
   }
 
   public final void insert(final Iterable<E> instances) throws OrmException {
-    doInsert(instances, null);
-  }
-
-  public final void insert(final Iterable<E> instances, final Transaction txn)
-      throws OrmException {
-    if (txn != null) {
-      cast(txn).queueInsert(this, instances);
-    } else {
-      insert(instances);
-    }
+    doInsert(instances);
   }
 
   public final void update(final Iterable<E> instances) throws OrmException {
-    doUpdate(instances, null);
-  }
-
-  public final void update(final Iterable<E> instances, final Transaction txn)
-      throws OrmException {
-    if (txn != null) {
-      cast(txn).queueUpdate(this, instances);
-    } else {
-      update(instances);
-    }
+    doUpdate(instances);
   }
 
   public final void upsert(final Iterable<E> instances) throws OrmException {
-    doUpsert(instances, null);
-  }
-
-  public final void upsert(final Iterable<E> instances, final Transaction txn)
-      throws OrmException {
-    if (txn != null) {
-      cast(txn).queueUpsert(this, instances);
-    } else {
-      upsert(instances);
-    }
+    doUpsert(instances);
   }
 
   public final void delete(final Iterable<E> instances) throws OrmException {
-    doDelete(instances, null);
+    doDelete(instances);
   }
 
-  public final void delete(final Iterable<E> instances, final Transaction txn)
-      throws OrmException {
-    if (txn != null) {
-      cast(txn).queueDelete(this, instances);
-    } else {
-      delete(instances);
-    }
-  }
-
-  protected abstract void doInsert(Iterable<E> instances, T txn)
+  protected abstract void doInsert(Iterable<E> instances)
       throws OrmException;
 
-  protected abstract void doUpdate(Iterable<E> instances, T txn)
+  protected abstract void doUpdate(Iterable<E> instances)
       throws OrmException;
 
-  protected abstract void doUpsert(Iterable<E> instances, T txn)
+  protected abstract void doUpsert(Iterable<E> instances)
       throws OrmException;
 
-  protected abstract void doDelete(Iterable<E> instances, T txn)
+  protected abstract void doDelete(Iterable<E> instances)
       throws OrmException;
 
-  @SuppressWarnings("unchecked")
-  private T cast(final Transaction txn) {
-    return ((T) txn);
-  }
 }
