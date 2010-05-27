@@ -19,7 +19,6 @@ import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.client.OrmRunnable;
 import com.google.gwtorm.client.Schema;
 import com.google.gwtorm.client.StatementExecutor;
-import com.google.gwtorm.client.Transaction;
 import com.google.gwtorm.schema.ColumnModel;
 import com.google.gwtorm.schema.RelationModel;
 import com.google.gwtorm.schema.SchemaModel;
@@ -55,12 +54,7 @@ public abstract class JdbcSchema implements Schema {
       throws OrmException {
     for (int attempts = 1;; attempts++) {
       try {
-        final Transaction txn = beginTransaction();
-        try {
-          return task.run((S) this, txn, attempts > 1);
-        } finally {
-          txn.commit();
-        }
+          return task.run((S) this, attempts > 1);
       } catch (OrmConcurrencyException err) {
         // If the commit failed, our implementation rolled back automatically.
         //
@@ -216,10 +210,6 @@ public abstract class JdbcSchema implements Schema {
 
   protected long nextLong(final String query) throws OrmException {
     return getDialect().nextLong(getConnection(), query);
-  }
-
-  public Transaction beginTransaction() {
-    return new JdbcTransaction(this);
   }
 
   public void close() {

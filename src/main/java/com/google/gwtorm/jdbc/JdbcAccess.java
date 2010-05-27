@@ -20,7 +20,6 @@ import com.google.gwtorm.client.Key;
 import com.google.gwtorm.client.OrmConcurrencyException;
 import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.client.OrmRunnable;
-import com.google.gwtorm.client.Transaction;
 import com.google.gwtorm.client.impl.AbstractAccess;
 import com.google.gwtorm.client.impl.ListResultSet;
 
@@ -33,7 +32,7 @@ import java.util.Collections;
 
 /** Internal base class for implementations of {@link Access}. */
 public abstract class JdbcAccess<T, K extends Key<?>> extends
-    AbstractAccess<T, K, JdbcTransaction> {
+    AbstractAccess<T, K> {
   private final JdbcSchema schema;
 
   protected JdbcAccess(final JdbcSchema s) {
@@ -154,7 +153,7 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
   }
 
   @Override
-  protected void doInsert(final Iterable<T> instances, final JdbcTransaction txn)
+  protected void doInsert(final Iterable<T> instances)
       throws OrmException {
     try {
       PreparedStatement ps = null;
@@ -180,7 +179,7 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
   }
 
   @Override
-  protected void doUpdate(final Iterable<T> instances, final JdbcTransaction txn)
+  protected void doUpdate(final Iterable<T> instances)
       throws OrmException {
     try {
       PreparedStatement ps = null;
@@ -206,7 +205,7 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
   }
 
   @Override
-  protected void doUpsert(final Iterable<T> instances, final JdbcTransaction txn)
+  protected void doUpsert(final Iterable<T> instances)
       throws OrmException {
     // Assume update first, it will cheaply tell us if the row is missing.
     //
@@ -254,12 +253,12 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
     }
 
     if (inserts != null) {
-      doInsert(inserts, txn);
+      doInsert(inserts);
     }
   }
 
   @Override
-  protected void doDelete(final Iterable<T> instances, final JdbcTransaction txn)
+  protected void doDelete(final Iterable<T> instances)
       throws OrmException {
     try {
       PreparedStatement ps = null;
@@ -306,14 +305,14 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
       throws OrmException {
     return schema.run(new OrmRunnable<T, JdbcSchema>() {
       @Override
-      public T run(JdbcSchema db, Transaction txn, boolean retry)
+      public T run(JdbcSchema db, boolean retry)
           throws OrmException {
         final T obj = get(key);
         if (obj == null) {
           return null;
         }
         final T res = update.update(obj);
-        update(Collections.singleton(obj), txn);
+        update(Collections.singleton(obj));
         return res;
       }
     });

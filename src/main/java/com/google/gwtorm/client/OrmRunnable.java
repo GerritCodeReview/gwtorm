@@ -33,11 +33,10 @@ public interface OrmRunnable<T, S extends Schema> {
    * concurrency error it would need to read the data again.
    *
    * @param db active schema handle to query through, and make updates on.
-   * @param txn the current transaction handle. Commit is invoked by the caller.
    * @param retry true if this is not the first attempt to execute this task.
    * @return the return value of the function, if any.
    * @throws OrmException any database error. {@link OrmConcurrencyException}
    *         may cause the transaction to be retried.
    */
-  T run(S db, Transaction txn, boolean retry) throws OrmException;
+  T run(S db, boolean retry) throws OrmException;
 }
