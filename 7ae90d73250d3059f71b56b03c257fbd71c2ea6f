@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAzH//+7s\u003d",
+        "filename": ".settings/org.eclipse.jdt.core.prefs",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2010-05-27T20:08:42Z",
+      "side": 1,
+      "message": "I\u0027d rather not make this edit as part of this change.  Can you drop this file out of your commit?",
+      "revId": "7ae90d73250d3059f71b56b03c257fbd71c2ea6f",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAzH//+7o\u003d",
+        "filename": "src/main/java/com/google/gwtorm/client/OrmRunnable.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2010-05-27T20:08:42Z",
+      "side": 1,
+      "message": "It looks like we should also remove this interface at the same time.  Its purpose is to re-execute a given block of code if an update fails, rolling back everything that occurred within that block.  But we cannot support that easily on BigTable and Gerrit Code Review doesn\u0027t need it.\n\nSo lets also drop it as part of this change.",
+      "revId": "7ae90d73250d3059f71b56b03c257fbd71c2ea6f",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAzH//+7k\u003d",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2010-05-27T20:08:42Z",
+      "side": 1,
+      "message": "This method will need to get reimplemented, because we\u0027re losing the transactional support that OrmRunnable provided us.\n\nI think its going to be something like:\n\n  for (int attempts \u003d 1;; attempts++) {\n    try {\n      final T obj \u003d get(key);\n      if (obj \u003d\u003d null) {\n        return null;\n      }\n      final T res \u003d update.update(obj);\n      update(Collections.singleton(obj));\n      return res;\n    } catch (OrmConcurrencyException err) {\n      if (attempts \u003c MAX_TRIES) {\n        continue;\n      }\n      throw err;\n    }\n  }",
+      "revId": "7ae90d73250d3059f71b56b03c257fbd71c2ea6f",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
