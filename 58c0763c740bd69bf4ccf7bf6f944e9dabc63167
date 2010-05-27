@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAzH//+60\u003d",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2010-05-27T21:48:03Z",
+      "side": 1,
+      "message": "Style-nit:  We typically put static fields above all instance members, so this should be before line 35.  We also offset them by one blank line from the instance members, so insert a new blank line below the constant.",
+      "revId": "58c0763c740bd69bf4ccf7bf6f944e9dabc63167",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
