@@ -18,7 +18,6 @@ import com.google.gwtorm.client.KeyUtil;
 import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.client.Schema;
 import com.google.gwtorm.client.SchemaFactory;
-import com.google.gwtorm.jdbc.gen.GeneratedClassLoader;
 import com.google.gwtorm.jdbc.gen.SchemaFactoryGen;
 import com.google.gwtorm.jdbc.gen.SchemaGen;
 import com.google.gwtorm.schema.SchemaModel;
@@ -27,6 +26,7 @@ import com.google.gwtorm.schema.sql.DialectH2;
 import com.google.gwtorm.schema.sql.DialectMySQL;
 import com.google.gwtorm.schema.sql.DialectPostgreSQL;
 import com.google.gwtorm.schema.sql.SqlDialect;
+import com.google.gwtorm.server.GeneratedClassLoader;
 import com.google.gwtorm.server.StandardKeyEncoder;
 
 import java.sql.Connection;

@@ -16,7 +16,7 @@ package com.google.gwtorm.protobuf;
 
 import com.google.gwtorm.client.Column;
 import com.google.gwtorm.client.OrmException;
-import com.google.gwtorm.jdbc.gen.GeneratedClassLoader;
+import com.google.gwtorm.server.GeneratedClassLoader;
 
 import java.util.Collections;
 import java.util.Map;

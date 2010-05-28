@@ -26,6 +26,7 @@ import com.google.gwtorm.schema.QueryModel;
 import com.google.gwtorm.schema.RelationModel;
 import com.google.gwtorm.schema.Util;
 import com.google.gwtorm.schema.sql.SqlDialect;
+import com.google.gwtorm.server.GeneratedClassLoader;
 
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;

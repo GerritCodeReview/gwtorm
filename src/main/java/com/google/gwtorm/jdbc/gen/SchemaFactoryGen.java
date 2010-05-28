@@ -19,6 +19,7 @@ import com.google.gwtorm.client.Schema;
 import com.google.gwtorm.jdbc.AbstractSchemaFactory;
 import com.google.gwtorm.jdbc.Database;
 import com.google.gwtorm.schema.Util;
+import com.google.gwtorm.server.GeneratedClassLoader;
 
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;

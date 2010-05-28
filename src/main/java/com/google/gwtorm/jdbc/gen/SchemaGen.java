@@ -23,6 +23,7 @@ import com.google.gwtorm.schema.SequenceModel;
 import com.google.gwtorm.schema.Util;
 import com.google.gwtorm.schema.java.JavaSchemaModel;
 import com.google.gwtorm.schema.sql.SqlDialect;
+import com.google.gwtorm.server.GeneratedClassLoader;
 
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
