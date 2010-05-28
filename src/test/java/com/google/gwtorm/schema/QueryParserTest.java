@@ -120,33 +120,27 @@ public class QueryParserTest extends TestCase {
     assertEquals(1, t.getChildCount());
 
     final Tree a = t.getChild(0);
-    assertEquals(QueryParser.ASC, a.getType());
-    assertEquals(1, a.getChildCount());
-    assertEquals(QueryParser.ID, a.getChild(0).getType());
-    assertTrue(a.getChild(0) instanceof QueryParser.Column);
-    assertEquals("a", a.getChild(0).getText());
+    assertEquals(QueryParser.ID, a.getType());
+    assertTrue(a instanceof QueryParser.Column);
+    assertEquals("a", a.getText());
   }
 
   public void testOrderByAB() throws QueryParseException {
-    final Tree t = parse("ORDER BY a DESC, b ASC");
+    final Tree t = parse("ORDER BY a, b");
     assertNotNull(t);
     assertEquals(QueryParser.ORDER, t.getType());
     assertEquals(2, t.getChildCount());
     {
       final Tree a = t.getChild(0);
-      assertEquals(QueryParser.DESC, a.getType());
-      assertEquals(1, a.getChildCount());
-      assertEquals(QueryParser.ID, a.getChild(0).getType());
-      assertTrue(a.getChild(0) instanceof QueryParser.Column);
-      assertEquals("a", a.getChild(0).getText());
+      assertEquals(QueryParser.ID, a.getType());
+      assertTrue(a instanceof QueryParser.Column);
+      assertEquals("a", a.getText());
     }
     {
       final Tree b = t.getChild(1);
-      assertEquals(QueryParser.ASC, b.getType());
-      assertEquals(1, b.getChildCount());
-      assertEquals(QueryParser.ID, b.getChild(0).getType());
-      assertTrue(b.getChild(0) instanceof QueryParser.Column);
-      assertEquals("b", b.getChild(0).getText());
+      assertEquals(QueryParser.ID, b.getType());
+      assertTrue(b instanceof QueryParser.Column);
+      assertEquals("b", b.getText());
     }
   }
 
@@ -166,10 +160,7 @@ public class QueryParserTest extends TestCase {
       assertEquals(QueryParser.ORDER, o.getType());
       assertEquals(1, o.getChildCount());
 
-      final Tree a = o.getChild(0);
-      assertEquals(QueryParser.ASC, a.getType());
-      assertEquals(1, a.getChildCount());
-      final Tree aId = a.getChild(0);
+      final Tree aId = o.getChild(0);
       assertEquals(QueryParser.ID, aId.getType());
       assertTrue(aId instanceof QueryParser.Column);
       assertEquals("a", aId.getText());

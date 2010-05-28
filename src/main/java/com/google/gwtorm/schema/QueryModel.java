@@ -220,8 +220,7 @@ public class QueryModel {
       case QueryParser.ORDER:
         fmt.buf.append(" ORDER BY ");
         for (int i = 0; i < node.getChildCount(); i++) {
-          final Tree sortOrder = node.getChild(i);
-          final Tree id = sortOrder.getChild(0);
+          final Tree id = node.getChild(i);
           if (i > 0) {
             fmt.buf.append(',');
           }
@@ -232,9 +231,6 @@ public class QueryModel {
               fmt.buf.append(fmt.tableAlias);
               fmt.buf.append('.');
               fmt.buf.append(cItr.next().getColumnName());
-              if (sortOrder.getType() == QueryParser.DESC) {
-                fmt.buf.append(" DESC");
-              }
               if (cItr.hasNext()) {
                 fmt.buf.append(',');
               }
@@ -243,9 +239,6 @@ public class QueryModel {
             fmt.buf.append(fmt.tableAlias);
             fmt.buf.append('.');
             fmt.buf.append(col.getColumnName());
-            if (sortOrder.getType() == QueryParser.DESC) {
-              fmt.buf.append(" DESC");
-            }
           }
         }
         break;
