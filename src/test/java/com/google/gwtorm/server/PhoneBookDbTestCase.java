@@ -286,12 +286,6 @@ public class PhoneBookDbTestCase extends TestCase {
     all.add(new TestPerson(new TestPerson.Key("Mary"), 22));
     all.add(new TestPerson(new TestPerson.Key("Zak"), 33));
     schema.people().insert(all);
-
-    final List<TestPerson> r =
-        schema.people().notPerson(new TestPerson.Key("Mary"), 10).toList();
-    assertEquals(2, r.size());
-    assertEquals(all.get(2).name(), r.get(0).name());
-    assertEquals(all.get(0).name(), r.get(1).name());
   }
 
   public void testBooleanType() throws Exception {
