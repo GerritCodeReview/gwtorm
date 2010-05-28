@@ -49,33 +49,4 @@ public abstract class AbstractAccess<E, K extends Key<?>>
       }
     }
   }
-
-  public final void insert(final Iterable<E> instances) throws OrmException {
-    doInsert(instances);
-  }
-
-  public final void update(final Iterable<E> instances) throws OrmException {
-    doUpdate(instances);
-  }
-
-  public final void upsert(final Iterable<E> instances) throws OrmException {
-    doUpsert(instances);
-  }
-
-  public final void delete(final Iterable<E> instances) throws OrmException {
-    doDelete(instances);
-  }
-
-  protected abstract void doInsert(Iterable<E> instances)
-      throws OrmException;
-
-  protected abstract void doUpdate(Iterable<E> instances)
-      throws OrmException;
-
-  protected abstract void doUpsert(Iterable<E> instances)
-      throws OrmException;
-
-  protected abstract void doDelete(Iterable<E> instances)
-      throws OrmException;
-
 }

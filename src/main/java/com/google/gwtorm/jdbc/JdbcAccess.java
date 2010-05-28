@@ -154,7 +154,7 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
   }
 
   @Override
-  protected void doInsert(final Iterable<T> instances) throws OrmException {
+  public void insert(final Iterable<T> instances) throws OrmException {
     try {
       PreparedStatement ps = null;
       try {
@@ -179,7 +179,7 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
   }
 
   @Override
-  protected void doUpdate(final Iterable<T> instances) throws OrmException {
+  public void update(final Iterable<T> instances) throws OrmException {
     try {
       PreparedStatement ps = null;
       try {
@@ -204,7 +204,7 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
   }
 
   @Override
-  protected void doUpsert(final Iterable<T> instances) throws OrmException {
+  public void upsert(final Iterable<T> instances) throws OrmException {
     // Assume update first, it will cheaply tell us if the row is missing.
     //
     Collection<T> inserts = null;
@@ -251,12 +251,12 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
     }
 
     if (inserts != null) {
-      doInsert(inserts);
+      insert(inserts);
     }
   }
 
   @Override
-  protected void doDelete(final Iterable<T> instances) throws OrmException {
+  public void delete(final Iterable<T> instances) throws OrmException {
     try {
       PreparedStatement ps = null;
       try {
