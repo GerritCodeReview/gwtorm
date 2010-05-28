@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAzX///7Y\u003d",
+        "filename": "src/test/java/com/google/gwtorm/server/PhoneBookDbTestCase.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 282,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2010-05-28T23:34:59Z",
+      "side": 0,
+      "message": "Drop the entire test method.  With the asserts gone at the end, all its doing now is wasting CPU time during the test phase of the build process.",
+      "revId": "2c467e9b643929a8a0f5cb456802733a157745cc",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
