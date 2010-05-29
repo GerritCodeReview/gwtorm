@@ -34,9 +34,9 @@ public abstract class JdbcSchema implements Schema {
   private final Database<?> dbDef;
   private Connection conn;
 
-  protected JdbcSchema(final Database<?> d, final Connection c) {
+  protected JdbcSchema(final Database<?> d) throws OrmException {
     dbDef = d;
-    conn = c;
+    conn = dbDef.newConnection();
   }
 
   public final Connection getConnection() {

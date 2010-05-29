@@ -18,7 +18,6 @@ import com.google.gwtorm.client.KeyUtil;
 import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.client.Schema;
 import com.google.gwtorm.client.SchemaFactory;
-import com.google.gwtorm.jdbc.gen.SchemaFactoryGen;
 import com.google.gwtorm.jdbc.gen.SchemaGen;
 import com.google.gwtorm.schema.SchemaModel;
 import com.google.gwtorm.schema.java.JavaSchemaModel;
@@ -27,6 +26,7 @@ import com.google.gwtorm.schema.sql.DialectMySQL;
 import com.google.gwtorm.schema.sql.DialectPostgreSQL;
 import com.google.gwtorm.schema.sql.SqlDialect;
 import com.google.gwtorm.server.GeneratedClassLoader;
+import com.google.gwtorm.server.SchemaConstructorGen;
 import com.google.gwtorm.server.StandardKeyEncoder;
 
 import java.sql.Connection;
@@ -89,7 +89,7 @@ public class Database<T extends Schema> implements SchemaFactory<T> {
 
   private final DataSource dataSource;
   private final JavaSchemaModel schemaModel;
-  private final AbstractSchemaFactory<T> implFactory;
+  private final SchemaFactory<T> implFactory;
   private final SqlDialect implDialect;
 
   /**
@@ -134,14 +134,14 @@ public class Database<T extends Schema> implements SchemaFactory<T> {
     final GeneratedClassLoader loader = newLoader(schema);
     final SchemaKey key = new SchemaKey(schema, dialect);
     final String cachedName = schemaFactoryNames.get(key);
-    AbstractSchemaFactory<T> factory = null;
+    SchemaFactory<T> factory = null;
     if (cachedName != null) {
       factory = newFactory(loader, cachedName);
     }
     if (factory == null) {
-      final SchemaGen gen = new SchemaGen(loader, schemaModel, dialect);
-      gen.defineClass();
-      factory = new SchemaFactoryGen<T>(loader, gen).create();
+      Class<T> impl =
+          (Class<T>) new SchemaGen(loader, schemaModel, dialect).create();
+      factory = new SchemaConstructorGen<T>(loader, impl, this).create();
       schemaFactoryNames.put(key, factory.getClass().getName());
     }
     implFactory = factory;
@@ -149,11 +149,11 @@ public class Database<T extends Schema> implements SchemaFactory<T> {
   }
 
   @SuppressWarnings("unchecked")
-  private AbstractSchemaFactory<T> newFactory(final ClassLoader cl,
+  private SchemaFactory<T> newFactory(final ClassLoader cl,
       final String name) {
     try {
       final Class<?> ft = Class.forName(name, true, cl);
-      return (AbstractSchemaFactory<T>) ft.newInstance();
+      return (SchemaFactory<T>) ft.newInstance();
     } catch (InstantiationException e) {
       return null;
     } catch (IllegalAccessException e) {
@@ -180,6 +180,10 @@ public class Database<T extends Schema> implements SchemaFactory<T> {
    *         cause of the connection failure.
    */
   public T open() throws OrmException {
+    return implFactory.open();
+  }
+
+  Connection newConnection() throws OrmException {
     final Connection conn;
     try {
       conn = dataSource.getConnection();
@@ -198,8 +202,7 @@ public class Database<T extends Schema> implements SchemaFactory<T> {
       }
       throw new OrmException("Cannot force auto-commit on connection", e);
     }
-
-    return implFactory.create(this, conn);
+    return conn;
   }
 
   private static <T> GeneratedClassLoader newLoader(final Class<T> schema) {

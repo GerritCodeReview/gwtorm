@@ -30,7 +30,6 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +51,7 @@ public class SchemaGen implements Opcodes {
     dialect = sqlDialect;
   }
 
-  public void defineClass() throws OrmException {
+  public Class<Schema> create() throws OrmException {
     defineRelationClasses();
 
     init();
@@ -62,6 +61,17 @@ public class SchemaGen implements Opcodes {
     implementRelationMethods();
     cw.visitEnd();
     classLoader.defineClass(getImplClassName(), cw.toByteArray());
+    return loadClass();
+  }
+
+  @SuppressWarnings("unchecked")
+  private Class<Schema> loadClass() throws OrmException {
+    try {
+      final Class<?> c = Class.forName(getImplClassName(), false, classLoader);
+      return (Class<Schema>) c;
+    } catch (ClassNotFoundException err) {
+      throw new OrmException("Cannot load generated class", err);
+    }
   }
 
   String getSchemaClassName() {
@@ -104,15 +114,14 @@ public class SchemaGen implements Opcodes {
   private void implementConstructor() {
     final String consName = "<init>";
     final String consDesc =
-        Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {
-            Type.getType(Database.class), Type.getType(Connection.class)});
+        Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {Type
+            .getType(Database.class)});
     final MethodVisitor mv =
         cw.visitMethod(ACC_PUBLIC, consName, consDesc, null, null);
     mv.visitCode();
 
     mv.visitVarInsn(ALOAD, 0);
     mv.visitVarInsn(ALOAD, 1);
-    mv.visitVarInsn(ALOAD, 2);
     mv.visitMethodInsn(INVOKESPECIAL, superTypeName, consName, consDesc);
 
     for (final RelationGen info : relations) {
