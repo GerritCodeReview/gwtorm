@@ -31,9 +31,6 @@ import com.google.gwtorm.server.StandardKeyEncoder;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Collections;
-import java.util.Map;
-import java.util.WeakHashMap;
 
 import javax.sql.DataSource;
 
@@ -53,36 +50,6 @@ import javax.sql.DataSource;
  * @param <T>
  */
 public class Database<T extends Schema> implements SchemaFactory<T> {
-  private static final Map<SchemaKey, String> schemaFactoryNames =
-      Collections.synchronizedMap(new WeakHashMap<SchemaKey, String>());
-
-  private static class SchemaKey {
-    final Class<?> schema;
-    final SqlDialect dialect;
-
-    SchemaKey(Class<?> s, SqlDialect d) {
-      schema = s;
-      dialect = d;
-    }
-
-    @Override
-    public int hashCode() {
-      return schema.hashCode() * 31 + dialect.getClass().hashCode();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      if (o instanceof SchemaKey) {
-        SchemaKey a = this;
-        SchemaKey b = (SchemaKey) o;
-
-        return a.schema == b.schema
-            && a.dialect.getClass() == b.dialect.getClass();
-      }
-      return false;
-    }
-  }
-
   static {
     KeyUtil.setEncoderImpl(new StandardKeyEncoder());
   }
@@ -132,35 +99,15 @@ public class Database<T extends Schema> implements SchemaFactory<T> {
 
     schemaModel = new JavaSchemaModel(schema);
     final GeneratedClassLoader loader = newLoader(schema);
-    final SchemaKey key = new SchemaKey(schema, dialect);
-    final String cachedName = schemaFactoryNames.get(key);
-    SchemaFactory<T> factory = null;
-    if (cachedName != null) {
-      factory = newFactory(loader, cachedName);
-    }
-    if (factory == null) {
-      Class<T> impl =
-          (Class<T>) new SchemaGen(loader, schemaModel, dialect).create();
-      factory = new SchemaConstructorGen<T>(loader, impl, this).create();
-      schemaFactoryNames.put(key, factory.getClass().getName());
-    }
-    implFactory = factory;
+    final Class<T> impl = generate(dialect, loader);
+    implFactory = new SchemaConstructorGen<T>(loader, impl, this).create();
     implDialect = dialect;
   }
 
   @SuppressWarnings("unchecked")
-  private SchemaFactory<T> newFactory(final ClassLoader cl,
-      final String name) {
-    try {
-      final Class<?> ft = Class.forName(name, true, cl);
-      return (SchemaFactory<T>) ft.newInstance();
-    } catch (InstantiationException e) {
-      return null;
-    } catch (IllegalAccessException e) {
-      return null;
-    } catch (ClassNotFoundException e) {
-      return null;
-    }
+  private Class<T> generate(SqlDialect dialect,
+      final GeneratedClassLoader loader) throws OrmException {
+    return (Class<T>) new SchemaGen(loader, schemaModel, dialect).create();
   }
 
   SqlDialect getDialect() {
