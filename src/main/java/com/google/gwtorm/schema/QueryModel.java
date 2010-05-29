@@ -89,7 +89,6 @@ public class QueryModel {
       case QueryParser.GT:
       case QueryParser.GE:
       case QueryParser.EQ:
-      case QueryParser.NE:
         if (node.getChild(1).getType() == QueryParser.PLACEHOLDER) {
           r.add(((QueryParser.Column) node.getChild(0)).getField());
         }
@@ -181,11 +180,6 @@ public class QueryModel {
         fmt.buf.append(node.getText());
         format(fmt, node.getChild(1));
         break;
-      case QueryParser.NE:
-        format(fmt, node.getChild(0));
-        fmt.buf.append("<>");
-        format(fmt, node.getChild(1));
-        break;
 
       case QueryParser.ID: {
         final ColumnModel col = ((QueryParser.Column) node).getField();
@@ -269,8 +263,7 @@ public class QueryModel {
       case QueryParser.LE:
       case QueryParser.GT:
       case QueryParser.GE:
-      case QueryParser.EQ:
-      case QueryParser.NE: {
+      case QueryParser.EQ: {
         final Column qpc = (QueryParser.Column) node.getChild(0);
         final ColumnModel f = qpc.getField();
         if (f.isNested()) {

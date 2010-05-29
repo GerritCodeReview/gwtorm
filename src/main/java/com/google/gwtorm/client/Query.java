@@ -38,7 +38,7 @@ import java.lang.annotation.Target;
  * [ORDER BY &lt;property&gt; [, &lt;property&gt; ...]]
  * [LIMIT { &lt;count&gt; | ? }]
  *
- * &lt;condition&gt; := &lt;property&gt; { &lt; | &lt;= | &gt; | &gt;= | = | != } &lt;value&gt;
+ * &lt;condition&gt; := &lt;property&gt; { &lt; | &lt;= | &gt; | &gt;= | = } &lt;value&gt;
  * &lt;value&gt; := { ? | true | false | &lt;int&gt; | &lt;string&gt; }
  * </pre>
  * <p>

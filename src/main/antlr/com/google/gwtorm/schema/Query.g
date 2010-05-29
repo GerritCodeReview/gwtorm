@@ -28,7 +28,6 @@ tokens {
   GT;
   GE;
   EQ;
-  NE;
   ID;
   PLACEHOLDER;
   COMMA;
@@ -175,7 +174,6 @@ compare_op
  | GT
  | GE
  | EQ
- | NE
  ;
 
 field
@@ -211,7 +209,6 @@ LE : '<=' ;
 GT : '>'  ;
 GE : '>=' ;
 EQ : '='  ;
-NE : '!=' ;
 
 PLACEHOLDER: '?' ;
 COMMA: ',' ;
