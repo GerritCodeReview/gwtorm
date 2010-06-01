@@ -15,7 +15,6 @@
 package com.google.gwtorm.jdbc;
 
 import com.google.gwtorm.client.Access;
-import com.google.gwtorm.client.AtomicUpdate;
 import com.google.gwtorm.client.Key;
 import com.google.gwtorm.client.OrmConcurrencyException;
 import com.google.gwtorm.client.OrmException;
@@ -32,8 +31,6 @@ import java.util.Collections;
 /** Internal base class for implementations of {@link Access}. */
 public abstract class JdbcAccess<T, K extends Key<?>> extends
     AbstractAccess<T, K> {
-  private static final int MAX_TRIES = 10;
-
   private final JdbcSchema schema;
 
   protected JdbcAccess(final JdbcSchema s) {
@@ -295,34 +292,6 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
         throw new OrmConcurrencyException();
       }
     }
-  }
-
-  @Override
-  public T atomicUpdate(final K key, final AtomicUpdate<T> update)
-      throws OrmException {
-
-    for (int attempts = 1;; attempts++) {
-      try {
-        final T obj = get(key);
-        if (obj == null) {
-          return null;
-        }
-        final T res = update.update(obj);
-        update(Collections.singleton(obj));
-        return res;
-      } catch (OrmConcurrencyException err) {
-        if (attempts < MAX_TRIES) {
-          continue;
-        }
-        throw err;
-      }
-    }
-
-  }
-
-  @Override
-  public void deleteKeys(Iterable<K> keys) throws OrmException {
-    delete(get(keys));
   }
 
   private OrmException convertError(final String op, final SQLException err) {

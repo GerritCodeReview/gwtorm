@@ -15,16 +15,21 @@
 package com.google.gwtorm.client.impl;
 
 import com.google.gwtorm.client.Access;
+import com.google.gwtorm.client.AtomicUpdate;
 import com.google.gwtorm.client.Key;
+import com.google.gwtorm.client.OrmConcurrencyException;
 import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.client.ResultSet;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 public abstract class AbstractAccess<E, K extends Key<?>>
     implements Access<E, K> {
+  private static final int MAX_TRIES = 10;
+
   public ResultSet<E> get(final Iterable<K> keys) throws OrmException {
     final ArrayList<E> r = new ArrayList<E>();
     for (final K key : keys) {
@@ -48,5 +53,31 @@ public abstract class AbstractAccess<E, K extends Key<?>>
         ((ResultSet<?>) c).close();
       }
     }
+  }
+
+  @Override
+  public E atomicUpdate(final K key, final AtomicUpdate<E> update)
+      throws OrmException {
+    for (int attempts = 1;; attempts++) {
+      try {
+        final E obj = get(key);
+        if (obj == null) {
+          return null;
+        }
+        final E res = update.update(obj);
+        update(Collections.singleton(obj));
+        return res;
+      } catch (OrmConcurrencyException err) {
+        if (attempts < MAX_TRIES) {
+          continue;
+        }
+        throw err;
+      }
+    }
+  }
+
+  @Override
+  public void deleteKeys(Iterable<K> keys) throws OrmException {
+    delete(get(keys));
   }
 }
