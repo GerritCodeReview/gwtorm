@@ -91,7 +91,7 @@ public class DialectMySQL extends SqlDialect {
   }
 
   @Override
-  public String getNextSequenceValueSql(final String seqname) {
+  protected String getNextSequenceValueSql(final String seqname) {
     return seqname;
   }
 

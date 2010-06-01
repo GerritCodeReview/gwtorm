@@ -22,6 +22,7 @@ import com.google.gwtorm.schema.RelationModel;
 import com.google.gwtorm.schema.SchemaModel;
 import com.google.gwtorm.schema.SequenceModel;
 import com.google.gwtorm.schema.sql.SqlDialect;
+import com.google.gwtorm.server.AbstractSchema;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -30,7 +31,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /** Internal base class for implementations of {@link Schema}. */
-public abstract class JdbcSchema implements Schema {
+public abstract class JdbcSchema extends AbstractSchema {
   private final Database<?> dbDef;
   private Connection conn;
 
@@ -189,8 +190,9 @@ public abstract class JdbcSchema implements Schema {
     }
   }
 
-  protected long nextLong(final String query) throws OrmException {
-    return getDialect().nextLong(getConnection(), query);
+  @Override
+  protected long nextLong(final String poolName) throws OrmException {
+    return getDialect().nextLong(getConnection(), poolName);
   }
 
   public void close() {

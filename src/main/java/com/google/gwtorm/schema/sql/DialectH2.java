@@ -42,7 +42,7 @@ public class DialectH2 extends SqlDialect {
   }
 
   @Override
-  public String getNextSequenceValueSql(final String seqname) {
+  protected String getNextSequenceValueSql(final String seqname) {
     return "SELECT NEXT VALUE FOR " + seqname;
   }
 

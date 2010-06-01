@@ -122,8 +122,9 @@ public abstract class SqlDialect {
     return new OrmException(op + " failure on " + entity, err);
   }
 
-  public long nextLong(final Connection conn, final String query)
+  public long nextLong(final Connection conn, final String poolName)
       throws OrmException {
+    final String query = getNextSequenceValueSql(poolName);
     try {
       final Statement st = conn.createStatement();
       try {
@@ -297,5 +298,5 @@ public abstract class SqlDialect {
   public abstract void renameColumn(StatementExecutor e, String tableName,
       String fromColumn, ColumnModel col) throws OrmException;
 
-  public abstract String getNextSequenceValueSql(String seqname);
+  protected abstract String getNextSequenceValueSql(String seqname);
 }

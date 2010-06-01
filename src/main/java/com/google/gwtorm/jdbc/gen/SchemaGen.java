@@ -153,7 +153,7 @@ public class SchemaGen implements Opcodes {
       mv.visitCode();
 
       mv.visitVarInsn(ALOAD, 0);
-      mv.visitLdcInsn(dialect.getNextSequenceValueSql(seq.getSequenceName()));
+      mv.visitLdcInsn(seq.getSequenceName());
       mv.visitMethodInsn(INVOKEVIRTUAL, superTypeName, "nextLong", Type
           .getMethodDescriptor(Type.getType(Long.TYPE), new Type[] {Type
               .getType(String.class)}));

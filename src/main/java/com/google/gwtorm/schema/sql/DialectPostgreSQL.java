@@ -62,7 +62,7 @@ public class DialectPostgreSQL extends SqlDialect {
   }
 
   @Override
-  public String getNextSequenceValueSql(final String seqname) {
+  protected String getNextSequenceValueSql(final String seqname) {
     return "SELECT nextval('" + seqname + "')";
   }
 
