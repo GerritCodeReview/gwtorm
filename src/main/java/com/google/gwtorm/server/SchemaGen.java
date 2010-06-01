@@ -12,8 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.gwtorm.jdbc.gen;
+package com.google.gwtorm.server;
 
+import com.google.gwtorm.client.Access;
 import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.client.Schema;
 import com.google.gwtorm.jdbc.Database;
@@ -22,8 +23,6 @@ import com.google.gwtorm.schema.RelationModel;
 import com.google.gwtorm.schema.SequenceModel;
 import com.google.gwtorm.schema.Util;
 import com.google.gwtorm.schema.java.JavaSchemaModel;
-import com.google.gwtorm.schema.sql.SqlDialect;
-import com.google.gwtorm.server.GeneratedClassLoader;
 
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
@@ -34,21 +33,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 /** Generates a concrete implementation of a {@link Schema} extension. */
-public class SchemaGen implements Opcodes {
+public class SchemaGen<S extends AbstractSchema> implements Opcodes {
+  public interface AccessGenerator {
+    <A extends Access<?, ?>> Class<A> create(GeneratedClassLoader loader,
+        RelationModel rm) throws OrmException;
+  }
+
   private final GeneratedClassLoader classLoader;
   private final JavaSchemaModel schema;
-  private final SqlDialect dialect;
+  private final Class<S> schemaSuperClass;
+  private final AccessGenerator accessGen;
   private List<RelationGen> relations;
   private ClassWriter cw;
-  private String superTypeName;
   private String implClassName;
   private String implTypeName;
 
   public SchemaGen(final GeneratedClassLoader loader,
-      final JavaSchemaModel schemaModel, final SqlDialect sqlDialect) {
+      final JavaSchemaModel schemaModel, final Class<S> superType,
+      final AccessGenerator ag) {
     classLoader = loader;
     schema = schemaModel;
-    dialect = sqlDialect;
+    schemaSuperClass = superType;
+    accessGen = ag;
   }
 
   public Class<Schema> create() throws OrmException {
@@ -89,20 +95,19 @@ public class SchemaGen implements Opcodes {
   private void defineRelationClasses() throws OrmException {
     relations = new ArrayList<RelationGen>();
     for (final RelationModel rel : schema.getRelations()) {
-      final RelationGen g = new RelationGen(rel);
-      relations.add(g);
-      new AccessGen(classLoader, g).defineClass();
+      final Class<? extends Access> a = accessGen.create(classLoader, rel);
+      relations.add(new RelationGen(rel, a));
     }
   }
 
   private void init() {
-    superTypeName = Type.getInternalName(JdbcSchema.class);
     implClassName = getSchemaClassName() + "_Schema_" + Util.createRandomName();
     implTypeName = implClassName.replace('.', '/');
 
     cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
-    cw.visit(V1_3, ACC_PUBLIC | ACC_FINAL | ACC_SUPER, implTypeName, null,
-        superTypeName, new String[] {getSchemaClassName().replace('.', '/')});
+    cw.visit(V1_3, ACC_PUBLIC | ACC_FINAL | ACC_SUPER, implTypeName, null, Type
+        .getInternalName(schemaSuperClass), new String[] {getSchemaClassName()
+        .replace('.', '/')});
   }
 
   private void implementRelationFields() {
@@ -122,7 +127,8 @@ public class SchemaGen implements Opcodes {
 
     mv.visitVarInsn(ALOAD, 0);
     mv.visitVarInsn(ALOAD, 1);
-    mv.visitMethodInsn(INVOKESPECIAL, superTypeName, consName, consDesc);
+    mv.visitMethodInsn(INVOKESPECIAL, Type.getInternalName(schemaSuperClass),
+        consName, consDesc);
 
     for (final RelationGen info : relations) {
       mv.visitVarInsn(ALOAD, 0);
@@ -154,9 +160,9 @@ public class SchemaGen implements Opcodes {
 
       mv.visitVarInsn(ALOAD, 0);
       mv.visitLdcInsn(seq.getSequenceName());
-      mv.visitMethodInsn(INVOKEVIRTUAL, superTypeName, "nextLong", Type
-          .getMethodDescriptor(Type.getType(Long.TYPE), new Type[] {Type
-              .getType(String.class)}));
+      mv.visitMethodInsn(INVOKEVIRTUAL, Type.getInternalName(schemaSuperClass),
+          "nextLong", Type.getMethodDescriptor(Type.getType(Long.TYPE),
+              new Type[] {Type.getType(String.class)}));
       if (retType.getSize() == 1) {
         mv.visitInsn(L2I);
         mv.visitInsn(IRETURN);
@@ -174,21 +180,16 @@ public class SchemaGen implements Opcodes {
     }
   }
 
-  class RelationGen {
+  private class RelationGen {
     final RelationModel model;
-    String accessClassName;
-    Type accessType;
+    final Type accessType;
 
-    RelationGen(final RelationModel model) {
+    RelationGen(final RelationModel model, final Class<?> accessClass) {
       this.model = model;
-    }
-
-    SqlDialect getDialect() {
-      return SchemaGen.this.dialect;
+      this.accessType = Type.getType(accessClass);
     }
 
     void implementField() {
-      accessType = Type.getObjectType(accessClassName.replace('.', '/'));
       cw.visitField(ACC_PRIVATE | ACC_FINAL, getAccessInstanceFieldName(),
           accessType.getDescriptor(), null, null).visitEnd();
     }

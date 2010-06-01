@@ -61,7 +61,6 @@ public class AccessGen implements Opcodes {
   }
 
   private final GeneratedClassLoader classLoader;
-  private final SchemaGen.RelationGen info;
   private final RelationModel model;
   private final SqlDialect dialect;
 
@@ -73,16 +72,15 @@ public class AccessGen implements Opcodes {
 
 
   public AccessGen(final GeneratedClassLoader loader,
-      final SchemaGen.RelationGen ri) {
+      final RelationModel rm, final SqlDialect sd) {
     classLoader = loader;
-    info = ri;
-    model = info.model;
-    dialect = ri.getDialect();
+    model = rm;
+    dialect = sd;
     entityType =
         Type.getObjectType(model.getEntityTypeClassName().replace('.', '/'));
   }
 
-  public void defineClass() throws OrmException {
+  public <A extends Access<?, ?>> Class<A> create() throws OrmException {
     init();
     implementConstructor();
     implementGetString("getRelationName", model.getRelationName());
@@ -123,9 +121,18 @@ public class AccessGen implements Opcodes {
 
     cw.visitEnd();
     classLoader.defineClass(implClassName, cw.toByteArray());
-    info.accessClassName = implClassName;
+    return loadClass();
   }
 
+  @SuppressWarnings("unchecked")
+  private <A extends Access<?, ?>> Class<A> loadClass() throws OrmException {
+    try {
+      final Class<?> c = Class.forName(implClassName, false, classLoader);
+      return (Class<A>) c;
+    } catch (ClassNotFoundException err) {
+      throw new OrmException("Cannot load generated class", err);
+    }
+  }
 
   private void init() {
     superTypeName = Type.getInternalName(JdbcAccess.class);

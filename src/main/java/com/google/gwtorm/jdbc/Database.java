@@ -14,11 +14,13 @@
 
 package com.google.gwtorm.jdbc;
 
+import com.google.gwtorm.client.Access;
 import com.google.gwtorm.client.KeyUtil;
 import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.client.Schema;
 import com.google.gwtorm.client.SchemaFactory;
-import com.google.gwtorm.jdbc.gen.SchemaGen;
+import com.google.gwtorm.jdbc.gen.AccessGen;
+import com.google.gwtorm.schema.RelationModel;
 import com.google.gwtorm.schema.SchemaModel;
 import com.google.gwtorm.schema.java.JavaSchemaModel;
 import com.google.gwtorm.schema.sql.DialectH2;
@@ -27,6 +29,7 @@ import com.google.gwtorm.schema.sql.DialectPostgreSQL;
 import com.google.gwtorm.schema.sql.SqlDialect;
 import com.google.gwtorm.server.GeneratedClassLoader;
 import com.google.gwtorm.server.SchemaConstructorGen;
+import com.google.gwtorm.server.SchemaGen;
 import com.google.gwtorm.server.StandardKeyEncoder;
 
 import java.sql.Connection;
@@ -105,9 +108,17 @@ public class Database<T extends Schema> implements SchemaFactory<T> {
   }
 
   @SuppressWarnings("unchecked")
-  private Class<T> generate(SqlDialect dialect,
+  private Class<T> generate(final SqlDialect dialect,
       final GeneratedClassLoader loader) throws OrmException {
-    return (Class<T>) new SchemaGen(loader, schemaModel, dialect).create();
+    return new SchemaGen(loader, schemaModel, JdbcSchema.class,
+        new SchemaGen.AccessGenerator() {
+          @Override
+          public <A extends Access<?, ?>> Class<A> create(
+              GeneratedClassLoader loader, RelationModel rm)
+              throws OrmException {
+            return new AccessGen(loader, rm, dialect).create();
+          }
+        }).create();
   }
 
   SqlDialect getDialect() {
