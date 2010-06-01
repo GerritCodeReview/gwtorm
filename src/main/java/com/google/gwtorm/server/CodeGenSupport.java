@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.gwtorm.jdbc.gen;
+package com.google.gwtorm.server;
 
 import com.google.gwtorm.schema.ColumnModel;
 
@@ -197,7 +197,7 @@ public class CodeGenSupport implements Opcodes {
     return Type.getObjectType(n.replace('.', '/'));
   }
 
-  static Type toType(final ColumnModel c) {
+  public static Type toType(final ColumnModel c) {
     if (c.isSqlPrimitive()) {
       return Type.getType(c.getPrimitiveType());
     }

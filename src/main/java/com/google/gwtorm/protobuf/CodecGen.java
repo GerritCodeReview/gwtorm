@@ -16,10 +16,10 @@ package com.google.gwtorm.protobuf;
 
 import com.google.gwtorm.client.Column;
 import com.google.gwtorm.client.OrmException;
-import com.google.gwtorm.jdbc.gen.CodeGenSupport;
 import com.google.gwtorm.schema.ColumnModel;
 import com.google.gwtorm.schema.Util;
 import com.google.gwtorm.schema.java.JavaColumnModel;
+import com.google.gwtorm.server.CodeGenSupport;
 import com.google.gwtorm.server.GeneratedClassLoader;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.CodedInputStream;

@@ -12,20 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.gwtorm.jdbc.gen;
+package com.google.gwtorm.jdbc;
 
 import com.google.gwtorm.client.Access;
 import com.google.gwtorm.client.Key;
 import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.client.impl.ListResultSet;
-import com.google.gwtorm.jdbc.JdbcAccess;
-import com.google.gwtorm.jdbc.JdbcSchema;
 import com.google.gwtorm.schema.ColumnModel;
 import com.google.gwtorm.schema.KeyModel;
 import com.google.gwtorm.schema.QueryModel;
 import com.google.gwtorm.schema.RelationModel;
 import com.google.gwtorm.schema.Util;
 import com.google.gwtorm.schema.sql.SqlDialect;
+import com.google.gwtorm.server.CodeGenSupport;
 import com.google.gwtorm.server.GeneratedClassLoader;
 
 import org.objectweb.asm.ClassWriter;
@@ -43,7 +42,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /** Generates a concrete implementation of an {@link Access} extension. */
-public class AccessGen implements Opcodes {
+class AccessGen implements Opcodes {
   private static final String REL_ALIAS = "T";
 
   private static enum DmlType {
@@ -70,8 +69,7 @@ public class AccessGen implements Opcodes {
   private String implTypeName;
   private Type entityType;
 
-
-  public AccessGen(final GeneratedClassLoader loader,
+  AccessGen(final GeneratedClassLoader loader,
       final RelationModel rm, final SqlDialect sd) {
     classLoader = loader;
     model = rm;
@@ -80,7 +78,7 @@ public class AccessGen implements Opcodes {
         Type.getObjectType(model.getEntityTypeClassName().replace('.', '/'));
   }
 
-  public <A extends Access<?, ?>> Class<A> create() throws OrmException {
+  <A extends Access<?, ?>> Class<A> create() throws OrmException {
     init();
     implementConstructor();
     implementGetString("getRelationName", model.getRelationName());

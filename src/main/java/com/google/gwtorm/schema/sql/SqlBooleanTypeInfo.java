@@ -14,8 +14,8 @@
 
 package com.google.gwtorm.schema.sql;
 
-import com.google.gwtorm.jdbc.gen.CodeGenSupport;
 import com.google.gwtorm.schema.ColumnModel;
+import com.google.gwtorm.server.CodeGenSupport;
 
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
