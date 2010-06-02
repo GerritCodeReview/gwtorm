@@ -31,24 +31,31 @@ import java.util.List;
 public class QueryModel {
   private final RelationModel model;
   private final String name;
-  private final Query query;
   private final Tree parsedQuery;
 
   public QueryModel(final RelationModel rel, final String queryName,
       final Query q) throws OrmException {
+    this(rel, queryName, queryTextOf(queryName, q));
+  }
+
+  private static String queryTextOf(String queryName, Query q)
+      throws OrmException {
     if (q == null) {
       throw new OrmException("Query " + queryName + " is missing "
           + Query.class.getName() + " annotation");
     }
+    return q.value();
+  }
 
+  public QueryModel(final RelationModel rel, final String queryName,
+      final String queryText) throws OrmException {
     model = rel;
     name = queryName;
-    query = q;
 
     try {
-      parsedQuery = QueryParser.parse(model, q.value());
+      parsedQuery = QueryParser.parse(model, queryText);
     } catch (QueryParseException e) {
-      throw new OrmException("Cannot parse query " + q.value(), e);
+      throw new OrmException("Cannot parse query " + queryText, e);
     }
   }
 
@@ -64,6 +71,20 @@ public class QueryModel {
     final ArrayList<ColumnModel> r = new ArrayList<ColumnModel>();
     if (parsedQuery != null) {
       findParameters(r, parsedQuery);
+    }
+    return r;
+  }
+
+  public List<ColumnModel> getOrderBy() {
+    final ArrayList<ColumnModel> r = new ArrayList<ColumnModel>();
+    if (parsedQuery != null) {
+      Tree node = findOrderBy(parsedQuery);
+      if (node != null) {
+        for (int i = 0; i < node.getChildCount(); i++) {
+          final Tree id = node.getChild(i);
+          r.add(((QueryParser.Column) id).getField());
+        }
+      }
     }
     return r;
   }
@@ -126,6 +147,24 @@ public class QueryModel {
       default:
         for (int i = 0; i < node.getChildCount(); i++) {
           final Tree r = findLimit(node.getChild(i));
+          if (r != null) {
+            return r;
+          }
+        }
+        return null;
+    }
+  }
+
+  private Tree findOrderBy(final Tree node) {
+    if (node == null) {
+      return null;
+    }
+    switch (node.getType()) {
+      case QueryParser.ORDER:
+        return node;
+      default:
+        for (int i = 0; i < node.getChildCount(); i++) {
+          final Tree r = findOrderBy(node.getChild(i));
           if (r != null) {
             return r;
           }
@@ -254,7 +293,7 @@ public class QueryModel {
 
   @Override
   public String toString() {
-    return "Query[" + name + " " + query.value() + "]";
+    return "Query[" + name + " " + getParseTree().toStringTree() + "]";
   }
 
   private Tree expand(final Tree node) {
