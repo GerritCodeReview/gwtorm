@@ -17,9 +17,9 @@ package com.google.gwtorm.server;
 import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.client.Schema;
 import com.google.gwtorm.schema.RelationModel;
+import com.google.gwtorm.schema.SchemaModel;
 import com.google.gwtorm.schema.SequenceModel;
 import com.google.gwtorm.schema.Util;
-import com.google.gwtorm.schema.java.JavaSchemaModel;
 
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
@@ -37,7 +37,7 @@ public class SchemaGen<S extends AbstractSchema> implements Opcodes {
   }
 
   private final GeneratedClassLoader classLoader;
-  private final JavaSchemaModel schema;
+  private final SchemaModel schema;
   private final Class<?> databaseClass;
   private final Class<S> schemaSuperClass;
   private final AccessGenerator accessGen;
@@ -47,7 +47,7 @@ public class SchemaGen<S extends AbstractSchema> implements Opcodes {
   private String implTypeName;
 
   public SchemaGen(final GeneratedClassLoader loader,
-      final JavaSchemaModel schemaModel, final Class<?> databaseType,
+      final SchemaModel schemaModel, final Class<?> databaseType,
       final Class<S> superType, final AccessGenerator ag) {
     classLoader = loader;
     schema = schemaModel;
