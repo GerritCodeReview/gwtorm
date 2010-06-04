@@ -104,7 +104,13 @@ public abstract class RelationModel {
     }
   }
 
-  protected void addQuery(final QueryModel q) {
+  protected void addQuery(final QueryModel q) throws OrmException {
+    for (QueryModel e : queries) {
+      if (e.getName().equals(q.getName())) {
+        throw new OrmException("Duplicate query " + q.getName() //
+            + " in " + getAccessInterfaceName());
+      }
+    }
     queries.add(q);
   }
 
