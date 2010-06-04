@@ -272,6 +272,7 @@ class CodecGen<T> implements Opcodes {
             || f.getPrimitiveType() == java.util.Date.class
             || f.getPrimitiveType() == java.sql.Date.class) {
           cgs.push(f.getColumnID());
+          cgs.pushFieldValue();
           String tsType = Type.getType(f.getPrimitiveType()).getInternalName();
           mv.visitMethodInsn(INVOKEVIRTUAL, tsType, "getTime", Type
               .getMethodDescriptor(Type.LONG_TYPE, new Type[] {}));
@@ -649,8 +650,9 @@ class CodecGen<T> implements Opcodes {
           mv.visitTypeInsn(NEW, tsType);
           mv.visitInsn(DUP);
           cgs.call("readFixed64", Type.LONG_TYPE);
-          mv.visitMethodInsn(INVOKESPECIAL, tsType, "<init>", Type
-              .getMethodDescriptor(Type.VOID_TYPE, new Type[] {}));
+          mv.visitMethodInsn(INVOKESPECIAL, tsType, "<init>", //
+              Type.getMethodDescriptor(Type.VOID_TYPE,
+                  new Type[] {Type.LONG_TYPE}));
 
         } else {
           throw new OrmException("Type " + f.getPrimitiveType()
