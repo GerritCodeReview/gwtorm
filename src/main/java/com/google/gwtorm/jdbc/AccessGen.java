@@ -78,7 +78,7 @@ class AccessGen implements Opcodes {
         Type.getObjectType(model.getEntityTypeClassName().replace('.', '/'));
   }
 
-  <A extends Access<?, ?>> Class<A> create() throws OrmException {
+  public Class<?> create() throws OrmException {
     init();
     implementConstructor();
     implementGetString("getRelationName", model.getRelationName());
@@ -122,11 +122,9 @@ class AccessGen implements Opcodes {
     return loadClass();
   }
 
-  @SuppressWarnings("unchecked")
-  private <A extends Access<?, ?>> Class<A> loadClass() throws OrmException {
+  private Class<?> loadClass() throws OrmException {
     try {
-      final Class<?> c = Class.forName(implClassName, false, classLoader);
-      return (Class<A>) c;
+      return Class.forName(implClassName, false, classLoader);
     } catch (ClassNotFoundException err) {
       throw new OrmException("Cannot load generated class", err);
     }

@@ -14,7 +14,6 @@
 
 package com.google.gwtorm.jdbc;
 
-import com.google.gwtorm.client.Access;
 import com.google.gwtorm.client.KeyUtil;
 import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.client.Schema;
@@ -112,8 +111,7 @@ public class Database<T extends Schema> implements SchemaFactory<T> {
     return new SchemaGen(loader, schemaModel, JdbcSchema.class,
         new SchemaGen.AccessGenerator() {
           @Override
-          public <A extends Access<?, ?>> Class<A> create(
-              GeneratedClassLoader loader, RelationModel rm)
+          public Class<?> create(GeneratedClassLoader loader, RelationModel rm)
               throws OrmException {
             return new AccessGen(loader, rm, dialect).create();
           }

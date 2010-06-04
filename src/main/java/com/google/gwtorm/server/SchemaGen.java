@@ -14,7 +14,6 @@
 
 package com.google.gwtorm.server;
 
-import com.google.gwtorm.client.Access;
 import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.client.Schema;
 import com.google.gwtorm.jdbc.Database;
@@ -35,8 +34,8 @@ import java.util.List;
 /** Generates a concrete implementation of a {@link Schema} extension. */
 public class SchemaGen<S extends AbstractSchema> implements Opcodes {
   public interface AccessGenerator {
-    <A extends Access<?, ?>> Class<A> create(GeneratedClassLoader loader,
-        RelationModel rm) throws OrmException;
+    Class<?> create(GeneratedClassLoader loader, RelationModel rm)
+        throws OrmException;
   }
 
   private final GeneratedClassLoader classLoader;
@@ -95,7 +94,7 @@ public class SchemaGen<S extends AbstractSchema> implements Opcodes {
   private void defineRelationClasses() throws OrmException {
     relations = new ArrayList<RelationGen>();
     for (final RelationModel rel : schema.getRelations()) {
-      final Class<? extends Access> a = accessGen.create(classLoader, rel);
+      final Class<?> a = accessGen.create(classLoader, rel);
       relations.add(new RelationGen(rel, a));
     }
   }
