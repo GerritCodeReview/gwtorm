@@ -16,8 +16,6 @@ package com.google.gwtorm.server;
 
 import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.client.Schema;
-import com.google.gwtorm.jdbc.Database;
-import com.google.gwtorm.jdbc.JdbcSchema;
 import com.google.gwtorm.schema.RelationModel;
 import com.google.gwtorm.schema.SequenceModel;
 import com.google.gwtorm.schema.Util;
@@ -40,6 +38,7 @@ public class SchemaGen<S extends AbstractSchema> implements Opcodes {
 
   private final GeneratedClassLoader classLoader;
   private final JavaSchemaModel schema;
+  private final Class<?> databaseClass;
   private final Class<S> schemaSuperClass;
   private final AccessGenerator accessGen;
   private List<RelationGen> relations;
@@ -48,10 +47,11 @@ public class SchemaGen<S extends AbstractSchema> implements Opcodes {
   private String implTypeName;
 
   public SchemaGen(final GeneratedClassLoader loader,
-      final JavaSchemaModel schemaModel, final Class<S> superType,
-      final AccessGenerator ag) {
+      final JavaSchemaModel schemaModel, final Class<?> databaseType,
+      final Class<S> superType, final AccessGenerator ag) {
     classLoader = loader;
     schema = schemaModel;
+    databaseClass = databaseType;
     schemaSuperClass = superType;
     accessGen = ag;
   }
@@ -117,17 +117,20 @@ public class SchemaGen<S extends AbstractSchema> implements Opcodes {
 
   private void implementConstructor() {
     final String consName = "<init>";
-    final String consDesc =
-        Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {Type
-            .getType(Database.class)});
+    final Type superType = Type.getType(schemaSuperClass);
+    final Type dbType = Type.getType(databaseClass);
+
     final MethodVisitor mv =
-        cw.visitMethod(ACC_PUBLIC, consName, consDesc, null, null);
+        cw.visitMethod(ACC_PUBLIC, consName, Type.getMethodDescriptor(
+            Type.VOID_TYPE, new Type[] {dbType}), null, null);
     mv.visitCode();
 
     mv.visitVarInsn(ALOAD, 0);
     mv.visitVarInsn(ALOAD, 1);
-    mv.visitMethodInsn(INVOKESPECIAL, Type.getInternalName(schemaSuperClass),
-        consName, consDesc);
+    mv.visitMethodInsn(INVOKESPECIAL, superType.getInternalName(), consName,
+        Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {Type
+            .getType(schemaSuperClass.getDeclaredConstructors()[0]
+                .getParameterTypes()[0])}));
 
     for (final RelationGen info : relations) {
       mv.visitVarInsn(ALOAD, 0);
@@ -135,8 +138,8 @@ public class SchemaGen<S extends AbstractSchema> implements Opcodes {
       mv.visitInsn(DUP);
       mv.visitVarInsn(ALOAD, 0);
       mv.visitMethodInsn(INVOKESPECIAL, info.accessType.getInternalName(),
-          consName, Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {Type
-              .getType(JdbcSchema.class)}));
+          consName, Type.getMethodDescriptor(Type.VOID_TYPE,
+              new Type[] {superType}));
       mv.visitFieldInsn(PUTFIELD, implTypeName, info
           .getAccessInstanceFieldName(), info.accessType.getDescriptor());
     }

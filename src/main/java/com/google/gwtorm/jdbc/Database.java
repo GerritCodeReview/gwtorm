@@ -108,7 +108,7 @@ public class Database<T extends Schema> implements SchemaFactory<T> {
   @SuppressWarnings("unchecked")
   private Class<T> generate(final SqlDialect dialect,
       final GeneratedClassLoader loader) throws OrmException {
-    return new SchemaGen(loader, schemaModel, JdbcSchema.class,
+    return new SchemaGen(loader, schemaModel, getClass(), JdbcSchema.class,
         new SchemaGen.AccessGenerator() {
           @Override
           public Class<?> create(GeneratedClassLoader loader, RelationModel rm)
