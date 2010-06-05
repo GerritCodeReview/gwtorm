@@ -54,8 +54,8 @@ class IndexFunctionGen<T> implements Opcodes {
   private String implClassName;
   private String implTypeName;
 
-  public IndexFunctionGen(final GeneratedClassLoader loader,
-      final QueryModel qm, final Class<T> t) {
+  IndexFunctionGen(final GeneratedClassLoader loader, final QueryModel qm,
+      final Class<T> t) {
     classLoader = loader;
     query = qm;
 
@@ -104,7 +104,7 @@ class IndexFunctionGen<T> implements Opcodes {
     return r;
   }
 
-  public IndexFunction<T> create() throws OrmException {
+  IndexFunction<T> create() throws OrmException {
     init();
     implementConstructor();
     implementGetName();
@@ -362,7 +362,7 @@ class IndexFunctionGen<T> implements Opcodes {
     mv.visitEnd();
   }
 
-  private static void encodeFields(final Collection<ColumnModel> myFields,
+  static void encodeFields(final Collection<ColumnModel> myFields,
       final MethodVisitor mv, final EncodeCGS cgs) throws OrmException {
     Iterator<ColumnModel> i = myFields.iterator();
     while (i.hasNext()) {
@@ -462,8 +462,8 @@ class IndexFunctionGen<T> implements Opcodes {
     }
   }
 
-  private static final class EncodeCGS extends CodeGenSupport {
-    private EncodeCGS(MethodVisitor method) {
+  static class EncodeCGS extends CodeGenSupport {
+    EncodeCGS(MethodVisitor method) {
       super(method);
     }
 
@@ -477,6 +477,12 @@ class IndexFunctionGen<T> implements Opcodes {
       pushBuilder();
       mv.visitMethodInsn(INVOKEVIRTUAL, indexKeyBuilder.getInternalName(),
           "delimiter", Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {}));
+    }
+
+    void nul() {
+      pushBuilder();
+      mv.visitMethodInsn(INVOKEVIRTUAL, indexKeyBuilder.getInternalName(),
+          "nul", Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {}));
     }
 
     void pushBuilder() {

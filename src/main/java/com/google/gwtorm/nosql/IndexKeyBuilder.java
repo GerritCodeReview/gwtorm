@@ -70,6 +70,16 @@ public class IndexKeyBuilder {
   }
 
   /**
+   * Add \0 to the string.
+   * <p>
+   * \0 can be used during searches to enforce greater then or less then clauses
+   * in a query.
+   */
+  public void nul() {
+    buf.write(0x00);
+  }
+
+  /**
    * Add a raw sequence of bytes.
    * <p>
    * The bytes 0x00 and 0xff are escaped by this method according to the
@@ -153,6 +163,18 @@ public class IndexKeyBuilder {
     }
     t[i - 1] = (byte) (t.length - i);
     buf.write(t, i - 1, t.length - i + 1);
+  }
+
+  /**
+   * Add a byte array as-is, without escaping.
+   * <p>
+   * This should only be used the byte array came from a prior index key and the
+   * caller is trying to create a new key with this key embedded at the end.
+   *
+   * @param bin the binary to append as-is, without further escaping.
+   */
+  public void addRaw(byte[] bin) {
+    buf.write(bin, 0, bin.length);
   }
 
   /**

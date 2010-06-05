@@ -18,11 +18,11 @@ package com.google.gwtorm.nosql;
  * A function to produce a NoSQL secondary index key from an object.
  * <p>
  * An index function computes a row key for a secondary index table by appending
- * the relevant values to builder's internal buffer in the order they are
+ * the relevant values to the builder's internal buffer in the order they are
  * referenced in the query.
  * <p>
- * Typically an IndexFunction would be code generated at runtime by
- * {@link IndexFunctionGen} as necessary by a NoSQL implementation.
+ * Typically an IndexFunction is automatically code generated at runtime by
+ * {@link IndexFunctionGen}.
  *
  * @param <T> type of the object the index record references.
  */
