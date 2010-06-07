@@ -47,6 +47,13 @@ public abstract class NoSqlAccess<T, K extends Key<?>> extends
   protected abstract ResultSet<T> scan(String indexName, byte[] fromKey,
       byte[] toKey, int limit) throws OrmException;
 
+  /**
+   * Lookup a query index by its unique name.
+   *
+   * @param indexName the name of the index.
+   * @return the IndexFunction for {@code indexName}
+   * @throws OrmException if no IndexFunction exists for the supplied name.
+   */
   protected IndexFunction<T> getQueryIndex(String indexName)
       throws OrmException {
     for (IndexFunction<T> f : getQueryIndexes()) {
@@ -60,15 +67,29 @@ public abstract class NoSqlAccess<T, K extends Key<?>> extends
     throw new OrmException("No index named " + indexName);
   }
 
-  // -- These are all provided by AccessGen when builds a subclass --
+  // -- These are all provided by AccessGen when it builds a subclass --
 
+  /** @return name of the relation in the schema. */
   protected abstract String getRelationName();
 
+  /** @return encoder/decoder for the object data. */
   protected abstract ProtobufCodec<T> getObjectCodec();
 
+  /** @return encoder/decoder for the primary key of the object. */
   protected abstract IndexFunction<T> getKeyIndex();
 
+  /** @return array of indexes to support queries. */
   protected abstract IndexFunction<T>[] getQueryIndexes();
 
+  /**
+   * Encode the primary key of the object.
+   * <p>
+   * This method is similar to {@link #getKeyIndex()}, except it can encode the
+   * key without needing an object instance. This is suitable for key based
+   * lookup of the row.
+   *
+   * @param dst builder the key components will be added into.
+   * @param key the object primary key.
+   */
   protected abstract void encodeKey(IndexKeyBuilder dst, K key);
 }

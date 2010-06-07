@@ -21,10 +21,18 @@ import com.google.gwtorm.nosql.CounterShard;
 import com.google.gwtorm.nosql.IndexKeyBuilder;
 import com.google.gwtorm.nosql.IndexRow;
 import com.google.gwtorm.nosql.NoSqlSchema;
+import com.google.gwtorm.schema.SequenceModel;
 
 import java.util.Map;
 
-/** Base implementation for {@link Schema} in a {@link GenericDatabase}. */
+/**
+ * Base implementation for {@link Schema} in a {@link GenericDatabase}.
+ * <p>
+ * NoSQL implementors must extend this class and provide implementations for the
+ * abstract methods declared here. Each schema instance will wrap one thread's
+ * connection to the data store. Therefore, unlike database, this class does not
+ * need to be thread-safe.
+ */
 public abstract class GenericSchema extends NoSqlSchema {
   private final GenericDatabase<?, ?, ?> db;
 
@@ -33,10 +41,28 @@ public abstract class GenericSchema extends NoSqlSchema {
     db = d;
   }
 
+  /** @return the database that created this schema instance. */
   public GenericDatabase<?, ?, ?> getDatabase() {
     return db;
   }
 
+  /**
+   * Allocate a new unique value from a pool of values.
+   * <p>
+   * This method is only required to return a unique value per invocation.
+   * Implementors may override the method to provide an implementation that
+   * returns values out of order.
+   * <p>
+   * The default implementation of this method stores a {@link CounterShard}
+   * under the row key {@code ".sequence." + poolName}, and updates it through
+   * the atomic semantics of {@link #atomicUpdate(byte[], AtomicUpdate)}. If the
+   * row does not yet exist, it is initialized and the value 1 is returned.
+   *
+   * @param poolName name of the value pool to allocate from. This is typically
+   *        the name of a sequence in the schema.
+   * @return a new unique value.
+   * @throws OrmException a unique value cannot be obtained.
+   */
   @Override
   protected long nextLong(final String poolName) throws OrmException {
     IndexKeyBuilder b = new IndexKeyBuilder();
@@ -87,40 +113,103 @@ public abstract class GenericSchema extends NoSqlSchema {
     upsert(key, data);
   }
 
+  /**
+   * Update a single row, inserting it if it does not exist.
+   * <p>
+   * Unlike insert, this method always succeeds.
+   *
+   * @param key key of the row to update, or insert if missing.
+   * @param data data to store at this row.
+   * @throws OrmException the data store cannot process the request, for example
+   *         due to a network connectivity problem.
+   */
   public abstract void upsert(byte[] key, byte[] data) throws OrmException;
 
+  /**
+   * Delete the row stored under the given key.
+   * <p>
+   * If the row does not exist, this method must complete successfully anyway.
+   * The intent of the caller is to ensure the row does not exist when the
+   * method completes, and a row that did not exist satisfies that intent.
+   *
+   * @param key the key to delete.
+   * @throws OrmException the data store cannot perform the removal.
+   */
   public abstract void delete(byte[] key) throws OrmException;
 
   /**
    * Atomically read and update a single row.
    * <p>
-   * Unlike the schema atomicUpdate, this method handles missing rows.
-   * Implementations must be logically equivalent to the following, but
+   * Unlike schema's atomicUpdate() method, this method must handle missing
+   * rows. Implementations must be logically equivalent to the following, but
    * performed atomically within the scope of the single row key:
    *
    * <pre>
    * byte[] oldData = get(key);
    * byte[] newData = update.update(oldData);
-   * if (newData != null)
+   * if (newData != null) {
    *   upsert(key, newData);
-   * else if (oldData != null) remove(key);
+   * } else if (oldData != null) {
+   *   remove(key);
+   * }
    * return data;
    * </pre>
+   * <p>
+   * Secondary index row updates are assumed to never be part of the atomic
+   * update transaction. This is an intentional design decision to fit with many
+   * NoSQL product's limitations to support only single-row atomic updates.
+   * <p>
+   * The {@code update} method may be invoked multiple times before the
+   * operation is considered successful. This permits an implementation to
+   * perform an opportunistic update attempt, and retry the update if the same
+   * row was modified by another concurrent worker.
    *
    * @param key the row key to read, update and return.
-   * @param update action to perform on the row's data element. May be passed in
-   *        null if the row doesn't exist, and should return the new row data,
-   *        or null to remove the row.
-   * @return the return value of {@code update}.
+   * @param update action to perform on the row's data element. The action may
+   *        be passed null if the row doesn't exist.
    * @throws OrmException the database cannot perform the update.
    */
   public abstract byte[] atomicUpdate(byte[] key, AtomicUpdate<byte[]> update)
       throws OrmException;
 
-  public void maybeFossilCollectIndexRow(long now, byte[] key, IndexRow r)
-      throws OrmException {
-    if (r.getTimestamp() + db.getMaxFossilAge() <= now) {
+  /**
+   * Check (and delete) an index row if its a fossil.
+   * <p>
+   * As index rows are written ahead of the main data row being written out,
+   * scans sometimes see an index row that does not match the data row. These
+   * are ignored for a short period ({@link GenericDatabase#getMaxFossilAge()})
+   * to allow the primary data row to eventually get written out. If however the
+   * writer never finished the update, these index rows are stale and need to be
+   * pruned. Any index row older than the fossil age is removed by this method.
+   *
+   * @param now timestamp when the current scan started.
+   * @param key the index row key.
+   * @param row the index row data.
+   */
+  public void maybeFossilCollectIndexRow(long now, byte[] key, IndexRow row) {
+    if (row.getTimestamp() + db.getMaxFossilAge() <= now) {
+      fossilCollectIndexRow(key, row);
+    }
+  }
+
+  /**
+   * Delete the given fossil index row.
+   * <p>
+   * This method is logically the same as {@link #delete(byte[])}, but its
+   * separated out to permit asynchronous delivery of the delete events since
+   * these are arriving during an index scan and are less time-critical than
+   * other delete operations.
+   * <p>
+   * The default implementation of this method calls {@link #delete(byte[])}.
+   *
+   * @param key index key to remove.
+   * @param row the index row data.
+   */
+  protected void fossilCollectIndexRow(byte[] key, IndexRow row) {
+    try {
       delete(key);
+    } catch (OrmException e) {
+      // Ignore a fossil delete error.
     }
   }
 

@@ -17,9 +17,36 @@ package com.google.gwtorm.nosql.generic;
 import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.client.Schema;
 import com.google.gwtorm.nosql.NoSqlDatabase;
+import com.google.gwtorm.nosql.NoSqlSchema;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Base class for generic NoSQL typed databases.
+ * <p>
+ * The generic types provide basic NoSQL implementation assuming a handful of
+ * primitive operations are available inside of the implementation's extension
+ * of {@link GenericSchema}. All relations are stored within the same key space,
+ * using the relation name as a prefix for the row's primary or secondary key.
+ * <p>
+ * Applications should use the database class to create instances of their
+ * Schema extension interface, and thus open and connect to the data store.
+ * <p>
+ * Creating a new database instance is expensive, due to the type analysis and
+ * code generation performed to implement the Schema and Access interfaces.
+ * Applications should create and cache their database instance for the life of
+ * the application.
+ * <p>
+ * Database instances are thread-safe, but returned Schema instances are not.
+ * <p>
+ * This class must be further extended by the NoSQL implementation to configure
+ * the connectivity with the data store and supply the correct subclass of
+ * {@link NoSqlSchema} that knows how to interact with the data store.
+ *
+ * @param <T> type of the application's Schema.
+ * @param <S> type of the implementation's base for Schema implementations.
+ * @param <A> type of the implementation's base for Access implementations.
+ */
 public abstract class GenericDatabase<T extends Schema, S extends GenericSchema, A extends GenericAccess>
     extends NoSqlDatabase<T, S, A> {
   private static final long DEFAULT_FOSSIL_AGE =

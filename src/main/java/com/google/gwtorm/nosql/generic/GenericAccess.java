@@ -239,9 +239,17 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
     }
   }
 
-  private void pruneOldIndexes(final T oldObj, T newObj) throws OrmException {
-    // Prune any old index records which no longer match.
-    //
+  /**
+   * Remove old secondary index rows that are no longer valid for an object.
+   *
+   * @param oldObj an old copy of the object, prior to the current update taking
+   *        place. If null the method does nothing and simply returns.
+   * @param newObj the new copy of the object. Index rows that are still valid
+   *        for {@code #newObj} are left alone. If null, all index rows for
+   *        {@code oldObj} are removed.
+   * @throws OrmException the data store is unable to remove an index row.
+   */
+  protected void pruneOldIndexes(final T oldObj, T newObj) throws OrmException {
     if (oldObj != null) {
       for (IndexFunction<T> f : getQueryIndexes()) {
         if (f.includes(oldObj)) {
@@ -308,7 +316,19 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
     }
   }
 
-  private boolean matches(IndexFunction<T> f, T obj, byte[] exp) {
+  /**
+   * Determine if an object still matches the index row.
+   * <p>
+   * This method checks that the object's fields still match the criteria
+   * necessary for it to be part of the index defined by {@code f}. It also
+   * formats the index key and validates it is still identical to {@code exp}.
+   *
+   * @param f the function that defines the index.
+   * @param obj the object instance being tested; must not be null.
+   * @param exp the index row key, as scanned from the index.
+   * @return true if the object still matches the data encoded in {@code #exp}.
+   */
+  protected boolean matches(IndexFunction<T> f, T obj, byte[] exp) {
     return f.includes(obj) && Arrays.equals(exp, indexRowKey(f, obj));
   }
 
@@ -320,19 +340,43 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
     return b.toByteArray();
   }
 
-  private byte[] indexRowKey(IndexFunction<T> f, T obj) {
+  /**
+   * Generate the row key for an object's secondary index row.
+   * <p>
+   * The default implementation uses the relation name, '.', the index name, a
+   * delimiter, the indexed fields encoded, a delimiter, and then the encoded
+   * primary key (without the relation name prefix).
+   * <p>
+   * The object's primary key is always appended onto the end of the secondary
+   * index row key to ensure that objects with the same field values still get
+   * distinct rows in the secondary index.
+   *
+   * @param idx function that describes the index.
+   * @param obj the object the index record should reference.
+   * @return the encoded secondary index row key.
+   */
+  protected byte[] indexRowKey(IndexFunction<T> idx, T obj) {
     IndexKeyBuilder b = new IndexKeyBuilder();
     b.add(getRelationName());
     b.add('.');
-    b.add(f.getName());
+    b.add(idx.getName());
     b.delimiter();
-    f.encode(b, obj);
+    idx.encode(b, obj);
     b.delimiter();
     getKeyIndex().encode(b, obj);
     return b.toByteArray();
   }
 
-  private byte[] indexRowData(T obj) {
+  /**
+   * Generate the data to store in a secondary index row for an object.
+   * <p>
+   * The default implementation of this method stores the encoded primary key,
+   * and the current system timestamp.
+   *
+   * @param obj the object the index record should reference.
+   * @return the encoded secondary index row data.
+   */
+  protected byte[] indexRowData(T obj) {
     final long now = System.currentTimeMillis();
 
     final IndexKeyBuilder b = new IndexKeyBuilder();

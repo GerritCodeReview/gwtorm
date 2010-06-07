@@ -34,8 +34,8 @@ public abstract class IndexFunction<T> {
    * Should this object exist in the index?
    * <p>
    * Objects that shouldn't appear in this index are skipped because field
-   * values are currently {@code null} or because one or more constants doesn't
-   * match as expected.
+   * values are currently {@code null}, or because one or more field values do
+   * not match the constants used in the query that defines the index.
    *
    * @param object the object to read fields from.
    * @return true if the object should be indexed by this index.
