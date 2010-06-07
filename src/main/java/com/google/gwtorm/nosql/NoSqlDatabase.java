@@ -84,7 +84,7 @@ public abstract class NoSqlDatabase<T extends Schema, S extends NoSqlSchema, A e
   }
 
   /** @return the derived model of the application's schema. */
-  protected SchemaModel getSchemaModel() {
+  public SchemaModel getSchemaModel() {
     return schemaModel;
   }
 

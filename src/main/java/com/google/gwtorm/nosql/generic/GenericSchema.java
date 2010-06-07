@@ -51,7 +51,15 @@ public abstract class GenericSchema extends NoSqlSchema {
           if (val != null) {
             ctr = CounterShard.CODEC.decode(val);
           } else {
-            ctr = new CounterShard(1, Long.MAX_VALUE);
+            long start = 1;
+            for (SequenceModel s : getDatabase().getSchemaModel()
+                .getSequences()) {
+              if (poolName.equals(s.getSequenceName())) {
+                start = s.getSequence().startWith();
+                break;
+              }
+            }
+            ctr = new CounterShard(start, Long.MAX_VALUE);
           }
 
           if (ctr.isEmpty()) {
