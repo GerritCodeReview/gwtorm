@@ -17,6 +17,7 @@ package com.google.gwtorm.nosql.generic;
 import com.google.gwtorm.client.Access;
 import com.google.gwtorm.client.AtomicUpdate;
 import com.google.gwtorm.client.Key;
+import com.google.gwtorm.client.OrmConcurrencyException;
 import com.google.gwtorm.client.OrmDuplicateKeyException;
 import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.client.ResultSet;
@@ -41,23 +42,12 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
     db = s;
   }
 
-  @Override
-  protected ResultSet<T> scan(String indexName, byte[] fromKey, byte[] toKey,
-      int limit) throws OrmException {
-    if (indexName.equals(getKeyIndex().getName())) {
-      return scanDataRow(fromKey, toKey, limit);
-
-    } else {
-      return scanIndexRow(indexName, fromKey, toKey, limit);
-    }
-  }
-
   /**
    * Lookup a single entity via its primary key.
    * <p>
    * The default implementation of this method performs a scan over the primary
-   * key with {@link #scan(String, byte[], byte[], int)}, '\0' appended onto
-   * the fromKey copy and a result limit of 2.
+   * key with {@link #scanPrimaryKey(byte[], byte[], int)}, '\0' appended onto
+   * the fromKey and a result limit of 2.
    * <p>
    * If multiple records are discovered {@link OrmDuplicateKeyException} is
    * thrown back to the caller.
@@ -69,17 +59,15 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
    */
   @Override
   public T get(K key) throws OrmException, OrmDuplicateKeyException {
-    final String primary = getKeyIndex().getName();
-
     final IndexKeyBuilder dst = new IndexKeyBuilder();
-    encodeKey(dst, key);
+    encodePrimaryKey(dst, key);
 
     final byte[] fromKey = dst.toByteArray();
 
     dst.nul();
     final byte[] toKey = dst.toByteArray();
 
-    Iterator<T> r = scan(primary, fromKey, toKey, 2).iterator();
+    Iterator<T> r = scanPrimaryKey(fromKey, toKey, 2).iterator();
     if (!r.hasNext()) {
       return null;
     }
@@ -91,7 +79,18 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
     return obj;
   }
 
-  private ResultSet<T> scanDataRow(byte[] fromKey, byte[] toKey, int limit)
+  /**
+   * Scan a range of keys from the data rows and return any matching objects.
+   *
+   * @param fromKey key to start the scan on. This is inclusive.
+   * @param toKey key to stop the scan on. This is exclusive.
+   * @param limit maximum number of results to return.
+   * @return result set for the requested range. The result set may be lazily
+   *         filled, or filled completely.
+   * @throws OrmException an error occurred preventing the scan from completing.
+   */
+  @Override
+  protected ResultSet<T> scanPrimaryKey(byte[] fromKey, byte[] toKey, int limit)
       throws OrmException {
     IndexKeyBuilder b;
 
@@ -108,16 +107,26 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
     toKey = b.toByteArray();
 
     final ArrayList<T> res = new ArrayList<T>();
-    for (Map.Entry<byte[], byte[]> ent : db.scan(fromKey, toKey)) {
-      res.add(getObjectCodec().decode(ent.getValue()));
-      if (limit > 0 && res.size() == limit) {
-        break;
-      }
+    Iterator<Map.Entry<byte[], byte[]>> i = db.scan(fromKey, toKey, limit);
+    while (i.hasNext()) {
+      res.add(getObjectCodec().decode(i.next().getValue()));
     }
     return new ListResultSet<T>(res);
   }
 
-  private ResultSet<T> scanIndexRow(String indexName, byte[] fromKey,
+  /**
+   * Scan a range of index keys and return any matching objects.
+   *
+   * @param idx the index function describing the index to scan.
+   * @param fromKey key to start the scan on. This is inclusive.
+   * @param toKey key to stop the scan on. This is exclusive.
+   * @param limit maximum number of results to return.
+   * @return result set for the requested range. The result set may be lazily
+   *         filled, or filled completely.
+   * @throws OrmException an error occurred preventing the scan from completing.
+   */
+  @Override
+  protected ResultSet<T> scanIndex(IndexFunction<T> idx, byte[] fromKey,
       byte[] toKey, int limit) throws OrmException {
     final long now = System.currentTimeMillis();
     IndexKeyBuilder b;
@@ -125,7 +134,7 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
     b = new IndexKeyBuilder();
     b.add(getRelationName());
     b.add('.');
-    b.add(indexName);
+    b.add(idx.getName());
     b.delimiter();
     b.addRaw(fromKey);
     fromKey = b.toByteArray();
@@ -133,52 +142,76 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
     b = new IndexKeyBuilder();
     b.add(getRelationName());
     b.add('.');
-    b.add(indexName);
+    b.add(idx.getName());
     b.delimiter();
     b.addRaw(toKey);
     toKey = b.toByteArray();
 
-    final IndexFunction<T> idx = getQueryIndex(indexName);
     final ArrayList<T> res = new ArrayList<T>();
-    for (Map.Entry<byte[], byte[]> ent : db.scan(fromKey, toKey)) {
+    byte[] lastKey = fromKey;
 
-      // Decode the row and try to get the object data. If its
-      // not stored in this row in the secondary index we need
-      // to get the authoritative copy from the main index.
-      //
-      final IndexRow r = IndexRow.CODEC.decode(ent.getValue());
-      byte[] objData = r.getDataCopy();
-      if (objData == null) {
-        b = new IndexKeyBuilder();
-        b.add(getRelationName());
-        b.delimiter();
-        b.addRaw(r.getDataKey());
-        objData = db.get(b.toByteArray());
-      }
+    SCAN: for (;;) {
+      int scanned = 0;
+      Iterator<Map.Entry<byte[], byte[]>> i = db.scan(lastKey, toKey, limit);
+      while (i.hasNext()) {
+        final Map.Entry<byte[], byte[]> ent = i.next();
+        final byte[] idxkey = ent.getKey();
+        lastKey = idxkey;
+        scanned++;
 
-      // If we have no data present and this row is stale enough,
-      // drop the row out of the index.
-      //
-      final byte[] idxkey = ent.getKey();
-      if (objData == null) {
-        db.maybeFossilCollectIndexRow(now, idxkey, r);
-        continue;
-      }
-
-      // Verify the object still matches the predicate of the index.
-      // If it does, include it in the result. Otherwise, maybe we
-      // should drop it from the index.
-      //
-      final T obj = getObjectCodec().decode(objData);
-      if (matches(idx, obj, idxkey)) {
-        res.add(obj);
-        if (limit > 0 && res.size() == limit) {
-          break;
+        // Decode the row and try to get the object data. If its
+        // not stored in this row in the secondary index we need
+        // to get the authoritative copy from the main index.
+        //
+        final IndexRow r = IndexRow.CODEC.decode(ent.getValue());
+        byte[] objData = r.getDataCopy();
+        if (objData == null) {
+          b = new IndexKeyBuilder();
+          b.add(getRelationName());
+          b.delimiter();
+          b.addRaw(r.getDataKey());
+          objData = db.fetchRow(b.toByteArray());
         }
-      } else {
-        db.maybeFossilCollectIndexRow(now, idxkey, r);
+
+        // If we have no data present and this row is stale enough,
+        // drop the row out of the index.
+        //
+        if (objData == null) {
+          db.maybeFossilCollectIndexRow(now, idxkey, r);
+          continue;
+        }
+
+        // Verify the object still matches the predicate of the index.
+        // If it does, include it in the result. Otherwise, maybe we
+        // should drop it from the index.
+        //
+        final T obj = getObjectCodec().decode(objData);
+        if (matches(idx, obj, idxkey)) {
+          res.add(obj);
+          if (limit > 0 && res.size() == limit) {
+            break SCAN;
+          }
+        } else {
+          db.maybeFossilCollectIndexRow(now, idxkey, r);
+        }
       }
+
+      // If we have no limit we scanned everything, so break out.
+      // If scanned < limit, we saw every index row that might be
+      // a match, and no further rows would exist.
+      //
+      if (limit == 0 || scanned < limit) {
+        break SCAN;
+      }
+
+      // Otherwise we have to scan again starting after lastKey.
+      //
+      b = new IndexKeyBuilder();
+      b.addRaw(lastKey);
+      b.nul();
+      lastKey = b.toByteArray();
     }
+
     return new ListResultSet<T>(res);
   }
 
@@ -189,51 +222,66 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
     }
   }
 
-  private void insertOne(T obj) throws OrmException {
-    byte[] idx = indexRowData(obj);
+  private void insertOne(T nObj) throws OrmException {
+    writeNewIndexes(null, nObj);
 
-    for (IndexFunction<T> f : getQueryIndexes()) {
-      if (f.includes(obj)) {
-        db.upsert(indexRowKey(f, obj), idx);
-      }
-    }
-
-    db.insert(dataRowKey(obj), getObjectCodec().encode(obj).toByteArray());
+    final byte[] key = dataRowKey(primaryKey(nObj));
+    db.insert(key, getObjectCodec().encode(nObj).toByteArray());
   }
 
   @Override
   public void update(Iterable<T> instances) throws OrmException {
-    upsert(instances);
+    for (T obj : instances) {
+      upsertOne(obj, true);
+    }
   }
 
   @Override
   public void upsert(Iterable<T> instances) throws OrmException {
     for (T obj : instances) {
-      upsertOne(obj);
+      upsertOne(obj, false);
     }
   }
 
-  private void upsertOne(T newObj) throws OrmException {
-    final byte[] key = dataRowKey(newObj);
-    final byte[] oldBin = db.get(key);
-    final T oldObj = oldBin != null ? getObjectCodec().decode(oldBin) : null;
+  private void upsertOne(T newObj, boolean mustExist) throws OrmException {
+    final byte[] key = dataRowKey(primaryKey(newObj));
+    final byte[] oldBin = db.fetchRow(key);
+    final T oldObj;
+
+    if (oldBin != null) {
+      oldObj = getObjectCodec().decode(oldBin);
+    } else if (mustExist) {
+      throw new OrmConcurrencyException();
+    } else {
+      oldObj = null;
+    }
 
     writeNewIndexes(oldObj, newObj);
     db.upsert(key, getObjectCodec().encode(newObj).toByteArray());
     pruneOldIndexes(oldObj, newObj);
   }
 
-  private void writeNewIndexes(T oldObj, final T newObj) throws OrmException {
-    final byte[] idx = indexRowData(newObj);
-
-    // Write any secondary index records first if they differ
-    // from what would already be there for the prior version.
-    //
-    for (IndexFunction<T> f : getQueryIndexes()) {
+  /**
+   * Insert secondary index rows for an object about to be written.
+   * <p>
+   * Insert or update operations should invoke this method before the main data
+   * row is written, allowing the secondary index rows to be put into the data
+   * store before the main data row arrives. Compatible scan implementations
+   * (such as {@link #scanIndex(IndexFunction, byte[], byte[], int)} above) will
+   * ignore these rows for a short time period.
+   *
+   * @param oldObj an old copy of the object; if non-null this may be used to
+   *        avoid writing unnecessary secondary index rows that already exist.
+   * @param newObj the new (or updated) object being stored. Must not be null.
+   * @throws OrmException the data store is unable to update an index row.
+   */
+  protected void writeNewIndexes(T oldObj, T newObj) throws OrmException {
+    final byte[] idxData = indexRowData(newObj);
+    for (IndexFunction<T> f : getIndexes()) {
       if (f.includes(newObj)) {
-        final byte[] row = indexRowKey(f, newObj);
-        if (oldObj == null || !matches(f, oldObj, row)) {
-          db.upsert(row, idx);
+        final byte[] idxKey = indexRowKey(f, newObj);
+        if (oldObj == null || !matches(f, oldObj, idxKey)) {
+          db.upsert(idxKey, idxData);
         }
       }
     }
@@ -251,11 +299,11 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
    */
   protected void pruneOldIndexes(final T oldObj, T newObj) throws OrmException {
     if (oldObj != null) {
-      for (IndexFunction<T> f : getQueryIndexes()) {
+      for (IndexFunction<T> f : getIndexes()) {
         if (f.includes(oldObj)) {
-          final byte[] k = indexRowKey(f, oldObj);
-          if (!matches(f, newObj, k)) {
-            db.delete(k);
+          final byte[] idxKey = indexRowKey(f, oldObj);
+          if (newObj == null || !matches(f, newObj, idxKey)) {
+            db.delete(idxKey);
           }
         }
       }
@@ -264,14 +312,9 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
 
   @Override
   public void delete(Iterable<T> instances) throws OrmException {
-    for (T obj : instances) {
-      db.delete(dataRowKey(obj));
-
-      for (IndexFunction<T> f : getQueryIndexes()) {
-        if (f.includes(obj)) {
-          db.delete(indexRowKey(f, obj));
-        }
-      }
+    for (T oldObj : instances) {
+      db.delete(dataRowKey(primaryKey(oldObj)));
+      pruneOldIndexes(oldObj, null);
     }
   }
 
@@ -281,7 +324,7 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
     final IndexKeyBuilder b = new IndexKeyBuilder();
     b.add(getRelationName());
     b.delimiter();
-    encodeKey(b, key);
+    encodePrimaryKey(b, key);
 
     try {
       final T[] res = (T[]) new Object[3];
@@ -332,11 +375,20 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
     return f.includes(obj) && Arrays.equals(exp, indexRowKey(f, obj));
   }
 
-  private byte[] dataRowKey(T obj) {
+  /**
+   * Generate the row key for the object's primary data row.
+   * <p>
+   * The default implementation uses the relation name, a delimiter, and then
+   * the encoded primary key.
+   *
+   * @param key key of the object.
+   * @return the object's data row key.
+   */
+  protected byte[] dataRowKey(K key) {
     IndexKeyBuilder b = new IndexKeyBuilder();
     b.add(getRelationName());
     b.delimiter();
-    getKeyIndex().encode(b, obj);
+    encodePrimaryKey(b, key);
     return b.toByteArray();
   }
 
@@ -363,7 +415,7 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
     b.delimiter();
     idx.encode(b, obj);
     b.delimiter();
-    getKeyIndex().encode(b, obj);
+    encodePrimaryKey(b, primaryKey(obj));
     return b.toByteArray();
   }
 
@@ -380,7 +432,7 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
     final long now = System.currentTimeMillis();
 
     final IndexKeyBuilder b = new IndexKeyBuilder();
-    getKeyIndex().encode(b, obj);
+    encodePrimaryKey(b, primaryKey(obj));
     final byte[] key = b.toByteArray();
 
     return IndexRow.CODEC.encode(IndexRow.forKey(now, key)).toByteArray();

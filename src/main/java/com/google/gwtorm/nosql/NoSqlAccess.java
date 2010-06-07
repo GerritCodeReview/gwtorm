@@ -28,6 +28,19 @@ public abstract class NoSqlAccess<T, K extends Key<?>> extends
   }
 
   /**
+   * Scan a range of keys from the data rows and return any matching objects.
+   *
+   * @param fromKey key to start the scan on. This is inclusive.
+   * @param toKey key to stop the scan on. This is exclusive.
+   * @param limit maximum number of results to return.
+   * @return result set for the requested range. The result set may be lazily
+   *         filled, or filled completely.
+   * @throws OrmException an error occurred preventing the scan from completing.
+   */
+  protected abstract ResultSet<T> scanPrimaryKey(byte[] fromKey, byte[] toKey,
+      int limit) throws OrmException;
+
+  /**
    * Scan a range of keys and return any matching objects.
    * <p>
    * All NoSQL implementations must provide their own variant of this method.
@@ -36,7 +49,7 @@ public abstract class NoSqlAccess<T, K extends Key<?>> extends
    * as {@code fromKey}, but append a trailing NUL byte (0x00). The caller
    * should validate that the returned ResultSet contains no more than 1 row.
    *
-   * @param indexName name of the index the scan occurs over.
+   * @param index definition of the index the scan occurs over.
    * @param fromKey key to start the scan on. This is inclusive.
    * @param toKey key to stop the scan on. This is exclusive.
    * @param limit maximum number of results to return.
@@ -44,28 +57,8 @@ public abstract class NoSqlAccess<T, K extends Key<?>> extends
    *         filled, or filled completely.
    * @throws OrmException an error occurred preventing the scan from completing.
    */
-  protected abstract ResultSet<T> scan(String indexName, byte[] fromKey,
-      byte[] toKey, int limit) throws OrmException;
-
-  /**
-   * Lookup a query index by its unique name.
-   *
-   * @param indexName the name of the index.
-   * @return the IndexFunction for {@code indexName}
-   * @throws OrmException if no IndexFunction exists for the supplied name.
-   */
-  protected IndexFunction<T> getQueryIndex(String indexName)
-      throws OrmException {
-    for (IndexFunction<T> f : getQueryIndexes()) {
-      if (indexName.equals(f.getName())) {
-        return f;
-      }
-    }
-    if (indexName.equals(getKeyIndex().getName())) {
-      return getKeyIndex();
-    }
-    throw new OrmException("No index named " + indexName);
-  }
+  protected abstract ResultSet<T> scanIndex(IndexFunction<T> index,
+      byte[] fromKey, byte[] toKey, int limit) throws OrmException;
 
   // -- These are all provided by AccessGen when it builds a subclass --
 
@@ -75,21 +68,22 @@ public abstract class NoSqlAccess<T, K extends Key<?>> extends
   /** @return encoder/decoder for the object data. */
   protected abstract ProtobufCodec<T> getObjectCodec();
 
-  /** @return encoder/decoder for the primary key of the object. */
-  protected abstract IndexFunction<T> getKeyIndex();
-
-  /** @return array of indexes to support queries. */
-  protected abstract IndexFunction<T>[] getQueryIndexes();
+  /**
+   * Get the indexes that support query functions.
+   * <p>
+   * This array may be a subset of the total query functions. This can occur
+   * when two or more queries can be efficiently answered by performing a range
+   * scan over the same index.
+   *
+   * @return indexes needed to support queries.
+   */
+  protected abstract IndexFunction<T>[] getIndexes();
 
   /**
    * Encode the primary key of the object.
-   * <p>
-   * This method is similar to {@link #getKeyIndex()}, except it can encode the
-   * key without needing an object instance. This is suitable for key based
-   * lookup of the row.
    *
    * @param dst builder the key components will be added into.
    * @param key the object primary key.
    */
-  protected abstract void encodeKey(IndexKeyBuilder dst, K key);
+  protected abstract void encodePrimaryKey(IndexKeyBuilder dst, K key);
 }

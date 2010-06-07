@@ -54,8 +54,7 @@ class AccessGen implements Opcodes {
       Type.getType(IndexKeyBuilder.class);
 
   private static final String F_OBJECT_CODEC = "objectCodec";
-  private static final String F_KEY_INDEX = "keyIndex";
-  private static final String F_QUERY_INDEXES = "queryIndexes";
+  private static final String F_INDEXES = "indexes";
 
   private final GeneratedClassLoader classLoader;
   private final RelationModel model;
@@ -99,11 +98,10 @@ class AccessGen implements Opcodes {
     implementConstructor();
     implementGetString("getRelationName", model.getRelationName());
     implementGetObjectCodec();
-    implementGetKeyIndex();
-    implementGetQueryIndexes();
+    implementGetIndexes();
 
     implementPrimaryKey();
-    implementEncodeKey();
+    implementEncodePrimaryKey();
     implementKeyQuery(key);
 
     for (final QueryModel q : model.getQueries()) {
@@ -115,7 +113,6 @@ class AccessGen implements Opcodes {
 
     final Class<?> c = loadClass();
     initObjectCodec(c);
-    initKeyIndex(c);
     initQueryIndexes(c);
     return c;
   }
@@ -139,38 +136,25 @@ class AccessGen implements Opcodes {
   }
 
   @SuppressWarnings("unchecked")
-  private void initKeyIndex(final Class<?> clazz) throws OrmException {
-    try {
-      final Field e = clazz.getDeclaredField(F_KEY_INDEX);
-      e.setAccessible(true);
-      e.set(null, new IndexFunctionGen(classLoader, toQueryModel(key),
-          modelClass).create());
-    } catch (IllegalArgumentException err) {
-      throw new OrmException("Cannot setup key IndexFunction", err);
-    } catch (IllegalStateException err) {
-      throw new OrmException("Cannot setup key IndexFunction", err);
-    } catch (IllegalAccessException err) {
-      throw new OrmException("Cannot setup key IndexFunction", err);
-    } catch (SecurityException err) {
-      throw new OrmException("Cannot setup key IndexFunction", err);
-    } catch (NoSuchFieldException err) {
-      throw new OrmException("Cannot setup key IndexFunction", err);
-    }
-  }
-
-  @SuppressWarnings("unchecked")
   private void initQueryIndexes(final Class<?> clazz) throws OrmException {
     final Collection<QueryModel> queries = model.getQueries();
-    final IndexFunction[] indexes = new IndexFunction[queries.size()];
-    int p = 0;
+    final ArrayList<IndexFunction> indexes = new ArrayList<IndexFunction>();
     for (QueryModel m : queries) {
-      indexes[p++] = new IndexFunctionGen(classLoader, m, modelClass).create();
+      if (needsIndexFunction(m)) {
+        indexes.add(new IndexFunctionGen(classLoader, m, modelClass).create());
+      }
     }
 
     try {
-      final Field e = clazz.getDeclaredField(F_QUERY_INDEXES);
+      Field e = clazz.getDeclaredField(F_INDEXES);
       e.setAccessible(true);
-      e.set(null, indexes);
+      e.set(null, indexes.toArray(new IndexFunction[indexes.size()]));
+
+      for (IndexFunction f : indexes) {
+        e = clazz.getDeclaredField("index_" + f.getName());
+        e.setAccessible(true);
+        e.set(null, f);
+      }
     } catch (IllegalArgumentException err) {
       throw new OrmException("Cannot setup query IndexFunctions", err);
     } catch (IllegalStateException err) {
@@ -207,11 +191,16 @@ class AccessGen implements Opcodes {
   private void implementStaticFields() {
     cw.visitField(ACC_PRIVATE | ACC_STATIC, F_OBJECT_CODEC,
         protobufCodec.getDescriptor(), null, null).visitEnd();
-    cw.visitField(ACC_PRIVATE | ACC_STATIC, F_KEY_INDEX,
-        indexFunction.getDescriptor(), null, null).visitEnd();
-    cw.visitField(ACC_PRIVATE | ACC_STATIC, F_QUERY_INDEXES,
+    cw.visitField(ACC_PRIVATE | ACC_STATIC, F_INDEXES,
         Type.getType(IndexFunction[].class).getDescriptor(), null, null)
         .visitEnd();
+
+    for (final QueryModel q : model.getQueries()) {
+      if (needsIndexFunction(q)) {
+        cw.visitField(ACC_PRIVATE | ACC_STATIC, "index_" + q.getName(),
+            indexFunction.getDescriptor(), null, null).visitEnd();
+      }
+    }
   }
 
   private void implementConstructor() {
@@ -254,25 +243,13 @@ class AccessGen implements Opcodes {
     mv.visitEnd();
   }
 
-  private void implementGetKeyIndex() {
+  private void implementGetIndexes() {
     final MethodVisitor mv =
-        cw.visitMethod(ACC_PUBLIC | ACC_FINAL, "getKeyIndex", Type
-            .getMethodDescriptor(indexFunction, new Type[] {}), null, null);
-    mv.visitCode();
-    mv.visitFieldInsn(GETSTATIC, implTypeName, F_KEY_INDEX, indexFunction
-        .getDescriptor());
-    mv.visitInsn(ARETURN);
-    mv.visitMaxs(-1, -1);
-    mv.visitEnd();
-  }
-
-  private void implementGetQueryIndexes() {
-    final MethodVisitor mv =
-        cw.visitMethod(ACC_PUBLIC | ACC_FINAL, "getQueryIndexes", Type
+        cw.visitMethod(ACC_PUBLIC | ACC_FINAL, "getIndexes", Type
             .getMethodDescriptor(Type.getType(IndexFunction[].class),
                 new Type[] {}), null, null);
     mv.visitCode();
-    mv.visitFieldInsn(GETSTATIC, implTypeName, F_QUERY_INDEXES, Type.getType(
+    mv.visitFieldInsn(GETSTATIC, implTypeName, F_INDEXES, Type.getType(
         IndexFunction[].class).getDescriptor());
     mv.visitInsn(ARETURN);
     mv.visitMaxs(-1, -1);
@@ -294,16 +271,11 @@ class AccessGen implements Opcodes {
     mv.visitEnd();
   }
 
-  private QueryModel toQueryModel(KeyModel info) throws OrmException {
-    return new QueryModel(model, info.getName(), //
-        "WHERE " + info.getField().getFieldName() + "=?");
-  }
-
-  private void implementEncodeKey() throws OrmException {
+  private void implementEncodePrimaryKey() throws OrmException {
     final List<ColumnModel> pCols = Collections.singletonList(key.getField());
     final Type argType = CodeGenSupport.toType(key.getField());
     final MethodVisitor mv =
-        cw.visitMethod(ACC_PUBLIC | ACC_FINAL, "encodeKey", Type
+        cw.visitMethod(ACC_PUBLIC | ACC_FINAL, "encodePrimaryKey", Type
             .getMethodDescriptor(Type.VOID_TYPE, new Type[] {indexKeyBuilder,
                 ormKey}), null, null);
     mv.visitCode();
@@ -395,7 +367,10 @@ class AccessGen implements Opcodes {
     // Make the scan call
     //
     mv.visitVarInsn(ALOAD, 0);
-    mv.visitLdcInsn(info.getName());
+    if (needsIndexFunction(info)) {
+      mv.visitFieldInsn(GETSTATIC, implTypeName, "index_" + info.getName(),
+          indexFunction.getDescriptor());
+    }
 
     mv.visitVarInsn(ALOAD, fromBuf);
     mv.visitMethodInsn(INVOKEVIRTUAL, indexKeyBuilder.getInternalName(),
@@ -417,12 +392,25 @@ class AccessGen implements Opcodes {
       cgs.push(0);
     }
 
-    mv.visitMethodInsn(INVOKEVIRTUAL, accessType.getInternalName(), "scan",
-        Type.getMethodDescriptor(resultSet, new Type[] {string, byteArray,
-            byteArray, Type.INT_TYPE}));
+    if (needsIndexFunction(info)) {
+      mv.visitMethodInsn(INVOKEVIRTUAL, accessType.getInternalName(),
+          "scanIndex", Type.getMethodDescriptor(resultSet, new Type[] {
+              indexFunction, byteArray, byteArray, Type.INT_TYPE}));
+    } else {
+      // No where and no order by clause? Use the primary key instead.
+      //
+      mv.visitMethodInsn(INVOKEVIRTUAL, accessType.getInternalName(),
+          "scanPrimaryKey", Type.getMethodDescriptor(resultSet, new Type[] {
+              byteArray, byteArray, Type.INT_TYPE}));
+    }
+
     mv.visitInsn(ARETURN);
     mv.visitMaxs(-1, -1);
     mv.visitEnd();
+  }
+
+  private boolean needsIndexFunction(final QueryModel info) {
+    return info.hasWhere() || info.hasOrderBy();
   }
 
   private void encodeFields(QueryModel qm, List<Tree> query, MethodVisitor mv,
@@ -430,7 +418,7 @@ class AccessGen implements Opcodes {
     final boolean toKey = !fromKey;
     Tree lastNode = null;
 
-    for(Tree node : query) {
+    for (Tree node : query) {
       switch (node.getType()) {
         case QueryParser.GE:
           if (fromKey) {

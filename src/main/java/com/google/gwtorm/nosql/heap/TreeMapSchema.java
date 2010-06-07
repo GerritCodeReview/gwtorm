@@ -15,12 +15,12 @@
 package com.google.gwtorm.nosql.heap;
 
 import com.google.gwtorm.client.AtomicUpdate;
-import com.google.gwtorm.client.OrmDuplicateKeyException;
 import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.client.Schema;
 import com.google.gwtorm.nosql.generic.GenericSchema;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -41,17 +41,8 @@ public abstract class TreeMapSchema extends GenericSchema {
   }
 
   @Override
-  public byte[] get(byte[] key) {
-    db.lock.lock();
-    try {
-      return db.table.get(key);
-    } finally {
-      db.lock.unlock();
-    }
-  }
-
-  @Override
-  public Iterable<Map.Entry<byte[], byte[]>> scan(byte[] fromKey, byte[] toKey) {
+  public Iterator<Map.Entry<byte[], byte[]>> scan(byte[] fromKey, byte[] toKey,
+      int limit) {
     db.lock.lock();
     try {
       final List<Map.Entry<byte[], byte[]>> res =
@@ -77,8 +68,12 @@ public abstract class TreeMapSchema extends GenericSchema {
             throw new UnsupportedOperationException();
           }
         });
+
+        if (limit > 0 && res.size() == limit) {
+          break;
+        }
       }
-      return res;
+      return res.iterator();
     } finally {
       db.lock.unlock();
     }
@@ -86,20 +81,6 @@ public abstract class TreeMapSchema extends GenericSchema {
 
   private Set<Entry<byte[], byte[]>> entries(byte[] fromKey, byte[] toKey) {
     return db.table.subMap(fromKey, toKey).entrySet();
-  }
-
-  @Override
-  public void insert(byte[] key, byte[] data) throws OrmException {
-    db.lock.lock();
-    try {
-      if (db.table.containsKey(key)) {
-        throw new OrmDuplicateKeyException("Duplicate key");
-      } else {
-        db.table.put(key, data);
-      }
-    } finally {
-      db.lock.unlock();
-    }
   }
 
   @Override
@@ -123,18 +104,17 @@ public abstract class TreeMapSchema extends GenericSchema {
   }
 
   @Override
-  public byte[] atomicUpdate(byte[] key, AtomicUpdate<byte[]> update)
+  public void atomicUpdate(byte[] key, AtomicUpdate<byte[]> update)
       throws OrmException {
     db.lock.lock();
     try {
-      final byte[] oldData = get(key);
+      final byte[] oldData = fetchRow(key);
       final byte[] newData = update.update(oldData);
       if (newData != null) {
         upsert(key, newData);
       } else if (oldData != null) {
         delete(key);
       }
-      return newData;
     } finally {
       db.lock.unlock();
     }

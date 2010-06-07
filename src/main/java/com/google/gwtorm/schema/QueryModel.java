@@ -123,6 +123,14 @@ public class QueryModel {
     }
   }
 
+  public boolean hasWhere() {
+    return findWhere(parsedQuery) != null;
+  }
+
+  public boolean hasOrderBy() {
+    return findOrderBy(parsedQuery) != null;
+  }
+
   public boolean hasLimit() {
     return findLimit(parsedQuery) != null;
   }
@@ -135,6 +143,24 @@ public class QueryModel {
 
   public int getStaticLimit() {
     return Integer.parseInt(findLimit(parsedQuery).getChild(0).getText());
+  }
+
+  private Tree findWhere(final Tree node) {
+    if (node == null) {
+      return null;
+    }
+    switch (node.getType()) {
+      case QueryParser.WHERE:
+        return node;
+      default:
+        for (int i = 0; i < node.getChildCount(); i++) {
+          final Tree r = findLimit(node.getChild(i));
+          if (r != null) {
+            return r;
+          }
+        }
+        return null;
+    }
   }
 
   private Tree findLimit(final Tree node) {

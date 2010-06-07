@@ -15,6 +15,7 @@
 package com.google.gwtorm.nosql.generic;
 
 import com.google.gwtorm.client.AtomicUpdate;
+import com.google.gwtorm.client.OrmDuplicateKeyException;
 import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.client.Schema;
 import com.google.gwtorm.nosql.CounterShard;
@@ -23,7 +24,9 @@ import com.google.gwtorm.nosql.IndexRow;
 import com.google.gwtorm.nosql.NoSqlSchema;
 import com.google.gwtorm.schema.SequenceModel;
 
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Base implementation for {@link Schema} in a {@link GenericDatabase}.
@@ -102,15 +105,90 @@ public abstract class GenericSchema extends NoSqlSchema {
     }
   }
 
-  public abstract byte[] get(byte[] key) throws OrmException;
+  /**
+   * Fetch one row's data.
+   * <p>
+   * The default implementation of this method creates a pair of keys and passes
+   * them to {@link #scan(byte[], byte[], int)}. The {@code fromKey} is the
+   * supplied {@code key}, while the {@code toKey} has '\0' appended onto
+   * {@code key}. If more than one row matches in that range, the method throws
+   * an exception.
+   *
+   * @param key key of the row to fetch and return.
+   * @return the data stored under {@code key}; null if no row exists.
+   * @throws OrmDuplicateKeyException more than one row was identified in the
+   *         key scan.
+   * @throws OrmException the data store cannot process the request.
+   */
+  public byte[] fetchRow(byte[] key) throws OrmDuplicateKeyException,
+      OrmException {
+    final byte[] fromKey = key;
+    final byte[] toKey = new byte[key.length + 1];
+    System.arraycopy(key, 0, toKey, 0, key.length);
 
-  public abstract Iterable<Map.Entry<byte[], byte[]>> scan(byte[] fromKey,
-      byte[] toKey) throws OrmException;
+    Iterator<Entry<byte[], byte[]>> i = scan(fromKey, toKey, 2);
+    if (!i.hasNext()) {
+      return null;
+    }
 
-  public abstract void insert(byte[] key, byte[] data) throws OrmException;
+    byte[] data = i.next().getValue();
+    if (i.hasNext()) {
+      throw new OrmDuplicateKeyException("Unexpected duplicate keys");
+    }
+    return data;
+  }
 
-  public void replace(byte[] key, byte[] data) throws OrmException {
-    upsert(key, data);
+  /**
+   * Scan a range of keys and return any matching objects.
+   * <p>
+   * To fetch a single record with a scan, set {@code toKey} to the same array
+   * as {@code fromKey}, but append a trailing NUL byte (0x00). The caller
+   * should validate that the returned ResultSet contains no more than 1 row.
+   * <p>
+   * The resulting iteration does not support remove.
+   * <p>
+   * Each iteration element is a map entry, describing the row key and the row
+   * value. The map entry's value cannot be changed.
+   *
+   * @param fromKey key to start the scan on. This is inclusive.
+   * @param toKey key to stop the scan on. This is exclusive.
+   * @param limit maximum number of results to return.
+   * @return result iteration for the requested range. The result set may be
+   *         lazily filled, or filled completely.
+   * @throws OrmException an error occurred preventing the scan from completing.
+   */
+  public abstract Iterator<Map.Entry<byte[], byte[]>> scan(byte[] fromKey,
+      byte[] toKey, int limit) throws OrmException;
+
+  /**
+   * Atomically insert one row, failing if the row already exists.
+   * <p>
+   * The default implementation of this method relies upon the atomic nature of
+   * the {@link #atomicUpdate(byte[], AtomicUpdate)} primitive to test for the
+   * row's existence, and create the row only if it is not found.
+   *
+   * @param key key of the new row to insert.
+   * @param newData data of the new row.
+   * @throws OrmDuplicateKeyException another row already exists with the
+   *         specified key.
+   * @throws OrmException the data store cannot process the request right now,
+   *         for example due to a network connectivity problem.
+   */
+  public void insert(byte[] key, final byte[] newData)
+      throws OrmDuplicateKeyException, OrmException {
+    try {
+      atomicUpdate(key, new AtomicUpdate<byte[]>() {
+        @Override
+        public byte[] update(byte[] oldData) {
+          if (oldData != null) {
+            throw new KeyExists();
+          }
+          return newData;
+        }
+      });
+    } catch (KeyExists err) {
+      throw new OrmDuplicateKeyException("Duplicate key");
+    }
   }
 
   /**
@@ -169,7 +247,7 @@ public abstract class GenericSchema extends NoSqlSchema {
    *        be passed null if the row doesn't exist.
    * @throws OrmException the database cannot perform the update.
    */
-  public abstract byte[] atomicUpdate(byte[] key, AtomicUpdate<byte[]> update)
+  public abstract void atomicUpdate(byte[] key, AtomicUpdate<byte[]> update)
       throws OrmException;
 
   /**
@@ -211,6 +289,9 @@ public abstract class GenericSchema extends NoSqlSchema {
     } catch (OrmException e) {
       // Ignore a fossil delete error.
     }
+  }
+
+  private static class KeyExists extends RuntimeException {
   }
 
   private static class NoMoreValues extends RuntimeException {

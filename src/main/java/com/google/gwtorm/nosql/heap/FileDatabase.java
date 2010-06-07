@@ -279,17 +279,6 @@ public class FileDatabase<T extends Schema> extends
     }
 
     @Override
-    public void insert(byte[] key, byte[] data) throws OrmException {
-      db.lock.lock();
-      try {
-        super.insert(key, data);
-        db.writeLog(1, key, data);
-      } finally {
-        db.lock.unlock();
-      }
-    }
-
-    @Override
     public void upsert(byte[] key, byte[] data) throws OrmException {
       db.lock.lock();
       try {
