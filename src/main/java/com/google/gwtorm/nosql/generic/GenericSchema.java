@@ -85,6 +85,9 @@ public abstract class GenericSchema extends NoSqlSchema {
                 .getSequences()) {
               if (poolName.equals(s.getSequenceName())) {
                 start = s.getSequence().startWith();
+                if (start == 0) {
+                  start = 1;
+                }
                 break;
               }
             }
