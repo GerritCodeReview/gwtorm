@@ -18,6 +18,8 @@ import com.google.gwtorm.client.Column;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.CodedInputStream;
 
+import java.nio.ByteBuffer;
+
 /**
  * Encode and decode an arbitrary Java object as a Protobuf message.
  * <p>
@@ -36,11 +38,21 @@ public abstract class ProtobufCodec<T> {
     return decode(buf.newCodedInput());
   }
 
-  /** Decode a byte string into an object instance. */
+  /** Decode a byte array into an object instance. */
   public T decode(byte[] buf) {
     return decode(CodedInputStream.newInstance(buf));
   }
 
   /** Decode an object by reading it from the stream. */
   protected abstract T decode(CodedInputStream in);
+
+  /** Decode a byte buffer into an object instance. */
+  public T decode(ByteBuffer buf) {
+    if (buf.hasArray()) {
+      return decode(CodedInputStream.newInstance(buf.array(), buf.position(),
+          buf.remaining()));
+    } else {
+      return decode(ByteString.copyFrom(buf));
+    }
+  }
 }
