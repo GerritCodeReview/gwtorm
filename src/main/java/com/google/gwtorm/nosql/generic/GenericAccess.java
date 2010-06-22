@@ -226,7 +226,7 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
     writeNewIndexes(null, nObj);
 
     final byte[] key = dataRowKey(primaryKey(nObj));
-    db.insert(key, getObjectCodec().encode(nObj).toByteArray());
+    db.insert(key, getObjectCodec().encodeToByteString(nObj).toByteArray());
   }
 
   @Override
@@ -257,7 +257,7 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
     }
 
     writeNewIndexes(oldObj, newObj);
-    db.upsert(key, getObjectCodec().encode(newObj).toByteArray());
+    db.upsert(key, getObjectCodec().encodeToByteString(newObj).toByteArray());
     pruneOldIndexes(oldObj, newObj);
   }
 
@@ -342,7 +342,7 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
             } catch (OrmException err) {
               throw new IndexException(err);
             }
-            return getObjectCodec().encode(newObj).toByteArray();
+            return getObjectCodec().encodeToByteString(newObj).toByteArray();
 
           } else {
             res[0] = null;
@@ -435,7 +435,7 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
     encodePrimaryKey(b, primaryKey(obj));
     final byte[] key = b.toByteArray();
 
-    return IndexRow.CODEC.encode(IndexRow.forKey(now, key)).toByteArray();
+    return IndexRow.CODEC.encodeToByteString(IndexRow.forKey(now, key)).toByteArray();
   }
 
   private static class IndexException extends RuntimeException {

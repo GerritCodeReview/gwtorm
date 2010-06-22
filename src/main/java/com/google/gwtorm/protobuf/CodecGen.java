@@ -32,7 +32,6 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
-import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -185,14 +184,17 @@ class CodecGen<T> implements Opcodes {
         sizeofMessage(sort(f.getNestedColumns()), mv, cgs);
         cgs.sizeVar = oldVar;
 
+        cgs.preinc();
         cgs.push(f.getColumnID());
-        cgs.inc("computeTagSize", Type.INT_TYPE);
+        cgs.doinc("computeTagSize", Type.INT_TYPE);
 
+        cgs.preinc();
         mv.visitVarInsn(ILOAD, msgVar);
-        cgs.inc("computeRawVarint32Size", Type.INT_TYPE);
+        cgs.doinc("computeRawVarint32Size", Type.INT_TYPE);
 
+        cgs.preinc();
         mv.visitVarInsn(ILOAD, msgVar);
-        cgs.inc();
+        cgs.doinc();
 
         cgs.freeLocal(msgVar);
         mv.visitLabel(end);
@@ -208,41 +210,47 @@ class CodecGen<T> implements Opcodes {
 
     switch (Type.getType(f.getPrimitiveType()).getSort()) {
       case Type.BOOLEAN:
+        cgs.preinc();
         cgs.push(f.getColumnID());
         cgs.pushFieldValue();
-        cgs.inc("computeBoolSize", Type.INT_TYPE, Type.BOOLEAN_TYPE);
+        cgs.doinc("computeBoolSize", Type.INT_TYPE, Type.BOOLEAN_TYPE);
         break;
 
       case Type.CHAR:
+        cgs.preinc();
         cgs.push(f.getColumnID());
         cgs.pushFieldValue();
-        cgs.inc("computeUInt32Size", Type.INT_TYPE, Type.INT_TYPE);
+        cgs.doinc("computeUInt32Size", Type.INT_TYPE, Type.INT_TYPE);
         break;
 
       case Type.BYTE:
       case Type.SHORT:
       case Type.INT:
+        cgs.preinc();
         cgs.push(f.getColumnID());
         cgs.pushFieldValue();
-        cgs.inc("computeSInt32Size", Type.INT_TYPE, Type.INT_TYPE);
+        cgs.doinc("computeSInt32Size", Type.INT_TYPE, Type.INT_TYPE);
         break;
 
       case Type.FLOAT:
+        cgs.preinc();
         cgs.push(f.getColumnID());
         cgs.pushFieldValue();
-        cgs.inc("computeFloatSize", Type.INT_TYPE, Type.FLOAT_TYPE);
+        cgs.doinc("computeFloatSize", Type.INT_TYPE, Type.FLOAT_TYPE);
         break;
 
       case Type.DOUBLE:
+        cgs.preinc();
         cgs.push(f.getColumnID());
         cgs.pushFieldValue();
-        cgs.inc("computeDoubleSize", Type.INT_TYPE, Type.DOUBLE_TYPE);
+        cgs.doinc("computeDoubleSize", Type.INT_TYPE, Type.DOUBLE_TYPE);
         break;
 
       case Type.LONG:
+        cgs.preinc();
         cgs.push(f.getColumnID());
         cgs.pushFieldValue();
-        cgs.inc("computeSInt64", Type.INT_TYPE, Type.LONG_TYPE);
+        cgs.doinc("computeSInt64", Type.INT_TYPE, Type.LONG_TYPE);
         break;
 
       case Type.ARRAY:
@@ -252,31 +260,36 @@ class CodecGen<T> implements Opcodes {
         mv.visitJumpInsn(IFNULL, end);
 
         if (f.getPrimitiveType() == byte[].class) {
+          cgs.preinc();
           cgs.push(f.getColumnID());
-          cgs.inc("computeTagSize", Type.INT_TYPE);
+          cgs.doinc("computeTagSize", Type.INT_TYPE);
 
+          cgs.preinc();
           cgs.pushFieldValue();
           mv.visitInsn(ARRAYLENGTH);
-          cgs.inc("computeRawVarint32Size", Type.INT_TYPE);
+          cgs.doinc("computeRawVarint32Size", Type.INT_TYPE);
 
+          cgs.preinc();
           cgs.pushFieldValue();
           mv.visitInsn(ARRAYLENGTH);
-          cgs.inc();
+          cgs.doinc();
 
         } else if (f.getPrimitiveType() == String.class) {
+          cgs.preinc();
           cgs.push(f.getColumnID());
           cgs.pushFieldValue();
-          cgs.inc("computeStringSize", Type.INT_TYPE, string);
+          cgs.doinc("computeStringSize", Type.INT_TYPE, string);
 
         } else if (f.getPrimitiveType() == java.sql.Timestamp.class
             || f.getPrimitiveType() == java.util.Date.class
             || f.getPrimitiveType() == java.sql.Date.class) {
+          cgs.preinc();
           cgs.push(f.getColumnID());
           cgs.pushFieldValue();
           String tsType = Type.getType(f.getPrimitiveType()).getInternalName();
           mv.visitMethodInsn(INVOKEVIRTUAL, tsType, "getTime", Type
               .getMethodDescriptor(Type.LONG_TYPE, new Type[] {}));
-          cgs.inc("computeFixed64Size", Type.INT_TYPE, Type.LONG_TYPE);
+          cgs.doinc("computeFixed64Size", Type.INT_TYPE, Type.LONG_TYPE);
 
         } else {
           throw new OrmException("Type " + f.getPrimitiveType()
@@ -295,7 +308,8 @@ class CodecGen<T> implements Opcodes {
   private void implementEncode() throws OrmException {
     final MethodVisitor mv =
         cw.visitMethod(ACC_PUBLIC, "encode", Type.getMethodDescriptor(
-            byteString, new Type[] {object}), null, new String[] {});
+            Type.VOID_TYPE, new Type[] {object, codedOutputStream}), null,
+            new String[] {});
     mv.visitCode();
     final EncodeCGS cgs = new EncodeCGS(mv);
     cgs.setEntityType(pojoType);
@@ -306,27 +320,17 @@ class CodecGen<T> implements Opcodes {
 
     encodeMessage(myFields, mv, cgs);
 
-    mv.visitInsn(ARETURN);
+    cgs.pushCodedOutputStream();
+    mv.visitMethodInsn(INVOKEVIRTUAL, codedOutputStream.getInternalName(),
+        "flush", Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {}));
+
+    mv.visitInsn(RETURN);
     mv.visitMaxs(-1, -1);
     mv.visitEnd();
   }
 
   private static void encodeMessage(final JavaColumnModel[] myFields,
       final MethodVisitor mv, final EncodeCGS cgs) throws OrmException {
-    final int oldVar = cgs.codedOutputStreamVar;
-    cgs.codedOutputStreamVar = cgs.newLocal();
-
-    final int strVar = cgs.newLocal();
-    mv.visitMethodInsn(INVOKESTATIC, byteString.getInternalName(), "newOutput",
-        Type.getMethodDescriptor(byteStringOutput, new Type[] {}));
-    mv.visitVarInsn(ASTORE, strVar);
-
-    mv.visitVarInsn(ALOAD, strVar);
-    mv.visitMethodInsn(INVOKESTATIC, codedOutputStream.getInternalName(),
-        "newInstance", Type.getMethodDescriptor(codedOutputStream,
-            new Type[] {Type.getType(OutputStream.class)}));
-    mv.visitVarInsn(ASTORE, cgs.codedOutputStreamVar);
-
     for (final JavaColumnModel f : myFields) {
       if (f.isNested()) {
         final Label end = new Label();
@@ -334,38 +338,30 @@ class CodecGen<T> implements Opcodes {
         cgs.pushFieldValue();
         mv.visitJumpInsn(IFNULL, end);
 
-        final int v = cgs.newLocal();
-        encodeMessage(sort(f.getNestedColumns()), mv, cgs);
-        mv.visitVarInsn(ASTORE, v);
-
-        mv.visitVarInsn(ALOAD, v);
-        mv.visitMethodInsn(INVOKEVIRTUAL, byteString.getInternalName(), "size",
-            Type.getMethodDescriptor(Type.INT_TYPE, new Type[] {}));
-        mv.visitJumpInsn(IFEQ, end);
-
         cgs.pushCodedOutputStream();
         cgs.push(f.getColumnID());
-        mv.visitVarInsn(ALOAD, v);
-        cgs.write("writeBytes", byteString);
+        cgs.push(WireFormat.FieldType.MESSAGE.getWireType());
+        mv.visitMethodInsn(INVOKEVIRTUAL, codedOutputStream.getInternalName(),
+            "writeTag", Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {
+                Type.INT_TYPE, Type.INT_TYPE}));
 
-        cgs.freeLocal(v);
+        cgs.push(0);
+        mv.visitVarInsn(ISTORE, cgs.sizeVar);
+        sizeofMessage(sort(f.getNestedColumns()), mv, cgs);
+
+        cgs.pushCodedOutputStream();
+        mv.visitVarInsn(ILOAD, cgs.sizeVar);
+        mv.visitMethodInsn(INVOKEVIRTUAL, codedOutputStream.getInternalName(),
+            "writeRawVarint32", Type.getMethodDescriptor(Type.VOID_TYPE,
+                new Type[] {Type.INT_TYPE}));
+
+        encodeMessage(sort(f.getNestedColumns()), mv, cgs);
+
         mv.visitLabel(end);
       } else {
         encodeScalar(mv, cgs, f);
       }
     }
-
-    cgs.pushCodedOutputStream();
-    mv.visitMethodInsn(INVOKEVIRTUAL, codedOutputStream.getInternalName(),
-        "flush", Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {}));
-
-    cgs.freeLocal(cgs.codedOutputStreamVar);
-    cgs.codedOutputStreamVar = oldVar;
-
-    mv.visitVarInsn(ALOAD, strVar);
-    mv.visitMethodInsn(INVOKEVIRTUAL, byteStringOutput.getInternalName(),
-        "toByteString", Type.getMethodDescriptor(byteString, new Type[] {}));
-    cgs.freeLocal(strVar);
   }
 
   private static void encodeScalar(final MethodVisitor mv, final EncodeCGS cgs,
@@ -663,22 +659,25 @@ class CodecGen<T> implements Opcodes {
     cgs.fieldSetEnd();
   }
 
-  private static final class SizeofCGS extends CodeGenSupport {
+  private static class SizeofCGS extends CodeGenSupport {
     int sizeVar;
 
-    private SizeofCGS(MethodVisitor method) {
+    SizeofCGS(MethodVisitor method) {
       super(method);
       sizeVar = newLocal();
     }
 
-    void inc(String name, Type... args) {
+    void doinc(String name, Type... args) {
       mv.visitMethodInsn(INVOKESTATIC, codedOutputStream.getInternalName(),
           name, Type.getMethodDescriptor(Type.INT_TYPE, args));
-      inc();
+      doinc();
     }
 
-    void inc() {
+    void preinc() {
       mv.visitVarInsn(ILOAD, sizeVar);
+    }
+
+    void doinc() {
       mv.visitInsn(IADD);
       mv.visitVarInsn(ISTORE, sizeVar);
     }
@@ -689,26 +688,19 @@ class CodecGen<T> implements Opcodes {
     }
   }
 
-  private static final class EncodeCGS extends CodeGenSupport {
-    int codedOutputStreamVar;
-
+  private static final class EncodeCGS extends SizeofCGS {
     private EncodeCGS(MethodVisitor method) {
       super(method);
     }
 
     void pushCodedOutputStream() {
-      mv.visitVarInsn(ALOAD, codedOutputStreamVar);
+      mv.visitVarInsn(ALOAD, 2);
     }
 
     void write(String name, Type arg) {
       mv.visitMethodInsn(INVOKEVIRTUAL, codedOutputStream.getInternalName(),
           name, Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {
               Type.INT_TYPE, arg}));
-    }
-
-    @Override
-    public void pushEntity() {
-      mv.visitVarInsn(ALOAD, 1);
     }
   }
 

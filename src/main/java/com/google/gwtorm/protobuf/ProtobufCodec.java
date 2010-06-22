@@ -17,6 +17,7 @@ package com.google.gwtorm.protobuf;
 import com.google.gwtorm.client.Column;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.CodedInputStream;
+import com.google.protobuf.CodedOutputStream;
 
 import java.nio.ByteBuffer;
 
@@ -28,7 +29,56 @@ import java.nio.ByteBuffer;
  */
 public abstract class ProtobufCodec<T> {
   /** Encode the object into an immutable byte string. */
-  public abstract ByteString encode(T obj);
+  public ByteString encodeToByteString(T obj) {
+    return ByteString.copyFrom(encodeToByteBuffer(obj));
+  }
+
+  /** Encode the object into an immutable byte string. */
+  public ByteBuffer encodeToByteBuffer(T obj) {
+    ByteBuffer data = ByteBuffer.allocate(sizeof(obj));
+    encode(obj, data);
+    data.flip();
+    return data;
+  }
+
+  /** Encode the object into a byte array. */
+  public byte[] encodeToByteArray(T obj) {
+    byte[] data = new byte[sizeof(obj)];
+    encode(obj, data);
+    return data;
+  }
+
+  /** Encode the object into a byte array. */
+  public void encode(T obj, final byte[] data) {
+    encode(obj, data, 0, data.length);
+  }
+
+  /** Encode the object into a byte array. */
+  public void encode(T obj, final byte[] data, int offset, int length) {
+    encode(obj, CodedOutputStream.newInstance(data, offset, length));
+  }
+
+  /** Encode the object into a ByteBuffer. */
+  public void encode(T obj, ByteBuffer buf) {
+    if (buf.hasArray()) {
+      CodedOutputStream out = CodedOutputStream.newInstance( //
+          buf.array(), //
+          buf.position(), //
+          buf.remaining());
+      encode(obj, out);
+      buf.position(buf.position() + (buf.remaining() - out.spaceLeft()));
+
+    } else {
+      encode(obj, CodedOutputStream.newInstance(newStream(buf)));
+    }
+  }
+
+  private static ByteBufferOutputStream newStream(ByteBuffer buf) {
+    return new ByteBufferOutputStream(buf);
+  }
+
+  /** Encode the object to the supplied output stream. */
+  protected abstract void encode(T obj, CodedOutputStream out);
 
   /** Compute the number of bytes of the encoded form of the object. */
   public abstract int sizeof(T obj);
@@ -39,20 +89,30 @@ public abstract class ProtobufCodec<T> {
   }
 
   /** Decode a byte array into an object instance. */
-  public T decode(byte[] buf) {
-    return decode(CodedInputStream.newInstance(buf));
+  public T decode(byte[] data) {
+    return decode(data, 0, data.length);
   }
 
-  /** Decode an object by reading it from the stream. */
-  protected abstract T decode(CodedInputStream in);
+  /** Decode a byte array into an object instance. */
+  public T decode(byte[] data, int offset, int length) {
+    return decode(CodedInputStream.newInstance(data, offset, length));
+  }
 
   /** Decode a byte buffer into an object instance. */
   public T decode(ByteBuffer buf) {
     if (buf.hasArray()) {
-      return decode(CodedInputStream.newInstance(buf.array(), buf.position(),
-          buf.remaining()));
+      CodedInputStream in = CodedInputStream.newInstance( //
+          buf.array(), //
+          buf.position(), //
+          buf.remaining());
+      T obj = decode(in);
+      buf.position(buf.position() + in.getTotalBytesRead());
+      return obj;
     } else {
       return decode(ByteString.copyFrom(buf));
     }
   }
+
+  /** Decode an object by reading it from the stream. */
+  protected abstract T decode(CodedInputStream in);
 }

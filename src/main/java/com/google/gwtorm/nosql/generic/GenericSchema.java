@@ -99,7 +99,7 @@ public abstract class GenericSchema extends NoSqlSchema {
           }
 
           res[0] = ctr.next();
-          return CounterShard.CODEC.encode(ctr).toByteArray();
+          return CounterShard.CODEC.encodeToByteString(ctr).toByteArray();
         }
       });
       return res[0];
