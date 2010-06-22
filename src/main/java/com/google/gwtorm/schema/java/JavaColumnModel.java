@@ -29,11 +29,13 @@ import java.util.List;
 
 
 public class JavaColumnModel extends ColumnModel {
+  private final Field field;
   private final String fieldName;
   private final Class<?> primitiveType;
   private final Type genericType;
 
-  public JavaColumnModel(final Field field) throws OrmException {
+  public JavaColumnModel(final Field f) throws OrmException {
+    field = f;
     fieldName = field.getName();
     primitiveType = field.getType();
     genericType = field.getGenericType();
@@ -58,8 +60,9 @@ public class JavaColumnModel extends ColumnModel {
     initNested();
   }
 
-  public JavaColumnModel(final String fieldPath, final int columnId,
+  public JavaColumnModel(Field f, final String fieldPath, final int columnId,
       final Class<?> columnType) throws OrmException {
+    this.field = f;
     this.fieldName = fieldPath;
     this.columnName = fieldPath;
     this.columnId = columnId;
@@ -115,6 +118,10 @@ public class JavaColumnModel extends ColumnModel {
 
   public Class<?> getNestedClass() {
     return primitiveType;
+  }
+
+  public Field getField() {
+    return field;
   }
 
   private boolean isPrimitive() {

@@ -312,9 +312,20 @@ class CodecGen<T> implements Opcodes {
     Class clazz = f.getNestedClass();
     NestedCodec n = nestedCodecs.get(clazz);
     if (n == null) {
-      n = new NestedCodec("codec" + f.getColumnID(), //
-          CodecFactory.encoder(clazz).getClass(), //
-          Type.getType(clazz));
+      Class<? extends ProtobufCodec> codec = null;
+      Type type = Type.getType(clazz);
+      if (f.getField() != null) {
+        final CustomCodec cc = f.getField().getAnnotation(CustomCodec.class);
+        if (cc != null) {
+          codec = cc.value();
+          type = object;
+        }
+      }
+      if (codec == null) {
+        codec = CodecFactory.encoder(clazz).getClass();
+      }
+
+      n = new NestedCodec("codec" + f.getColumnID(), codec, type);
       nestedCodecs.put(clazz, n);
     }
     return n;
@@ -390,7 +401,8 @@ class CodecGen<T> implements Opcodes {
 
   private JavaColumnModel collectionColumn(final JavaColumnModel f,
       final Class<?> valClazz) throws OrmException {
-    return new JavaColumnModel(//
+    return new JavaColumnModel( //
+        f.getField(), //
         f.getPathToFieldName(), //
         f.getColumnID(), //
         valClazz);
@@ -886,6 +898,10 @@ class CodecGen<T> implements Opcodes {
           .getDescriptor());
       mv.visitMethodInsn(INVOKEVIRTUAL, n.codecType.getInternalName(),
           "newInstance", Type.getMethodDescriptor(n.pojoType, new Type[] {}));
+      if (object.equals(n.pojoType)) {
+        mv.visitTypeInsn(CHECKCAST, Type.getType(f.getNestedClass())
+            .getInternalName());
+      }
       cgs.fieldSetEnd();
 
       // read the length, set a new limit, decode the message, validate

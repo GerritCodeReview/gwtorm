@@ -17,9 +17,12 @@ package com.google.gwtorm.protobuf;
 import com.google.gwtorm.client.Column;
 import com.google.gwtorm.data.TestAddress;
 import com.google.gwtorm.data.TestPerson;
+import com.google.protobuf.CodedInputStream;
+import com.google.protobuf.CodedOutputStream;
 
 import junit.framework.TestCase;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -181,6 +184,19 @@ public class ProtobufEncoderTest extends TestCase {
     assertEquals(list.people, other.people);
   }
 
+  public void testCustomEncoderList() {
+    ProtobufCodec<ItemList> e = CodecFactory.encoder(ItemList.class);
+
+    ItemList list = new ItemList();
+    list.list = new ArrayList<Item>();
+    list.list.add(new Item());
+    list.list.add(new Item());
+
+    ItemList other = e.decode(e.encodeToByteArray(list));
+    assertNotNull(other.list);
+    assertEquals(2, other.list.size());
+  }
+
   private static String asString(byte[] bin)
       throws UnsupportedEncodingException {
     return new String(bin, "ISO-8859-1");
@@ -199,5 +215,36 @@ public class ProtobufEncoderTest extends TestCase {
   static class StringSet {
     @Column(id = 1)
     SortedSet<String> list;
+  }
+
+  static class Item {
+  }
+
+  static class ItemCodec extends ProtobufCodec<Item> {
+    @Override
+    public void encode(Item obj, CodedOutputStream out) throws IOException {
+      out.writeBoolNoTag(true);
+    }
+
+    @Override
+    public void mergeFrom(CodedInputStream in, Item obj) throws IOException {
+      in.readBool();
+    }
+
+    @Override
+    public Item newInstance() {
+      return new Item();
+    }
+
+    @Override
+    public int sizeof(Item obj) {
+      return 1;
+    }
+  }
+
+  static class ItemList {
+    @Column(id = 2)
+    @CustomCodec(ItemCodec.class)
+    List<Item> list;
   }
 }

@@ -57,8 +57,12 @@ public abstract class ProtobufCodec<T> {
   /** Encode the object into a byte array. */
   public void encode(T obj, final byte[] data, int offset, int length) {
     CodedOutputStream out = CodedOutputStream.newInstance(data, offset, length);
-    encode(obj, out);
-    flush(out);
+    try {
+      encode(obj, out);
+      out.flush();
+    } catch (IOException err) {
+      throw new RuntimeException("Cannot encode message", err);
+    }
   }
 
   /** Encode the object into a ByteBuffer. */
@@ -68,22 +72,22 @@ public abstract class ProtobufCodec<T> {
           buf.array(), //
           buf.position(), //
           buf.remaining());
-      encode(obj, out);
-      flush(out);
+      try {
+        encode(obj, out);
+        out.flush();
+      } catch (IOException err) {
+        throw new RuntimeException("Cannot encode message", err);
+      }
       buf.position(buf.position() + (buf.remaining() - out.spaceLeft()));
 
     } else {
       CodedOutputStream out = CodedOutputStream.newInstance(newStream(buf));
-      encode(obj, out);
-      flush(out);
-    }
-  }
-
-  private static void flush(CodedOutputStream out) {
-    try {
-      out.flush();
-    } catch (IOException err) {
-      throw new RuntimeException("Cannot flush to in-memory buffer", err);
+      try {
+        encode(obj, out);
+        out.flush();
+      } catch (IOException err) {
+        throw new RuntimeException("Cannot encode message", err);
+      }
     }
   }
 
@@ -100,8 +104,9 @@ public abstract class ProtobufCodec<T> {
    *
    * @param obj the object to encode.
    * @param out the stream to encode the object onto.
+   * @throws IOException the underlying stream cannot be written to.
    */
-  public abstract void encode(T obj, CodedOutputStream out);
+  public abstract void encode(T obj, CodedOutputStream out) throws IOException;
 
   /** Compute the number of bytes of the encoded form of the object. */
   public abstract int sizeof(T obj);
@@ -111,7 +116,11 @@ public abstract class ProtobufCodec<T> {
 
   /** Decode a byte string into an object instance. */
   public T decode(ByteString buf) {
-    return decode(buf.newCodedInput());
+    try {
+      return decode(buf.newCodedInput());
+    } catch (IOException err) {
+      throw new RuntimeException("Cannot decode message", err);
+    }
   }
 
   /** Decode a byte array into an object instance. */
@@ -121,7 +130,11 @@ public abstract class ProtobufCodec<T> {
 
   /** Decode a byte array into an object instance. */
   public T decode(byte[] data, int offset, int length) {
-    return decode(CodedInputStream.newInstance(data, offset, length));
+    try {
+      return decode(CodedInputStream.newInstance(data, offset, length));
+    } catch (IOException err) {
+      throw new RuntimeException("Cannot decode message", err);
+    }
   }
 
   /** Decode a byte buffer into an object instance. */
@@ -131,7 +144,12 @@ public abstract class ProtobufCodec<T> {
           buf.array(), //
           buf.position(), //
           buf.remaining());
-      T obj = decode(in);
+      T obj;
+      try {
+        obj = decode(in);
+      } catch (IOException err) {
+        throw new RuntimeException("Cannot decode message", err);
+      }
       buf.position(buf.position() + in.getTotalBytesRead());
       return obj;
     } else {
@@ -139,13 +157,21 @@ public abstract class ProtobufCodec<T> {
     }
   }
 
-  /** Decode an object by reading it from the stream. */
-  public T decode(CodedInputStream in) {
+  /**
+   * Decode an object by reading it from the stream.
+   *
+   * @throws IOException the underlying stream cannot be read.
+   */
+  public T decode(CodedInputStream in) throws IOException {
     T obj = newInstance();
     mergeFrom(in, obj);
     return obj;
   }
 
-  /** Decode an input stream into an existing object instance. */
-  public abstract void mergeFrom(CodedInputStream in, T obj);
+  /**
+   * Decode an input stream into an existing object instance.
+   *
+   * @throws IOException the underlying stream cannot be read.
+   */
+  public abstract void mergeFrom(CodedInputStream in, T obj) throws IOException;
 }

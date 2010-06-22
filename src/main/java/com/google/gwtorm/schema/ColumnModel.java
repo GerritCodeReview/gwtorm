@@ -57,11 +57,6 @@ public abstract class ColumnModel {
 
   protected void initNestedColumns(final Collection<? extends ColumnModel> col)
       throws OrmException {
-    if (col == null || col.isEmpty()) {
-      throw new OrmException("Field " + getPathToFieldName()
-          + " has no nested members inside type " + getNestedClassName());
-    }
-
     nestedColumns = new ArrayList<ColumnModel>(col);
     recomputeColumnNames();
     if (!isNotNull()) {
