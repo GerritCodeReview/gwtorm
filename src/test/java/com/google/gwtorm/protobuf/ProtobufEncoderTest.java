@@ -14,6 +14,7 @@
 
 package com.google.gwtorm.protobuf;
 
+import com.google.gwtorm.client.Column;
 import com.google.gwtorm.data.TestAddress;
 import com.google.gwtorm.data.TestPerson;
 
@@ -21,6 +22,10 @@ import junit.framework.TestCase;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public class ProtobufEncoderTest extends TestCase {
   private static final byte[] testingBin = new byte[] {
@@ -124,8 +129,75 @@ public class ProtobufEncoderTest extends TestCase {
     assertEquals(asString(testingBin), asString(act));
   }
 
+  public void testStringList() throws UnsupportedEncodingException {
+    ProtobufCodec<StringList> e = CodecFactory.encoder(StringList.class);
+
+    StringList list = new StringList();
+    list.list = new ArrayList<String>();
+    list.list.add("moe");
+    list.list.add("larry");
+
+    byte[] act = e.encodeToByteArray(list);
+    StringList other = e.decode(act);
+    assertNotNull(other.list);
+    assertEquals(list.list, other.list);
+    assertEquals(asString(new byte[] { //
+        //
+            0x12, 0x03, 'm', 'o', 'e', //
+            0x12, 0x05, 'l', 'a', 'r', 'r', 'y' //
+        }), asString(act));
+  }
+
+  public void testStringSet() throws UnsupportedEncodingException {
+    ProtobufCodec<StringSet> e = CodecFactory.encoder(StringSet.class);
+
+    StringSet list = new StringSet();
+    list.list = new TreeSet<String>();
+    list.list.add("larry");
+    list.list.add("moe");
+
+    byte[] act = e.encodeToByteArray(list);
+    StringSet other = e.decode(act);
+    assertNotNull(other.list);
+    assertEquals(list.list, other.list);
+    assertEquals(asString(new byte[] { //
+        //
+            0x0a, 0x05, 'l', 'a', 'r', 'r', 'y', //
+            0x0a, 0x03, 'm', 'o', 'e' //
+        }), asString(act));
+  }
+
+  public void testPersonList() {
+    ProtobufCodec<PersonList> e = CodecFactory.encoder(PersonList.class);
+
+    PersonList list = new PersonList();
+    list.people = new ArrayList<TestPerson>();
+    list.people.add(new TestPerson(new TestPerson.Key("larry"), 1 << 16));
+    list.people.add(new TestPerson(new TestPerson.Key("curly"), 1));
+    list.people.add(new TestPerson(new TestPerson.Key("moe"), -1));
+
+    PersonList other = e.decode(e.encodeToByteArray(list));
+    assertNotNull(other.people);
+    assertEquals(list.people, other.people);
+  }
+
   private static String asString(byte[] bin)
       throws UnsupportedEncodingException {
     return new String(bin, "ISO-8859-1");
+  }
+
+  static class PersonList {
+    @Column(id = 5)
+    public List<TestPerson> people;
+  }
+
+  static class StringList {
+    @Column(id = 2)
+    List<String> list;
+  }
+
+  static class StringSet {
+    @Column(id = 1)
+    SortedSet<String> list;
   }
 }

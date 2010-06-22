@@ -19,6 +19,7 @@ import com.google.protobuf.ByteString;
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.CodedOutputStream;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 
 /**
@@ -55,7 +56,9 @@ public abstract class ProtobufCodec<T> {
 
   /** Encode the object into a byte array. */
   public void encode(T obj, final byte[] data, int offset, int length) {
-    encode(obj, CodedOutputStream.newInstance(data, offset, length));
+    CodedOutputStream out = CodedOutputStream.newInstance(data, offset, length);
+    encode(obj, out);
+    flush(out);
   }
 
   /** Encode the object into a ByteBuffer. */
@@ -66,10 +69,21 @@ public abstract class ProtobufCodec<T> {
           buf.position(), //
           buf.remaining());
       encode(obj, out);
+      flush(out);
       buf.position(buf.position() + (buf.remaining() - out.spaceLeft()));
 
     } else {
-      encode(obj, CodedOutputStream.newInstance(newStream(buf)));
+      CodedOutputStream out = CodedOutputStream.newInstance(newStream(buf));
+      encode(obj, out);
+      flush(out);
+    }
+  }
+
+  private static void flush(CodedOutputStream out) {
+    try {
+      out.flush();
+    } catch (IOException err) {
+      throw new RuntimeException("Cannot flush to in-memory buffer", err);
     }
   }
 
@@ -77,11 +91,23 @@ public abstract class ProtobufCodec<T> {
     return new ByteBufferOutputStream(buf);
   }
 
-  /** Encode the object to the supplied output stream. */
-  protected abstract void encode(T obj, CodedOutputStream out);
+  /**
+   * Encode the object to the supplied output stream.
+   * <p>
+   * The stream {@code out} is not flushed by this method. Callers that need the
+   * entire byte representation after invoking encode must flush the stream to
+   * ensure its intermediate buffers have been written to the backing store.
+   *
+   * @param obj the object to encode.
+   * @param out the stream to encode the object onto.
+   */
+  public abstract void encode(T obj, CodedOutputStream out);
 
   /** Compute the number of bytes of the encoded form of the object. */
   public abstract int sizeof(T obj);
+
+  /** Create a new uninitialized instance of the object type. */
+  public abstract T newInstance();
 
   /** Decode a byte string into an object instance. */
   public T decode(ByteString buf) {
@@ -114,5 +140,12 @@ public abstract class ProtobufCodec<T> {
   }
 
   /** Decode an object by reading it from the stream. */
-  protected abstract T decode(CodedInputStream in);
+  public T decode(CodedInputStream in) {
+    T obj = newInstance();
+    mergeFrom(in, obj);
+    return obj;
+  }
+
+  /** Decode an input stream into an existing object instance. */
+  public abstract void mergeFrom(CodedInputStream in, T obj);
 }

@@ -22,16 +22,23 @@ import com.google.gwtorm.schema.Util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class JavaColumnModel extends ColumnModel {
-  private final Field field;
+  private final String fieldName;
+  private final Class<?> primitiveType;
+  private final Type genericType;
 
-  public JavaColumnModel(final Field columnField) throws OrmException {
-    field = columnField;
-    initName(field.getName(), field.getAnnotation(Column.class));
+  public JavaColumnModel(final Field field) throws OrmException {
+    fieldName = field.getName();
+    primitiveType = field.getType();
+    genericType = field.getGenericType();
+
+    initName(fieldName, field.getAnnotation(Column.class));
 
     if (Modifier.isPrivate(field.getModifiers())) {
       throw new OrmException("Field " + field.getName() + " of "
@@ -48,9 +55,23 @@ public class JavaColumnModel extends ColumnModel {
           + field.getDeclaringClass().getName() + " must have type 'int'");
     }
 
+    initNested();
+  }
+
+  public JavaColumnModel(final String fieldPath, final int columnId,
+      final Class<?> columnType) throws OrmException {
+    this.fieldName = fieldPath;
+    this.columnName = fieldPath;
+    this.columnId = columnId;
+    this.primitiveType = columnType;
+    this.genericType = null;
+    initNested();
+  }
+
+  private void initNested() throws OrmException {
     if (isNested()) {
       final List<JavaColumnModel> col = new ArrayList<JavaColumnModel>();
-      Class<?> in = field.getType();
+      Class<?> in = primitiveType;
       while (in != null) {
         for (final Field f : in.getDeclaredFields()) {
           if (f.getAnnotation(Column.class) != null) {
@@ -65,24 +86,38 @@ public class JavaColumnModel extends ColumnModel {
 
   @Override
   public String getFieldName() {
-    return field.getName();
+    return fieldName;
   }
 
   @Override
   public Class<?> getPrimitiveType() {
-    return isPrimitive() ? field.getType() : null;
+    return isPrimitive() ? primitiveType : null;
+  }
+
+  @Override
+  public Type[] getArgumentTypes() {
+    if (genericType instanceof ParameterizedType) {
+      ParameterizedType pt = (ParameterizedType) genericType;
+      return pt.getActualTypeArguments();
+    }
+    return new Type[0];
   }
 
   @Override
   public String getNestedClassName() {
-    return isPrimitive() ? null : field.getType().getName();
+    return isPrimitive() ? null : primitiveType.getName();
+  }
+
+  @Override
+  public boolean isCollection() {
+    return java.util.Collection.class.isAssignableFrom(primitiveType);
   }
 
   public Class<?> getNestedClass() {
-    return field.getType();
+    return primitiveType;
   }
 
   private boolean isPrimitive() {
-    return Util.isSqlPrimitive(field.getType());
+    return Util.isSqlPrimitive(primitiveType);
   }
 }

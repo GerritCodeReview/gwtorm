@@ -81,4 +81,18 @@ public class TestPerson {
   public void unregister() {
     registered = false;
   }
+
+  @Override
+  public int hashCode() {
+    return name.hashCode();
+  }
+
+  @Override
+  public boolean equals(Object other) {
+    if (other instanceof TestPerson) {
+      TestPerson p = (TestPerson) other;
+      return name.equals(p.name) && age == p.age && registered == p.registered;
+    }
+    return false;
+  }
 }

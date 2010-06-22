@@ -33,16 +33,24 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.TreeSet;
 
 /** Generates {@link ProtobufCodec} implementations. */
 class CodecGen<T> implements Opcodes {
+  private static final Type illegalStateException =
+      Type.getType(IllegalStateException.class);
+  private static final Type collection =
+      Type.getType(java.util.Collection.class);
+  private static final Type iterator = Type.getType(java.util.Iterator.class);
   private static final Type string = Type.getType(String.class);
-  private static final Type byteStringOutput =
-      Type.getType(ByteString.Output.class);
   private static final Type byteString = Type.getType(ByteString.class);
   private static final Type object = Type.getType(Object.class);
   private static final Type codedOutputStream =
@@ -59,20 +67,34 @@ class CodecGen<T> implements Opcodes {
   private String implClassName;
   private String implTypeName;
 
+  private Map<Class<?>, NestedCodec> nestedCodecs;
+
   public CodecGen(final GeneratedClassLoader loader, final Class<T> t) {
     classLoader = loader;
     pojo = t;
     pojoType = Type.getType(pojo);
+    nestedCodecs = new HashMap<Class<?>, NestedCodec>();
   }
 
   public ProtobufCodec<T> create() throws OrmException {
     myFields = scanFields(pojo);
 
     init();
+    implementNewInstanceObject();
+    implementNewInstanceSelf();
+
+    implementSizeofObject();
+    implementSizeofSelf();
+
+    implementEncodeObject();
+    implementEncodeSelf();
+
+    implementMergeFromObject();
+    implementMergeFromSelf();
+
+    implementCodecFields();
+    implementStaticInit();
     implementConstructor();
-    implementSizeof();
-    implementEncode();
-    implementDecode();
     cw.visitEnd();
     classLoader.defineClass(implClassName, cw.toByteArray());
 
@@ -128,6 +150,33 @@ class CodecGen<T> implements Opcodes {
         superTypeName, new String[] {});
   }
 
+  private void implementCodecFields() {
+    for (NestedCodec other : nestedCodecs.values()) {
+      cw.visitField(ACC_PRIVATE | ACC_STATIC | ACC_FINAL, other.field,
+          other.codecType.getDescriptor(), null, null).visitEnd();
+    }
+  }
+
+  private void implementStaticInit() {
+    final MethodVisitor mv =
+        cw.visitMethod(ACC_PUBLIC | ACC_STATIC, "<clinit>", Type
+            .getMethodDescriptor(Type.VOID_TYPE, new Type[] {}), null, null);
+    mv.visitCode();
+
+    for (NestedCodec other : nestedCodecs.values()) {
+      mv.visitTypeInsn(NEW, other.codecType.getInternalName());
+      mv.visitInsn(DUP);
+      mv.visitMethodInsn(INVOKESPECIAL, other.codecType.getInternalName(),
+          "<init>", Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {}));
+      mv.visitFieldInsn(PUTSTATIC, implTypeName, other.field, other.codecType
+          .getDescriptor());
+    }
+
+    mv.visitInsn(RETURN);
+    mv.visitMaxs(-1, -1);
+    mv.visitEnd();
+  }
+
   private void implementConstructor() {
     final String consName = "<init>";
     final String consDesc =
@@ -144,17 +193,66 @@ class CodecGen<T> implements Opcodes {
     mv.visitEnd();
   }
 
-  private void implementSizeof() throws OrmException {
+  private void implementNewInstanceObject() {
+    final MethodVisitor mv =
+        cw.visitMethod(ACC_PUBLIC, "newInstance", Type.getMethodDescriptor(
+            object, new Type[] {}), null, new String[] {});
+    mv.visitCode();
+
+    mv.visitTypeInsn(NEW, pojoType.getInternalName());
+    mv.visitInsn(DUP);
+    mv.visitMethodInsn(INVOKESPECIAL, pojoType.getInternalName(), "<init>",
+        Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {}));
+
+    mv.visitInsn(ARETURN);
+    mv.visitMaxs(-1, -1);
+    mv.visitEnd();
+  }
+
+  private void implementNewInstanceSelf() {
+    final MethodVisitor mv =
+        cw.visitMethod(ACC_PUBLIC, "newInstance", Type.getMethodDescriptor(
+            pojoType, new Type[] {}), null, new String[] {});
+    mv.visitCode();
+
+    mv.visitTypeInsn(NEW, pojoType.getInternalName());
+    mv.visitInsn(DUP);
+    mv.visitMethodInsn(INVOKESPECIAL, pojoType.getInternalName(), "<init>",
+        Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {}));
+
+    mv.visitInsn(ARETURN);
+    mv.visitMaxs(-1, -1);
+    mv.visitEnd();
+  }
+
+  private void implementSizeofObject() {
     final MethodVisitor mv =
         cw.visitMethod(ACC_PUBLIC, "sizeof", Type.getMethodDescriptor(
             Type.INT_TYPE, new Type[] {object}), null, new String[] {});
     mv.visitCode();
     final SizeofCGS cgs = new SizeofCGS(mv);
+    cgs.sizeVar = cgs.newLocal();
     cgs.setEntityType(pojoType);
 
+    mv.visitVarInsn(ALOAD, 0);
     mv.visitVarInsn(ALOAD, 1);
     mv.visitTypeInsn(CHECKCAST, pojoType.getInternalName());
-    mv.visitVarInsn(ASTORE, 1);
+    mv.visitMethodInsn(INVOKEVIRTUAL, implTypeName, "sizeof", Type
+        .getMethodDescriptor(Type.INT_TYPE, new Type[] {pojoType}));
+
+    mv.visitInsn(IRETURN);
+    mv.visitMaxs(-1, -1);
+    mv.visitEnd();
+  }
+
+  private void implementSizeofSelf() throws OrmException {
+    final MethodVisitor mv =
+        cw.visitMethod(ACC_PUBLIC, "sizeof", Type.getMethodDescriptor(
+            Type.INT_TYPE, new Type[] {pojoType}), null, new String[] {});
+    mv.visitCode();
+    final SizeofCGS cgs = new SizeofCGS(mv);
+    cgs.sizeVar = cgs.newLocal();
+    cgs.setEntityType(pojoType);
 
     cgs.push(0);
     mv.visitVarInsn(ISTORE, cgs.sizeVar);
@@ -166,45 +264,139 @@ class CodecGen<T> implements Opcodes {
     mv.visitEnd();
   }
 
-  private static void sizeofMessage(final JavaColumnModel[] myFields,
+  private void sizeofMessage(final JavaColumnModel[] myFields,
       final MethodVisitor mv, final SizeofCGS cgs) throws OrmException {
     for (final JavaColumnModel f : myFields) {
       if (f.isNested()) {
+        final NestedCodec n = nestedFor(f);
         final Label end = new Label();
         cgs.setFieldReference(f);
         cgs.pushFieldValue();
         mv.visitJumpInsn(IFNULL, end);
 
-        final int oldVar = cgs.sizeVar;
-        final int msgVar = cgs.newLocal();
-        cgs.sizeVar = msgVar;
-        cgs.push(0);
-        mv.visitVarInsn(ISTORE, cgs.sizeVar);
-
-        sizeofMessage(sort(f.getNestedColumns()), mv, cgs);
-        cgs.sizeVar = oldVar;
+        final int msgSizeVar = cgs.newLocal();
+        mv.visitFieldInsn(GETSTATIC, implTypeName, n.field, n.codecType
+            .getDescriptor());
+        cgs.pushFieldValue();
+        mv.visitMethodInsn(INVOKEVIRTUAL, n.codecType.getInternalName(),
+            "sizeof", Type.getMethodDescriptor(Type.INT_TYPE,
+                new Type[] {n.pojoType}));
+        mv.visitVarInsn(ISTORE, msgSizeVar);
 
         cgs.preinc();
         cgs.push(f.getColumnID());
         cgs.doinc("computeTagSize", Type.INT_TYPE);
 
         cgs.preinc();
-        mv.visitVarInsn(ILOAD, msgVar);
+        mv.visitVarInsn(ILOAD, msgSizeVar);
         cgs.doinc("computeRawVarint32Size", Type.INT_TYPE);
 
         cgs.preinc();
-        mv.visitVarInsn(ILOAD, msgVar);
+        mv.visitVarInsn(ILOAD, msgSizeVar);
         cgs.doinc();
 
-        cgs.freeLocal(msgVar);
+        cgs.freeLocal(msgSizeVar);
         mv.visitLabel(end);
+
+      } else if (f.isCollection()) {
+        sizeofCollection(f, mv, cgs);
+
       } else {
         sizeofScalar(mv, cgs, f);
       }
     }
   }
 
-  private static void sizeofScalar(final MethodVisitor mv, final SizeofCGS cgs,
+  @SuppressWarnings("unchecked")
+  private NestedCodec nestedFor(JavaColumnModel f) {
+    Class clazz = f.getNestedClass();
+    NestedCodec n = nestedCodecs.get(clazz);
+    if (n == null) {
+      n = new NestedCodec("codec" + f.getColumnID(), //
+          CodecFactory.encoder(clazz).getClass(), //
+          Type.getType(clazz));
+      nestedCodecs.put(clazz, n);
+    }
+    return n;
+  }
+
+  private void sizeofCollection(final JavaColumnModel f,
+      final MethodVisitor mv, final SizeofCGS cgs) throws OrmException {
+    final int itr = cgs.newLocal();
+    final int val = cgs.newLocal();
+    final Class<?> valClazz = (Class<?>) f.getArgumentTypes()[0];
+    final Type valType = Type.getType(valClazz);
+    final JavaColumnModel col = collectionColumn(f, valClazz);
+    final SizeofCGS ng = new SizeofCGS(mv) {
+      {
+        sizeVar = cgs.sizeVar;
+        setEntityType(valType);
+      }
+
+      @Override
+      public void pushEntity() {
+        mv.visitVarInsn(ALOAD, val);
+      }
+
+      @Override
+      protected void appendGetField(final ColumnModel c) {
+        if (c != col) {
+          super.appendGetField(c);
+        }
+      }
+
+      @Override
+      public int newLocal() {
+        return cgs.newLocal();
+      }
+
+      @Override
+      public void freeLocal(int index) {
+        cgs.freeLocal(index);
+      }
+    };
+
+    final Label end = new Label();
+    cgs.setFieldReference(f);
+    cgs.pushFieldValue();
+    mv.visitJumpInsn(IFNULL, end);
+
+    cgs.setFieldReference(f);
+    cgs.pushFieldValue();
+    mv.visitMethodInsn(INVOKEINTERFACE, collection.getInternalName(),
+        "iterator", Type.getMethodDescriptor(iterator, new Type[] {}));
+    mv.visitVarInsn(ASTORE, itr);
+
+    final Label doloop = new Label();
+    mv.visitLabel(doloop);
+    mv.visitVarInsn(ALOAD, itr);
+    mv.visitMethodInsn(INVOKEINTERFACE, iterator.getInternalName(), "hasNext",
+        Type.getMethodDescriptor(Type.BOOLEAN_TYPE, new Type[] {}));
+    mv.visitJumpInsn(IFEQ, end);
+
+    mv.visitVarInsn(ALOAD, itr);
+    mv.visitMethodInsn(INVOKEINTERFACE, iterator.getInternalName(), "next",
+        Type.getMethodDescriptor(object, new Type[] {}));
+    mv.visitTypeInsn(CHECKCAST, valType.getInternalName());
+    mv.visitVarInsn(ASTORE, val);
+
+    sizeofMessage(new JavaColumnModel[] {col}, mv, ng);
+    mv.visitJumpInsn(GOTO, doloop);
+
+    mv.visitLabel(end);
+    cgs.freeLocal(itr);
+    cgs.freeLocal(val);
+  }
+
+  private JavaColumnModel collectionColumn(final JavaColumnModel f,
+      final Class<?> valClazz) throws OrmException {
+    return new JavaColumnModel(//
+        f.getPathToFieldName(), //
+        f.getColumnID(), //
+        valClazz);
+  }
+
+  private void sizeofScalar(final MethodVisitor mv, final SizeofCGS cgs,
       final JavaColumnModel f) throws OrmException {
     cgs.setFieldReference(f);
 
@@ -305,7 +497,7 @@ class CodecGen<T> implements Opcodes {
     }
   }
 
-  private void implementEncode() throws OrmException {
+  private void implementEncodeObject() {
     final MethodVisitor mv =
         cw.visitMethod(ACC_PUBLIC, "encode", Type.getMethodDescriptor(
             Type.VOID_TYPE, new Type[] {object, codedOutputStream}), null,
@@ -314,29 +506,54 @@ class CodecGen<T> implements Opcodes {
     final EncodeCGS cgs = new EncodeCGS(mv);
     cgs.setEntityType(pojoType);
 
+    mv.visitVarInsn(ALOAD, 0);
     mv.visitVarInsn(ALOAD, 1);
     mv.visitTypeInsn(CHECKCAST, pojoType.getInternalName());
-    mv.visitVarInsn(ASTORE, 1);
-
-    encodeMessage(myFields, mv, cgs);
-
-    cgs.pushCodedOutputStream();
-    mv.visitMethodInsn(INVOKEVIRTUAL, codedOutputStream.getInternalName(),
-        "flush", Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {}));
+    mv.visitVarInsn(ALOAD, 2);
+    mv.visitMethodInsn(INVOKEVIRTUAL, implTypeName, "encode", Type
+        .getMethodDescriptor(Type.VOID_TYPE, new Type[] {pojoType,
+            codedOutputStream}));
 
     mv.visitInsn(RETURN);
     mv.visitMaxs(-1, -1);
     mv.visitEnd();
   }
 
-  private static void encodeMessage(final JavaColumnModel[] myFields,
+  private void implementEncodeSelf() throws OrmException {
+    final MethodVisitor mv =
+        cw.visitMethod(ACC_PUBLIC, "encode", Type.getMethodDescriptor(
+            Type.VOID_TYPE, new Type[] {pojoType, codedOutputStream}), null,
+            new String[] {});
+    mv.visitCode();
+    final EncodeCGS cgs = new EncodeCGS(mv);
+    cgs.setEntityType(pojoType);
+
+    encodeMessage(myFields, mv, cgs);
+
+    mv.visitInsn(RETURN);
+    mv.visitMaxs(-1, -1);
+    mv.visitEnd();
+  }
+
+  private void encodeMessage(final JavaColumnModel[] myFields,
       final MethodVisitor mv, final EncodeCGS cgs) throws OrmException {
     for (final JavaColumnModel f : myFields) {
       if (f.isNested()) {
+        final NestedCodec n = nestedFor(f);
+
         final Label end = new Label();
         cgs.setFieldReference(f);
         cgs.pushFieldValue();
         mv.visitJumpInsn(IFNULL, end);
+
+        final int msgSizeVar = cgs.newLocal();
+        mv.visitFieldInsn(GETSTATIC, implTypeName, n.field, n.codecType
+            .getDescriptor());
+        cgs.pushFieldValue();
+        mv.visitMethodInsn(INVOKEVIRTUAL, n.codecType.getInternalName(),
+            "sizeof", Type.getMethodDescriptor(Type.INT_TYPE,
+                new Type[] {n.pojoType}));
+        mv.visitVarInsn(ISTORE, msgSizeVar);
 
         cgs.pushCodedOutputStream();
         cgs.push(f.getColumnID());
@@ -345,26 +562,101 @@ class CodecGen<T> implements Opcodes {
             "writeTag", Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {
                 Type.INT_TYPE, Type.INT_TYPE}));
 
-        cgs.push(0);
-        mv.visitVarInsn(ISTORE, cgs.sizeVar);
-        sizeofMessage(sort(f.getNestedColumns()), mv, cgs);
-
         cgs.pushCodedOutputStream();
-        mv.visitVarInsn(ILOAD, cgs.sizeVar);
+        mv.visitVarInsn(ILOAD, msgSizeVar);
         mv.visitMethodInsn(INVOKEVIRTUAL, codedOutputStream.getInternalName(),
             "writeRawVarint32", Type.getMethodDescriptor(Type.VOID_TYPE,
                 new Type[] {Type.INT_TYPE}));
 
-        encodeMessage(sort(f.getNestedColumns()), mv, cgs);
+        mv.visitFieldInsn(GETSTATIC, implTypeName, n.field, n.codecType
+            .getDescriptor());
+        cgs.pushFieldValue();
+        cgs.pushCodedOutputStream();
+        mv.visitMethodInsn(INVOKEVIRTUAL, n.codecType.getInternalName(),
+            "encode", Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {
+                n.pojoType, codedOutputStream}));
 
+        cgs.freeLocal(msgSizeVar);
         mv.visitLabel(end);
+
+      } else if (f.isCollection()) {
+        encodeCollection(f, mv, cgs);
+
       } else {
         encodeScalar(mv, cgs, f);
       }
     }
   }
 
-  private static void encodeScalar(final MethodVisitor mv, final EncodeCGS cgs,
+  private void encodeCollection(final JavaColumnModel f,
+      final MethodVisitor mv, final EncodeCGS cgs) throws OrmException {
+    final int itr = cgs.newLocal();
+    final int val = cgs.newLocal();
+    final Class<?> valClazz = (Class<?>) f.getArgumentTypes()[0];
+    final Type valType = Type.getType(valClazz);
+    final JavaColumnModel col = collectionColumn(f, valClazz);
+    final EncodeCGS ng = new EncodeCGS(mv) {
+      {
+        sizeVar = cgs.sizeVar;
+        setEntityType(valType);
+      }
+
+      @Override
+      public void pushEntity() {
+        mv.visitVarInsn(ALOAD, val);
+      }
+
+      @Override
+      protected void appendGetField(final ColumnModel c) {
+        if (c != col) {
+          super.appendGetField(c);
+        }
+      }
+
+      @Override
+      public int newLocal() {
+        return cgs.newLocal();
+      }
+
+      @Override
+      public void freeLocal(int index) {
+        cgs.freeLocal(index);
+      }
+    };
+
+    final Label end = new Label();
+    cgs.setFieldReference(f);
+    cgs.pushFieldValue();
+    mv.visitJumpInsn(IFNULL, end);
+
+    cgs.setFieldReference(f);
+    cgs.pushFieldValue();
+    mv.visitMethodInsn(INVOKEINTERFACE, collection.getInternalName(),
+        "iterator", Type.getMethodDescriptor(iterator, new Type[] {}));
+    mv.visitVarInsn(ASTORE, itr);
+
+    final Label doloop = new Label();
+    mv.visitLabel(doloop);
+    mv.visitVarInsn(ALOAD, itr);
+    mv.visitMethodInsn(INVOKEINTERFACE, iterator.getInternalName(), "hasNext",
+        Type.getMethodDescriptor(Type.BOOLEAN_TYPE, new Type[] {}));
+    mv.visitJumpInsn(IFEQ, end);
+
+    mv.visitVarInsn(ALOAD, itr);
+    mv.visitMethodInsn(INVOKEINTERFACE, iterator.getInternalName(), "next",
+        Type.getMethodDescriptor(object, new Type[] {}));
+    mv.visitTypeInsn(CHECKCAST, valType.getInternalName());
+    mv.visitVarInsn(ASTORE, val);
+
+    encodeMessage(new JavaColumnModel[] {col}, mv, ng);
+    mv.visitJumpInsn(GOTO, doloop);
+
+    mv.visitLabel(end);
+    cgs.freeLocal(itr);
+    cgs.freeLocal(val);
+  }
+
+  private void encodeScalar(final MethodVisitor mv, final EncodeCGS cgs,
       final JavaColumnModel f) throws OrmException {
     cgs.setFieldReference(f);
 
@@ -475,32 +767,45 @@ class CodecGen<T> implements Opcodes {
     }
   }
 
-  private void implementDecode() throws OrmException {
-    final Type retType = object;
+  private void implementMergeFromObject() {
     final MethodVisitor mv =
-        cw.visitMethod(ACC_PROTECTED, "decode", Type.getMethodDescriptor(
-            retType, new Type[] {codedInputStream}), null, new String[] {});
+        cw.visitMethod(ACC_PUBLIC, "mergeFrom", Type.getMethodDescriptor(
+            Type.VOID_TYPE, new Type[] {codedInputStream, object}), null,
+            new String[] {});
     mv.visitCode();
-    final DecodeCGS cgs = new DecodeCGS(mv);
 
-    cgs.setEntityType(pojoType);
+    mv.visitVarInsn(ALOAD, 0);
+    mv.visitVarInsn(ALOAD, 1);
+    mv.visitVarInsn(ALOAD, 2);
+    mv.visitTypeInsn(CHECKCAST, pojoType.getInternalName());
+    mv.visitMethodInsn(INVOKEVIRTUAL, implTypeName, "mergeFrom", Type
+        .getMethodDescriptor(Type.VOID_TYPE, new Type[] {codedInputStream,
+            pojoType}));
 
-    mv.visitTypeInsn(NEW, pojoType.getInternalName());
-    mv.visitInsn(DUP);
-    mv.visitMethodInsn(INVOKESPECIAL, pojoType.getInternalName(), "<init>",
-        Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {}));
-    mv.visitVarInsn(ASTORE, cgs.objVar);
-
-    final int tagVar = cgs.newLocal();
-    decodeMessage(myFields, mv, cgs);
-
-    cgs.pushEntity();
-    mv.visitInsn(ARETURN);
+    mv.visitInsn(RETURN);
     mv.visitMaxs(-1, -1);
     mv.visitEnd();
   }
 
-  private static void decodeMessage(final JavaColumnModel[] myFields,
+  private void implementMergeFromSelf() throws OrmException {
+    final MethodVisitor mv =
+        cw.visitMethod(ACC_PUBLIC, "mergeFrom", Type.getMethodDescriptor(
+            Type.VOID_TYPE, new Type[] {codedInputStream, pojoType}), null,
+            new String[] {});
+    mv.visitCode();
+    final DecodeCGS cgs = new DecodeCGS(mv);
+    cgs.objVar = 2;
+    cgs.tagVar = cgs.newLocal();
+    cgs.setEntityType(pojoType);
+
+    decodeMessage(myFields, mv, cgs);
+
+    mv.visitInsn(RETURN);
+    mv.visitMaxs(-1, -1);
+    mv.visitEnd();
+  }
+
+  private void decodeMessage(final JavaColumnModel[] myFields,
       final MethodVisitor mv, final DecodeCGS cgs) throws OrmException {
     final Label nextField = new Label();
     final Label end = new Label();
@@ -547,40 +852,7 @@ class CodecGen<T> implements Opcodes {
     for (int idx = 1; idx < caseTags.length; idx++) {
       final JavaColumnModel f = myFields[idx - 1];
       mv.visitLabel(caseLabels[idx]);
-      if (f.isNested()) {
-        final Label load = new Label();
-        cgs.setFieldReference(f);
-        cgs.pushFieldValue();
-        mv.visitJumpInsn(IFNONNULL, load);
-        cgs.fieldSetBegin();
-        mv.visitTypeInsn(NEW, Type.getType(f.getNestedClass())
-            .getInternalName());
-        mv.visitInsn(DUP);
-        mv.visitMethodInsn(INVOKESPECIAL, Type.getType(f.getNestedClass())
-            .getInternalName(), "<init>", Type.getMethodDescriptor(
-            Type.VOID_TYPE, new Type[] {}));
-        cgs.fieldSetEnd();
-
-        // read the length, set a new limit, decode the message, validate
-        // we stopped at the end of it as expected.
-        //
-        mv.visitLabel(load);
-        final int limitVar = cgs.newLocal();
-        cgs.pushCodedInputStream();
-        cgs.call("readRawVarint32", Type.INT_TYPE);
-        cgs.ncallInt("pushLimit", Type.INT_TYPE);
-        mv.visitVarInsn(ISTORE, limitVar);
-
-        decodeMessage(sort(f.getNestedColumns()), mv, cgs);
-
-        cgs.pushCodedInputStream();
-        mv.visitVarInsn(ILOAD, limitVar);
-        cgs.ncallInt("popLimit", Type.VOID_TYPE);
-        cgs.freeLocal(limitVar);
-
-      } else {
-        decodeScalar(mv, cgs, f);
-      }
+      decodeField(mv, cgs, f);
       mv.visitJumpInsn(GOTO, nextField);
     }
 
@@ -596,6 +868,196 @@ class CodecGen<T> implements Opcodes {
     cgs.pushCodedInputStream();
     cgs.push(0);
     cgs.ncallInt("checkLastTagWas", Type.VOID_TYPE);
+  }
+
+  private void decodeField(final MethodVisitor mv, final DecodeCGS cgs,
+      final JavaColumnModel f) throws OrmException {
+    if (f.isNested()) {
+      final NestedCodec n = nestedFor(f);
+      final Label load = new Label();
+      cgs.setFieldReference(f);
+      cgs.pushFieldValue();
+      mv.visitJumpInsn(IFNONNULL, load);
+
+      // Since the field isn't initialized, construct it
+      //
+      cgs.fieldSetBegin();
+      mv.visitFieldInsn(GETSTATIC, implTypeName, n.field, n.codecType
+          .getDescriptor());
+      mv.visitMethodInsn(INVOKEVIRTUAL, n.codecType.getInternalName(),
+          "newInstance", Type.getMethodDescriptor(n.pojoType, new Type[] {}));
+      cgs.fieldSetEnd();
+
+      // read the length, set a new limit, decode the message, validate
+      // we stopped at the end of it as expected.
+      //
+      mv.visitLabel(load);
+      final int limitVar = cgs.newLocal();
+      cgs.pushCodedInputStream();
+      cgs.call("readRawVarint32", Type.INT_TYPE);
+      cgs.ncallInt("pushLimit", Type.INT_TYPE);
+      mv.visitVarInsn(ISTORE, limitVar);
+
+      mv.visitFieldInsn(GETSTATIC, implTypeName, n.field, n.codecType
+          .getDescriptor());
+      cgs.pushCodedInputStream();
+      cgs.pushFieldValue();
+      mv.visitMethodInsn(INVOKEVIRTUAL, n.codecType.getInternalName(),
+          "mergeFrom", Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {
+              codedInputStream, n.pojoType}));
+
+      cgs.pushCodedInputStream();
+      mv.visitVarInsn(ILOAD, limitVar);
+      cgs.ncallInt("popLimit", Type.VOID_TYPE);
+      cgs.freeLocal(limitVar);
+
+    } else if (f.isCollection()) {
+      decodeCollection(mv, cgs, f);
+
+    } else {
+      decodeScalar(mv, cgs, f);
+    }
+  }
+
+  private void decodeCollection(final MethodVisitor mv, final DecodeCGS cgs,
+      final JavaColumnModel f) throws OrmException {
+    final Class<?> valClazz = (Class<?>) f.getArgumentTypes()[0];
+    final Type valType = Type.getType(valClazz);
+    final JavaColumnModel col = collectionColumn(f, valClazz);
+    final DecodeCGS ng = new DecodeCGS(mv) {
+      {
+        tagVar = cgs.tagVar;
+        setEntityType(valType);
+      }
+
+      @Override
+      public int newLocal() {
+        return cgs.newLocal();
+      }
+
+      @Override
+      public void freeLocal(int index) {
+        cgs.freeLocal(index);
+      }
+
+      @Override
+      protected void appendGetField(final ColumnModel c) {
+        if (c != col) {
+          super.appendGetField(c);
+        }
+      }
+
+      @Override
+      public void fieldSetBegin() {
+        if (col.isNested()) {
+          super.fieldSetBegin();
+        } else {
+          cgs.pushFieldValue();
+        }
+      }
+
+      @Override
+      public void fieldSetEnd() {
+        if (col.isNested()) {
+          super.fieldSetEnd();
+        } else {
+          mv.visitMethodInsn(INVOKEINTERFACE, collection.getInternalName(),
+              "add", Type.getMethodDescriptor(Type.BOOLEAN_TYPE,
+                  new Type[] {object}));
+          mv.visitInsn(POP);
+        }
+      }
+    };
+
+    final Label notnull = new Label();
+    cgs.setFieldReference(f);
+    cgs.pushFieldValue();
+    mv.visitJumpInsn(IFNONNULL, notnull);
+
+    // If the field is null, try to initialize it based on its declared type.
+    // If we don't know what that is, we have to throw an exception instead.
+    //
+    final Type concreteType;
+    if (!f.getNestedClass().isInterface()
+        && (f.getNestedClass().getModifiers() & Modifier.ABSTRACT) == 0) {
+      concreteType = Type.getType(f.getNestedClass());
+
+    } else if (f.getNestedClass().isAssignableFrom(ArrayList.class)) {
+      concreteType = Type.getType(ArrayList.class);
+
+    } else if (f.getNestedClass().isAssignableFrom(HashSet.class)) {
+      concreteType = Type.getType(HashSet.class);
+
+    } else if (f.getNestedClass().isAssignableFrom(TreeSet.class)) {
+      concreteType = Type.getType(TreeSet.class);
+
+    } else {
+      mv.visitTypeInsn(NEW, illegalStateException.getInternalName());
+      mv.visitInsn(DUP);
+      mv.visitLdcInsn("Field " + f.getPathToFieldName() + " not initialized");
+      mv.visitMethodInsn(INVOKESPECIAL,
+          illegalStateException.getInternalName(), "<init>", Type
+              .getMethodDescriptor(Type.VOID_TYPE, new Type[] {string}));
+      mv.visitInsn(ATHROW);
+      concreteType = null;
+    }
+    if (concreteType != null) {
+      cgs.fieldSetBegin();
+      mv.visitTypeInsn(NEW, concreteType.getInternalName());
+      mv.visitInsn(DUP);
+      mv.visitMethodInsn(INVOKESPECIAL, concreteType.getInternalName(),
+          "<init>", Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {}));
+      cgs.fieldSetEnd();
+    }
+    mv.visitLabel(notnull);
+
+    if (col.isNested()) {
+      // If its nested, we have to build the object instance.
+      //
+      final NestedCodec n = nestedFor(col);
+      ng.objVar = cgs.newLocal();
+      mv.visitFieldInsn(GETSTATIC, implTypeName, n.field, n.codecType
+          .getDescriptor());
+      mv.visitMethodInsn(INVOKEVIRTUAL, n.codecType.getInternalName(),
+          "newInstance", Type.getMethodDescriptor(n.pojoType, new Type[] {}));
+      mv.visitVarInsn(ASTORE, ng.objVar);
+
+      // read the length, set a new limit, decode the message, validate
+      // we stopped at the end of it as expected.
+      //
+      final int limitVar = cgs.newLocal();
+      cgs.pushCodedInputStream();
+      cgs.call("readRawVarint32", Type.INT_TYPE);
+      cgs.ncallInt("pushLimit", Type.INT_TYPE);
+      mv.visitVarInsn(ISTORE, limitVar);
+
+      mv.visitFieldInsn(GETSTATIC, implTypeName, n.field, n.codecType
+          .getDescriptor());
+      cgs.pushCodedInputStream();
+      mv.visitVarInsn(ALOAD, ng.objVar);
+      mv.visitMethodInsn(INVOKEVIRTUAL, n.codecType.getInternalName(),
+          "mergeFrom", Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {
+              codedInputStream, n.pojoType}));
+
+      cgs.pushCodedInputStream();
+      mv.visitVarInsn(ILOAD, limitVar);
+      cgs.ncallInt("popLimit", Type.VOID_TYPE);
+      cgs.freeLocal(limitVar);
+      cgs.pushFieldValue();
+
+      mv.visitVarInsn(ALOAD, ng.objVar);
+      mv.visitMethodInsn(INVOKEINTERFACE, collection.getInternalName(), "add",
+          Type.getMethodDescriptor(Type.BOOLEAN_TYPE, new Type[] {object}));
+      mv.visitInsn(POP);
+      cgs.freeLocal(ng.objVar);
+
+    } else if (col.isCollection()) {
+      throw new OrmException("Cannot nest collection as member of another"
+          + " collection: " + f.getPathToFieldName());
+
+    } else {
+      decodeScalar(mv, ng, col);
+    }
   }
 
   private static void decodeScalar(final MethodVisitor mv, final DecodeCGS cgs,
@@ -664,7 +1126,6 @@ class CodecGen<T> implements Opcodes {
 
     SizeofCGS(MethodVisitor method) {
       super(method);
-      sizeVar = newLocal();
     }
 
     void doinc(String name, Type... args) {
@@ -688,7 +1149,7 @@ class CodecGen<T> implements Opcodes {
     }
   }
 
-  private static final class EncodeCGS extends SizeofCGS {
+  private static class EncodeCGS extends SizeofCGS {
     private EncodeCGS(MethodVisitor method) {
       super(method);
     }
@@ -704,15 +1165,13 @@ class CodecGen<T> implements Opcodes {
     }
   }
 
-  private static final class DecodeCGS extends CodeGenSupport {
+  private static class DecodeCGS extends CodeGenSupport {
     final int codedInputStreamVar = 1;
-    final int objVar;
-    final int tagVar;
+    int objVar;
+    int tagVar;
 
-    private DecodeCGS(MethodVisitor method) {
+    DecodeCGS(MethodVisitor method) {
       super(method);
-      objVar = newLocal();
-      tagVar = newLocal();
     }
 
     void pushCodedInputStream() {
@@ -733,6 +1192,19 @@ class CodecGen<T> implements Opcodes {
     @Override
     public void pushEntity() {
       mv.visitVarInsn(ALOAD, objVar);
+    }
+  }
+
+  private static class NestedCodec {
+    final String field;
+    final Type codecType;
+    final Type pojoType;
+
+    @SuppressWarnings("unchecked")
+    NestedCodec(String field, Class impl, Type pojoType) {
+      this.field = field;
+      this.codecType = Type.getType(impl);
+      this.pojoType = pojoType;
     }
   }
 }

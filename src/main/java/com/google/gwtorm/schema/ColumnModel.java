@@ -17,6 +17,7 @@ package com.google.gwtorm.schema;
 import com.google.gwtorm.client.Column;
 import com.google.gwtorm.client.OrmException;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -147,7 +148,7 @@ public abstract class ColumnModel {
   }
 
   public boolean isNested() {
-    return getPrimitiveType() == null;
+    return !isCollection() && getPrimitiveType() == null;
   }
 
   public boolean isRowVersion() {
@@ -162,9 +163,13 @@ public abstract class ColumnModel {
     return notNull;
   }
 
+  public abstract boolean isCollection();
+
   public abstract String getFieldName();
 
   public abstract Class<?> getPrimitiveType();
+
+  public abstract Type[] getArgumentTypes();
 
   public abstract String getNestedClassName();
 

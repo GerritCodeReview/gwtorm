@@ -20,6 +20,7 @@ import junit.framework.TestCase;
 
 import org.antlr.runtime.tree.Tree;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -46,6 +47,16 @@ public class QueryParserTest extends TestCase {
     @Override
     public Class<?> getPrimitiveType() {
       return String.class;
+    }
+
+    @Override
+    public Type[] getArgumentTypes() {
+      return new Type[0];
+    }
+
+    @Override
+    public boolean isCollection() {
+      return false;
     }
   }
 
