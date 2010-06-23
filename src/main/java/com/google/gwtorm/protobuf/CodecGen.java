@@ -454,7 +454,7 @@ class CodecGen<T> implements Opcodes {
         cgs.preinc();
         cgs.push(f.getColumnID());
         cgs.pushFieldValue();
-        cgs.doinc("computeSInt64", Type.INT_TYPE, Type.LONG_TYPE);
+        cgs.doinc("computeSInt64Size", Type.INT_TYPE, Type.LONG_TYPE);
         break;
 
       case Type.ARRAY:
