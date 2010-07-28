@@ -22,6 +22,8 @@ import com.google.protobuf.CodedOutputStream;
 
 import junit.framework.TestCase;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
@@ -213,6 +215,26 @@ public class ProtobufEncoderTest extends TestCase {
     byte[] act = e.encodeToByteArray(thing);
     byte[] exp = {0x08, 0x01};
     assertEquals(asString(exp), asString(act));
+  }
+
+  public void testEncodeToStream()throws IOException {
+    ProtobufCodec<ThingWithEnum> e = CodecFactory.encoder(ThingWithEnum.class);
+
+    ThingWithEnum thing = new ThingWithEnum();
+    thing.type = ThingWithEnum.Type.B;
+
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    e.encodeWithSize(thing, out);
+    byte[] exp = {0x02, 0x08, 0x01};
+    assertEquals(asString(exp), asString(out.toByteArray()));
+
+    byte[] exp2 = {0x02, 0x08, 0x01, '\n'};
+    ByteArrayInputStream in = new ByteArrayInputStream(exp2);
+    ThingWithEnum other = e.decodeWithSize(in);
+    assertEquals('\n', in.read());
+    assertEquals(-1, in.read());
+    assertNotNull(other.type);
+    assertSame(thing.type, other.type);
   }
 
   private static String asString(byte[] bin)

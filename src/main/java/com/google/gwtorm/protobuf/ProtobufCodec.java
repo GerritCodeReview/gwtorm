@@ -18,8 +18,11 @@ import com.google.gwtorm.client.Column;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.CodedOutputStream;
+import com.google.protobuf.InvalidProtocolBufferException;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
 /**
@@ -91,6 +94,22 @@ public abstract class ProtobufCodec<T> {
     }
   }
 
+  /**
+   * Encodes the object, prefixed by its encoded length.
+   * <p>
+   * The length is encoded as a raw varint with no tag.
+   *
+   * @param obj the object to encode.
+   * @param out stream that will receive the object's data.
+   * @throws IOException the stream failed to write data.
+   */
+  public void encodeWithSize(T obj, OutputStream out) throws IOException {
+    CodedOutputStream cos = CodedOutputStream.newInstance(out);
+    cos.writeRawVarint32(sizeof(obj));
+    encode(obj, cos);
+    cos.flush();
+  }
+
   private static ByteBufferOutputStream newStream(ByteBuffer buf) {
     return new ByteBufferOutputStream(buf);
   }
@@ -116,45 +135,30 @@ public abstract class ProtobufCodec<T> {
 
   /** Decode a byte string into an object instance. */
   public T decode(ByteString buf) {
-    try {
-      return decode(buf.newCodedInput());
-    } catch (IOException err) {
-      throw new RuntimeException("Cannot decode message", err);
-    }
+    T obj = newInstance();
+    mergeFrom(buf, obj);
+    return obj;
   }
 
   /** Decode a byte array into an object instance. */
   public T decode(byte[] data) {
-    return decode(data, 0, data.length);
+    T obj = newInstance();
+    mergeFrom(data, obj);
+    return obj;
   }
 
   /** Decode a byte array into an object instance. */
   public T decode(byte[] data, int offset, int length) {
-    try {
-      return decode(CodedInputStream.newInstance(data, offset, length));
-    } catch (IOException err) {
-      throw new RuntimeException("Cannot decode message", err);
-    }
+    T obj = newInstance();
+    mergeFrom(data, offset, length, obj);
+    return obj;
   }
 
   /** Decode a byte buffer into an object instance. */
   public T decode(ByteBuffer buf) {
-    if (buf.hasArray()) {
-      CodedInputStream in = CodedInputStream.newInstance( //
-          buf.array(), //
-          buf.position(), //
-          buf.remaining());
-      T obj;
-      try {
-        obj = decode(in);
-      } catch (IOException err) {
-        throw new RuntimeException("Cannot decode message", err);
-      }
-      buf.position(buf.position() + in.getTotalBytesRead());
-      return obj;
-    } else {
-      return decode(ByteString.copyFrom(buf));
-    }
+    T obj = newInstance();
+    mergeFrom(buf, obj);
+    return obj;
   }
 
   /**
@@ -168,10 +172,101 @@ public abstract class ProtobufCodec<T> {
     return obj;
   }
 
+  /** Decode an object that is prefixed by its encoded length. */
+  public T decodeWithSize(InputStream in) throws IOException {
+    T obj = newInstance();
+    mergeFromWithSize(in, obj);
+    return obj;
+  }
+
+  /** Decode a byte string into an existing object instance. */
+  public void mergeFrom(ByteString buf, T obj) {
+    try {
+      mergeFrom(buf.newCodedInput(), obj);
+    } catch (IOException err) {
+      throw new RuntimeException("Cannot decode message", err);
+    }
+  }
+
+  /** Decode a byte array into an existing object instance. */
+  public void mergeFrom(byte[] data, T obj) {
+    mergeFrom(data, 0, data.length, obj);
+  }
+
+  /** Decode a byte array into an existing object instance. */
+  public void mergeFrom(byte[] data, int offset, int length, T obj) {
+    try {
+      mergeFrom(CodedInputStream.newInstance(data, offset, length), obj);
+    } catch (IOException err) {
+      throw new RuntimeException("Cannot decode message", err);
+    }
+  }
+
+  /** Decode a byte buffer into an existing object instance. */
+  public void mergeFrom(ByteBuffer buf, T obj) {
+    if (buf.hasArray()) {
+      CodedInputStream in = CodedInputStream.newInstance( //
+          buf.array(), //
+          buf.position(), //
+          buf.remaining());
+      try {
+        mergeFrom(in, obj);
+      } catch (IOException err) {
+        throw new RuntimeException("Cannot decode message", err);
+      }
+      buf.position(buf.position() + in.getTotalBytesRead());
+    } else {
+      mergeFrom(ByteString.copyFrom(buf), obj);
+    }
+  }
+
+  /** Decode an object that is prefixed by its encoded length. */
+  public void mergeFromWithSize(InputStream in, T obj) throws IOException {
+    int sz = readRawVarint32(in);
+    mergeFrom(CodedInputStream.newInstance(new CappedInputStream(in, sz)), obj);
+  }
+
   /**
    * Decode an input stream into an existing object instance.
    *
    * @throws IOException the underlying stream cannot be read.
    */
   public abstract void mergeFrom(CodedInputStream in, T obj) throws IOException;
+
+  private static int readRawVarint32(InputStream in) throws IOException {
+    int b = in.read();
+    if (b == -1) {
+      throw new InvalidProtocolBufferException("Truncated input");
+    }
+
+    if ((b & 0x80) == 0) {
+      return b;
+    }
+
+    int result = b & 0x7f;
+    int offset = 7;
+    for (; offset < 32; offset += 7) {
+      b = in.read();
+      if (b == -1) {
+        throw new InvalidProtocolBufferException("Truncated input");
+      }
+      result |= (b & 0x7f) << offset;
+      if ((b & 0x80) == 0) {
+        return result;
+      }
+    }
+
+    // Keep reading up to 64 bits.
+    for (; offset < 64; offset += 7) {
+      b = in.read();
+      if (b == -1) {
+        throw new InvalidProtocolBufferException("Truncated input");
+      }
+      if ((b & 0x80) == 0) {
+        return result;
+      }
+    }
+
+    throw new InvalidProtocolBufferException("Malformed varint");
+  }
 }
