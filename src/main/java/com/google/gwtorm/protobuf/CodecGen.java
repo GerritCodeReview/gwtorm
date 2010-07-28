@@ -121,6 +121,10 @@ class CodecGen<T> implements Opcodes {
       }
       in = in.getSuperclass();
     }
+    if (col.isEmpty()) {
+      throw new OrmException(
+          "Cannot create new encoder, no @Column fields found");
+    }
     return sort(col);
   }
 
