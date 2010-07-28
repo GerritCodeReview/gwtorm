@@ -67,7 +67,7 @@ public class Util {
     if (type == null || type == Void.TYPE) {
       return false;
     }
-    if (type.isPrimitive()) {
+    if (type.isPrimitive() || type.isEnum()) {
       return true;
     }
     if (type == String.class) {

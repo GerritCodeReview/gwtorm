@@ -197,6 +197,24 @@ public class ProtobufEncoderTest extends TestCase {
     assertEquals(2, other.list.size());
   }
 
+  public void testEnumEncoder() throws UnsupportedEncodingException {
+    assertEquals(1, ThingWithEnum.Type.B.ordinal());
+    assertSame(ThingWithEnum.Type.B, ThingWithEnum.Type.values()[1]);
+
+    ProtobufCodec<ThingWithEnum> e = CodecFactory.encoder(ThingWithEnum.class);
+
+    ThingWithEnum thing = new ThingWithEnum();
+    thing.type = ThingWithEnum.Type.B;
+
+    ThingWithEnum other = e.decode(e.encodeToByteArray(thing));
+    assertNotNull(other.type);
+    assertSame(thing.type, other.type);
+
+    byte[] act = e.encodeToByteArray(thing);
+    byte[] exp = {0x08, 0x01};
+    assertEquals(asString(exp), asString(act));
+  }
+
   private static String asString(byte[] bin)
       throws UnsupportedEncodingException {
     return new String(bin, "ISO-8859-1");
@@ -246,5 +264,14 @@ public class ProtobufEncoderTest extends TestCase {
     @Column(id = 2)
     @CustomCodec(ItemCodec.class)
     List<Item> list;
+  }
+
+  static class ThingWithEnum {
+    static enum Type {
+      A, B;
+    }
+
+    @Column(id = 1)
+    Type type;
   }
 }

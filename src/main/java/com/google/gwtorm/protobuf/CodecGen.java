@@ -51,6 +51,7 @@ class CodecGen<T> implements Opcodes {
       Type.getType(java.util.Collection.class);
   private static final Type iterator = Type.getType(java.util.Iterator.class);
   private static final Type string = Type.getType(String.class);
+  private static final Type enumType = Type.getType(Enum.class);
   private static final Type byteString = Type.getType(ByteString.class);
   private static final Type object = Type.getType(Object.class);
   private static final Type codedOutputStream =
@@ -495,6 +496,15 @@ class CodecGen<T> implements Opcodes {
               .getMethodDescriptor(Type.LONG_TYPE, new Type[] {}));
           cgs.doinc("computeFixed64Size", Type.INT_TYPE, Type.LONG_TYPE);
 
+        } else if (f.getPrimitiveType().isEnum()) {
+          cgs.preinc();
+          cgs.push(f.getColumnID());
+          cgs.pushFieldValue();
+          mv.visitMethodInsn(INVOKEVIRTUAL, enumType.getInternalName(),
+              "ordinal", //
+              Type.getMethodDescriptor(Type.INT_TYPE, new Type[] {}));
+          cgs.doinc("computeEnumSize", Type.INT_TYPE, Type.INT_TYPE);
+
         } else {
           throw new OrmException("Type " + f.getPrimitiveType()
               + " not supported for field " + f.getPathToFieldName());
@@ -763,6 +773,12 @@ class CodecGen<T> implements Opcodes {
             mv.visitMethodInsn(INVOKEVIRTUAL, tsType, "getTime", Type
                 .getMethodDescriptor(Type.LONG_TYPE, new Type[] {}));
             cgs.write("writeFixed64", Type.LONG_TYPE);
+
+          } else if (f.getPrimitiveType().isEnum()) {
+            mv.visitMethodInsn(INVOKEVIRTUAL, enumType.getInternalName(),
+                "ordinal", //
+                Type.getMethodDescriptor(Type.INT_TYPE, new Type[] {}));
+            cgs.write("writeEnum", Type.INT_TYPE);
 
           } else {
             throw new OrmException("Type " + f.getPrimitiveType()
@@ -1127,6 +1143,14 @@ class CodecGen<T> implements Opcodes {
           mv.visitMethodInsn(INVOKESPECIAL, tsType, "<init>", //
               Type.getMethodDescriptor(Type.VOID_TYPE,
                   new Type[] {Type.LONG_TYPE}));
+
+        } else if (f.getPrimitiveType().isEnum()) {
+          Type et = Type.getType(f.getPrimitiveType());
+          mv.visitMethodInsn(INVOKESTATIC, et.getInternalName(), "values", Type
+              .getMethodDescriptor(Type.getType("[" + et.getDescriptor()),
+                  new Type[] {}));
+          cgs.call("readEnum", Type.INT_TYPE);
+          mv.visitInsn(AALOAD);
 
         } else {
           throw new OrmException("Type " + f.getPrimitiveType()
