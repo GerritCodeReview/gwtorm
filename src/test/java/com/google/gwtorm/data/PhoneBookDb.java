@@ -19,10 +19,10 @@ import com.google.gwtorm.client.Schema;
 import com.google.gwtorm.client.Sequence;
 
 public interface PhoneBookDb extends Schema {
-  @Relation
+  @Relation(id = 0)
   PersonAccess people();
 
-  @Relation
+  @Relation(id = 1)
   AddressAccess addresses();
 
   @Sequence

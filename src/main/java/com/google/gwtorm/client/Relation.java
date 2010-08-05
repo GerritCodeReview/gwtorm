@@ -45,4 +45,10 @@ public @interface Relation {
    * @return the name of the data store table. Defaults to the method name.
    */
   String name() default "";
+
+  /**
+   * @return the unique ID for this relation. Must be unique among all
+   *         relations.
+   */
+  int id();
 }
