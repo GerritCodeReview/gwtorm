@@ -45,4 +45,11 @@ public @interface Relation {
    * @return the name of the data store table. Defaults to the method name.
    */
   String name() default "";
+
+  /**
+   * @return the unique ID for this relation. Must be unique among all
+   *         relations, and conform to Protobuf message ID rules. The ID must be
+   *         in the range [1,2^29-1] except 19000 through 19999.
+   */
+  int id();
 }

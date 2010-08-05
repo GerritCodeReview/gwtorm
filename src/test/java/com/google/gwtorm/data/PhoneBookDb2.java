@@ -18,6 +18,6 @@ import com.google.gwtorm.client.Relation;
 import com.google.gwtorm.client.Schema;
 
 public interface PhoneBookDb2 extends Schema {
-  @Relation
+  @Relation(id = 1)
   PersonAccess2 people();
 }
