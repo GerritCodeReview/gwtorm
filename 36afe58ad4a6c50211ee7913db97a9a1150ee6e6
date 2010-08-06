@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAA4X///8Y\u003d",
+        "filename": "src/main/java/com/google/gwtorm/schema/RelationModel.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2010-08-06T22:27:28Z",
+      "side": 1,
+      "message": "Use getRelationID here instead, it matches our getFieldID() case we already use for the column level field tag.",
+      "revId": "36afe58ad4a6c50211ee7913db97a9a1150ee6e6",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAA4X///8U\u003d",
+        "filename": "src/main/java/com/google/gwtorm/schema/java/ProtoFileGenerator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2010-08-06T22:27:28Z",
+      "side": 1,
+      "message": "getMessageName would be a better name for this method.",
+      "revId": "36afe58ad4a6c50211ee7913db97a9a1150ee6e6",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAA4X///8E\u003d",
+        "filename": "src/main/java/com/google/gwtorm/schema/java/ProtoFileGenerator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2010-08-06T22:27:28Z",
+      "side": 1,
+      "message": "Lets remove the case and just fall-through to the throw exception part below.  We don\u0027t need enum support right now so its safer to avoid it.",
+      "revId": "36afe58ad4a6c50211ee7913db97a9a1150ee6e6",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
