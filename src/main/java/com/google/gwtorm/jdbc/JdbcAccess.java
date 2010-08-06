@@ -303,8 +303,6 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
 
   protected abstract T newEntityInstance();
 
-  protected abstract String getRelationName();
-
   protected abstract String getInsertOneSql();
 
   protected abstract String getUpdateOneSql();

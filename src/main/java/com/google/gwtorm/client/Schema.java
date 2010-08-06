@@ -78,6 +78,11 @@ public interface Schema {
   void pruneSchema(StatementExecutor e) throws OrmException;
 
   /**
+   * @return access interface for each declared relation.
+   */
+  Access<?, ?>[] allRelations();
+
+  /**
    * Close the schema and release all resources.
    */
   void close();

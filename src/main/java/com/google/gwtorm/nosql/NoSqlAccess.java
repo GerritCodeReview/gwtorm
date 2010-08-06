@@ -62,9 +62,6 @@ public abstract class NoSqlAccess<T, K extends Key<?>> extends
 
   // -- These are all provided by AccessGen when it builds a subclass --
 
-  /** @return name of the relation in the schema. */
-  protected abstract String getRelationName();
-
   /** @return encoder/decoder for the object data. */
   protected abstract ProtobufCodec<T> getObjectCodec();
 

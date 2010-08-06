@@ -14,6 +14,7 @@
 
 package com.google.gwtorm.server;
 
+import com.google.gwtorm.client.Access;
 import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.client.Schema;
 import com.google.gwtorm.schema.RelationModel;
@@ -27,6 +28,8 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /** Generates a concrete implementation of a {@link Schema} extension. */
@@ -64,6 +67,8 @@ public class SchemaGen<S extends AbstractSchema> implements Opcodes {
     implementConstructor();
     implementSequenceMethods();
     implementRelationMethods();
+    implementAllRelationsMethod();
+
     cw.visitEnd();
     classLoader.defineClass(getImplClassName(), cw.toByteArray());
     return loadClass();
@@ -97,6 +102,17 @@ public class SchemaGen<S extends AbstractSchema> implements Opcodes {
       final Class<?> a = accessGen.create(classLoader, rel);
       relations.add(new RelationGen(rel, a));
     }
+
+    Collections.sort(relations, new Comparator<RelationGen>() {
+      @Override
+      public int compare(RelationGen a, RelationGen b) {
+        int cmp = a.model.getRelationID() - b.model.getRelationID();
+        if (cmp == 0) {
+          cmp = a.model.getRelationName().compareTo(b.model.getRelationName());
+        }
+        return cmp;
+      }
+    });
   }
 
   private void init() {
@@ -182,6 +198,37 @@ public class SchemaGen<S extends AbstractSchema> implements Opcodes {
     }
   }
 
+  private void implementAllRelationsMethod() {
+    final MethodVisitor mv =
+        cw.visitMethod(ACC_PUBLIC | ACC_FINAL, "allRelations", Type
+            .getMethodDescriptor(Type.getType(Access[].class), new Type[] {}),
+            null, null);
+    mv.visitCode();
+
+    final int r = 1;
+    CodeGenSupport cgs = new CodeGenSupport(mv);
+    cgs.push(relations.size());
+    mv.visitTypeInsn(ANEWARRAY, Type.getType(Access.class).getInternalName());
+    mv.visitVarInsn(ASTORE, r);
+
+    int index = 0;
+    for (RelationGen info : relations) {
+      mv.visitVarInsn(ALOAD, r);
+      cgs.push(index++);
+
+      mv.visitVarInsn(ALOAD, 0);
+      mv.visitMethodInsn(INVOKEVIRTUAL, getImplTypeName(), info.model
+          .getMethodName(), info.getDescriptor());
+
+      mv.visitInsn(AASTORE);
+    }
+
+    mv.visitVarInsn(ALOAD, r);
+    mv.visitInsn(ARETURN);
+    mv.visitMaxs(-1, -1);
+    mv.visitEnd();
+  }
+
   private class RelationGen {
     final RelationModel model;
     final Type accessType;
@@ -202,10 +249,8 @@ public class SchemaGen<S extends AbstractSchema> implements Opcodes {
 
     void implementMethod() {
       final MethodVisitor mv =
-          cw.visitMethod(ACC_PUBLIC | ACC_FINAL, model.getMethodName(), Type
-              .getMethodDescriptor(Type.getObjectType(model
-                  .getAccessInterfaceName().replace('.', '/')), new Type[] {}),
-              null, null);
+          cw.visitMethod(ACC_PUBLIC | ACC_FINAL, model.getMethodName(),
+              getDescriptor(), null, null);
       mv.visitCode();
       mv.visitVarInsn(ALOAD, 0);
       mv.visitFieldInsn(GETFIELD, implTypeName, getAccessInstanceFieldName(),
@@ -213,6 +258,11 @@ public class SchemaGen<S extends AbstractSchema> implements Opcodes {
       mv.visitInsn(ARETURN);
       mv.visitMaxs(-1, -1);
       mv.visitEnd();
+    }
+
+    String getDescriptor() {
+      return Type.getMethodDescriptor(Type.getObjectType(model
+          .getAccessInterfaceName().replace('.', '/')), new Type[] {});
     }
   }
 }

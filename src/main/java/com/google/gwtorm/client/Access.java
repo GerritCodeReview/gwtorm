@@ -47,6 +47,16 @@ import java.util.Map;
  *        implementation. Entity specific key subclasses are recommended.
  */
 public interface Access<T extends Object, K extends Key<?>> {
+  /** @return the name of this relation. */
+  String getRelationName();
+
+  /**
+   * Iterate through all members of the relation.
+   *
+   * @return an iterator over all members. This is most likely not fast.
+   */
+  ResultSet<T> iterateAllEntities() throws OrmException;
+
   /**
    * Obtain the primary key of an entity instance.
    *

@@ -14,6 +14,7 @@
 
 package com.google.gwtorm.server;
 
+import com.google.gwtorm.client.Access;
 import com.google.gwtorm.client.OrmConcurrencyException;
 import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.data.PersonAccess;
@@ -100,11 +101,22 @@ public class PhoneBookDbTestCase extends TestCase {
   public void testGetPeopleAccess() throws Exception {
     final PhoneBookDb schema = open();
     assertNotNull(schema.people());
+    assertEquals("people", schema.people().getRelationName());
   }
 
   public void testGetAddressAccess() throws Exception {
     final PhoneBookDb schema = open();
     assertNotNull(schema.addresses());
+    assertEquals("addresses", schema.addresses().getRelationName());
+  }
+
+  public void testGetAllRelations() throws Exception {
+    final PhoneBookDb schema = open();
+    Access<?, ?>[] all = schema.allRelations();
+    assertNotNull(all);
+    assertEquals(2, all.length);
+    assertSame(schema.people(), all[0]);
+    assertSame(schema.addresses(), all[1]);
   }
 
   public void testCreateSchema() throws Exception {

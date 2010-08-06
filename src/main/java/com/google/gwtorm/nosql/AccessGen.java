@@ -107,6 +107,7 @@ class AccessGen implements Opcodes {
     for (final QueryModel q : model.getQueries()) {
       implementQuery(q);
     }
+    implementQuery(new QueryModel(model, "iterateAllEntities", ""));
 
     cw.visitEnd();
     classLoader.defineClass(implClassName, cw.toByteArray());
