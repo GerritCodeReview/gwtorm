@@ -352,6 +352,7 @@ public abstract class RelationModel {
     r.append("Relation[\n");
     r.append("  method: " + getMethodName() + "\n");
     r.append("  table:  " + getRelationName() + "\n");
+    r.append("  id:     " + getRelationID() + "\n");
     r.append("  access: " + getAccessInterfaceName() + "\n");
     r.append("  entity: " + getEntityTypeClassName() + "\n");
     r.append("]");
