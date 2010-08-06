@@ -123,6 +123,10 @@ public abstract class RelationModel {
     return relationName;
   }
 
+  public int getRelationId() {
+    return relation.id();
+  }
+
   public Collection<ColumnModel> getDependentFields() {
     final ArrayList<ColumnModel> r = new ArrayList<ColumnModel>();
     for (final ColumnModel c : fieldsByFieldName.values()) {
