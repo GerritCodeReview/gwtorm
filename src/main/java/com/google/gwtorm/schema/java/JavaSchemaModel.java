@@ -22,6 +22,7 @@ import com.google.gwtorm.schema.RelationModel;
 import com.google.gwtorm.schema.SchemaModel;
 import com.google.gwtorm.schema.SequenceModel;
 
+import java.io.PrintWriter;
 import java.lang.reflect.Method;
 
 
@@ -63,6 +64,11 @@ public class JavaSchemaModel extends SchemaModel {
       }
     }
     throw new IllegalArgumentException("No relation named " + name);
+  }
+
+  public void generateProto(PrintWriter out) {
+    ProtoFileGenerator pfg = new ProtoFileGenerator(schema.getSimpleName(), getRelations());
+    pfg.print(out);
   }
 
   @Override
