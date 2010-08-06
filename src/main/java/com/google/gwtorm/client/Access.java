@@ -50,6 +50,9 @@ public interface Access<T extends Object, K extends Key<?>> {
   /** @return the name of this relation. */
   String getRelationName();
 
+  /** @return the id of this relation (if defined), otherwise 0. */
+  int getRelationID();
+
   /**
    * Iterate through all members of the relation.
    *

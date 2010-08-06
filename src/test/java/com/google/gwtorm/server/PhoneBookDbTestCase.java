@@ -102,12 +102,14 @@ public class PhoneBookDbTestCase extends TestCase {
     final PhoneBookDb schema = open();
     assertNotNull(schema.people());
     assertEquals("people", schema.people().getRelationName());
+    assertEquals(1, schema.people().getRelationID());
   }
 
   public void testGetAddressAccess() throws Exception {
     final PhoneBookDb schema = open();
     assertNotNull(schema.addresses());
     assertEquals("addresses", schema.addresses().getRelationName());
+    assertEquals(2, schema.addresses().getRelationID());
   }
 
   public void testGetAllRelations() throws Exception {

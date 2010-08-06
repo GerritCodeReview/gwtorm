@@ -97,6 +97,7 @@ class AccessGen implements Opcodes {
     implementStaticFields();
     implementConstructor();
     implementGetString("getRelationName", model.getRelationName());
+    implementGetRelationID();
     implementGetObjectCodec();
     implementGetIndexes();
 
@@ -234,6 +235,17 @@ class AccessGen implements Opcodes {
     mv.visitCode();
     mv.visitLdcInsn(returnValue);
     mv.visitInsn(ARETURN);
+    mv.visitMaxs(-1, -1);
+    mv.visitEnd();
+  }
+
+  private void implementGetRelationID() {
+    final MethodVisitor mv =
+        cw.visitMethod(ACC_PUBLIC | ACC_FINAL, "getRelationID", Type
+            .getMethodDescriptor(Type.INT_TYPE, new Type[] {}), null, null);
+    mv.visitCode();
+    new CodeGenSupport(mv).push(model.getRelationID());
+    mv.visitInsn(IRETURN);
     mv.visitMaxs(-1, -1);
     mv.visitEnd();
   }
