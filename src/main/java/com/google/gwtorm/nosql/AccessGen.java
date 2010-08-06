@@ -117,11 +117,17 @@ class AccessGen implements Opcodes {
     return c;
   }
 
+  @SuppressWarnings("unchecked")
   private void initObjectCodec(final Class<?> clazz) throws OrmException {
+    ProtobufCodec oc = CodecFactory.encoder(modelClass);
+    if (model.getRelationID() > 0) {
+      oc = new RelationCodec(model.getRelationID(), oc);
+    }
+
     try {
       final Field e = clazz.getDeclaredField(F_OBJECT_CODEC);
       e.setAccessible(true);
-      e.set(null, CodecFactory.encoder(modelClass));
+      e.set(null, oc);
     } catch (IllegalArgumentException err) {
       throw new OrmException("Cannot setup ProtobufCodec", err);
     } catch (IllegalStateException err) {

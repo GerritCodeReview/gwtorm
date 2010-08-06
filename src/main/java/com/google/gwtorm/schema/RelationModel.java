@@ -31,6 +31,7 @@ import java.util.TreeMap;
 public abstract class RelationModel {
   protected String methodName;
   protected String relationName;
+  protected int relationId;
   protected Relation relation;
   protected final LinkedHashMap<String, ColumnModel> fieldsByFieldName;
   protected final LinkedHashMap<String, ColumnModel> columnsByColumnName;
@@ -54,6 +55,7 @@ public abstract class RelationModel {
     relation = rel;
     methodName = method;
     relationName = Util.any(relation.name(), Util.makeSqlFriendly(methodName));
+    relationId = rel.id();
   }
 
   protected void initColumns(final Collection<? extends ColumnModel> allFields)
@@ -121,6 +123,10 @@ public abstract class RelationModel {
 
   public String getRelationName() {
     return relationName;
+  }
+
+  public int getRelationID() {
+    return relationId;
   }
 
   public Collection<ColumnModel> getDependentFields() {
@@ -348,6 +354,7 @@ public abstract class RelationModel {
     r.append("Relation[\n");
     r.append("  method: " + getMethodName() + "\n");
     r.append("  table:  " + getRelationName() + "\n");
+    r.append("  id:     " + getRelationID() + "\n");
     r.append("  access: " + getAccessInterfaceName() + "\n");
     r.append("  entity: " + getEntityTypeClassName() + "\n");
     r.append("]");
