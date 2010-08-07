@@ -30,16 +30,34 @@ import com.google.gwtorm.nosql.NoSqlAccess;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /** Base implementation for {@link Access} in a {@link GenericDatabase}. */
 public abstract class GenericAccess<T, K extends Key<?>> extends
     NoSqlAccess<T, K> {
+  /** Maximum number of results to cache to improve updates on upsert. */
+  private static final int MAX_SZ = 64;
+
   private final GenericSchema db;
+  private LinkedHashMap<K, byte[]> cache;
 
   protected GenericAccess(final GenericSchema s) {
     super(s);
     db = s;
+  }
+
+  protected LinkedHashMap<K, byte[]> cache() {
+    if (cache == null) {
+      cache = new LinkedHashMap<K, byte[]>(8) {
+        @Override
+        protected boolean removeEldestEntry(Entry<K, byte[]> entry) {
+          return MAX_SZ <= size();
+        }
+      };
+    }
+    return cache;
   }
 
   /**
@@ -109,7 +127,10 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
     final ArrayList<T> res = new ArrayList<T>();
     Iterator<Map.Entry<byte[], byte[]>> i = db.scan(fromKey, toKey, limit);
     while (i.hasNext()) {
-      res.add(getObjectCodec().decode(i.next().getValue()));
+      byte[] bin = i.next().getValue();
+      T obj = getObjectCodec().decode(bin);
+      res.add(obj);
+      cache().put(primaryKey(obj), bin);
     }
     return new ListResultSet<T>(res);
   }
@@ -187,6 +208,7 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
         //
         final T obj = getObjectCodec().decode(objData);
         if (matches(idx, obj, idxkey)) {
+          cache().put(primaryKey(obj), objData);
           res.add(obj);
           if (limit > 0 && res.size() == limit) {
             break SCAN;
@@ -254,13 +276,18 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
 
   private void upsertOne(T newObj, boolean mustExist) throws OrmException {
     final byte[] key = dataRowKey(primaryKey(newObj));
-    final byte[] oldBin = db.fetchRow(key);
-    final T oldObj;
 
+    T oldObj;
+    byte[] oldBin = cache().get(primaryKey(newObj));
     if (oldBin != null) {
       oldObj = getObjectCodec().decode(oldBin);
     } else if (mustExist) {
-      throw new OrmConcurrencyException();
+      oldBin = db.fetchRow(key);
+      if (oldBin != null) {
+        oldObj = getObjectCodec().decode(oldBin);
+      } else {
+        throw new OrmConcurrencyException();
+      }
     } else {
       oldObj = null;
     }
@@ -324,6 +351,7 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
     for (T oldObj : instances) {
       db.delete(dataRowKey(primaryKey(oldObj)));
       pruneOldIndexes(oldObj, null);
+      cache().remove(primaryKey(oldObj));
     }
     maybeFlush();
   }
@@ -445,7 +473,8 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
     encodePrimaryKey(b, primaryKey(obj));
     final byte[] key = b.toByteArray();
 
-    return IndexRow.CODEC.encodeToByteString(IndexRow.forKey(now, key)).toByteArray();
+    return IndexRow.CODEC.encodeToByteString(IndexRow.forKey(now, key))
+        .toByteArray();
   }
 
   private static class IndexException extends RuntimeException {
