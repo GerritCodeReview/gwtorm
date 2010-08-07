@@ -36,6 +36,11 @@ public abstract class TreeMapSchema extends GenericSchema {
   }
 
   @Override
+  public void flush() {
+    // We don't buffer writes.
+  }
+
+  @Override
   public void close() {
     // Nothing to do.
   }
