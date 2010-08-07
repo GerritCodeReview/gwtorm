@@ -17,6 +17,7 @@ package com.google.gwtorm.nosql.generic;
 import com.google.gwtorm.client.AtomicUpdate;
 import com.google.gwtorm.client.OrmDuplicateKeyException;
 import com.google.gwtorm.client.OrmException;
+import com.google.gwtorm.client.ResultSet;
 import com.google.gwtorm.client.Schema;
 import com.google.gwtorm.nosql.CounterShard;
 import com.google.gwtorm.nosql.IndexKeyBuilder;
@@ -129,16 +130,21 @@ public abstract class GenericSchema extends NoSqlSchema {
     final byte[] toKey = new byte[key.length + 1];
     System.arraycopy(key, 0, toKey, 0, key.length);
 
-    Iterator<Entry<byte[], byte[]>> i = scan(fromKey, toKey, 2);
-    if (!i.hasNext()) {
-      return null;
-    }
+    ResultSet<Entry<byte[], byte[]>> r = scan(fromKey, toKey, 2);
+    try {
+      Iterator<Entry<byte[], byte[]>> i = r.iterator();
+      if (!i.hasNext()) {
+        return null;
+      }
 
-    byte[] data = i.next().getValue();
-    if (i.hasNext()) {
-      throw new OrmDuplicateKeyException("Unexpected duplicate keys");
+      byte[] data = i.next().getValue();
+      if (i.hasNext()) {
+        throw new OrmDuplicateKeyException("Unexpected duplicate keys");
+      }
+      return data;
+    } finally {
+      r.close();
     }
-    return data;
   }
 
   /**
@@ -160,7 +166,7 @@ public abstract class GenericSchema extends NoSqlSchema {
    *         lazily filled, or filled completely.
    * @throws OrmException an error occurred preventing the scan from completing.
    */
-  public abstract Iterator<Map.Entry<byte[], byte[]>> scan(byte[] fromKey,
+  public abstract ResultSet<Map.Entry<byte[], byte[]>> scan(byte[] fromKey,
       byte[] toKey, int limit) throws OrmException;
 
   /**

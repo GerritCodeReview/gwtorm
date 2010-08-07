@@ -750,7 +750,7 @@ class AccessGen implements Opcodes {
     mv.visitVarInsn(ALOAD, 0);
     mv.visitVarInsn(ALOAD, psvar);
     mv.visitMethodInsn(INVOKEVIRTUAL, superTypeName, "queryList", Type
-        .getMethodDescriptor(Type.getType(ListResultSet.class),
+        .getMethodDescriptor(Type.getType(com.google.gwtorm.client.ResultSet.class),
             new Type[] {Type.getType(PreparedStatement.class)}));
     mv.visitInsn(ARETURN);
     mv.visitMaxs(-1, -1);

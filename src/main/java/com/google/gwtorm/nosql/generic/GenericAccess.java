@@ -21,6 +21,7 @@ import com.google.gwtorm.client.OrmConcurrencyException;
 import com.google.gwtorm.client.OrmDuplicateKeyException;
 import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.client.ResultSet;
+import com.google.gwtorm.client.impl.AbstractResultSet;
 import com.google.gwtorm.client.impl.ListResultSet;
 import com.google.gwtorm.nosql.IndexFunction;
 import com.google.gwtorm.nosql.IndexKeyBuilder;
@@ -31,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -124,15 +126,28 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
     b.addRaw(toKey);
     toKey = b.toByteArray();
 
-    final ArrayList<T> res = new ArrayList<T>();
-    Iterator<Map.Entry<byte[], byte[]>> i = db.scan(fromKey, toKey, limit);
-    while (i.hasNext()) {
-      byte[] bin = i.next().getValue();
-      T obj = getObjectCodec().decode(bin);
-      res.add(obj);
-      cache().put(primaryKey(obj), bin);
-    }
-    return new ListResultSet<T>(res);
+    final ResultSet<Map.Entry<byte[], byte[]>> rs = db.scan(fromKey, toKey, limit);
+    final Iterator<Map.Entry<byte[], byte[]>> i = rs.iterator();
+
+    return new AbstractResultSet<T>() {
+      @Override
+      protected boolean hasNext() {
+        return i.hasNext();
+      }
+
+      @Override
+      protected T next() {
+        byte[] bin = i.next().getValue();
+        T obj = getObjectCodec().decode(bin);
+        cache().put(primaryKey(obj), bin);
+        return obj;
+      }
+
+      @Override
+      public void close() {
+        rs.close();
+      }
+    };
   }
 
   /**
@@ -173,9 +188,8 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
 
     SCAN: for (;;) {
       int scanned = 0;
-      Iterator<Map.Entry<byte[], byte[]>> i = db.scan(lastKey, toKey, limit);
-      while (i.hasNext()) {
-        final Map.Entry<byte[], byte[]> ent = i.next();
+      ResultSet<Entry<byte[], byte[]>> rs = db.scan(lastKey, toKey, limit);
+      for (Map.Entry<byte[], byte[]> ent : rs) {
         final byte[] idxkey = ent.getKey();
         lastKey = idxkey;
         scanned++;
@@ -211,6 +225,7 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
           cache().put(primaryKey(obj), objData);
           res.add(obj);
           if (limit > 0 && res.size() == limit) {
+            rs.close();
             break SCAN;
           }
         } else {
@@ -223,6 +238,7 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
       // a match, and no further rows would exist.
       //
       if (limit == 0 || scanned < limit) {
+        rs.close();
         break SCAN;
       }
 

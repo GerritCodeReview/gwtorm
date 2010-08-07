@@ -16,11 +16,12 @@ package com.google.gwtorm.nosql.heap;
 
 import com.google.gwtorm.client.AtomicUpdate;
 import com.google.gwtorm.client.OrmException;
+import com.google.gwtorm.client.ResultSet;
 import com.google.gwtorm.client.Schema;
+import com.google.gwtorm.client.impl.ListResultSet;
 import com.google.gwtorm.nosql.generic.GenericSchema;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -46,8 +47,8 @@ public abstract class TreeMapSchema extends GenericSchema {
   }
 
   @Override
-  public Iterator<Map.Entry<byte[], byte[]>> scan(byte[] fromKey, byte[] toKey,
-      int limit) {
+  public ResultSet<Map.Entry<byte[], byte[]>> scan(byte[] fromKey,
+      byte[] toKey, int limit) {
     db.lock.lock();
     try {
       final List<Map.Entry<byte[], byte[]>> res =
@@ -78,7 +79,7 @@ public abstract class TreeMapSchema extends GenericSchema {
           break;
         }
       }
-      return res.iterator();
+      return new ListResultSet<Entry<byte[],byte[]>>(res);
     } finally {
       db.lock.unlock();
     }

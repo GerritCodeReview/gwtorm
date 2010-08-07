@@ -126,28 +126,25 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
     }
   }
 
-  protected ListResultSet<T> queryList(final PreparedStatement ps)
-      throws OrmException {
+  protected com.google.gwtorm.client.ResultSet<T> queryList(
+      final PreparedStatement ps) throws OrmException {
+    final ResultSet rs;
     try {
-      try {
-        final ResultSet rs = ps.executeQuery();
-        try {
-          final ArrayList<T> r = new ArrayList<T>();
-          while (rs.next()) {
-            final T o = newEntityInstance();
-            bindOneFetch(rs, o);
-            r.add(o);
-          }
-          return new ListResultSet<T>(r);
-        } finally {
-          rs.close();
-        }
-      } finally {
+      rs = ps.executeQuery();
+      if (!rs.next()) {
+        rs.close();
         ps.close();
+        return new ListResultSet<T>(Collections.<T> emptyList());
       }
-    } catch (SQLException e) {
-      throw convertError("fetch", e);
+    } catch (SQLException err) {
+      try {
+        ps.close();
+      } catch (SQLException e) {
+        // Ignored.
+      }
+      throw convertError("fetch", err);
     }
+    return new JdbcResultSet<T, K>(this, rs, ps);
   }
 
   @Override
@@ -294,7 +291,7 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
     }
   }
 
-  private OrmException convertError(final String op, final SQLException err) {
+  protected OrmException convertError(final String op, final SQLException err) {
     if (err.getCause() == null && err.getNextException() != null) {
       err.initCause(err.getNextException());
     }
