@@ -215,11 +215,18 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
     return new ListResultSet<T>(res);
   }
 
+  private void maybeFlush() throws OrmException {
+    if (db.isAutoFlush()) {
+      db.flush();
+    }
+  }
+
   @Override
   public void insert(Iterable<T> instances) throws OrmException {
     for (T obj : instances) {
       insertOne(obj);
     }
+    maybeFlush();
   }
 
   private void insertOne(T nObj) throws OrmException {
@@ -234,6 +241,7 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
     for (T obj : instances) {
       upsertOne(obj, true);
     }
+    maybeFlush();
   }
 
   @Override
@@ -241,6 +249,7 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
     for (T obj : instances) {
       upsertOne(obj, false);
     }
+    maybeFlush();
   }
 
   private void upsertOne(T newObj, boolean mustExist) throws OrmException {
@@ -316,6 +325,7 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
       db.delete(dataRowKey(primaryKey(oldObj)));
       pruneOldIndexes(oldObj, null);
     }
+    maybeFlush();
   }
 
   @Override
