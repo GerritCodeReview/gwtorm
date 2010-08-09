@@ -29,16 +29,24 @@ public abstract class NoSqlAccess<T, K extends Key<?>> extends
 
   /**
    * Scan a range of keys from the data rows and return any matching objects.
+   * <p>
+   * All NoSQL implementations must provide their own variant of this method.
+   * <p>
+   * To fetch a single record with a scan, set {@code toKey} to the same array
+   * as {@code fromKey}, but append a trailing NUL byte (0x00). The caller
+   * should validate that the returned ResultSet contains no more than 1 row.
    *
    * @param fromKey key to start the scan on. This is inclusive.
    * @param toKey key to stop the scan on. This is exclusive.
-   * @param limit maximum number of results to return.
+   * @param limit maximum number of results to return, 0 for unlimited.
+   * @param order if true the order will be preserved, false if the result order
+   *        order can be arbitrary.
    * @return result set for the requested range. The result set may be lazily
    *         filled, or filled completely.
    * @throws OrmException an error occurred preventing the scan from completing.
    */
   protected abstract ResultSet<T> scanPrimaryKey(byte[] fromKey, byte[] toKey,
-      int limit) throws OrmException;
+      int limit, boolean order) throws OrmException;
 
   /**
    * Scan a range of keys and return any matching objects.
@@ -52,13 +60,16 @@ public abstract class NoSqlAccess<T, K extends Key<?>> extends
    * @param index definition of the index the scan occurs over.
    * @param fromKey key to start the scan on. This is inclusive.
    * @param toKey key to stop the scan on. This is exclusive.
-   * @param limit maximum number of results to return.
+   * @param limit maximum number of results to return, 0 for unlimited.
+   * @param order if true the order will be preserved, false if the result order
+   *        order can be arbitrary.
    * @return result set for the requested range. The result set may be lazily
    *         filled, or filled completely.
    * @throws OrmException an error occurred preventing the scan from completing.
    */
   protected abstract ResultSet<T> scanIndex(IndexFunction<T> index,
-      byte[] fromKey, byte[] toKey, int limit) throws OrmException;
+      byte[] fromKey, byte[] toKey, int limit, boolean order)
+      throws OrmException;
 
   // -- These are all provided by AccessGen when it builds a subclass --
 

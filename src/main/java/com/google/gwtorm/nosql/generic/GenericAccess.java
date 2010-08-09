@@ -32,7 +32,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -66,8 +65,8 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
    * Lookup a single entity via its primary key.
    * <p>
    * The default implementation of this method performs a scan over the primary
-   * key with {@link #scanPrimaryKey(byte[], byte[], int)}, '\0' appended onto
-   * the fromKey and a result limit of 2.
+   * key with {@link #scanPrimaryKey(byte[], byte[], int, boolean)}, '\0'
+   * appended onto the fromKey and a result limit of 2.
    * <p>
    * If multiple records are discovered {@link OrmDuplicateKeyException} is
    * thrown back to the caller.
@@ -87,7 +86,7 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
     dst.nul();
     final byte[] toKey = dst.toByteArray();
 
-    Iterator<T> r = scanPrimaryKey(fromKey, toKey, 2).iterator();
+    Iterator<T> r = scanPrimaryKey(fromKey, toKey, 2, false).iterator();
     if (!r.hasNext()) {
       return null;
     }
@@ -105,13 +104,15 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
    * @param fromKey key to start the scan on. This is inclusive.
    * @param toKey key to stop the scan on. This is exclusive.
    * @param limit maximum number of results to return.
+   * @param order if true the order will be preserved, false if the result order
+   *        order can be arbitrary.
    * @return result set for the requested range. The result set may be lazily
    *         filled, or filled completely.
    * @throws OrmException an error occurred preventing the scan from completing.
    */
   @Override
-  protected ResultSet<T> scanPrimaryKey(byte[] fromKey, byte[] toKey, int limit)
-      throws OrmException {
+  protected ResultSet<T> scanPrimaryKey(byte[] fromKey, byte[] toKey,
+      int limit, boolean order) throws OrmException {
     IndexKeyBuilder b;
 
     b = new IndexKeyBuilder();
@@ -126,7 +127,9 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
     b.addRaw(toKey);
     toKey = b.toByteArray();
 
-    final ResultSet<Map.Entry<byte[], byte[]>> rs = db.scan(fromKey, toKey, limit);
+    final ResultSet<Map.Entry<byte[], byte[]>> rs =
+        db.scan(fromKey, toKey, limit, order);
+
     final Iterator<Map.Entry<byte[], byte[]>> i = rs.iterator();
 
     return new AbstractResultSet<T>() {
@@ -157,13 +160,15 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
    * @param fromKey key to start the scan on. This is inclusive.
    * @param toKey key to stop the scan on. This is exclusive.
    * @param limit maximum number of results to return.
+   * @param order if true the order will be preserved, false if the result order
+   *        order can be arbitrary.
    * @return result set for the requested range. The result set may be lazily
    *         filled, or filled completely.
    * @throws OrmException an error occurred preventing the scan from completing.
    */
   @Override
   protected ResultSet<T> scanIndex(IndexFunction<T> idx, byte[] fromKey,
-      byte[] toKey, int limit) throws OrmException {
+      byte[] toKey, int limit, boolean order) throws OrmException {
     final long now = System.currentTimeMillis();
     IndexKeyBuilder b;
 
@@ -188,7 +193,8 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
 
     SCAN: for (;;) {
       int scanned = 0;
-      ResultSet<Entry<byte[], byte[]>> rs = db.scan(lastKey, toKey, limit);
+      ResultSet<Entry<byte[], byte[]>> rs =
+          db.scan(lastKey, toKey, limit, order);
       for (Map.Entry<byte[], byte[]> ent : rs) {
         final byte[] idxkey = ent.getKey();
         lastKey = idxkey;
@@ -319,8 +325,8 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
    * Insert or update operations should invoke this method before the main data
    * row is written, allowing the secondary index rows to be put into the data
    * store before the main data row arrives. Compatible scan implementations
-   * (such as {@link #scanIndex(IndexFunction, byte[], byte[], int)} above) will
-   * ignore these rows for a short time period.
+   * (such as {@link #scanIndex(IndexFunction, byte[], byte[], int, boolean)}
+   * above) will ignore these rows for a short time period.
    *
    * @param oldObj an old copy of the object; if non-null this may be used to
    *        avoid writing unnecessary secondary index rows that already exist.

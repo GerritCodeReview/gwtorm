@@ -113,8 +113,8 @@ public abstract class GenericSchema extends NoSqlSchema {
    * Fetch one row's data.
    * <p>
    * The default implementation of this method creates a pair of keys and passes
-   * them to {@link #scan(byte[], byte[], int)}. The {@code fromKey} is the
-   * supplied {@code key}, while the {@code toKey} has '\0' appended onto
+   * them to {@link #scan(byte[], byte[], int, boolean)}. The {@code fromKey} is
+   * the supplied {@code key}, while the {@code toKey} has '\0' appended onto
    * {@code key}. If more than one row matches in that range, the method throws
    * an exception.
    *
@@ -130,7 +130,7 @@ public abstract class GenericSchema extends NoSqlSchema {
     final byte[] toKey = new byte[key.length + 1];
     System.arraycopy(key, 0, toKey, 0, key.length);
 
-    ResultSet<Entry<byte[], byte[]>> r = scan(fromKey, toKey, 2);
+    ResultSet<Entry<byte[], byte[]>> r = scan(fromKey, toKey, 2, false);
     try {
       Iterator<Entry<byte[], byte[]>> i = r.iterator();
       if (!i.hasNext()) {
@@ -162,12 +162,14 @@ public abstract class GenericSchema extends NoSqlSchema {
    * @param fromKey key to start the scan on. This is inclusive.
    * @param toKey key to stop the scan on. This is exclusive.
    * @param limit maximum number of results to return.
+   * @param order if true the order will be preserved, false if the result order
+   *        order can be arbitrary.
    * @return result iteration for the requested range. The result set may be
    *         lazily filled, or filled completely.
    * @throws OrmException an error occurred preventing the scan from completing.
    */
   public abstract ResultSet<Map.Entry<byte[], byte[]>> scan(byte[] fromKey,
-      byte[] toKey, int limit) throws OrmException;
+      byte[] toKey, int limit, boolean order) throws OrmException;
 
   /**
    * Atomically insert one row, failing if the row already exists.

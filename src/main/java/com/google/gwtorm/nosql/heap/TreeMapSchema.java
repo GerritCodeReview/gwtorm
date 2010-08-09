@@ -48,7 +48,7 @@ public abstract class TreeMapSchema extends GenericSchema {
 
   @Override
   public ResultSet<Map.Entry<byte[], byte[]>> scan(byte[] fromKey,
-      byte[] toKey, int limit) {
+      byte[] toKey, int limit, boolean order) {
     db.lock.lock();
     try {
       final List<Map.Entry<byte[], byte[]>> res =

@@ -411,16 +411,21 @@ class AccessGen implements Opcodes {
       cgs.push(0);
     }
 
+    // Only keep order if there is an order by clause present
+    //
+    cgs.push(info.hasOrderBy() ? 1 : 0);
+
     if (needsIndexFunction(info)) {
       mv.visitMethodInsn(INVOKEVIRTUAL, accessType.getInternalName(),
           "scanIndex", Type.getMethodDescriptor(resultSet, new Type[] {
-              indexFunction, byteArray, byteArray, Type.INT_TYPE}));
+              indexFunction, byteArray, byteArray, Type.INT_TYPE,
+              Type.BOOLEAN_TYPE}));
     } else {
       // No where and no order by clause? Use the primary key instead.
       //
       mv.visitMethodInsn(INVOKEVIRTUAL, accessType.getInternalName(),
           "scanPrimaryKey", Type.getMethodDescriptor(resultSet, new Type[] {
-              byteArray, byteArray, Type.INT_TYPE}));
+              byteArray, byteArray, Type.INT_TYPE, Type.BOOLEAN_TYPE}));
     }
 
     mv.visitInsn(ARETURN);
