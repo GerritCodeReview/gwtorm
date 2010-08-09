@@ -32,7 +32,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Map.Entry;
 
 /** Base implementation for {@link Access} in a {@link GenericDatabase}. */
@@ -111,10 +110,8 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
     b.addRaw(toKey);
     toKey = b.toByteArray();
 
-    final ResultSet<Map.Entry<byte[], byte[]>> rs =
-        db.scan(fromKey, toKey, limit, order);
-
-    final Iterator<Map.Entry<byte[], byte[]>> i = rs.iterator();
+    final ResultSet<Row> rs = db.scan(fromKey, toKey, limit, order);
+    final Iterator<Row> i = rs.iterator();
 
     return new AbstractResultSet<T>() {
       @Override
@@ -177,9 +174,8 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
 
     SCAN: for (;;) {
       int scanned = 0;
-      ResultSet<Entry<byte[], byte[]>> rs =
-          db.scan(lastKey, toKey, limit, order);
-      for (Map.Entry<byte[], byte[]> ent : rs) {
+      ResultSet<Row> rs = db.scan(lastKey, toKey, limit, order);
+      for (Row ent : rs) {
         final byte[] idxkey = ent.getKey();
         lastKey = idxkey;
         scanned++;

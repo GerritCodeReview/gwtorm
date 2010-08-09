@@ -26,8 +26,6 @@ import com.google.gwtorm.nosql.NoSqlSchema;
 import com.google.gwtorm.schema.SequenceModel;
 
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * Base implementation for {@link Schema} in a {@link GenericDatabase}.
@@ -130,9 +128,9 @@ public abstract class GenericSchema extends NoSqlSchema {
     final byte[] toKey = new byte[key.length + 1];
     System.arraycopy(key, 0, toKey, 0, key.length);
 
-    ResultSet<Entry<byte[], byte[]>> r = scan(fromKey, toKey, 2, false);
+    ResultSet<Row> r = scan(fromKey, toKey, 2, false);
     try {
-      Iterator<Entry<byte[], byte[]>> i = r.iterator();
+      Iterator<Row> i = r.iterator();
       if (!i.hasNext()) {
         return null;
       }
@@ -168,8 +166,8 @@ public abstract class GenericSchema extends NoSqlSchema {
    *         lazily filled, or filled completely.
    * @throws OrmException an error occurred preventing the scan from completing.
    */
-  public abstract ResultSet<Map.Entry<byte[], byte[]>> scan(byte[] fromKey,
-      byte[] toKey, int limit, boolean order) throws OrmException;
+  public abstract ResultSet<Row> scan(byte[] fromKey, byte[] toKey, int limit,
+      boolean order) throws OrmException;
 
   /**
    * Atomically insert one row, failing if the row already exists.

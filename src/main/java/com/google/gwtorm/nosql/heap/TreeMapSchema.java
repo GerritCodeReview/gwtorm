@@ -20,6 +20,7 @@ import com.google.gwtorm.client.ResultSet;
 import com.google.gwtorm.client.Schema;
 import com.google.gwtorm.client.impl.ListResultSet;
 import com.google.gwtorm.nosql.generic.GenericSchema;
+import com.google.gwtorm.nosql.generic.Row;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,39 +48,19 @@ public abstract class TreeMapSchema extends GenericSchema {
   }
 
   @Override
-  public ResultSet<Map.Entry<byte[], byte[]>> scan(byte[] fromKey,
-      byte[] toKey, int limit, boolean order) {
+  public ResultSet<Row> scan(byte[] fromKey, byte[] toKey, int limit,
+      boolean order) {
     db.lock.lock();
     try {
-      final List<Map.Entry<byte[], byte[]>> res =
-          new ArrayList<Map.Entry<byte[], byte[]>>();
-
+      final List<Row> res = new ArrayList<Row>();
       for (Map.Entry<byte[], byte[]> ent : entries(fromKey, toKey)) {
-        final byte[] key = ent.getKey();
-        final byte[] val = ent.getValue();
-
-        res.add(new Map.Entry<byte[], byte[]>() {
-          @Override
-          public byte[] getKey() {
-            return key;
-          }
-
-          @Override
-          public byte[] getValue() {
-            return val;
-          }
-
-          @Override
-          public byte[] setValue(byte[] value) {
-            throw new UnsupportedOperationException();
-          }
-        });
+        res.add(new Row(ent.getKey(), ent.getValue()));
 
         if (limit > 0 && res.size() == limit) {
           break;
         }
       }
-      return new ListResultSet<Entry<byte[],byte[]>>(res);
+      return new ListResultSet<Row>(res);
     } finally {
       db.lock.unlock();
     }
