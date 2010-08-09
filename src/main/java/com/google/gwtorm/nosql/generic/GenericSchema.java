@@ -19,13 +19,16 @@ import com.google.gwtorm.client.OrmDuplicateKeyException;
 import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.client.ResultSet;
 import com.google.gwtorm.client.Schema;
+import com.google.gwtorm.client.impl.ListResultSet;
 import com.google.gwtorm.nosql.CounterShard;
 import com.google.gwtorm.nosql.IndexKeyBuilder;
 import com.google.gwtorm.nosql.IndexRow;
 import com.google.gwtorm.nosql.NoSqlSchema;
 import com.google.gwtorm.schema.SequenceModel;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Base implementation for {@link Schema} in a {@link GenericDatabase}.
@@ -143,6 +146,27 @@ public abstract class GenericSchema extends NoSqlSchema {
     } finally {
       r.close();
     }
+  }
+
+  /**
+   * Fetch multiple rows at once.
+   * <p>
+   * The default implementation of this method is a simple iteration over each
+   * key and executes a sequential fetch with {@link #fetchRow(byte[])}.
+   *
+   * @param keys keys to fetch and return.
+   * @return iteration over the rows that exist and appear in {@code keys}.
+   * @throws OrmException the data store cannot process the request.
+   */
+  public ResultSet<Row> fetchRows(Iterable<byte[]> keys) throws OrmException {
+    List<Row> r = new ArrayList<Row>();
+    for (byte[] key : keys) {
+      byte[] val = fetchRow(key);
+      if (val != null) {
+        r.add(new Row(key, val));
+      }
+    }
+    return new ListResultSet<Row>(r);
   }
 
   /**

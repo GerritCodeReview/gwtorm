@@ -81,6 +81,54 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
     }
   }
 
+  @Override
+  public ResultSet<T> get(final Iterable<K> keys) throws OrmException {
+    final ResultSet<Row> rs = db.fetchRows(new Iterable<byte[]>() {
+      @Override
+      public Iterator<byte[]> iterator() {
+        return new Iterator<byte[]>() {
+          private final Iterator<K> i = keys.iterator();
+
+          @Override
+          public boolean hasNext() {
+            return i.hasNext();
+          }
+
+          @Override
+          public byte[] next() {
+            return dataRowKey(i.next());
+          }
+
+          @Override
+          public void remove() {
+            throw new UnsupportedOperationException();
+          }
+        };
+      }
+    });
+
+    final Iterator<Row> i = rs.iterator();
+    return new AbstractResultSet<T>() {
+      @Override
+      protected boolean hasNext() {
+        return i.hasNext();
+      }
+
+      @Override
+      protected T next() {
+        byte[] bin = i.next().getValue();
+        T obj = getObjectCodec().decode(bin);
+        cache().put(primaryKey(obj), bin);
+        return obj;
+      }
+
+      @Override
+      public void close() {
+        rs.close();
+      }
+    };
+  }
+
   /**
    * Scan a range of keys from the data rows and return any matching objects.
    *
