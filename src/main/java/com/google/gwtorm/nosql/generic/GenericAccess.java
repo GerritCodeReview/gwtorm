@@ -63,39 +63,23 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
 
   /**
    * Lookup a single entity via its primary key.
-   * <p>
-   * The default implementation of this method performs a scan over the primary
-   * key with {@link #scanPrimaryKey(byte[], byte[], int, boolean)}, '\0'
-   * appended onto the fromKey and a result limit of 2.
-   * <p>
-   * If multiple records are discovered {@link OrmDuplicateKeyException} is
-   * thrown back to the caller.
    *
    * @param key the primary key instance; must not be null.
    * @return the entity; null if no entity has this key.
    * @throws OrmException the data lookup failed.
-   * @throws OrmDuplicateKeyException more than one row matched in the scan.
+   * @throws OrmDuplicateKeyException more than one row was identified in the
+   *         key scan.
    */
   @Override
   public T get(K key) throws OrmException, OrmDuplicateKeyException {
-    final IndexKeyBuilder dst = new IndexKeyBuilder();
-    encodePrimaryKey(dst, key);
-
-    final byte[] fromKey = dst.toByteArray();
-
-    dst.nul();
-    final byte[] toKey = dst.toByteArray();
-
-    Iterator<T> r = scanPrimaryKey(fromKey, toKey, 2, false).iterator();
-    if (!r.hasNext()) {
+    byte[] bin = db.fetchRow(dataRowKey(key));
+    if (bin != null) {
+      T obj = getObjectCodec().decode(bin);
+      cache().put(primaryKey(obj), bin);
+      return obj;
+    } else {
       return null;
     }
-
-    T obj = r.next();
-    if (r.hasNext()) {
-      throw new OrmDuplicateKeyException("Duplicate " + getRelationName());
-    }
-    return obj;
   }
 
   /**
