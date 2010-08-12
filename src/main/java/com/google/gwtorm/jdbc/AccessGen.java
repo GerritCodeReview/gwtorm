@@ -17,7 +17,6 @@ package com.google.gwtorm.jdbc;
 import com.google.gwtorm.client.Access;
 import com.google.gwtorm.client.Key;
 import com.google.gwtorm.client.OrmException;
-import com.google.gwtorm.client.impl.ListResultSet;
 import com.google.gwtorm.schema.ColumnModel;
 import com.google.gwtorm.schema.KeyModel;
 import com.google.gwtorm.schema.QueryModel;
@@ -658,7 +657,7 @@ class AccessGen implements Opcodes {
     mv.visitVarInsn(ALOAD, 0);
     mv.visitVarInsn(ALOAD, psvar);
     mv.visitMethodInsn(INVOKEVIRTUAL, superTypeName, "queryList", Type
-        .getMethodDescriptor(Type.getType(ListResultSet.class),
+        .getMethodDescriptor(Type.getType(com.google.gwtorm.client.ResultSet.class),
             new Type[] {Type.getType(PreparedStatement.class)}));
     mv.visitInsn(ARETURN);
     mv.visitMaxs(-1, -1);
