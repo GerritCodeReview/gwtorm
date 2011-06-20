@@ -113,7 +113,6 @@ public class DialectMySQL extends SqlDialect {
         } finally {
           rs.close();
         }
-        st.execute("DELETE FROM " + seqname + " WHERE s=" + r);
         return r;
       } finally {
         st.close();
