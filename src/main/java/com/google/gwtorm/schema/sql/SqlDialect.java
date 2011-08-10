@@ -299,4 +299,41 @@ public abstract class SqlDialect {
       String fromColumn, ColumnModel col) throws OrmException;
 
   protected abstract String getNextSequenceValueSql(String seqname);
+
+
+  /**
+   * Does the array returned by the PreparedStatement.executeBatch method return
+   * the exact number of rows updated for every row in the batch?
+   *
+   * @return <code>true</code> if the executeBatch method returns the number of
+   *         rows affected for every row in the batch; <code>false</code> if it
+   *         may return Statement.SUCESS_NO_INFO
+   */
+  public boolean hasInfoOnBatchingSuccess() {
+    return true;
+  }
+
+  /**
+   * Checks if the total number of rows updated by a prepared statement batch
+   * matches an expected update count.
+   *
+   * @param updateCounts the update count array returned by the execute batch
+   *        method
+   * @param updateCount the total update count of the prepared statement as
+   *        returned by the getUpdateCount of the prepared statement that
+   *        execute the batch
+   * @param expectedCount the expected total update count
+   * @return <code>true</code> the passed parameters indicate that the total
+   *         update count matches the expected total update count; <false>
+   *         otherwise
+   */
+  public boolean allRowsUpdated(int[] updateCounts, int updateCount, int expectedCount) {
+    for (int i = 0; i < expectedCount; i++) {
+      if (updateCounts.length <= i || updateCounts[i] != 1) {
+        return false;
+      }
+    }
+    return true;
+  }
+
 }

@@ -27,6 +27,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 /** Internal base class for implementations of {@link Access}. */
 public abstract class JdbcAccess<T, K extends Key<?>> extends
@@ -199,6 +200,11 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
 
   @Override
   public void upsert(final Iterable<T> instances) throws OrmException {
+    if (!schema.getDialect().hasInfoOnBatchingSuccess()) {
+      upsertIndividually(instances);
+      return;
+    }
+
     // Assume update first, it will cheaply tell us if the row is missing.
     //
     Collection<T> inserts = null;
@@ -248,6 +254,40 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
       insert(inserts);
     }
   }
+
+  private void upsertIndividually(Iterable<T> instances)
+      throws OrmException {
+    if (!instances.iterator().hasNext()) {
+      return;
+    }
+
+    try {
+      @SuppressWarnings("unchecked")
+      List<T> inserts = Collections.EMPTY_LIST;
+      PreparedStatement ps =
+          schema.getConnection().prepareStatement(getUpdateOneSql());
+      try {
+        for (T o : instances) {
+          bindOneUpdate(ps, o);
+          int updateCount = ps.executeUpdate();
+          if (updateCount == 0) {
+            if (inserts == Collections.EMPTY_LIST) {
+              inserts = new ArrayList<T>();
+            }
+            inserts.add(o);
+          }
+        }
+      } finally {
+        ps.close();
+      }
+
+      insert(inserts);
+
+    } catch (SQLException e) {
+      throw convertError("update", e);
+    }
+  }
+
 
   @Override
   public void delete(final Iterable<T> instances) throws OrmException {
