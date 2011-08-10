@@ -27,6 +27,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 /** Internal base class for implementations of {@link Access}. */
 public abstract class JdbcAccess<T, K extends Key<?>> extends
@@ -199,6 +200,11 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
 
   @Override
   public void upsert(final Iterable<T> instances) throws OrmException {
+    if (!schema.getDialect().hasInfoOnBatchingSuccess()) {
+      upsertIndividually(instances);
+      return;
+    }
+
     // Assume update first, it will cheaply tell us if the row is missing.
     //
     Collection<T> inserts = null;
@@ -249,6 +255,40 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
     }
   }
 
+  private void upsertIndividually(final Iterable<T> instances)
+      throws OrmException {
+    if (!instances.iterator().hasNext()) {
+      return;
+    }
+
+    try {
+      @SuppressWarnings("unchecked")
+      List<T> inserts = Collections.EMPTY_LIST; // avoid creation of empty list
+      PreparedStatement ps =
+          schema.getConnection().prepareStatement(getUpdateOneSql());
+      try {
+        for (T o : instances) {
+          bindOneUpdate(ps, o);
+          int updateCount = ps.executeUpdate();
+          if (updateCount == 0) {
+            if (inserts == Collections.EMPTY_LIST) {
+              inserts = new ArrayList<T>();
+            }
+            inserts.add(o);
+          }
+        }
+      } finally {
+        ps.close();
+      }
+
+      insert(inserts);
+
+    } catch (SQLException e) {
+      throw convertError("update", e);
+    }
+  }
+
+
   @Override
   public void delete(final Iterable<T> instances) throws OrmException {
     try {
@@ -274,20 +314,14 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
     }
   }
 
-  private static void execute(final PreparedStatement ps, final int cnt)
+  private void execute(final PreparedStatement ps, final int cnt)
       throws SQLException, OrmConcurrencyException {
     if (cnt == 0) {
       return;
     }
 
-    final int[] states = ps.executeBatch();
-    if (states == null) {
-      throw new SQLException("No rows affected; expected " + cnt + " rows");
-    }
-    for (int i = 0; i < cnt; i++) {
-      if (states.length <= i || states[i] != 1) {
-        throw new OrmConcurrencyException();
-      }
+    if (schema.getDialect().executeBatch(ps) != cnt) {
+      throw new OrmConcurrencyException();
     }
   }
 
