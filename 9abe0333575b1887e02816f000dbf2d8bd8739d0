@@ -67,6 +67,24 @@
       "revId": "9abe0333575b1887e02816f000dbf2d8bd8739d0",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABEn//8PU\u003d",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/SqlDialect.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 335,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2011-08-11T16:24:45Z",
+      "side": 1,
+      "message": "sorry, I now read the javadoc of executeBatch and see that the return values indeed can be \u003e 1 and also negative.\nSo, I think my comment above is a nonsense.",
+      "parentUuid": "AAABEn//8Pg\u003d",
+      "revId": "9abe0333575b1887e02816f000dbf2d8bd8739d0",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
