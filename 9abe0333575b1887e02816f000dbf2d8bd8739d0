@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAABEn//8P0\u003d",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2011-08-11T16:21:23Z",
+      "side": 1,
+      "message": "I think you may want to also pass the cnt parameter to the executeBatch method?",
+      "revId": "9abe0333575b1887e02816f000dbf2d8bd8739d0",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABEn//8Ps\u003d",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/SqlDialect.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 329,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2011-08-11T16:21:23Z",
+      "side": 1,
+      "message": "The exception text seems incomplete.\nDidn\u0027t you need to pass the cnt from the caller?",
+      "revId": "9abe0333575b1887e02816f000dbf2d8bd8739d0",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABEn//8Pk\u003d",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/SqlDialect.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 332,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2011-08-11T16:21:23Z",
+      "side": 1,
+      "message": "The for loop in the JdbcAccess class, before your change,\niterated up to cnt. Now this iterates until updateCounts.length.\nIs this still compatible with the old behaviour as it was before your change?",
+      "revId": "9abe0333575b1887e02816f000dbf2d8bd8739d0",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABEn//8Pg\u003d",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/SqlDialect.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 335,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2011-08-11T16:21:23Z",
+      "side": 1,
+      "message": "Can updateCount be anything else but 0 or 1?\nIf yes, then it is not safe to just create sum of all updateCounts.\n\nIf no, then you don\u0027t need the:\n\n if (updateCount \u003e 0) {\n\njust use:\n\n totalUpdateCount +\u003d udpateCounts[i];",
+      "revId": "9abe0333575b1887e02816f000dbf2d8bd8739d0",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
