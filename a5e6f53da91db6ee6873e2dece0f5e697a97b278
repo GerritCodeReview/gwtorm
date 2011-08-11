@@ -72,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "AAABEn//8P4\u003d",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2011-08-11T16:20:52Z",
+      "side": 1,
+      "message": "It will not. Look at the Collections.emptyList() method in JDK.\n\nThis method was introduced as a type-safe alternative to EMTPY_LIST when generics were introduced in Java.",
+      "parentUuid": "AAABEn//8Qo\u003d",
+      "revId": "a5e6f53da91db6ee6873e2dece0f5e697a97b278",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAABEn//8Rs\u003d",
         "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
         "patchSetId": 2
