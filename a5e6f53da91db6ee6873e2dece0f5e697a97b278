@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAABEn//8Rw\u003d",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2011-08-11T14:21:43Z",
+      "side": 1,
+      "message": "declare the parameter as final to be consistent with the rest of the method declarations in this class.",
+      "revId": "a5e6f53da91db6ee6873e2dece0f5e697a97b278",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABEn//8R0\u003d",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2011-08-11T14:21:43Z",
+      "side": 1,
+      "message": "Use:\n\n List\u003cT\u003e inserts \u003d Collections.emptyList();\n\nfor a type-safe way to get an empty list and remove the\n\n @SuppressWarnings(\"unchecked\")",
+      "revId": "a5e6f53da91db6ee6873e2dece0f5e697a97b278",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABEn//8Rs\u003d",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2011-08-11T14:21:43Z",
+      "side": 1,
+      "message": "Using:\n\n if (inserts.isEmpty()) {\n\nmight be cleaner because, after using Collections.emptyList() above, we will not any more reference the EMPTY_LIST directly.",
+      "revId": "a5e6f53da91db6ee6873e2dece0f5e697a97b278",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABEn//8Rk\u003d",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/SqlDialect.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 322,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2011-08-11T14:21:43Z",
+      "side": 1,
+      "message": "This parameter is not used in this method",
+      "revId": "a5e6f53da91db6ee6873e2dece0f5e697a97b278",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABEn//8Rg\u003d",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/SqlDialect.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2011-08-11T14:21:43Z",
+      "side": 1,
+      "message": "updateCount\n\nparameter is not used in this method",
+      "revId": "a5e6f53da91db6ee6873e2dece0f5e697a97b278",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
