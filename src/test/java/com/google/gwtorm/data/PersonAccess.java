@@ -20,29 +20,29 @@ import com.google.gwtorm.server.PrimaryKey;
 import com.google.gwtorm.server.Query;
 import com.google.gwtorm.server.ResultSet;
 
-public interface PersonAccess extends Access<TestPerson, TestPerson.Key> {
+public interface PersonAccess extends Access<Person, Person.Key> {
   @PrimaryKey("name")
-  TestPerson get(TestPerson.Key key) throws OrmException;
+  Person get(Person.Key key) throws OrmException;
 
   @Query
-  ResultSet<TestPerson> all() throws OrmException;
+  ResultSet<Person> all() throws OrmException;
 
   @Query("WHERE age > ? ORDER BY age")
-  ResultSet<TestPerson> olderThan(int age) throws OrmException;
+  ResultSet<Person> olderThan(int age) throws OrmException;
 
   @Query("WHERE age > ? ORDER BY name DESC")
-  ResultSet<TestPerson> olderThanDescByName(int age)
+  ResultSet<Person> olderThanDescByName(int age)
       throws OrmException;
 
   @Query("WHERE name = 'bob' LIMIT ?")
-  ResultSet<TestPerson> firstNBob(int n) throws OrmException;
+  ResultSet<Person> firstNBob(int n) throws OrmException;
 
   @Query("WHERE registered = false ORDER BY name")
-  ResultSet<TestPerson> notRegistered() throws OrmException;
+  ResultSet<Person> notRegistered() throws OrmException;
 
   @Query("ORDER BY age LIMIT 1")
-  ResultSet<TestPerson> youngest() throws OrmException;
+  ResultSet<Person> youngest() throws OrmException;
 
   @Query("ORDER BY age LIMIT ?")
-  ResultSet<TestPerson> youngestN(int n) throws OrmException;
+  ResultSet<Person> youngestN(int n) throws OrmException;
 }

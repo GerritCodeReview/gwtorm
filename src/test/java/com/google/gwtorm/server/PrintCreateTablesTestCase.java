@@ -18,9 +18,11 @@ import com.google.gwtorm.data.PhoneBookDb;
 import com.google.gwtorm.schema.java.JavaSchemaModel;
 import com.google.gwtorm.schema.sql.DialectH2;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class PrintCreateTablesTestCase extends TestCase {
+public class PrintCreateTablesTestCase {
+
+  @Test
   public void testCreate() throws Exception {
     final JavaSchemaModel m = new JavaSchemaModel(PhoneBookDb.class);
     System.out.println(m.getCreateDatabaseSql(new DialectH2()));

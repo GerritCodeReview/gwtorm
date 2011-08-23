@@ -14,13 +14,20 @@
 
 package com.google.gwtorm.protobuf;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
 import com.google.gwtorm.client.Column;
-import com.google.gwtorm.data.TestAddress;
-import com.google.gwtorm.data.TestPerson;
+import com.google.gwtorm.data.Address;
+import com.google.gwtorm.data.Person;
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.CodedOutputStream;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -32,7 +39,7 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-public class ProtobufEncoderTest extends TestCase {
+public class ProtobufEncoderTest {
   private static final byte[] testingBin = new byte[] {
   //
       // name
@@ -47,12 +54,13 @@ public class ProtobufEncoderTest extends TestCase {
       };
 
   @SuppressWarnings("cast")
+  @Test
   public void testPerson() throws UnsupportedEncodingException {
-    final ProtobufCodec<TestPerson> e = CodecFactory.encoder(TestPerson.class);
+    final ProtobufCodec<Person> e = CodecFactory.encoder(Person.class);
 
-    TestPerson p = e.decode(testingBin);
+    Person p = e.decode(testingBin);
     assertNotNull(p);
-    assertTrue(p instanceof TestPerson);
+    assertTrue(p instanceof Person);
     assertEquals("testing", p.name());
     assertEquals(75, p.age());
     assertTrue(p.isRegistered());
@@ -62,37 +70,40 @@ public class ProtobufEncoderTest extends TestCase {
     assertEquals(testingBin.length, e.sizeof(p));
   }
 
+  @Test
   public void testAddress() {
-    final ProtobufCodec<TestAddress> e =
-        CodecFactory.encoder(TestAddress.class);
-    TestAddress a = e.decode(new byte[0]);
+    final ProtobufCodec<Address> e =
+        CodecFactory.encoder(Address.class);
+    Address a = e.decode(new byte[0]);
     assertNotNull(a);
     assertNull(a.location());
 
-    TestPerson.Key k = new TestPerson.Key("bob");
-    TestPerson p = new TestPerson(k, 42);
-    TestAddress b = new TestAddress(new TestAddress.Key(k, "ny"), "ny");
+    Person.Key k = new Person.Key("bob");
+    Person p = new Person(k, 42);
+    Address b = new Address(new Address.Key(k, "ny"), "ny");
 
     byte[] act = e.encodeToByteArray(b);
 
-    TestAddress c = e.decode(act);
+    Address c = e.decode(act);
     assertEquals(c.location(), b.location());
     assertEquals(c.city(), b.city());
     assertEquals(c.key(), b.key());
   }
 
+  @Test
   public void testDecodeEmptiesByteBuffer() {
-    ProtobufCodec<TestPerson> e = CodecFactory.encoder(TestPerson.class);
+    ProtobufCodec<Person> e = CodecFactory.encoder(Person.class);
     ByteBuffer buf = ByteBuffer.wrap(testingBin);
-    TestPerson p = e.decode(buf);
+    Person p = e.decode(buf);
     assertEquals(0, buf.remaining());
     assertEquals(testingBin.length, buf.position());
   }
 
+  @Test
   public void testEncodeFillsByteBuffer() throws UnsupportedEncodingException {
-    ProtobufCodec<TestPerson> e = CodecFactory.encoder(TestPerson.class);
+    ProtobufCodec<Person> e = CodecFactory.encoder(Person.class);
 
-    TestPerson p = new TestPerson(new TestPerson.Key("testing"), 75);
+    Person p = new Person(new Person.Key("testing"), 75);
     p.register();
 
     int sz = e.sizeof(p);
@@ -110,11 +121,12 @@ public class ProtobufEncoderTest extends TestCase {
     assertEquals(asString(testingBin), asString(act));
   }
 
+  @Test
   public void testEncodeNonArrayByteBuffer()
       throws UnsupportedEncodingException {
-    ProtobufCodec<TestPerson> e = CodecFactory.encoder(TestPerson.class);
+    ProtobufCodec<Person> e = CodecFactory.encoder(Person.class);
 
-    TestPerson p = new TestPerson(new TestPerson.Key("testing"), 75);
+    Person p = new Person(new Person.Key("testing"), 75);
     p.register();
 
     int sz = e.sizeof(p);
@@ -134,6 +146,7 @@ public class ProtobufEncoderTest extends TestCase {
     assertEquals(asString(testingBin), asString(act));
   }
 
+  @Test
   public void testStringList() throws UnsupportedEncodingException {
     ProtobufCodec<StringList> e = CodecFactory.encoder(StringList.class);
 
@@ -153,6 +166,7 @@ public class ProtobufEncoderTest extends TestCase {
         }), asString(act));
   }
 
+  @Test
   public void testStringSet() throws UnsupportedEncodingException {
     ProtobufCodec<StringSet> e = CodecFactory.encoder(StringSet.class);
 
@@ -172,20 +186,22 @@ public class ProtobufEncoderTest extends TestCase {
         }), asString(act));
   }
 
+  @Test
   public void testPersonList() {
     ProtobufCodec<PersonList> e = CodecFactory.encoder(PersonList.class);
 
     PersonList list = new PersonList();
-    list.people = new ArrayList<TestPerson>();
-    list.people.add(new TestPerson(new TestPerson.Key("larry"), 1 << 16));
-    list.people.add(new TestPerson(new TestPerson.Key("curly"), 1));
-    list.people.add(new TestPerson(new TestPerson.Key("moe"), -1));
+    list.people = new ArrayList<Person>();
+    list.people.add(new Person(new Person.Key("larry"), 1 << 16));
+    list.people.add(new Person(new Person.Key("curly"), 1));
+    list.people.add(new Person(new Person.Key("moe"), -1));
 
     PersonList other = e.decode(e.encodeToByteArray(list));
     assertNotNull(other.people);
     assertEquals(list.people, other.people);
   }
 
+  @Test
   public void testCustomEncoderList() {
     ProtobufCodec<ItemList> e = CodecFactory.encoder(ItemList.class);
 
@@ -199,6 +215,7 @@ public class ProtobufEncoderTest extends TestCase {
     assertEquals(2, other.list.size());
   }
 
+  @Test
   public void testEnumEncoder() throws UnsupportedEncodingException {
     assertEquals(1, ThingWithEnum.Type.B.ordinal());
     assertSame(ThingWithEnum.Type.B, ThingWithEnum.Type.values()[1]);
@@ -217,6 +234,7 @@ public class ProtobufEncoderTest extends TestCase {
     assertEquals(asString(exp), asString(act));
   }
 
+  @Test
   public void testEncodeToStream()throws IOException {
     ProtobufCodec<ThingWithEnum> e = CodecFactory.encoder(ThingWithEnum.class);
 
@@ -231,8 +249,8 @@ public class ProtobufEncoderTest extends TestCase {
     byte[] exp2 = {0x02, 0x08, 0x01, '\n'};
     ByteArrayInputStream in = new ByteArrayInputStream(exp2);
     ThingWithEnum other = e.decodeWithSize(in);
-    assertEquals('\n', in.read());
-    assertEquals(-1, in.read());
+    assertTrue('\n' == in.read());
+    assertTrue(-1 == in.read());
     assertNotNull(other.type);
     assertSame(thing.type, other.type);
   }
@@ -244,7 +262,7 @@ public class ProtobufEncoderTest extends TestCase {
 
   static class PersonList {
     @Column(id = 5)
-    public List<TestPerson> people;
+    public List<Person> people;
   }
 
   static class StringList {

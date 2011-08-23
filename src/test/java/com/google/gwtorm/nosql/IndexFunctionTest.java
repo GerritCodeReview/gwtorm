@@ -14,174 +14,187 @@
 
 package com.google.gwtorm.nosql;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import com.google.gwtorm.data.Person;
 import com.google.gwtorm.data.PhoneBookDb;
-import com.google.gwtorm.data.TestPerson;
 import com.google.gwtorm.schema.QueryModel;
 import com.google.gwtorm.schema.RelationModel;
 import com.google.gwtorm.schema.java.JavaSchemaModel;
 import com.google.gwtorm.server.GeneratedClassLoader;
 import com.google.gwtorm.server.OrmException;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 @SuppressWarnings("unchecked")
-public class IndexFunctionTest extends TestCase {
+public class IndexFunctionTest {
   private JavaSchemaModel schema;
   private RelationModel people;
 
-  @Override
-  protected void setUp() throws Exception {
-    super.setUp();
+  @Before
+  public void setUp() throws Exception {
     schema = new JavaSchemaModel(PhoneBookDb.class);
     people = schema.getRelation("people");
   }
 
+  @Test
   public void testPersonByName() throws Exception {
-    IndexFunction<TestPerson> idx = index("testMyQuery", "WHERE name=?");
-    assertEquals("testMyQuery", idx.getName());
+    IndexFunction<Person> idx = index("testMyQuery", "WHERE name=?");
+    Assert.assertEquals("testMyQuery", idx.getName());
 
     IndexKeyBuilder b;
-    TestPerson p;
+    Person p;
 
     b = new IndexKeyBuilder();
-    p = new TestPerson(new TestPerson.Key("bob"), 12);
+    p = new Person(new Person.Key("bob"), 12);
     assertTrue(idx.includes(p));
     idx.encode(b, p);
-    assertEquals(new byte[] {'b', 'o', 'b'}, b);
+    assertEqualToBuilderResult(new byte[] {'b', 'o', 'b'}, b);
   }
 
+  @Test
   public void testPersonByNameAge() throws Exception {
-    IndexFunction<TestPerson> idx = index("nameAge", "WHERE name=? AND age=?");
-    assertEquals("nameAge", idx.getName());
+    IndexFunction<Person> idx = index("nameAge", "WHERE name=? AND age=?");
+    Assert.assertEquals("nameAge", idx.getName());
 
     IndexKeyBuilder b;
-    TestPerson p;
+    Person p;
 
     b = new IndexKeyBuilder();
-    p = new TestPerson(new TestPerson.Key("hm"), 42);
+    p = new Person(new Person.Key("hm"), 42);
     assertTrue(idx.includes(p));
     idx.encode(b, p);
-    assertEquals(new byte[] {'h', 'm', 0x00, 0x01, 0x01, 42}, b);
+    assertEqualToBuilderResult(new byte[] {'h', 'm', 0x00, 0x01, 0x01, 42}, b);
 
-    p = new TestPerson(new TestPerson.Key(null), 0);
+    p = new Person(new Person.Key(null), 0);
     assertFalse(idx.includes(p));
 
     b = new IndexKeyBuilder();
     assertFalse(idx.includes(p));
   }
 
+  @Test
   public void testPersonByNameAge_OrderByName() throws Exception {
-    IndexFunction<TestPerson> idx =
+    IndexFunction<Person> idx =
         index("nameAge", "WHERE name=? AND age=? ORDER BY name");
-    assertEquals("nameAge", idx.getName());
+    Assert.assertEquals("nameAge", idx.getName());
 
     IndexKeyBuilder b;
-    TestPerson p;
+    Person p;
 
     b = new IndexKeyBuilder();
-    p = new TestPerson(new TestPerson.Key("qy"), 42);
+    p = new Person(new Person.Key("qy"), 42);
     assertTrue(idx.includes(p));
     idx.encode(b, p);
-    assertEquals(new byte[] {'q', 'y', 0x00, 0x01, 0x01, 42}, b);
+    assertEqualToBuilderResult(new byte[] {'q', 'y', 0x00, 0x01, 0x01, 42}, b);
   }
 
+  @Test
   public void testPersonByNameAge_OrderByRegistered() throws Exception {
-    IndexFunction<TestPerson> idx =
+    IndexFunction<Person> idx =
         index("nameAge", "WHERE name=? AND age=? ORDER BY registered");
-    assertEquals("nameAge", idx.getName());
+    Assert.assertEquals("nameAge", idx.getName());
 
     IndexKeyBuilder b;
-    TestPerson p;
+    Person p;
 
     b = new IndexKeyBuilder();
-    p = new TestPerson(new TestPerson.Key("q"), 42);
+    p = new Person(new Person.Key("q"), 42);
     p.register();
     assertTrue(idx.includes(p));
     idx.encode(b, p);
-    assertEquals(new byte[] {'q', 0x00, 0x01, // name
+    assertEqualToBuilderResult(new byte[] {'q', 0x00, 0x01, // name
         0x01, 42, 0x00, 0x01, // age
         0x01, 0x01 // registered
         }, b);
   }
 
+  @Test
   public void testPersonByNameRange_OrderByName() throws Exception {
-    IndexFunction<TestPerson> idx =
+    IndexFunction<Person> idx =
         index("nameSuggest", "WHERE name >= ? AND name <= ? ORDER BY name");
     assertEquals("nameSuggest", idx.getName());
 
     IndexKeyBuilder b;
-    TestPerson p;
+    Person p;
 
     b = new IndexKeyBuilder();
-    p = new TestPerson(new TestPerson.Key("q"), 42);
+    p = new Person(new Person.Key("q"), 42);
     assertTrue(idx.includes(p));
     idx.encode(b, p);
-    assertEquals(new byte[] {'q'}, b);
+    assertEqualToBuilderResult(new byte[] {'q'}, b);
   }
 
+  @Test
   public void testOnlyRegistered() throws Exception {
-    IndexFunction<TestPerson> idx =
+    IndexFunction<Person> idx =
         index("isregistered", "WHERE registered = true ORDER BY name");
     assertEquals("isregistered", idx.getName());
 
     IndexKeyBuilder b;
-    TestPerson p;
+    Person p;
 
     b = new IndexKeyBuilder();
-    p = new TestPerson(new TestPerson.Key("q"), 42);
+    p = new Person(new Person.Key("q"), 42);
     assertFalse(idx.includes(p));
     p.register();
     assertTrue(idx.includes(p));
 
     idx.encode(b, p);
-    assertEquals(new byte[] {'q'}, b);
+    assertEqualToBuilderResult(new byte[] {'q'}, b);
   }
 
+  @Test
   public void testOnlyAge42() throws Exception {
-    IndexFunction<TestPerson> idx =
+    IndexFunction<Person> idx =
         index("isOldEnough", "WHERE age = 42 ORDER BY name");
     assertEquals("isOldEnough", idx.getName());
 
     IndexKeyBuilder b;
-    TestPerson p;
+    Person p;
 
     b = new IndexKeyBuilder();
-    p = new TestPerson(new TestPerson.Key("q"), 32);
+    p = new Person(new Person.Key("q"), 32);
     assertFalse(idx.includes(p));
 
-    p = new TestPerson(new TestPerson.Key("q"), 42);
+    p = new Person(new Person.Key("q"), 42);
     assertTrue(idx.includes(p));
 
     idx.encode(b, p);
-    assertEquals(new byte[] {'q'}, b);
+    assertEqualToBuilderResult(new byte[] {'q'}, b);
   }
 
+  @Test
   public void testOnlyBob() throws Exception {
-    IndexFunction<TestPerson> idx = index("isbob", "WHERE name.name = 'bob'");
+    IndexFunction<Person> idx = index("isbob", "WHERE name.name = 'bob'");
     assertEquals("isbob", idx.getName());
 
     IndexKeyBuilder b;
-    TestPerson p;
+    Person p;
 
     b = new IndexKeyBuilder();
-    p = new TestPerson(new TestPerson.Key("q"), 42);
+    p = new Person(new Person.Key("q"), 42);
     assertFalse(idx.includes(p));
 
-    p = new TestPerson(new TestPerson.Key("bob"), 42);
+    p = new Person(new Person.Key("bob"), 42);
     assertTrue(idx.includes(p));
 
     idx.encode(b, p);
-    assertEquals(new byte[] {}, b);
+    assertEqualToBuilderResult(new byte[] {}, b);
   }
 
-  private IndexFunction<TestPerson> index(String name, String query)
+  private IndexFunction<Person> index(String name, String query)
       throws OrmException {
     final QueryModel qm = new QueryModel(people, name, query);
-    return new IndexFunctionGen(new GeneratedClassLoader(TestPerson.class
-        .getClassLoader()), qm, TestPerson.class).create();
+    return new IndexFunctionGen(new GeneratedClassLoader(Person.class
+        .getClassLoader()), qm, Person.class).create();
   }
 
-  private static void assertEquals(byte[] exp, IndexKeyBuilder ic) {
+  private static void assertEqualToBuilderResult(byte[] exp, IndexKeyBuilder ic) {
     assertEquals(toString(exp), toString(ic.toByteArray()));
   }
 

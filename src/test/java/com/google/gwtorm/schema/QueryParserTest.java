@@ -14,17 +14,21 @@
 
 package com.google.gwtorm.schema;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import com.google.gwtorm.server.OrmException;
 
-import junit.framework.TestCase;
-
 import org.antlr.runtime.tree.Tree;
+import org.junit.Test;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class QueryParserTest extends TestCase {
+public class QueryParserTest {
   private final class DummyColumn extends ColumnModel {
     private String name;
 
@@ -97,10 +101,12 @@ public class QueryParserTest extends TestCase {
     assertEquals(QueryParser.PLACEHOLDER, c.getChild(1).getType());
   }
 
+  @Test
   public void testEmptyQuery() throws QueryParseException {
     assertNull(parse(""));
   }
 
+  @Test
   public void testWhereNameEq() throws QueryParseException {
     final Tree t = parse("WHERE name = ?");
     assertNotNull(t);
@@ -110,6 +116,7 @@ public class QueryParserTest extends TestCase {
     assertGoodEQ(t.getChild(0), "name");
   }
 
+  @Test
   public void testWhereAAndBAndC() throws QueryParseException {
     final Tree t = parse("WHERE a = ? AND b = ? AND c = ?");
     assertNotNull(t);
@@ -124,6 +131,7 @@ public class QueryParserTest extends TestCase {
     assertGoodEQ(c.getChild(2), "c");
   }
 
+  @Test
   public void testOrderByA() throws QueryParseException {
     final Tree t = parse("ORDER BY a");
     assertNotNull(t);
@@ -138,6 +146,7 @@ public class QueryParserTest extends TestCase {
     assertEquals("a", a.getChild(0).getText());
   }
 
+  @Test
   public void testOrderByAB() throws QueryParseException {
     final Tree t = parse("ORDER BY a DESC, b ASC");
     assertNotNull(t);
@@ -161,6 +170,7 @@ public class QueryParserTest extends TestCase {
     }
   }
 
+  @Test
   public void testWhereAOrderByA() throws QueryParseException {
     final Tree t = parse("WHERE a = ? ORDER BY a");
     assertNotNull(t);

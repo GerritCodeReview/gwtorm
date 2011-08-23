@@ -20,13 +20,13 @@ import com.google.gwtorm.server.PrimaryKey;
 import com.google.gwtorm.server.Query;
 import com.google.gwtorm.server.ResultSet;
 
-public interface AddressAccess extends Access<TestAddress, TestAddress.Key> {
+public interface AddressAccess extends Access<Address, Address.Key> {
   @PrimaryKey("city")
-  TestAddress byId(TestAddress.Key a) throws OrmException;
+  Address byId(Address.Key a) throws OrmException;
 
   @Query()
-  ResultSet<TestAddress> all() throws OrmException;
+  ResultSet<Address> all() throws OrmException;
 
   @Query("WHERE city.owner = ?")
-  ResultSet<TestAddress> byOwner(TestPerson.Key owner) throws OrmException;
+  ResultSet<Address> byOwner(Person.Key owner) throws OrmException;
 }

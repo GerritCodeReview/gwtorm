@@ -14,12 +14,18 @@
 
 package com.google.gwtorm.client;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
 import com.google.gwtorm.server.StandardKeyEncoder;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 
-public class LongKeyTestCase extends TestCase {
+public class LongKeyTestCase {
   private abstract static class LongKeyImpl<T extends Key<?>> extends
       LongKey<T> {
     @Column(id = 1)
@@ -66,22 +72,25 @@ public class LongKeyTestCase extends TestCase {
     }
   }
 
-  @Override
-  protected void setUp() throws Exception {
+  @Before
+  public void setUp() throws Exception {
     KeyUtil.setEncoderImpl(new StandardKeyEncoder());
   }
 
+  @Test
   public void testHashCodeWhenNull() {
     final Parent p = new Parent(0);
     assertEquals(0, p.hashCode());
   }
 
+  @Test
   public void testParentHashCode() {
     final long id = 21281821821821881L;
     final Parent p = new Parent(id);
     assertEquals((int) id, p.hashCode());
   }
 
+  @Test
   public void testParentEquals() {
     final long id = 21281821821821881L;
     final Parent p1 = new Parent(id);
@@ -99,6 +108,7 @@ public class LongKeyTestCase extends TestCase {
     assertFalse(p1.equals(p3));
   }
 
+  @Test
   public void testChildHashCode() {
     final long pId = 21281821821821881L;
     final long cId = 8;
@@ -108,6 +118,7 @@ public class LongKeyTestCase extends TestCase {
     assertTrue(cId != c.hashCode());
   }
 
+  @Test
   public void testChildEquals() {
     final long pId = 21281821821821881L;
     final long cId = 8;
@@ -123,6 +134,7 @@ public class LongKeyTestCase extends TestCase {
     assertFalse(u.equals(c1));
   }
 
+  @Test
   public void testParentString() {
     final long pId = 21281821821821881L;
     final Parent p1 = new Parent(pId);
@@ -133,6 +145,7 @@ public class LongKeyTestCase extends TestCase {
     assertEquals(p1, p2);
   }
 
+  @Test
   public void testChildString() {
     final long pId = 21281821821821881L;
     final long cId = 18218181281818888L;

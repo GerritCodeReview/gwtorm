@@ -14,12 +14,18 @@
 
 package com.google.gwtorm.client;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
 import com.google.gwtorm.server.StandardKeyEncoder;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 
-public class StringKeyTestCase extends TestCase {
+public class StringKeyTestCase {
   private abstract static class StringKeyImpl<T extends Key<?>> extends
       StringKey<T> {
     @Column(id = 1)
@@ -66,22 +72,25 @@ public class StringKeyTestCase extends TestCase {
     }
   }
 
-  @Override
-  protected void setUp() throws Exception {
+  @Before
+  public void setUp() throws Exception {
     KeyUtil.setEncoderImpl(new StandardKeyEncoder());
   }
 
+  @Test
   public void testHashCodeWhenNull() {
     final Parent p = new Parent(null);
     assertEquals(0, p.hashCode());
   }
 
+  @Test
   public void testParentHashCode() {
     final String str = "foo";
     final Parent p = new Parent(str);
     assertEquals(str.hashCode(), p.hashCode());
   }
 
+  @Test
   public void testParentEquals() {
     final String str = "foo";
     final Parent p1 = new Parent(str);
@@ -99,6 +108,7 @@ public class StringKeyTestCase extends TestCase {
     assertFalse(p1.equals(p3));
   }
 
+  @Test
   public void testChildHashCode() {
     final String pName = "foo";
     final String cName = "bar";
@@ -108,6 +118,7 @@ public class StringKeyTestCase extends TestCase {
     assertTrue(cName.hashCode() != c.hashCode());
   }
 
+  @Test
   public void testChildEquals() {
     final String pName = "foo";
     final String cName = "bar";
@@ -123,6 +134,7 @@ public class StringKeyTestCase extends TestCase {
     assertFalse(u.equals(c1));
   }
 
+  @Test
   public void testParentString() {
     final String pv = "foo,bar/ at %here";
     final Parent p1 = new Parent(pv);
@@ -133,6 +145,7 @@ public class StringKeyTestCase extends TestCase {
     assertEquals(p1, p2);
   }
 
+  @Test
   public void testChildString() {
     final String pv = "foo,bar/ at %here";
     final String cv = "x";

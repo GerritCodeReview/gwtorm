@@ -18,7 +18,7 @@ import com.google.gwtorm.server.Access;
 import com.google.gwtorm.server.OrmException;
 import com.google.gwtorm.server.PrimaryKey;
 
-public interface PersonAccess2 extends Access<TestPerson2, TestPerson.Key> {
+public interface PersonAccess2 extends Access<Person2, Person.Key> {
   @PrimaryKey("name")
-  TestPerson2 get(TestPerson.Key key) throws OrmException;
+  Person2 get(Person.Key key) throws OrmException;
 }
