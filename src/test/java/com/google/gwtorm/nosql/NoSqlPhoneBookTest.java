@@ -14,35 +14,40 @@
 
 package com.google.gwtorm.nosql;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import com.google.gwtorm.client.Access;
 import com.google.gwtorm.client.OrmConcurrencyException;
 import com.google.gwtorm.client.OrmException;
+import com.google.gwtorm.data.Person;
 import com.google.gwtorm.data.PersonAccess;
 import com.google.gwtorm.data.PhoneBookDb;
-import com.google.gwtorm.data.TestPerson;
-import com.google.gwtorm.jdbc.JdbcExecutor;
-import com.google.gwtorm.jdbc.JdbcSchema;
 import com.google.gwtorm.nosql.heap.MemoryDatabase;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class NoSqlPhoneBookTest extends TestCase {
+public class NoSqlPhoneBookTest  {
   protected MemoryDatabase<PhoneBookDb> db;
   private List<PhoneBookDb> openSchemas;
 
-  @Override
+  @Before
   public void setUp() throws Exception {
-    super.setUp();
-
     db = new MemoryDatabase<PhoneBookDb>(PhoneBookDb.class);
     openSchemas = new ArrayList<PhoneBookDb>();
   }
 
-  @Override
+  @After
   public void tearDown() throws Exception {
     if (openSchemas != null) {
       for (PhoneBookDb schema : openSchemas) {
@@ -50,7 +55,6 @@ public class NoSqlPhoneBookTest extends TestCase {
       }
       openSchemas = null;
     }
-    super.tearDown();
   }
 
   protected PhoneBookDb open() throws OrmException {
@@ -61,10 +65,12 @@ public class NoSqlPhoneBookTest extends TestCase {
     return r;
   }
 
+  @Test
   public void testCreateDatabaseHandle() throws Exception {
     assertNotNull(db);
   }
 
+  @Test
   public void testOpenSchema() throws Exception {
     final PhoneBookDb schema1 = open();
     assertNotNull(schema1);
@@ -74,6 +80,7 @@ public class NoSqlPhoneBookTest extends TestCase {
     assertNotSame(schema1, schema2);
   }
 
+  @Test
   public void testGetPeopleAccess() throws Exception {
     final PhoneBookDb schema = open();
     assertNotNull(schema.people());
@@ -81,6 +88,7 @@ public class NoSqlPhoneBookTest extends TestCase {
     assertEquals(1, schema.people().getRelationID());
   }
 
+  @Test
   public void testGetAddressAccess() throws Exception {
     final PhoneBookDb schema = open();
     assertNotNull(schema.addresses());
@@ -88,6 +96,7 @@ public class NoSqlPhoneBookTest extends TestCase {
     assertEquals(2, schema.addresses().getRelationID());
   }
 
+  @Test
   public void testGetAllRelations() throws Exception {
     final PhoneBookDb schema = open();
     Access<?, ?>[] all = schema.allRelations();
@@ -97,6 +106,7 @@ public class NoSqlPhoneBookTest extends TestCase {
     assertSame(schema.addresses(), all[1]);
   }
 
+  @Test
   public void testNextAddressId() throws Exception {
     final PhoneBookDb schema = open();
     final int a = schema.nextAddressId();
@@ -104,79 +114,87 @@ public class NoSqlPhoneBookTest extends TestCase {
     assertTrue(a != b);
   }
 
+  @Test
   public void testPersonPrimaryKey() throws Exception {
     final PhoneBookDb schema = open();
-    final TestPerson.Key key = new TestPerson.Key("Bob");
-    final TestPerson bob = new TestPerson(key, 18);
+    final Person.Key key = new Person.Key("Bob");
+    final Person bob = new Person(key, 18);
     assertSame(key, schema.people().primaryKey(bob));
   }
 
+  @Test
   public void testInsertOnePerson() throws Exception {
     final PhoneBookDb schema = open();
-    final TestPerson bob = new TestPerson(new TestPerson.Key("Bob"), 18);
+    final Person bob = new Person(new Person.Key("Bob"), 18);
     schema.people().insert(Collections.singleton(bob));
 
-    TestPerson copy = schema.people().all().toList().get(0);
+    Person copy = schema.people().all().toList().get(0);
     assertNotSame(copy, bob);
     assertEquals(bob.name(), copy.name());
   }
 
+  @Test
   public void testGetOnePerson() throws Exception {
     final PhoneBookDb schema = open();
     final PersonAccess sp = schema.people();
-    final TestPerson p1 = new TestPerson(new TestPerson.Key("Bob"), 18);
+    final Person p1 = new Person(new Person.Key("Bob"), 18);
     sp.insert(Collections.singleton(p1));
 
-    final TestPerson p2 = sp.get(sp.primaryKey(p1));
+    final Person p2 = sp.get(sp.primaryKey(p1));
     assertNotNull(p2);
     assertNotSame(p1, p2);
     assertEquals(sp.primaryKey(p1), sp.primaryKey(p2));
   }
 
+  @Test
   public void testGetOnePersonIterator() throws Exception {
     final PhoneBookDb schema = open();
     final PersonAccess sp = schema.people();
-    final TestPerson p1 = new TestPerson(new TestPerson.Key("Bob"), 18);
+    final Person p1 = new Person(new Person.Key("Bob"), 18);
     sp.insert(Collections.singleton(p1));
 
-    final List<TestPerson> list =
+    final List<Person> list =
         sp.get(Collections.singleton(sp.primaryKey(p1))).toList();
     assertNotNull(list);
     assertEquals(1, list.size());
 
-    final TestPerson p2 = list.get(0);
+    final Person p2 = list.get(0);
     assertNotNull(p2);
     assertNotSame(p1, p2);
     assertEquals(sp.primaryKey(p1), sp.primaryKey(p2));
   }
 
+  @Test
   public void testInsertManyPeople() throws Exception {
     final PhoneBookDb schema = open();
-    final ArrayList<TestPerson> all = new ArrayList<TestPerson>();
-    all.add(new TestPerson(new TestPerson.Key("Bob"), 18));
-    all.add(new TestPerson(new TestPerson.Key("Mary"), 22));
-    all.add(new TestPerson(new TestPerson.Key("Zak"), 33));
+    final ArrayList<Person> all = new ArrayList<Person>();
+    all.add(new Person(new Person.Key("Bob"), 18));
+    all.add(new Person(new Person.Key("Mary"), 22));
+    all.add(new Person(new Person.Key("Zak"), 33));
     schema.people().insert(all);
   }
 
+  @Test
   public void testDeleteOnePerson() throws Exception {
     final PhoneBookDb schema = open();
-    final TestPerson bob = new TestPerson(new TestPerson.Key("Bob"), 18);
+    final Person bob = new Person(new Person.Key("Bob"), 18);
     schema.people().insert(Collections.singleton(bob));
     schema.people().delete(Collections.singleton(bob));
   }
 
+  @Test
   public void testUpdateOnePerson() throws Exception {
     final PhoneBookDb schema = open();
-    final TestPerson bob = new TestPerson(new TestPerson.Key("Bob"), 18);
+    final Person bob = new Person(new Person.Key("Bob"), 18);
     schema.people().insert(Collections.singleton(bob));
     bob.growOlder();
     schema.people().update(Collections.singleton(bob));
   }
 
+  @Test
   public void testUpdateNoPerson() throws Exception {
     final PhoneBookDb schema = open();
-    final TestPerson bob = new TestPerson(new TestPerson.Key("Bob"), 18);
+    final Person bob = new Person(new Person.Key("Bob"), 18);
     try {
       schema.people().update(Collections.singleton(bob));
       fail("Update of missing person succeeded");
@@ -185,12 +203,13 @@ public class NoSqlPhoneBookTest extends TestCase {
     }
   }
 
+  @Test
   public void testFetchOnePerson() throws Exception {
     final PhoneBookDb schema = open();
-    final TestPerson bob = new TestPerson(new TestPerson.Key("Bob"), 18);
+    final Person bob = new Person(new Person.Key("Bob"), 18);
     schema.people().insert(Collections.singleton(bob));
 
-    final List<TestPerson> all = schema.people().all().toList();
+    final List<Person> all = schema.people().all().toList();
     assertNotNull(all);
     assertEquals(1, all.size());
     assertNotSame(bob, all.get(0));
@@ -199,13 +218,14 @@ public class NoSqlPhoneBookTest extends TestCase {
     assertEquals(bob.isRegistered(), all.get(0).isRegistered());
   }
 
+  @Test
   public void testFetchOnePersonByName() throws Exception {
     final PhoneBookDb schema = open();
-    final TestPerson bob1 = new TestPerson(new TestPerson.Key("Bob"), 18);
+    final Person bob1 = new Person(new Person.Key("Bob"), 18);
     schema.people().insert(Collections.singleton(bob1));
 
-    final TestPerson bob2 =
-        schema.people().get(new TestPerson.Key(bob1.name()));
+    final Person bob2 =
+        schema.people().get(new Person.Key(bob1.name()));
     assertNotNull(bob2);
     assertNotSame(bob1, bob2);
     assertEquals(bob1.name(), bob2.name());
@@ -213,23 +233,25 @@ public class NoSqlPhoneBookTest extends TestCase {
     assertEquals(bob1.isRegistered(), bob2.isRegistered());
   }
 
+  @Test
   public void testFetchByAge() throws Exception {
     final PhoneBookDb schema = open();
-    final ArrayList<TestPerson> all = new ArrayList<TestPerson>();
-    all.add(new TestPerson(new TestPerson.Key("Bob"), 18));
-    all.add(new TestPerson(new TestPerson.Key("Mary"), 22));
-    all.add(new TestPerson(new TestPerson.Key("Zak"), 33));
+    final ArrayList<Person> all = new ArrayList<Person>();
+    all.add(new Person(new Person.Key("Bob"), 18));
+    all.add(new Person(new Person.Key("Mary"), 22));
+    all.add(new Person(new Person.Key("Zak"), 33));
     schema.people().insert(all);
 
-    final List<TestPerson> r = schema.people().olderThan(20).toList();
+    final List<Person> r = schema.people().olderThan(20).toList();
     assertEquals(2, r.size());
     assertEquals(all.get(1).name(), r.get(0).name());
     assertEquals(all.get(2).name(), r.get(1).name());
   }
 
+  @Test
   public void testBooleanType() throws Exception {
     final PhoneBookDb schema = open();
-    final TestPerson bob = new TestPerson(new TestPerson.Key("Bob"), 18);
+    final Person bob = new Person(new Person.Key("Bob"), 18);
     schema.people().insert(Collections.singleton(bob));
 
     assertEquals(bob.isRegistered(), schema.people().all().toList().get(0)

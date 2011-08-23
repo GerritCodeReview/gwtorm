@@ -17,9 +17,9 @@ package com.google.gwtorm.data;
 import com.google.gwtorm.client.Column;
 
 
-public class TestPerson2 {
+public class Person2 {
   @Column(id = 1)
-  protected TestPerson.Key name;
+  protected Person.Key name;
 
   @Column(id = 2)
   protected int age;

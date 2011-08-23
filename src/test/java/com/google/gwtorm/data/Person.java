@@ -18,7 +18,7 @@ import com.google.gwtorm.client.Column;
 import com.google.gwtorm.client.StringKey;
 
 
-public class TestPerson {
+public class Person {
   public static class Key extends StringKey<com.google.gwtorm.client.Key<?>> {
     @Column(id = 1, length = 20)
     protected String name;
@@ -50,10 +50,10 @@ public class TestPerson {
   @Column(id = 3)
   protected boolean registered;
 
-  protected TestPerson() {
+  protected Person() {
   }
 
-  public TestPerson(final Key key, final int age) {
+  public Person(final Key key, final int age) {
     this.name = key;
     this.age = age;
   }
@@ -89,8 +89,8 @@ public class TestPerson {
 
   @Override
   public boolean equals(Object other) {
-    if (other instanceof TestPerson) {
-      TestPerson p = (TestPerson) other;
+    if (other instanceof Person) {
+      Person p = (Person) other;
       return name.equals(p.name) && age == p.age && registered == p.registered;
     }
     return false;

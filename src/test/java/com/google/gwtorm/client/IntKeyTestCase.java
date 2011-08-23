@@ -15,11 +15,18 @@
 package com.google.gwtorm.client;
 
 import com.google.gwtorm.server.StandardKeyEncoder;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import junit.framework.TestCase;
 
+import org.junit.Before;
+import org.junit.Test;
 
-public class IntKeyTestCase extends TestCase {
+
+public class IntKeyTestCase {
   private abstract static class IntKeyImpl<T extends Key<?>> extends IntKey<T> {
     @Column(id = 1)
     int id;
@@ -65,22 +72,25 @@ public class IntKeyTestCase extends TestCase {
     }
   }
 
-  @Override
-  protected void setUp() throws Exception {
+  @Before
+  public void setUp() throws Exception {
     KeyUtil.setEncoderImpl(new StandardKeyEncoder());
   }
 
+  @Test
   public void testHashCodeWhenNull() {
     final Parent p = new Parent(0);
     assertEquals(0, p.hashCode());
   }
 
+  @Test
   public void testParentHashCode() {
     final int id = 42;
     final Parent p = new Parent(id);
     assertEquals(id, p.hashCode());
   }
 
+  @Test
   public void testParentEquals() {
     final int id = 42;
     final Parent p1 = new Parent(id);
@@ -98,6 +108,7 @@ public class IntKeyTestCase extends TestCase {
     assertFalse(p1.equals(p3));
   }
 
+  @Test
   public void testChildHashCode() {
     final int pId = 2;
     final int cId = 8;
@@ -107,6 +118,7 @@ public class IntKeyTestCase extends TestCase {
     assertTrue(cId != c.hashCode());
   }
 
+  @Test
   public void testChildEquals() {
     final int pId = 2;
     final int cId = 8;
@@ -122,6 +134,7 @@ public class IntKeyTestCase extends TestCase {
     assertFalse(u.equals(c1));
   }
 
+  @Test
   public void testParentString() {
     final Parent p1 = new Parent(1);
     assertEquals("1", p1.toString());
@@ -131,6 +144,7 @@ public class IntKeyTestCase extends TestCase {
     assertEquals(p1, p2);
   }
 
+  @Test
   public void testChildString() {
     final Child c1 = new Child(new Parent(1), 2);
     assertEquals("1,2", c1.toString());

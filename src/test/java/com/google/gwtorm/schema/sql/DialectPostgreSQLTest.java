@@ -15,17 +15,23 @@
 
 package com.google.gwtorm.schema.sql;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.data.PhoneBookDb;
 import com.google.gwtorm.data.PhoneBookDb2;
-import com.google.gwtorm.data.TestAddress;
-import com.google.gwtorm.data.TestPerson;
+import com.google.gwtorm.data.Address;
+import com.google.gwtorm.data.Person;
 import com.google.gwtorm.jdbc.Database;
 import com.google.gwtorm.jdbc.JdbcExecutor;
 import com.google.gwtorm.jdbc.JdbcSchema;
 import com.google.gwtorm.jdbc.SimpleDataSource;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -34,16 +40,15 @@ import java.util.Collections;
 import java.util.Properties;
 import java.util.Set;
 
-public class DialectPostgreSQLTest extends TestCase {
+public class DialectPostgreSQLTest {
   private Connection db;
   private JdbcExecutor executor;
   private SqlDialect dialect;
   private Database<PhoneBookDb> phoneBook;
   private Database<PhoneBookDb2> phoneBook2;
 
-  @Override
-  protected void setUp() throws Exception {
-    super.setUp();
+  @Before
+  public void setUp() throws Exception {
     Class.forName(org.postgresql.Driver.class.getName());
 
     final String database = "gwtorm";
@@ -79,8 +84,8 @@ public class DialectPostgreSQLTest extends TestCase {
     }
   }
 
-  @Override
-  protected void tearDown() {
+  @After
+  public void tearDown() {
     if (executor != null) {
       executor.close();
     }
@@ -100,6 +105,7 @@ public class DialectPostgreSQLTest extends TestCase {
     executor.execute(sql);
   }
 
+  @Test
   public void testListSequences() throws OrmException, SQLException {
     assertTrue(dialect.listSequences(db).isEmpty());
 
@@ -112,6 +118,7 @@ public class DialectPostgreSQLTest extends TestCase {
     assertFalse(s.contains("foo"));
   }
 
+  @Test
   public void testListTables() throws OrmException, SQLException {
     assertTrue(dialect.listTables(db).isEmpty());
 
@@ -124,6 +131,7 @@ public class DialectPostgreSQLTest extends TestCase {
     assertTrue(s.contains("foo"));
   }
 
+  @Test
   public void testUpgradeSchema() throws SQLException, OrmException {
     final PhoneBookDb p = phoneBook.open();
     try {
@@ -154,12 +162,12 @@ public class DialectPostgreSQLTest extends TestCase {
       assertFalse(sequences.contains("cnt"));
       assertFalse(tables.contains("foo"));
 
-      final TestPerson.Key pk = new TestPerson.Key("Bob");
-      final TestPerson bob = new TestPerson(pk, p.nextAddressId());
+      final Person.Key pk = new Person.Key("Bob");
+      final Person bob = new Person(pk, p.nextAddressId());
       p.people().insert(Collections.singleton(bob));
 
-      final TestAddress addr =
-          new TestAddress(new TestAddress.Key(pk, "home"), "some place");
+      final Address addr =
+          new Address(new Address.Key(pk, "home"), "some place");
       p.addresses().insert(Collections.singleton(addr));
     } finally {
       p.close();
