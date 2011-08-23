@@ -17,19 +17,19 @@ package com.google.gwtorm.data;
 import com.google.gwtorm.client.Column;
 import com.google.gwtorm.client.StringKey;
 
-public class TestAddress {
-  public static class Key extends StringKey<TestPerson.Key> {
+public class Address {
+  public static class Key extends StringKey<Person.Key> {
     @Column(id = 1)
-    protected TestPerson.Key owner;
+    protected Person.Key owner;
 
     @Column(id = 2)
     protected String name;
 
     protected Key() {
-      owner = new TestPerson.Key();
+      owner = new Person.Key();
     }
 
-    public Key(final TestPerson.Key owner, final String name) {
+    public Key(final Person.Key owner, final String name) {
       this.owner = owner;
       this.name = name;
     }
@@ -40,7 +40,7 @@ public class TestAddress {
     }
 
     @Override
-    public TestPerson.Key getParentKey() {
+    public Person.Key getParentKey() {
       return owner;
     }
 
@@ -59,10 +59,10 @@ public class TestAddress {
   @Column(id = 3, notNull = false)
   protected byte[] photo;
 
-  protected TestAddress() {
+  protected Address() {
   }
 
-  public TestAddress(final TestAddress.Key city, final String where) {
+  public Address(final Address.Key city, final String where) {
     this.city = city;
     this.location = where;
   }
@@ -75,7 +75,7 @@ public class TestAddress {
     return location;
   }
 
-  public TestAddress.Key key() {
+  public Address.Key key() {
     return city;
   }
 }

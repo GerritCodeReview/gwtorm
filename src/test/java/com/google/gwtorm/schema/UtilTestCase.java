@@ -14,9 +14,12 @@
 
 package com.google.gwtorm.schema;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
-public class UtilTestCase extends TestCase {
+import org.junit.Test;
+
+public class UtilTestCase {
+  @Test
   public void testSqlFriendlyNames() {
     assertEquals("a", Util.makeSqlFriendly("a"));
     assertEquals("url", Util.makeSqlFriendly("url"));

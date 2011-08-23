@@ -14,17 +14,23 @@
 
 package com.google.gwtorm.protobuf;
 
-import com.google.gwtorm.data.TestAddress;
-import com.google.gwtorm.data.TestPerson;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
-import junit.framework.TestCase;
+import com.google.gwtorm.data.Address;
+import com.google.gwtorm.data.Person;
+
+import org.junit.Test;
 
 import java.io.UnsupportedEncodingException;
 
-public class ProtobufEncoderTest extends TestCase {
+public class ProtobufEncoderTest {
   @SuppressWarnings("cast")
+  @Test
   public void testPerson() throws UnsupportedEncodingException {
-    final ProtobufCodec<TestPerson> e = CodecFactory.encoder(TestPerson.class);
+    final ProtobufCodec<Person> e = CodecFactory.encoder(Person.class);
     final byte[] bin = new byte[] {
     //
         // name
@@ -37,9 +43,9 @@ public class ProtobufEncoderTest extends TestCase {
         0x18, 0x01 //
         //
         };
-    TestPerson p = e.decode(bin);
+    Person p = e.decode(bin);
     assertNotNull(p);
-    assertTrue(p instanceof TestPerson);
+    assertTrue(p instanceof Person);
     assertEquals("testing", p.name());
     assertEquals(75, p.age());
     assertTrue(p.isRegistered());
@@ -49,20 +55,21 @@ public class ProtobufEncoderTest extends TestCase {
     assertEquals(bin.length, e.sizeof(p));
   }
 
+  @Test
   public void testAddress() {
-    final ProtobufCodec<TestAddress> e =
-        CodecFactory.encoder(TestAddress.class);
-    TestAddress a = e.decode(new byte[0]);
+    final ProtobufCodec<Address> e =
+        CodecFactory.encoder(Address.class);
+    Address a = e.decode(new byte[0]);
     assertNotNull(a);
     assertNull(a.location());
 
-    TestPerson.Key k = new TestPerson.Key("bob");
-    TestPerson p = new TestPerson(k, 42);
-    TestAddress b = new TestAddress(new TestAddress.Key(k, "ny"), "ny");
+    Person.Key k = new Person.Key("bob");
+    Person p = new Person(k, 42);
+    Address b = new Address(new Address.Key(k, "ny"), "ny");
 
     byte[] act = e.encode(b).toByteArray();
 
-    TestAddress c = e.decode(act);
+    Address c = e.decode(act);
     assertEquals(c.location(), b.location());
     assertEquals(c.city(), b.city());
     assertEquals(c.key(), b.key());
