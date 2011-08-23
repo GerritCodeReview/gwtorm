@@ -189,19 +189,39 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
       PreparedStatement ps =
           schema.getConnection().prepareStatement(getUpdateOneSql());
       try {
-         int cnt = 0;
-        for (final T o : instances) {
-          bindOneUpdate(ps, o);
-          ps.addBatch();
-          cnt++;
+        if (!schema.getDialect().canDetermineTotalBatchUpdateCount()) {
+          updateIndividually(ps, instances);
+        } else {
+          updateAsBatch(ps, instances);
         }
-        execute(ps, cnt);
       } finally {
         ps.close();
       }
     } catch (SQLException e) {
       throw convertError("update", e);
     }
+  }
+
+  private void updateIndividually(final PreparedStatement ps,
+      final Iterable<T> instances) throws SQLException, OrmConcurrencyException {
+    for (final T o : instances) {
+      bindOneUpdate(ps, o);
+      int updateCount = ps.executeUpdate();
+      if (updateCount != 1) {
+        throw new OrmConcurrencyException();
+      }
+    }
+  }
+
+  private void updateAsBatch(final PreparedStatement ps,
+      final Iterable<T> instances) throws SQLException, OrmConcurrencyException {
+    int cnt = 0;
+    for (final T o : instances) {
+      bindOneUpdate(ps, o);
+      ps.addBatch();
+      cnt++;
+    }
+    execute(ps, cnt);
   }
 
   @Override
@@ -218,7 +238,11 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
       PreparedStatement ps =
           schema.getConnection().prepareStatement(getUpdateOneSql());
       try {
+        if (!schema.getDialect().canDetermineIndividualBatchUpdateCounts()) {
+          inserts = attemptUpdatesIndividually(ps, instances);
+        } else {
           inserts = attemptUpdatesAsBatch(ps, instances);
+        }
       } finally {
         ps.close();
       }
@@ -227,6 +251,23 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
     }
 
     doInsert(inserts, txn);
+  }
+
+  private Iterable<T> attemptUpdatesIndividually(final PreparedStatement ps,
+      final Iterable<T> instances) throws OrmException, SQLException {
+    Collection<T> inserts = Collections.emptyList();
+    for (T o : instances) {
+      bindOneUpdate(ps, o);
+      int updateCount = ps.executeUpdate();
+      if (updateCount == 0) {
+        if (inserts.isEmpty()) {
+          inserts = new ArrayList<T>();
+        }
+        inserts.add(o);
+      }
+    }
+
+    return inserts;
   }
 
   private Iterable<T> attemptUpdatesAsBatch(PreparedStatement ps,
@@ -270,13 +311,11 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
           schema.getConnection().prepareStatement(getDeleteOneSql());
 
       try {
-          int cnt = 0;
-          for (final T o : instances) {
-            bindOneDelete(ps, o);
-            ps.addBatch();
-            cnt++;
-          }
-          execute(ps, cnt);
+        if (!schema.getDialect().canDetermineTotalBatchUpdateCount()) {
+          deleteIndividually(ps, instances);
+        } else {
+          deleteAsBatch(ps, instances);
+        }
 
       } finally {
         ps.close();
@@ -286,21 +325,31 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
     }
   }
 
+  private void deleteAsBatch(PreparedStatement ps, Iterable<T> instances) throws SQLException, OrmConcurrencyException {
+    int cnt = 0;
+    for (final T o : instances) {
+      bindOneDelete(ps, o);
+      ps.addBatch();
+      cnt++;
+    }
+    execute(ps, cnt);
+  }
+
+  private void deleteIndividually(PreparedStatement ps, Iterable<T> instances) throws SQLException, OrmConcurrencyException {
+    for (final T o : instances) {
+      bindOneDelete(ps, o);
+      int updateCount = ps.executeUpdate();
+      if (updateCount != 1) {
+        throw new OrmConcurrencyException();
+      }
+    }
+  }
+
   private void execute(final PreparedStatement ps, final int cnt)
       throws SQLException, OrmConcurrencyException {
     if (cnt > 0) {
-      final int[] updateCounts = ps.executeBatch();
-      if (updateCounts == null) {
-        throw new SQLException("No rows affected");
-      }
-      int totalUpdateCount = 0;
-      for (int i = 0; i < updateCounts.length; i++) {
-        int updateCount = updateCounts[i];
-        if (updateCount > 0) {
-          totalUpdateCount += updateCount;
-        }
-      }
-      if (totalUpdateCount != cnt) {
+      int numberOfRowsUpdated = schema.getDialect().executeBatch(ps);
+      if (numberOfRowsUpdated != cnt) {
         throw new OrmConcurrencyException();
       }
     }

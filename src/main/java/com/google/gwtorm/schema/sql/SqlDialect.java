@@ -23,6 +23,7 @@ import com.google.gwtorm.schema.SequenceModel;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -298,4 +299,56 @@ public abstract class SqlDialect {
       String fromColumn, ColumnModel col) throws OrmException;
 
   public abstract String getNextSequenceValueSql(String seqname);
+
+  /**
+   * Does the array returned by the PreparedStatement.executeBatch method return
+   * the exact number of rows updated for every row in the batch?
+   *
+   * @return <code>true</code> if the executeBatch method returns the number of
+   *         rows affected for every row in the batch; <code>false</code> if it
+   *         may return Statement.SUCESS_NO_INFO
+   */
+  public boolean canDetermineIndividualBatchUpdateCounts() {
+    return true;
+
+  }
+
+  /**
+   * Can the total number of rows updated by the PreparedStatement.executeBatch
+   * be determined exactly by the SQLDialect.executeBatch method?
+   *
+   * @return <code>true</code> if the SQlDialect.executeBatch method can exactly
+   *         determine the total number of rows updated by a batch;
+   *         <code>false</code> otherwise
+   * @see #executeBatch(PreparedStatement)
+   */
+  public boolean canDetermineTotalBatchUpdateCount() {
+    return true;
+  }
+
+  /**
+   * Executes a prepared statement batch and returns the total number of rows
+   * successfully updated or inserted. This method is intended to be overridden.
+   *
+   * If the canDetermineTotalBatchUpdateCount returns false for a particular
+   * SQLDialect, this method should throw an UnsupportedOperationException.
+   *
+   * @param ps the prepared statement with the batch to be executed
+   * @return the total number of rows affected
+   * @see #canDetermineIndividualBatchUpdateCounts()
+   */
+  public int executeBatch(PreparedStatement ps) throws SQLException {
+    final int[] updateCounts = ps.executeBatch();
+    if (updateCounts == null) {
+      throw new SQLException("No rows affected");
+    }
+    int totalUpdateCount = 0;
+    for (int i = 0; i < updateCounts.length; i++) {
+      int updateCount = updateCounts[i];
+      if (updateCount > 0) {
+        totalUpdateCount += updateCount;
+      }
+    }
+    return totalUpdateCount;
+  }
 }
