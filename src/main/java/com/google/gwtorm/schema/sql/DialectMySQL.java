@@ -77,6 +77,11 @@ public class DialectMySQL extends SqlDialect {
   }
 
   @Override
+  public boolean handles(String url, Connection c) {
+    return url.startsWith("jdbc:mysql:");
+  }
+
+  @Override
   public String getCreateSequenceSql(final SequenceModel seq) {
     final StringBuilder r = new StringBuilder();
     r.append("CREATE TABLE ");

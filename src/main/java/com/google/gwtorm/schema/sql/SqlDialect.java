@@ -29,10 +29,36 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class SqlDialect {
+  private static final List<SqlDialect> DIALECTS =
+      new CopyOnWriteArrayList<SqlDialect>();
+
+  static {
+    DIALECTS.add(new DialectH2());
+    DIALECTS.add(new DialectPostgreSQL());
+    DIALECTS.add(new DialectMySQL());
+  }
+
+  public static void register(SqlDialect dialect) {
+    DIALECTS.add(0, dialect);
+  }
+
+  public static SqlDialect getDialectFor(Connection c)
+      throws SQLException, OrmException {
+    String url = c.getMetaData().getURL();
+    for (SqlDialect d : DIALECTS) {
+      if (d.handles(url, c)) {
+        return d.refine(c);
+      }
+    }
+    throw new OrmException("No dialect known for " + url);
+  }
+
   protected final Map<Class<?>, SqlTypeInfo> types;
   protected final Map<Integer, String> typeNames;
 
@@ -57,6 +83,8 @@ public abstract class SqlDialect {
     typeNames.put(Types.LONGVARCHAR, "TEXT");
     typeNames.put(Types.TIMESTAMP, "TIMESTAMP");
   }
+
+  public abstract boolean handles(String url, Connection c) throws SQLException;
 
   /** Select a better dialect definition for this connection */
   public SqlDialect refine(final Connection c) throws SQLException {

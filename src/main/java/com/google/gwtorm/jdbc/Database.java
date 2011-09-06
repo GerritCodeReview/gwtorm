@@ -23,9 +23,6 @@ import com.google.gwtorm.jdbc.gen.SchemaFactoryGen;
 import com.google.gwtorm.jdbc.gen.SchemaGen;
 import com.google.gwtorm.schema.SchemaModel;
 import com.google.gwtorm.schema.java.JavaSchemaModel;
-import com.google.gwtorm.schema.sql.DialectH2;
-import com.google.gwtorm.schema.sql.DialectMySQL;
-import com.google.gwtorm.schema.sql.DialectPostgreSQL;
 import com.google.gwtorm.schema.sql.SqlDialect;
 import com.google.gwtorm.server.StandardKeyEncoder;
 
@@ -106,28 +103,14 @@ public class Database<T extends Schema> implements SchemaFactory<T> {
 
     SqlDialect dialect;
     try {
-      final Connection c = ds.getConnection();
+      Connection c = ds.getConnection();
       try {
-        final String url = c.getMetaData().getURL();
-        if (url.startsWith("jdbc:postgresql:")) {
-          dialect = new DialectPostgreSQL();
-
-        } else if (url.startsWith("jdbc:h2:")) {
-          dialect = new DialectH2();
-
-        } else if (url.startsWith("jdbc:mysql:")) {
-          dialect = new DialectMySQL();
-
-        } else {
-          throw new OrmException("No dialect known for " + url);
-        }
-
-        dialect = dialect.refine(c);
+        dialect = SqlDialect.getDialectFor(c);
       } finally {
         c.close();
       }
     } catch (SQLException e) {
-      throw new OrmException("Unable to determine driver URL", e);
+      throw new OrmException("Unable to determine SqlDialect", e);
     }
 
     schemaModel = new JavaSchemaModel(schema);

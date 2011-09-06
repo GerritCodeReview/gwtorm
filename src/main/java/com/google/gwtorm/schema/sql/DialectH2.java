@@ -29,6 +29,11 @@ import java.util.Set;
 /** Dialect for <a href="http://www.h2database.com/">H2</a> */
 public class DialectH2 extends SqlDialect {
   @Override
+  public boolean handles(String url, Connection c) {
+    return url.startsWith("jdbc:h2:");
+  }
+
+  @Override
   public OrmException convertError(final String op, final String entity,
       final SQLException err) {
     switch (getSQLStateInt(err)) {
