@@ -36,6 +36,11 @@ public class DialectPostgreSQL extends SqlDialect {
   }
 
   @Override
+  public boolean handles(String url, Connection c) {
+    return url.startsWith("jdbc:postgresql:");
+  }
+
+  @Override
   public SqlDialect refine(final Connection c) throws SQLException {
     final int major = c.getMetaData().getDatabaseMajorVersion();
     final int minor = c.getMetaData().getDatabaseMinorVersion();

@@ -41,12 +41,12 @@ public class DialectMySQL extends SqlDialect {
         final int type;
 
         if (column.length() <= 0) {
-          r.append("VARCHAR(255)");
+          r.append("VARCHAR(255) BINARY");
           if (col.isNotNull()) {
             r.append(" DEFAULT ''");
           }
         } else if (column.length() <= 255) {
-          r.append("VARCHAR(" + column.length() + ")");
+          r.append("VARCHAR(" + column.length() + ") BINARY");
           if (col.isNotNull()) {
             r.append(" DEFAULT ''");
           }
@@ -74,6 +74,11 @@ public class DialectMySQL extends SqlDialect {
         return r.toString();
       }
     });
+  }
+
+  @Override
+  public boolean handles(String url, Connection c) {
+    return url.startsWith("jdbc:mysql:");
   }
 
   @Override
