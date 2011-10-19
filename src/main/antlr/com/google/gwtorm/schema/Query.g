@@ -31,6 +31,8 @@ tokens {
   ID;
   PLACEHOLDER;
   COMMA;
+  ASC;
+  DESC;
   LIMIT;
   CONSTANT_INTEGER;
   CONSTANT_STRING;
@@ -147,7 +149,17 @@ where
   ;
 
 orderBy
-  : ORDER^ BY! field (COMMA! field)*
+  : ORDER^ BY! fieldSort (COMMA! fieldSort)*
+  ;
+
+fieldSort
+  : field sortDirection^
+  | field -> ^(ASC field)
+  ;
+
+sortDirection
+  : ASC
+  | DESC
   ;
 
 limit
@@ -200,6 +212,8 @@ WHERE: 'WHERE' ;
 ORDER: 'ORDER' ;
 BY:    'BY'    ;
 AND:   'AND'   ;
+ASC:   'ASC'   ;
+DESC:  'DESC'  ;
 LIMIT: 'LIMIT' ;
 TRUE:  'true'  ;
 FALSE: 'false' ;

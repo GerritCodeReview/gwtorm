@@ -75,14 +75,41 @@ public class QueryModel {
     return r;
   }
 
-  public List<ColumnModel> getOrderBy() {
-    final ArrayList<ColumnModel> r = new ArrayList<ColumnModel>();
+  public static class OrderBy {
+    public final ColumnModel column;
+    public final boolean descending;
+
+    public OrderBy(ColumnModel column, boolean desc) {
+      this.column = column;
+      this.descending = desc;
+    }
+
+    @Override
+    public int hashCode() {
+      return column.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+      if (other instanceof OrderBy) {
+        OrderBy o = (OrderBy) other;
+        return column.equals(o.column) && descending == o.descending;
+      }
+      return false;
+    }
+  }
+
+  public List<OrderBy> getOrderBy() {
+    ArrayList<OrderBy> r = new ArrayList<OrderBy>();
     if (parsedQuery != null) {
       Tree node = findOrderBy(parsedQuery);
       if (node != null) {
         for (int i = 0; i < node.getChildCount(); i++) {
-          final Tree id = node.getChild(i);
-          r.add(((QueryParser.Column) id).getField());
+          Tree sortOrder = node.getChild(i);
+          Tree id = sortOrder.getChild(0);
+          r.add(new OrderBy(
+              ((QueryParser.Column) id).getField(),
+              sortOrder.getType() == QueryParser.DESC));
         }
       }
     }
@@ -279,7 +306,8 @@ public class QueryModel {
       case QueryParser.ORDER:
         fmt.buf.append(" ORDER BY ");
         for (int i = 0; i < node.getChildCount(); i++) {
-          final Tree id = node.getChild(i);
+          final Tree sortOrder = node.getChild(i);
+          final Tree id = sortOrder.getChild(0);
           if (i > 0) {
             fmt.buf.append(',');
           }
@@ -290,6 +318,9 @@ public class QueryModel {
               fmt.buf.append(fmt.tableAlias);
               fmt.buf.append('.');
               fmt.buf.append(cItr.next().getColumnName());
+              if (sortOrder.getType() == QueryParser.DESC) {
+                fmt.buf.append(" DESC");
+              }
               if (cItr.hasNext()) {
                 fmt.buf.append(',');
               }
@@ -298,6 +329,9 @@ public class QueryModel {
             fmt.buf.append(fmt.tableAlias);
             fmt.buf.append('.');
             fmt.buf.append(col.getColumnName());
+            if (sortOrder.getType() == QueryParser.DESC) {
+              fmt.buf.append(" DESC");
+            }
           }
         }
         break;

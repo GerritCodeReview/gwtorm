@@ -106,6 +106,23 @@ public class IndexKeyBuilder {
     }
   }
 
+  public void desc(byte[] bin, int pos, int cnt) {
+    while (0 < cnt--) {
+      int b = 0xff - (bin[pos++] & 0xff);
+      if (b == 0x00) {
+        buf.write(0x00);
+        buf.write(0xff);
+
+      } else if (b == 0xff) {
+        buf.write(0xff);
+        buf.write(0x00);
+
+      } else {
+        buf.write(b);
+      }
+    }
+  }
+
   /**
    * Add a raw sequence of bytes.
    * <p>
@@ -118,6 +135,10 @@ public class IndexKeyBuilder {
     add(bin, 0, bin.length);
   }
 
+  public void desc(byte[] bin) {
+    desc(bin, 0, bin.length);
+  }
+
   /**
    * Encode a string into UTF-8 and append as a sequence of bytes.
    *
@@ -126,6 +147,14 @@ public class IndexKeyBuilder {
   public void add(String str) {
     try {
       add(str.getBytes("UTF-8"));
+    } catch (UnsupportedEncodingException e) {
+      throw new RuntimeException("JVM does not support UTF-8", e);
+    }
+  }
+
+  public void desc(String str) {
+    try {
+      desc(str.getBytes("UTF-8"));
     } catch (UnsupportedEncodingException e) {
       throw new RuntimeException("JVM does not support UTF-8", e);
     }
@@ -149,6 +178,10 @@ public class IndexKeyBuilder {
     }
   }
 
+  public void desc(char ch) {
+    desc(Character.toString(ch));
+  }
+
   /**
    * Add an integer value as a big-endian variable length integer.
    *
@@ -163,6 +196,10 @@ public class IndexKeyBuilder {
     }
     t[i - 1] = (byte) (t.length - i);
     buf.write(t, i - 1, t.length - i + 1);
+  }
+
+  public void desc(long val) {
+    add(~val);
   }
 
   /**

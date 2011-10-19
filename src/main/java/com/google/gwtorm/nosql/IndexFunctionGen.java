@@ -31,6 +31,7 @@ import org.objectweb.asm.Type;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -45,7 +46,7 @@ class IndexFunctionGen<T> implements Opcodes {
 
   private final GeneratedClassLoader classLoader;
   private final QueryModel query;
-  private final List<ColumnModel> myFields;
+  private final List<QueryModel.OrderBy> myFields;
   private final Class<T> pojo;
   private final Type pojoType;
 
@@ -59,15 +60,16 @@ class IndexFunctionGen<T> implements Opcodes {
     classLoader = loader;
     query = qm;
 
-    myFields = new ArrayList<ColumnModel>();
+    myFields = new ArrayList<QueryModel.OrderBy>();
 
     // Only add each parameter column once, but in the order used.
     // This avoids a range test on the same column from duplicating
     // the data in the index record.
     //
     for (ColumnModel m : leaves(query.getParameters())) {
-      if (!myFields.contains(m)) {
-        myFields.add(m);
+      QueryModel.OrderBy o = new QueryModel.OrderBy(m, false);
+      if (!myFields.contains(o)) {
+        myFields.add(o);
       }
     }
 
@@ -75,11 +77,12 @@ class IndexFunctionGen<T> implements Opcodes {
     // add anything else onto the end.
     //
     int p = 0;
-    Iterator<ColumnModel> orderby = leaves(query.getOrderBy()).iterator();
+    Iterator<QueryModel.OrderBy> orderby = orderByLeaves(query.getOrderBy()).iterator();
     while (p < myFields.size() && orderby.hasNext()) {
-      ColumnModel c = orderby.next();
-      if (!myFields.get(p).equals(c)) {
-        myFields.add(c);
+      QueryModel.OrderBy o = orderby.next();
+      ColumnModel c = o.column;
+      if (!myFields.get(p).equals(o)) {
+        myFields.add(o);
         break;
       }
       p++;
@@ -92,11 +95,25 @@ class IndexFunctionGen<T> implements Opcodes {
     pojoType = Type.getType(pojo);
   }
 
-  private List<ColumnModel> leaves(List<ColumnModel> in) {
+  private static List<ColumnModel> leaves(List<ColumnModel> in) {
     ArrayList<ColumnModel> r = new ArrayList<ColumnModel>(in.size());
     for (ColumnModel m : in) {
       if (m.isNested()) {
         r.addAll(m.getAllLeafColumns());
+      } else {
+        r.add(m);
+      }
+    }
+    return r;
+  }
+
+  private static List<QueryModel.OrderBy> orderByLeaves(List<QueryModel.OrderBy> in) {
+    ArrayList<QueryModel.OrderBy> r = new ArrayList<QueryModel.OrderBy>(in.size());
+    for (QueryModel.OrderBy m : in) {
+      if (m.column.isNested()) {
+        for (ColumnModel c : m.column.getAllLeafColumns()) {
+          r.add(new QueryModel.OrderBy(c, m.descending));
+        }
       } else {
         r.add(m);
       }
@@ -183,7 +200,9 @@ class IndexFunctionGen<T> implements Opcodes {
     mv.visitVarInsn(ASTORE, 1);
 
     Set<ColumnModel> checked = new HashSet<ColumnModel>();
-    checkNotNullFields(myFields, checked, mv, cgs);
+    for (QueryModel.OrderBy orderby : myFields) {
+      checkNotNullFields(Collections.singleton(orderby.column), checked, mv, cgs);
+    }
 
     final Tree parseTree = query.getParseTree();
     if (parseTree != null) {
@@ -362,11 +381,11 @@ class IndexFunctionGen<T> implements Opcodes {
     mv.visitEnd();
   }
 
-  static void encodeFields(final Collection<ColumnModel> myFields,
+  static void encodeFields(Collection<QueryModel.OrderBy> myFields,
       final MethodVisitor mv, final EncodeCGS cgs) throws OrmException {
-    Iterator<ColumnModel> i = myFields.iterator();
+    Iterator<QueryModel.OrderBy> i = myFields.iterator();
     while (i.hasNext()) {
-      ColumnModel f = i.next();
+      QueryModel.OrderBy f = i.next();
       encodeScalar(f, mv, cgs);
       if (i.hasNext()) {
         cgs.delimiter();
@@ -374,20 +393,22 @@ class IndexFunctionGen<T> implements Opcodes {
     }
   }
 
-  static void encodeField(ColumnModel f, final MethodVisitor mv,
+  static void encodeField(QueryModel.OrderBy f, final MethodVisitor mv,
       final EncodeCGS cgs) throws OrmException {
-    if (f.isNested()) {
-      encodeFields(f.getAllLeafColumns(), mv, cgs);
+    if (f.column.isNested()) {
+      encodeFields(orderByLeaves(Collections.singletonList(f)), mv, cgs);
     } else {
       encodeScalar(f, mv, cgs);
     }
   }
 
-  private static void encodeScalar(final ColumnModel f, final MethodVisitor mv,
+  private static void encodeScalar(QueryModel.OrderBy f, final MethodVisitor mv,
       final EncodeCGS cgs) throws OrmException {
-    cgs.setFieldReference(f);
+    String method = f.descending ? "desc" : "add";
+    ColumnModel c = f.column;
+    cgs.setFieldReference(c);
 
-    switch (Type.getType(f.getPrimitiveType()).getSort()) {
+    switch (Type.getType(c.getPrimitiveType()).getSort()) {
       case Type.BOOLEAN:
       case Type.BYTE:
       case Type.SHORT:
@@ -397,7 +418,7 @@ class IndexFunctionGen<T> implements Opcodes {
         cgs.pushFieldValue();
         mv.visitInsn(I2L);
         mv.visitMethodInsn(INVOKEVIRTUAL, indexKeyBuilder.getInternalName(),
-            "add", Type.getMethodDescriptor(Type.VOID_TYPE,
+            method, Type.getMethodDescriptor(Type.VOID_TYPE,
                 new Type[] {Type.LONG_TYPE}));
         break;
 
@@ -405,47 +426,47 @@ class IndexFunctionGen<T> implements Opcodes {
         cgs.pushBuilder();
         cgs.pushFieldValue();
         mv.visitMethodInsn(INVOKEVIRTUAL, indexKeyBuilder.getInternalName(),
-            "add", Type.getMethodDescriptor(Type.VOID_TYPE,
+            method, Type.getMethodDescriptor(Type.VOID_TYPE,
                 new Type[] {Type.LONG_TYPE}));
         break;
 
       case Type.ARRAY:
       case Type.OBJECT: {
-        if (f.getPrimitiveType() == byte[].class) {
+        if (c.getPrimitiveType() == byte[].class) {
           cgs.pushBuilder();
           cgs.pushFieldValue();
           mv.visitMethodInsn(INVOKEVIRTUAL, indexKeyBuilder.getInternalName(),
-              "add", Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {Type
+              method, Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {Type
                   .getType(byte[].class)}));
 
-        } else if (f.getPrimitiveType() == String.class) {
+        } else if (c.getPrimitiveType() == String.class) {
           cgs.pushBuilder();
           cgs.pushFieldValue();
           mv.visitMethodInsn(INVOKEVIRTUAL, indexKeyBuilder.getInternalName(),
-              "add", Type.getMethodDescriptor(Type.VOID_TYPE,
+              method, Type.getMethodDescriptor(Type.VOID_TYPE,
                   new Type[] {string}));
 
-        } else if (f.getPrimitiveType() == java.sql.Timestamp.class
-            || f.getPrimitiveType() == java.util.Date.class
-            || f.getPrimitiveType() == java.sql.Date.class) {
+        } else if (c.getPrimitiveType() == java.sql.Timestamp.class
+            || c.getPrimitiveType() == java.util.Date.class
+            || c.getPrimitiveType() == java.sql.Date.class) {
           cgs.pushBuilder();
           cgs.pushFieldValue();
-          String tsType = Type.getType(f.getPrimitiveType()).getInternalName();
+          String tsType = Type.getType(c.getPrimitiveType()).getInternalName();
           mv.visitMethodInsn(INVOKEVIRTUAL, tsType, "getTime", Type
               .getMethodDescriptor(Type.LONG_TYPE, new Type[] {}));
           mv.visitMethodInsn(INVOKEVIRTUAL, indexKeyBuilder.getInternalName(),
-              "add", Type.getMethodDescriptor(Type.VOID_TYPE,
+              method, Type.getMethodDescriptor(Type.VOID_TYPE,
                   new Type[] {Type.LONG_TYPE}));
         } else {
-          throw new OrmException("Type " + f.getPrimitiveType()
-              + " not supported for field " + f.getPathToFieldName());
+          throw new OrmException("Type " + c.getPrimitiveType()
+              + " not supported for field " + c.getPathToFieldName());
         }
         break;
       }
 
       default:
-        throw new OrmException("Type " + f.getPrimitiveType()
-            + " not supported for field " + f.getPathToFieldName());
+        throw new OrmException("Type " + c.getPrimitiveType()
+            + " not supported for field " + c.getPathToFieldName());
     }
   }
 

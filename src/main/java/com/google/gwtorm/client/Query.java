@@ -35,7 +35,7 @@ import java.lang.annotation.Target;
  *
  * <pre>
  * [WHERE &lt;condition&gt; [AND &lt;condition&gt; ...]]
- * [ORDER BY &lt;property&gt; [, &lt;property&gt; ...]]
+ * [ORDER BY &lt;property&gt; [ASC | DESC] [, &lt;property&gt; [ASC | DESC] ...]]
  * [LIMIT { &lt;count&gt; | ? }]
  *
  * &lt;condition&gt; := &lt;property&gt; { &lt; | &lt;= | &gt; | &gt;= | = } &lt;value&gt;

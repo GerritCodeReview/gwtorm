@@ -306,7 +306,7 @@ class AccessGen implements Opcodes {
     final QueryCGS cgs =
         new QueryCGS(mv, new Type[] {argType}, pCols, new int[] {2}, 1);
     for (ColumnModel f : pCols) {
-      IndexFunctionGen.encodeField(f, mv, cgs);
+      IndexFunctionGen.encodeField(new QueryModel.OrderBy(f, false), mv, cgs);
     }
 
     mv.visitInsn(RETURN);
@@ -508,7 +508,7 @@ class AccessGen implements Opcodes {
   private void encodeField(Tree node, MethodVisitor mv, QueryCGS cgs)
       throws OrmException {
     ColumnModel f = ((QueryParser.Column) node.getChild(0)).getField();
-    IndexFunctionGen.encodeField(f, mv, cgs);
+    IndexFunctionGen.encodeField(new QueryModel.OrderBy(f, false), mv, cgs);
   }
 
   private List<Tree> compareOpsOnly(Tree node) throws OrmException {
