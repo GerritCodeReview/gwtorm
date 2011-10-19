@@ -17,6 +17,7 @@ package com.google.gwtorm.schema.java;
 import com.google.gwtorm.client.Column;
 import com.google.gwtorm.schema.ColumnModel;
 import com.google.gwtorm.schema.RelationModel;
+import com.google.gwtorm.schema.Util;
 
 import org.objectweb.asm.Type;
 
@@ -98,7 +99,9 @@ class ProtoFileGenerator {
 
     out.print("message " + getMessageName(rel) + " {\n");
     for (ColumnModel c : cols) {
-      out.append("\toptional " + getType(c) + " " + getName(c) + " = "
+      out.append("\t");
+      out.append(c.isNotNull() ? "required" : "optional");
+      out.append(" " + getType(c) + " " + getName(c) + " = "
           + c.getColumnID() + ";\n");
     }
     out.print("}\n\n");
@@ -119,7 +122,10 @@ class ProtoFileGenerator {
 
     out.print("message " + getType(parent) + " {\n");
     for (ColumnModel child : children) {
-      out.append("\toptional " + getType(child) + " " + getName(child) + " = "
+      out.append("\t");
+      out.append(child.isNotNull() ? "required" : "optional");
+      out.append(" " + getType(child) + " "
+          + Util.makeSqlFriendly(child.getFieldName()) + " = "
           + child.getColumnID() + ";\n");
     }
     out.print("}\n\n");
