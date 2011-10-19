@@ -79,7 +79,7 @@ class ProtoFileGenerator {
       generateMessage(r, out);
     }
 
-    out.print("message " + schemaName + " {\n");
+    out.print("message Any" + schemaName + " {\n");
 
     for (RelationModel r : sortRelations(rels)) {
       out.print("\toptional " + getMessageName(r) + " "
