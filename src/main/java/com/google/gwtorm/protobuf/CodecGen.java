@@ -438,7 +438,7 @@ class CodecGen<T> implements Opcodes {
         cgs.preinc();
         cgs.push(f.getColumnID());
         cgs.pushFieldValue();
-        cgs.doinc("computeSInt32Size", Type.INT_TYPE, Type.INT_TYPE);
+        cgs.doinc("computeInt32Size", Type.INT_TYPE, Type.INT_TYPE);
         break;
 
       case Type.FLOAT:
@@ -459,7 +459,7 @@ class CodecGen<T> implements Opcodes {
         cgs.preinc();
         cgs.push(f.getColumnID());
         cgs.pushFieldValue();
-        cgs.doinc("computeSInt64Size", Type.INT_TYPE, Type.LONG_TYPE);
+        cgs.doinc("computeInt64Size", Type.INT_TYPE, Type.LONG_TYPE);
         break;
 
       case Type.ARRAY:
@@ -707,7 +707,7 @@ class CodecGen<T> implements Opcodes {
         cgs.pushCodedOutputStream();
         cgs.push(f.getColumnID());
         cgs.pushFieldValue();
-        cgs.write("writeSInt32", Type.INT_TYPE);
+        cgs.write("writeInt32", Type.INT_TYPE);
         break;
 
       case Type.FLOAT:
@@ -728,7 +728,7 @@ class CodecGen<T> implements Opcodes {
         cgs.pushCodedOutputStream();
         cgs.push(f.getColumnID());
         cgs.pushFieldValue();
-        cgs.write("writeSInt64", Type.LONG_TYPE);
+        cgs.write("writeInt64", Type.LONG_TYPE);
         break;
 
       case Type.ARRAY:
@@ -1112,7 +1112,7 @@ class CodecGen<T> implements Opcodes {
       case Type.BYTE:
       case Type.SHORT:
       case Type.INT:
-        cgs.call("readSInt32", Type.INT_TYPE);
+        cgs.call("readInt32", Type.INT_TYPE);
         break;
 
       case Type.FLOAT:
@@ -1124,7 +1124,7 @@ class CodecGen<T> implements Opcodes {
         break;
 
       case Type.LONG:
-        cgs.call("readSInt64", Type.LONG_TYPE);
+        cgs.call("readInt64", Type.LONG_TYPE);
         break;
 
       default:

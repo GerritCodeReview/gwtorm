@@ -180,13 +180,13 @@ class ProtoFileGenerator {
       case Type.BYTE:
       case Type.SHORT:
       case Type.INT:
-        return "sint32";
+        return "int32";
       case Type.FLOAT:
         return "float";
       case Type.DOUBLE:
         return "double";
       case Type.LONG:
-        return "sint64";
+        return "int64";
       case Type.ARRAY:
       case Type.OBJECT: {
         if (clazz == byte[].class) {
