@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAABNX////Y\u003d",
+        "filename": "src/test/java/com/google/gwtorm/jdbc/TestJdbcAccess.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2011-10-27T18:09:55Z",
+      "side": 1,
+      "message": "Copyright is probably not Google, nor 2008.",
+      "revId": "b7ec08c71d1ff2cae1a49c99932d1778310de2b0",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
