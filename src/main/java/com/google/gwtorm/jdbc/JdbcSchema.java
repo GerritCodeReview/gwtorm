@@ -40,20 +40,6 @@ public abstract class JdbcSchema extends AbstractSchema {
     conn = dbDef.newConnection();
   }
 
-  @Override
-  public boolean isAutoFlush() {
-    return true; // We are always flushing.
-  }
-
-  @Override
-  public void setAutoFlush(boolean autoFlush) {
-  }
-
-  @Override
-  public void flush() {
-    // Do nothing, we flush by default during execution.
-  }
-
   public final Connection getConnection() {
     return conn;
   }

@@ -46,6 +46,9 @@ public abstract class GenericSchema extends NoSqlSchema {
     db = d;
   }
 
+  public void flush() throws OrmException {
+  }
+
   /** @return the database that created this schema instance. */
   public GenericDatabase<?, ?, ?> getDatabase() {
     return db;

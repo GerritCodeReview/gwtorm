@@ -155,6 +155,14 @@ public interface Access<T extends Object, K extends Key<?>> {
   void delete(Iterable<T> instances) throws OrmException;
 
   /**
+   * Start a transaction on an object.
+   *
+   * @param key key describing the object (and its children).
+   * @throws OrmException a transaction cannot be started.
+   */
+  void beginTransaction(K key) throws OrmException;
+
+  /**
    * Atomically update a single entity.
    * <p>
    * If the entity does not exist, the method returns {@code null} without

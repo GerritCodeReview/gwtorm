@@ -30,6 +30,11 @@ public abstract class AbstractAccess<E, K extends Key<?>>
     implements Access<E, K> {
   private static final int MAX_TRIES = 10;
 
+  @Override
+  public void beginTransaction(K key) throws OrmException {
+    // Do nothing by default.
+  }
+
   public ResultSet<E> get(final Iterable<K> keys) throws OrmException {
     final ArrayList<E> r = new ArrayList<E>();
     for (final K key : keys) {

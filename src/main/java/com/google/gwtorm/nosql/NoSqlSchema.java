@@ -21,23 +21,7 @@ import com.google.gwtorm.server.AbstractSchema;
 
 /** Internal base class for implementations of {@link Schema}. */
 public abstract class NoSqlSchema extends AbstractSchema {
-  private boolean autoFlush = true;
-
   protected NoSqlSchema(final NoSqlDatabase<?, ?, ?> d) {
-  }
-
-  @Override
-  public boolean isAutoFlush() {
-    return autoFlush;
-  }
-
-  @Override
-  public void setAutoFlush(boolean autoFlush) throws OrmException {
-    if (!this.autoFlush && autoFlush) {
-      flush();
-    }
-
-    this.autoFlush = autoFlush;
   }
 
   @Override

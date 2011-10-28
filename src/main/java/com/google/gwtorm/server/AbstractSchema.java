@@ -19,6 +19,16 @@ import com.google.gwtorm.client.Schema;
 
 /** Base implementation any generated schema must implement. */
 public abstract class AbstractSchema implements Schema {
+  @Override
+  public void commit() throws OrmException {
+    // Do nothign by default.
+  }
+
+  @Override
+  public void rollback() throws OrmException {
+    // Do nothign by default.
+  }
+
   /**
    * Obtain the next unique value from a pool of available numbers.
    * <p>

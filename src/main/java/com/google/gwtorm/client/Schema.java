@@ -55,30 +55,11 @@ package com.google.gwtorm.client;
  * </pre>
  */
 public interface Schema {
-  /** @return true if auto flush is enabled (default). */
-  boolean isAutoFlush();
+  /** Commit a pending transaction. */
+  public void commit() throws OrmException;
 
-  /**
-   * Set (or unset) the auto-flush flag for this connection.
-   * <p>
-   * If true writes are sent to the database by the time the method returns. If
-   * false, writes will be sent at any time, or some later point in the future.
-   * Callers should use {@link #flush()} to ensure the writes are visible, or
-   * reset the auto flush flag to true.
-   *
-   * @param autoFlush the new setting.
-   * @throws OrmException previously autoFlush was false, the new setting is
-   *         true, and flushed writes cannot be sent.
-   */
-  void setAutoFlush(boolean autoFlush) throws OrmException;
-
-  /**
-   * Ensures all modifications are now visible to others.
-   *
-   * @throws OrmException one or more modifications cannot be applied. The
-   *         writes are now inconsistent.
-   */
-  void flush() throws OrmException;
+  /** Abort a pending transaction, if one is already in progress, otherwise nop. */
+  public void rollback() throws OrmException;
 
   /**
    * Add any missing columns, create any missing tables or sequences.
