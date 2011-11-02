@@ -25,7 +25,7 @@ import java.io.Serializable;
  * @param <P> the parent key type. Use {@link Key} if no parent key is needed.
  */
 public abstract class StringKey<P extends Key<?>> implements Key<P>,
-    Serializable {
+    Serializable, Comparable<StringKey> {
   /**
    * @return name of the entity instance.
    */
@@ -60,6 +60,11 @@ public abstract class StringKey<P extends Key<?>> implements Key<P>,
     final StringKey<P> q = cast(b);
     return get().equals(q.get())
         && KeyUtil.eq(getParentKey(), q.getParentKey());
+  }
+
+  @Override
+  public int compareTo(final StringKey other) {
+    return get().compareTo(other.get());
   }
 
   @Override
