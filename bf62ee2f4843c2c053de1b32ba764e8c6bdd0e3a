@@ -16,6 +16,24 @@
       "revId": "bf62ee2f4843c2c053de1b32ba764e8c6bdd0e3a",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABWH////8\u003d",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2011-11-04T16:25:56Z",
+      "side": 1,
+      "message": "Its probably easier to fix this in gwtorm by defining that toList() returns a mutable list. In ListResultSet we can make toList() return a copy of the input.\n\nAny other ResultSet implementation should be checked too, but there are probably only a couple of these.",
+      "parentUuid": "AAABVn////k\u003d",
+      "revId": "bf62ee2f4843c2c053de1b32ba764e8c6bdd0e3a",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
