@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAABVn////k\u003d",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1003935
+      },
+      "writtenOn": "2011-11-04T15:18:56Z",
+      "side": 1,
+      "message": "I just found that returning here an empty list which is unmodifiable causes some issues in Gerrit. E.g. in PublishComments#publishApprovals(ChangeControl) we fetch a collection of all patch set approvals:\n\nfinal Collection\u003cPatchSetApproval\u003e all \u003d\n        db.patchSetApprovals().byPatchSet(patchSetId).toList();\n\nand try to add an approval to the returned list:\n\nall.add(a);\n\nThis now fails if the returned list is empty and unmodifiable.\n\nShould we fix this in the Gerrit code by not trying to modify the returned list or should we instead return here a modifiable list? I think it would be cleaner to fix it in Gerrit, but who knows in which other places we try to modify the returned list?",
+      "revId": "bf62ee2f4843c2c053de1b32ba764e8c6bdd0e3a",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
