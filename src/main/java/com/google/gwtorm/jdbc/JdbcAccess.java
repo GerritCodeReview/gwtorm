@@ -30,6 +30,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 /** Internal base class for implementations of {@link Access}. */
@@ -157,23 +158,25 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
   @Override
   protected void doInsert(final Iterable<T> instances, final JdbcTransaction txn)
       throws OrmException {
+    Iterator<T> iterator = instances.iterator();
+    if (!iterator.hasNext()) {
+      return;
+    }
+
     try {
-      PreparedStatement ps = null;
+      PreparedStatement ps =
+          schema.getConnection().prepareStatement(getInsertOneSql());;
       try {
         int cnt = 0;
-        for (final T o : instances) {
-          if (ps == null) {
-            ps = schema.getConnection().prepareStatement(getInsertOneSql());
-          }
-          bindOneInsert(ps, o);
+        do {
+          bindOneInsert(ps, iterator.next());
           ps.addBatch();
           cnt++;
-        }
+        } while (iterator.hasNext());
+        // a failing insert (duprec) will result in a BatchUpdateException
         execute(ps, cnt);
       } finally {
-        if (ps != null) {
-          ps.close();
-        }
+        ps.close();
       }
     } catch (SQLException e) {
       throw convertError("insert", e);
@@ -183,23 +186,24 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
   @Override
   protected void doUpdate(final Iterable<T> instances, final JdbcTransaction txn)
       throws OrmException {
+    Iterator<T> iterator = instances.iterator();
+    if (!iterator.hasNext()) {
+      return;
+    }
+
     try {
-      PreparedStatement ps = null;
+      PreparedStatement ps =
+          schema.getConnection().prepareStatement(getUpdateOneSql());
       try {
-        int cnt = 0;
-        for (final T o : instances) {
-          if (ps == null) {
-            ps = schema.getConnection().prepareStatement(getUpdateOneSql());
-          }
-          bindOneUpdate(ps, o);
+         int cnt = 0;
+         do {
+          bindOneUpdate(ps, iterator.next());
           ps.addBatch();
           cnt++;
-        }
+        } while (iterator.hasNext());
         execute(ps, cnt);
       } finally {
-        if (ps != null) {
-          ps.close();
-        }
+        ps.close();
       }
     } catch (SQLException e) {
       throw convertError("update", e);
@@ -209,96 +213,105 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
   @Override
   protected void doUpsert(final Iterable<T> instances, final JdbcTransaction txn)
       throws OrmException {
-    // Assume update first, it will cheaply tell us if the row is missing.
-    //
-    Collection<T> inserts = null;
-    try {
-      PreparedStatement ps = null;
-      try {
-        int cnt = 0;
-        List<T> allInstances = new ArrayList<T>();
-        for (final T o : instances) {
-          if (ps == null) {
-            ps = schema.getConnection().prepareStatement(getUpdateOneSql());
-          }
-          bindOneUpdate(ps, o);
-          ps.addBatch();
-          allInstances.add(o);
-          cnt++;
-        }
+    Iterator<T> iterator = instances.iterator();
+    if (!iterator.hasNext()) {
+      return;
+    }
 
-        if (0 < cnt) {
-          final int[] states = ps.executeBatch();
-          if (states == null) {
-            inserts = new ArrayList<T>(cnt);
-            for (T o : allInstances) {
-              inserts.add(o);
-            }
-          } else {
-            int i = 0;
-            for (T o : allInstances) {
-              if (states.length <= i || states[i] != 1) {
-                if (inserts == null) {
-                  inserts = new ArrayList<T>(cnt - i);
-                }
-                inserts.add(o);
-              }
-              i++;
-            }
-          }
-        }
+    final Iterable<T> inserts;
+
+    // Assume update first, it will cheaply tell us if the row is missing.
+    try {
+      PreparedStatement ps =
+          schema.getConnection().prepareStatement(getUpdateOneSql());
+      try {
+          inserts = attemptUpdatesAsBatch(ps, iterator);
       } finally {
-        if (ps != null) {
-          ps.close();
-        }
+        ps.close();
       }
     } catch (SQLException e) {
       throw convertError("update", e);
     }
 
-    if (inserts != null) {
-      doInsert(inserts, txn);
+    doInsert(inserts, txn);
+  }
+
+  private Iterable<T> attemptUpdatesAsBatch(PreparedStatement ps,
+      final Iterator<T> iterator) throws OrmException, SQLException {
+    int cnt = 0;
+    List<T> allInstances = new ArrayList<T>();
+    do {
+      T o = iterator.next();
+      bindOneUpdate(ps, o);
+      ps.addBatch();
+      cnt++;
+      allInstances.add(o);
+    } while (iterator.hasNext());
+    final int[] updateCounts = ps.executeBatch();
+
+    if (updateCounts == null) {
+      return allInstances;
     }
+
+    Collection<T> inserts = Collections.emptyList();
+    int i = 0;
+    for (T o : allInstances) {
+      if (updateCounts.length <= i || updateCounts[i] != 1) {
+        if (inserts.isEmpty()) {
+          inserts = new ArrayList<T>(cnt - i);
+        }
+        inserts.add(o);
+      }
+      i++;
+    }
+
+    return inserts;
   }
 
   @Override
   protected void doDelete(final Iterable<T> instances, final JdbcTransaction txn)
       throws OrmException {
+    Iterator<T> iterator = instances.iterator();
+    if (!iterator.hasNext()) {
+      return;
+    }
+
     try {
-      PreparedStatement ps = null;
+      PreparedStatement ps =
+          schema.getConnection().prepareStatement(getDeleteOneSql());
+
       try {
-        int cnt = 0;
-        for (final T o : instances) {
-          if (ps == null) {
-            ps = schema.getConnection().prepareStatement(getDeleteOneSql());
-          }
-          bindOneDelete(ps, o);
-          ps.addBatch();
-          cnt++;
-        }
-        execute(ps, cnt);
+          int cnt = 0;
+          do {
+            bindOneDelete(ps, iterator.next());
+            ps.addBatch();
+            cnt++;
+          } while (iterator.hasNext());
+          execute(ps, cnt);
+
       } finally {
-        if (ps != null) {
-          ps.close();
-        }
+        ps.close();
       }
     } catch (SQLException e) {
       throw convertError("delete", e);
     }
   }
 
-  private static void execute(final PreparedStatement ps, final int cnt)
+  private void execute(final PreparedStatement ps, final int cnt)
       throws SQLException, OrmConcurrencyException {
-    if (cnt == 0) {
-      return;
-    }
-
-    final int[] states = ps.executeBatch();
-    if (states == null) {
-      throw new SQLException("No rows affected; expected " + cnt + " rows");
-    }
-    for (int i = 0; i < cnt; i++) {
-      if (states.length <= i || states[i] != 1) {
+    if (cnt > 0) {
+      final int[] updateCounts = ps.executeBatch();
+      if (updateCounts == null) {
+        throw new SQLException("No rows affected");
+      }
+      int totalUpdateCount = 0;
+      for (int i = 0; i < updateCounts.length; i++) {
+        int updateCount = updateCounts[i];
+        if (updateCount > 0) {
+          totalUpdateCount += updateCount;
+        }
+      }
+      if (totalUpdateCount != cnt) {
         throw new OrmConcurrencyException();
       }
     }
