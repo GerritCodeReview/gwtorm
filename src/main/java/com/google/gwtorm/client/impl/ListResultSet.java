@@ -16,6 +16,7 @@ package com.google.gwtorm.client.impl;
 
 import com.google.gwtorm.client.ResultSet;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -31,10 +32,10 @@ public class ListResultSet<T> implements ResultSet<T> {
   }
 
   public List<T> toList() {
-    final List<T> r = items;
-    if (r == null) {
+    if (items == null) {
       throw new IllegalStateException("Results already obtained");
     }
+    final List<T> r = new ArrayList<T>(items);
     items = null;
     return r;
   }

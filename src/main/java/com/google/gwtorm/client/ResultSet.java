@@ -38,7 +38,7 @@ public interface ResultSet<T> extends Iterable<T> {
    * Prior to returning {@link #close()} is invoked. This method must not be
    * combined with {@link #iterator()} on the same instance.
    *
-   * @return list of the complete results.
+   * @return mutable list of the complete results.
    */
   List<T> toList();
 
