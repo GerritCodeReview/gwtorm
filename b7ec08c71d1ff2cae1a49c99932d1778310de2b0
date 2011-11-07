@@ -16,6 +16,24 @@
       "revId": "b7ec08c71d1ff2cae1a49c99932d1778310de2b0",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABVX////0\u003d",
+        "filename": "src/test/java/com/google/gwtorm/jdbc/TestJdbcAccess.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1007114
+      },
+      "writtenOn": "2011-11-07T13:28:52Z",
+      "side": 1,
+      "message": "What about \r\n\r\n// Copyright (C) 2011 The Android Open Source Project\r\n\r\n?",
+      "parentUuid": "AAABNX////Y\u003d",
+      "revId": "b7ec08c71d1ff2cae1a49c99932d1778310de2b0",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
