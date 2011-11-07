@@ -167,13 +167,12 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
       PreparedStatement ps =
           schema.getConnection().prepareStatement(getInsertOneSql());;
       try {
-        int cnt = 0;
         do {
           bindOneInsert(ps, iterator.next());
           ps.addBatch();
-          cnt++;
         } while (iterator.hasNext());
-        execute(ps, cnt);
+        // a failing insert (duprec) will result in a BatchUpdateException
+        ps.executeBatch();
       } finally {
         ps.close();
       }
