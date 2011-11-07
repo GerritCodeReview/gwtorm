@@ -1,4 +1,4 @@
-// Copyright 2008 Google Inc.
+// Copyright (C) 2008 The Android Open Source Project
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 /** Internal base class for implementations of {@link Access}. */
 public abstract class JdbcAccess<T, K extends Key<?>> extends
@@ -206,25 +207,24 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
       PreparedStatement ps = null;
       try {
         int cnt = 0;
+        List<T> allInstances = new ArrayList<T>();
         for (final T o : instances) {
           if (ps == null) {
             ps = schema.getConnection().prepareStatement(getUpdateOneSql());
           }
           bindOneUpdate(ps, o);
           ps.addBatch();
+          allInstances.add(o);
           cnt++;
         }
 
         if (0 < cnt) {
           final int[] states = ps.executeBatch();
           if (states == null) {
-            inserts = new ArrayList<T>(cnt);
-            for (T o : instances) {
-              inserts.add(o);
-            }
+            inserts = allInstances;
           } else {
             int i = 0;
-            for (T o : instances) {
+            for (T o : allInstances) {
               if (states.length <= i || states[i] != 1) {
                 if (inserts == null) {
                   inserts = new ArrayList<T>(cnt - i);
