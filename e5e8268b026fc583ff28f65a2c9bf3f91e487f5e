@@ -1,0 +1,208 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAABjX////E\u003d",
+        "filename": "src/test/java/com/google/gwtorm/jdbc/TestJdbcAccess.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2011-11-29T17:01:57Z",
+      "side": 1,
+      "message": "From the method name you imply that the second parameter should be a \"BatchException\". From all places where this method is called you pass the \"BatchUpdateException\".\nDoes it make sense to pass something that is not a Batch...Exception for the second parameter? Probably no.\n\nProposal: let this method instantiate the BatchUpdateException and remove the second parameter.",
+      "revId": "e5e8268b026fc583ff28f65a2c9bf3f91e487f5e",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABjX////I\u003d",
+        "filename": "src/test/java/com/google/gwtorm/jdbc/TestJdbcAccess.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2011-11-29T17:01:57Z",
+      "side": 1,
+      "message": "Nothing from this method throws SQLException, could be removed from the throws list.",
+      "revId": "e5e8268b026fc583ff28f65a2c9bf3f91e487f5e",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABjX////M\u003d",
+        "filename": "src/test/java/com/google/gwtorm/jdbc/TestJdbcAccess.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2011-11-29T17:01:57Z",
+      "side": 1,
+      "message": "This call is ensured by the @Before annotation on the setup method. Remove it from here.",
+      "revId": "e5e8268b026fc583ff28f65a2c9bf3f91e487f5e",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABjX////A\u003d",
+        "filename": "src/test/java/com/google/gwtorm/jdbc/TestJdbcAccess.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2011-11-29T17:01:57Z",
+      "side": 1,
+      "message": "Do you want to check the e.getCause() here?",
+      "revId": "e5e8268b026fc583ff28f65a2c9bf3f91e487f5e",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABjX///+8\u003d",
+        "filename": "src/test/java/com/google/gwtorm/jdbc/TestJdbcAccess.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2011-11-29T17:01:57Z",
+      "side": 1,
+      "message": "SQLException not thrown from this method.",
+      "revId": "e5e8268b026fc583ff28f65a2c9bf3f91e487f5e",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABjX///+4\u003d",
+        "filename": "src/test/java/com/google/gwtorm/jdbc/TestJdbcAccess.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2011-11-29T17:01:57Z",
+      "side": 1,
+      "message": "checking e.getCause() ?",
+      "revId": "e5e8268b026fc583ff28f65a2c9bf3f91e487f5e",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABjX///+w\u003d",
+        "filename": "src/test/java/com/google/gwtorm/jdbc/TestJdbcAccess.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2011-11-29T17:01:57Z",
+      "side": 1,
+      "message": "From the methods above I got impression that when a method expects an exception, then its name also ends with the \"Exception\". However, this method seems not to follow this rule?",
+      "revId": "e5e8268b026fc583ff28f65a2c9bf3f91e487f5e",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABjX///+0\u003d",
+        "filename": "src/test/java/com/google/gwtorm/jdbc/TestJdbcAccess.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2011-11-29T17:01:57Z",
+      "side": 1,
+      "message": "The classUnderTest is used on only one place below.\nCould be inlined like you did in the previous @Test methods.",
+      "revId": "e5e8268b026fc583ff28f65a2c9bf3f91e487f5e",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABjX///+s\u003d",
+        "filename": "src/test/java/com/google/gwtorm/jdbc/TestJdbcAccess.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2011-11-29T17:01:57Z",
+      "side": 1,
+      "message": "s/Existsing/Existing",
+      "revId": "e5e8268b026fc583ff28f65a2c9bf3f91e487f5e",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABjX///+o\u003d",
+        "filename": "src/test/java/com/google/gwtorm/jdbc/TestJdbcAccess.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2011-11-29T17:01:57Z",
+      "side": 1,
+      "message": "s/Existsing/Existing",
+      "revId": "e5e8268b026fc583ff28f65a2c9bf3f91e487f5e",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABjX///+k\u003d",
+        "filename": "src/test/java/com/google/gwtorm/jdbc/TestJdbcAccess.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2011-11-29T17:01:57Z",
+      "side": 1,
+      "message": "s/Existsing/Existing",
+      "revId": "e5e8268b026fc583ff28f65a2c9bf3f91e487f5e",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABjX///+g\u003d",
+        "filename": "src/test/java/com/google/gwtorm/jdbc/TestJdbcAccess.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2011-11-29T17:01:57Z",
+      "side": 1,
+      "message": "s/Existsing/Existing",
+      "revId": "e5e8268b026fc583ff28f65a2c9bf3f91e487f5e",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
