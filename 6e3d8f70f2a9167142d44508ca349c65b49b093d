@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAABjX////c\u003d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2011-11-29T15:10:15Z",
+      "side": 1,
+      "message": "I don\u0027t see any change in the existing launch configuration(s) that are related to m2e?\n\nAnd even if there would be such changes shouldn\u0027t they go into the previous one (Adapt for the inclusion of m2e in EclipseIndigo):\n\n https://gerrit-review.googlesource.com/#/c/25643\n\n?",
+      "revId": "6e3d8f70f2a9167142d44508ca349c65b49b093d",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABjX////Y\u003d",
+        "filename": "GwtOrm-AllTests.launch",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2011-11-29T15:10:15Z",
+      "side": 1,
+      "message": "Did you forget to change this\n\n value\u003d\"org.maven.ide.eclipse....\n\nto\n\n value\u003d\"org.eclipse.m2e...\n\n?\n\nIf yes this should go into the other change:\n\nhttps://gerrit-review.googlesource.com/#/c/25643",
+      "revId": "6e3d8f70f2a9167142d44508ca349c65b49b093d",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
