@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "AAABk3////k\u003d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1007114
+      },
+      "writtenOn": "2011-12-01T22:23:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "AAABlH////c\u003d",
+      "revId": "da57af6abd0d69255b35b6b2b96790b41b713efd",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAABlH////Y\u003d",
         "filename": "/COMMIT_MSG",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2011-12-01T14:26:55Z",
       "side": 1,
       "message": "I would suggest rephrasing this with:\ns/implementations of this interface can/implementations of this interface (and specifically the ResultSet class)",
+      "revId": "da57af6abd0d69255b35b6b2b96790b41b713efd",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABmn////0\u003d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1007114
+      },
+      "writtenOn": "2011-12-01T22:23:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "AAABlH////Y\u003d",
       "revId": "da57af6abd0d69255b35b6b2b96790b41b713efd",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "AAABmn////4\u003d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1007114
+      },
+      "writtenOn": "2011-12-01T22:23:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "AAABlH////U\u003d",
+      "revId": "da57af6abd0d69255b35b6b2b96790b41b713efd",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAABlH////Q\u003d",
         "filename": "/COMMIT_MSG",
         "patchSetId": 2
@@ -64,6 +118,24 @@
       "writtenOn": "2011-12-01T14:26:55Z",
       "side": 1,
       "message": "It would be good if you also explain why it will become important to support passing instances of the ResultSet class to the JdbcAccess.upsert method besides the reason you gave above (ResultSet implements Iterable).\n\nI assume you are preparing ground for some further changes?",
+      "revId": "da57af6abd0d69255b35b6b2b96790b41b713efd",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABmn////8\u003d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1007114
+      },
+      "writtenOn": "2011-12-01T22:23:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "AAABlH////Q\u003d",
       "revId": "da57af6abd0d69255b35b6b2b96790b41b713efd",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
