@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAABlH////I\u003d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2011-12-01T15:25:24Z",
+      "side": 1,
+      "message": "style-nit: trailing white space",
+      "revId": "d8daed2e6cbc2a80045c922b7ec5444ec6976cb3",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABlH///+4\u003d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2011-12-01T15:25:24Z",
+      "side": 1,
+      "message": "Could you explain *why* it was necessary to cleanup and refactor?",
+      "revId": "d8daed2e6cbc2a80045c922b7ec5444ec6976cb3",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABlH///+8\u003d",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2011-12-01T15:25:24Z",
+      "side": 1,
+      "message": "I think in Gerrit we prefer the if statement as it was before:\n\n if (cnt \u003d\u003d 0) {\n   return;\n }\n\nIt avoids one level of indentation of the rest.",
+      "revId": "d8daed2e6cbc2a80045c922b7ec5444ec6976cb3",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
