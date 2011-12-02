@@ -1,0 +1,191 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAABmn////c\u003d",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1007114
+      },
+      "writtenOn": "2011-12-02T11:48:48Z",
+      "side": 0,
+      "message": "This check can be avoided if it is asserted before-hand that the collection is not empty.",
+      "revId": "da57af6abd0d69255b35b6b2b96790b41b713efd",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABmn////g\u003d",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1007114
+      },
+      "writtenOn": "2011-12-02T11:48:48Z",
+      "side": 0,
+      "message": "see above",
+      "revId": "da57af6abd0d69255b35b6b2b96790b41b713efd",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABmn////Y\u003d",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1007114
+      },
+      "writtenOn": "2011-12-02T11:48:48Z",
+      "side": 0,
+      "message": "same as above",
+      "revId": "da57af6abd0d69255b35b6b2b96790b41b713efd",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABmn////U\u003d",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1007114
+      },
+      "writtenOn": "2011-12-02T11:48:48Z",
+      "side": 0,
+      "message": "same as above",
+      "revId": "da57af6abd0d69255b35b6b2b96790b41b713efd",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABmn////Q\u003d",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1007114
+      },
+      "writtenOn": "2011-12-02T11:48:48Z",
+      "side": 0,
+      "message": "This method is long and complex. Separating the subtasks greatly reduces the complexity.",
+      "revId": "da57af6abd0d69255b35b6b2b96790b41b713efd",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABmn////M\u003d",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1007114
+      },
+      "writtenOn": "2011-12-02T11:48:48Z",
+      "side": 0,
+      "message": "subtask 1: attempt updates as batch",
+      "revId": "da57af6abd0d69255b35b6b2b96790b41b713efd",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABmn////I\u003d",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1007114
+      },
+      "writtenOn": "2011-12-02T11:48:48Z",
+      "side": 0,
+      "message": "This should be rather initialized with an empty collection.",
+      "revId": "da57af6abd0d69255b35b6b2b96790b41b713efd",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABmn////E\u003d",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 1007114
+      },
+      "writtenOn": "2011-12-02T11:48:48Z",
+      "side": 0,
+      "message": "No need to perform a null check here if inserts is initialized with an empty collection.",
+      "revId": "da57af6abd0d69255b35b6b2b96790b41b713efd",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABmn///+8\u003d",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1007114
+      },
+      "writtenOn": "2011-12-02T11:48:48Z",
+      "side": 0,
+      "message": "Again, the null check can be avoided if we assert beforehand that the collection is not empty",
+      "revId": "da57af6abd0d69255b35b6b2b96790b41b713efd",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABmn///+4\u003d",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1007114
+      },
+      "writtenOn": "2011-12-02T11:48:48Z",
+      "side": 0,
+      "message": "see above",
+      "revId": "da57af6abd0d69255b35b6b2b96790b41b713efd",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABmn///+w\u003d",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 296,
+      "author": {
+        "id": 1007114
+      },
+      "writtenOn": "2011-12-02T11:48:48Z",
+      "side": 0,
+      "message": "the executeBatch method returns an array of update counts",
+      "revId": "da57af6abd0d69255b35b6b2b96790b41b713efd",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}

@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "AAABmn////o\u003d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1007114
+      },
+      "writtenOn": "2011-12-02T11:48:48Z",
+      "side": 1,
+      "message": "nitpicker",
+      "parentUuid": "AAABlH////I\u003d",
+      "revId": "d8daed2e6cbc2a80045c922b7ec5444ec6976cb3",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAABlH///+4\u003d",
         "filename": "/COMMIT_MSG",
         "patchSetId": 3
@@ -36,6 +54,41 @@
     },
     {
       "key": {
+        "uuid": "AAABmn////k\u003d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1007114
+      },
+      "writtenOn": "2011-12-02T11:48:48Z",
+      "side": 1,
+      "message": "Refactoring does not alter the external behavior of the code that is refactored. It changes nonfunctional aspects of the code. Therefore, it is not *necessary*, by nature.\n\nPlease find inlined explanations why I consider the proposed changes to improve the internal structure of the code.\n\nIt is not really clear to me if you are questioning the value of refactoring in general or in this particular case. \n\nOne could argue that refactoring is typically performed after functional changes have been introduced, which is not the case here. Consequently, refactoring at this point in time is indeed questionable.\n\nHowever, the predecessor change brings the class JDBCAccess under test which now opens the opportunity for refactoring. Hence, I think refactoring at this point in time is justifiable.",
+      "parentUuid": "AAABlH///+4\u003d",
+      "revId": "d8daed2e6cbc2a80045c922b7ec5444ec6976cb3",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABmn////A\u003d",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1007114
+      },
+      "writtenOn": "2011-12-02T11:48:48Z",
+      "side": 1,
+      "message": "Actually, the statement should be prepared and closed in the attemptUpdatesAsBatch method.",
+      "revId": "d8daed2e6cbc2a80045c922b7ec5444ec6976cb3",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAABlH///+8\u003d",
         "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
         "patchSetId": 3
@@ -47,6 +100,41 @@
       "writtenOn": "2011-12-01T15:25:24Z",
       "side": 1,
       "message": "I think in Gerrit we prefer the if statement as it was before:\n\n if (cnt \u003d\u003d 0) {\n   return;\n }\n\nIt avoids one level of indentation of the rest.",
+      "revId": "d8daed2e6cbc2a80045c922b7ec5444ec6976cb3",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABmn///+0\u003d",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 1007114
+      },
+      "writtenOn": "2011-12-02T11:48:48Z",
+      "side": 1,
+      "message": "fine with me",
+      "parentUuid": "AAABlH///+8\u003d",
+      "revId": "d8daed2e6cbc2a80045c922b7ec5444ec6976cb3",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABmn///+s\u003d",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 306,
+      "author": {
+        "id": 1007114
+      },
+      "writtenOn": "2011-12-02T11:48:48Z",
+      "side": 1,
+      "message": "Here I check perform the check on the total update count instead of the individual update counts. I need this for a follow-up change only. It should not be part of this refactoring.",
       "revId": "d8daed2e6cbc2a80045c922b7ec5444ec6976cb3",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
