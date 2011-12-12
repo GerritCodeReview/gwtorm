@@ -314,6 +314,19 @@ public abstract class SqlDialect {
   }
 
   /**
+   * Can the total number of rows updated by the PreparedStatement.executeBatch
+   * be determined exactly by the SQLDialect.executeBatch method?
+   *
+   * @return <code>true</code> if the SQlDialect.executeBatch method can exactly
+   *         determine the total number of rows updated by a batch;
+   *         <code>false</code> otherwise
+   * @see #executeBatch(PreparedStatement)
+   */
+  public boolean canDetermineTotalBatchUpdateCount() {
+    return true;
+  }
+
+  /**
    * Executes a prepared statement batch and returns the total number of rows
    * successfully updated or inserted. This method is intended to be overridden.
    *
@@ -324,7 +337,7 @@ public abstract class SqlDialect {
    * @return the total number of rows affected
    * @see #canDetermineIndividualBatchUpdateCounts()
    */
- public int executeBatch(PreparedStatement ps) throws SQLException {
+  public int executeBatch(PreparedStatement ps) throws SQLException {
     final int[] updateCounts = ps.executeBatch();
     if (updateCounts == null) {
       throw new SQLException("No rows affected");
