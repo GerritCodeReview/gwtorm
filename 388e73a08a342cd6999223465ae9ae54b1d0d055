@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAABpH////4\u003d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2011-12-13T09:33:06Z",
+      "side": 1,
+      "message": "Why the brackets in the class name: TestPerson[2]?",
+      "revId": "388e73a08a342cd6999223465ae9ae54b1d0d055",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
