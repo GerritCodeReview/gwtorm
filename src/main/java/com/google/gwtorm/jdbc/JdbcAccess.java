@@ -158,7 +158,7 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
   protected void doInsert(final Iterable<T> instances, final JdbcTransaction txn)
       throws OrmException {
     try {
-      if (schema.getDialect().canDetermineIndividualBatchUpdateCounts()) {
+      if (schema.getDialect().canDetermineTotalBatchUpdateCount()) {
         insertAsBatch(instances);
       } else {
         insertIndividually(instances);
@@ -429,20 +429,15 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
     }
   }
 
-  private static void execute(final PreparedStatement ps, final int cnt)
+  private void execute(final PreparedStatement ps, final int cnt)
       throws SQLException, OrmConcurrencyException {
     if (cnt == 0) {
       return;
     }
 
-    final int[] states = ps.executeBatch();
-    if (states == null) {
-      throw new SQLException("No rows affected; expected " + cnt + " rows");
-    }
-    for (int i = 0; i < cnt; i++) {
-      if (states.length <= i || states[i] != 1) {
+    final int numberOfRowsUpdated = schema.getDialect().executeBatch(ps);
+    if (numberOfRowsUpdated != cnt) {
         throw new OrmConcurrencyException();
-      }
     }
   }
 
