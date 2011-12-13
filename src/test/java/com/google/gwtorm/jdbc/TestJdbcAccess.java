@@ -14,14 +14,20 @@
 
 package com.google.gwtorm.jdbc;
 
+
+import static java.lang.Boolean.FALSE;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.CALLS_REAL_METHODS;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.stub;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
 
 import com.google.gwtorm.client.Key;
 import com.google.gwtorm.client.OrmConcurrencyException;
@@ -34,6 +40,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+import org.mockito.stubbing.OngoingStubbing;
 
 import java.sql.BatchUpdateException;
 import java.sql.Connection;
@@ -111,14 +118,40 @@ public class TestJdbcAccess {
     return ps;
   }
 
-  private void stubExecuteBatchException(String command, BatchUpdateException exception)
-      throws SQLException {
+  private PreparedStatement stubExecuteUpdateOK(String command,
+      final int... updateCounts)      throws SQLException {
+    PreparedStatement ps = setupPreparedStatementForSingleUpdates(updateCounts);
+    stub(conn.prepareStatement(command)).toReturn(ps);
+    return ps;
+  }
+
+  private void stubExecuteBatchException(String command,
+      BatchUpdateException exception)      throws SQLException {
     PreparedStatement ps = setupPreparedStatementException(exception);
+    stub(conn.prepareStatement(command)).toReturn(ps);
+  }
+
+  private void stubExecuteUpdateException(String command, SQLException e)
+      throws SQLException {
+    PreparedStatement ps = setupPreparedStatementException(e);
     stub(conn.prepareStatement(command)).toReturn(ps);
   }
 
   private JdbcAccess<Data, Data.DataKey> createClassUnderTest() {
     final SqlDialect dialect = mock(SqlDialect.class, CALLS_REAL_METHODS);
+    JdbcSchema schema = setupSchema(dialect);
+
+    JdbcAccess<Data, Data.DataKey> classUnderTest = new DataJdbcAccess(schema);
+    return classUnderTest;
+  }
+
+  private JdbcAccess<Data, Data.DataKey> createClassUnderTestNoInfo()
+      throws SQLException {
+    final SqlDialect dialect = mock(SqlDialect.class);
+    stub(dialect.canDetermineIndividualBatchUpdateCounts()).toReturn(FALSE);
+    when(
+        dialect.convertError(any(String.class), any(String.class),
+            any(SQLException.class))).thenCallRealMethod();
     JdbcSchema schema = setupSchema(dialect);
 
     JdbcAccess<Data, Data.DataKey> classUnderTest = new DataJdbcAccess(schema);
@@ -144,6 +177,21 @@ public class TestJdbcAccess {
     doNothing().when(ps).addBatch();
     stub(ps.executeBatch()).toReturn(updateCounts);
     stub(ps.executeUpdate()).toThrow(
+        new AssertionError("unexpected method call"));
+    return ps;
+  }
+
+  private PreparedStatement setupPreparedStatementForSingleUpdates(
+      final int... updateCounts) throws SQLException {
+    PreparedStatement ps = mock(PreparedStatement.class);
+    doThrow(new AssertionError("unexpected method call")).when(ps).addBatch();
+    if (updateCounts.length > 0) {
+      OngoingStubbing<Integer> stubber = when(ps.executeUpdate());
+      for (int updateCount : updateCounts) {
+        stubber = stubber.thenReturn(updateCount);
+      }
+    }
+    stub(ps.executeBatch()).toThrow(
         new AssertionError("unexpected method call"));
     return ps;
   }
@@ -175,11 +223,18 @@ public class TestJdbcAccess {
   }
 
   @Test
+  public void testInsertNoInfo() throws OrmException, SQLException {
+    stubExecuteUpdateOK(INSERT, 1);
+    createClassUnderTestNoInfo().insert(oneRow);
+  }
+
+  @Test
   public void testInsertOneDBException() throws OrmException, SQLException {
     BatchUpdateException exception = new BatchUpdateException();
     stubExecuteBatchException(INSERT, exception);
+    JdbcAccess<Data, Data.DataKey> classUnderTest = createClassUnderTest();
     try {
-      createClassUnderTest().insert(oneRow);
+      classUnderTest.insert(oneRow);
       fail("missingException");
     } catch (OrmException e) {
       // expected
@@ -202,8 +257,9 @@ public class TestJdbcAccess {
   public void testUpdateOneDBException() throws OrmException, SQLException {
     BatchUpdateException exception = new BatchUpdateException();
     stubExecuteBatchException(UPDATE, exception);
+    JdbcAccess<Data, Data.DataKey> classUnderTest = createClassUnderTest();
     try {
-      createClassUnderTest().update(oneRow);
+      classUnderTest.update(oneRow);
       fail("missingException");
     } catch (OrmException e) {
       // expected
@@ -212,10 +268,46 @@ public class TestJdbcAccess {
   }
 
   @Test
-  public void testUpdateOneConcurrentlyModifiedException() throws SQLException, OrmException {
-    stubExecuteBatchOK(UPDATE, 0);
+  public void testUpdateOneNoInfoException() throws OrmException, SQLException {
+    SQLException exception = new SQLException();
+    stubExecuteUpdateException(UPDATE, exception);
+    JdbcAccess<Data, Data.DataKey> classUnderTest =
+        createClassUnderTestNoInfo();
     try {
-      createClassUnderTest().update(oneRow);
+      classUnderTest.update(oneRow);
+      fail("missingException");
+    } catch (OrmException e) {
+      assertSame(e.getCause(), exception);
+    }
+  }
+
+  @Test
+  public void testUpdateOneNoInfo() throws OrmException, SQLException {
+    stubExecuteUpdateOK(UPDATE, 1);
+    createClassUnderTestNoInfo().update(oneRow);
+  }
+
+  @Test
+  public void testUpdateOneConcurrentlyModifiedException() throws SQLException,
+      OrmException {
+    stubExecuteBatchOK(UPDATE, 0);
+    JdbcAccess<Data, Data.DataKey> classUnderTest = createClassUnderTest();
+    try {
+      classUnderTest.update(oneRow);
+      fail("missing OrmConcurrencyException");
+    } catch (OrmConcurrencyException e) {
+      // expected
+    }
+  }
+
+  @Test
+  public void testUpdateOneConcurrentlyModifiedExceptionNoInfo()
+      throws SQLException, OrmException {
+    stubExecuteUpdateOK(UPDATE, 0);
+    JdbcAccess<Data, TestJdbcAccess.Data.DataKey> classUnderTest =
+        createClassUnderTestNoInfo();
+    try {
+      classUnderTest.update(oneRow);
       fail("missing OrmConcurrencyException");
     } catch (OrmConcurrencyException e) {
       // expected
@@ -230,19 +322,43 @@ public class TestJdbcAccess {
   @Test
   public void testUpsertOneExisting() throws OrmException, SQLException {
     stubExecuteBatchOK(UPDATE, 1);
+    PreparedStatement insert = stubExecuteBatchOK(INSERT);
     createClassUnderTest().upsert(oneRow);
+    verifyZeroInteractions(insert);
+  }
+
+  @Test
+  public void testUpsertOneExistingNoInfo() throws OrmException, SQLException {
+    stubExecuteUpdateOK(UPDATE, 1);
+    PreparedStatement insert = stubExecuteUpdateOK(INSERT);
+    createClassUnderTestNoInfo().upsert(oneRow);
+    verifyZeroInteractions(insert);
   }
 
   @Test
   public void testUpsertOneException() throws OrmException, SQLException {
     BatchUpdateException exception = new BatchUpdateException();
     stubExecuteBatchException(UPDATE, exception);
+    JdbcAccess<Data, Data.DataKey> classUnderTest = createClassUnderTest();
     try {
-      createClassUnderTest().upsert(oneRow);
+      classUnderTest.upsert(oneRow);
       fail("missingException");
     } catch (OrmException e) {
       // expected
       assertSame(e.getCause(), exception);
+    }
+  }
+
+  @Test
+  public void testUpsertOneNoInfoException() throws OrmException, SQLException {
+    stubExecuteUpdateException(UPDATE, new SQLException());
+    JdbcAccess<Data, Data.DataKey> classUnderTest =
+        createClassUnderTestNoInfo();
+    try {
+      classUnderTest.upsert(oneRow);
+      fail("missingException");
+    } catch (OrmException e) {
+      // expected
     }
   }
 
@@ -255,6 +371,15 @@ public class TestJdbcAccess {
   }
 
   @Test
+  public void testUpsertOneNotExistingNoInfo() throws OrmException,
+      SQLException {
+    stubExecuteUpdateOK(UPDATE, 0);
+    PreparedStatement insert = stubExecuteUpdateOK(INSERT, 1);
+    createClassUnderTestNoInfo().upsert(oneRow);
+    verifyIds(insert, 1);
+  }
+
+  @Test
   public void testUpsertTwoNotExisting() throws SQLException, OrmException {
     stubExecuteBatchOK(UPDATE);
     PreparedStatement insert = stubExecuteBatchOK(INSERT, 1, 1);
@@ -263,9 +388,29 @@ public class TestJdbcAccess {
   }
 
   @Test
+  public void testUpsertTwoNotExistsingNoInfo() throws SQLException,
+      OrmException {
+    stubExecuteUpdateOK(UPDATE, 0, 0);
+    PreparedStatement insert = stubExecuteUpdateOK(INSERT, 1, 1);
+    createClassUnderTestNoInfo().upsert(twoRows);
+    verifyIds(insert, 1, 2);
+  }
+
+  @Test
   public void testUpsertTwoBothExisting() throws SQLException, OrmException {
     stubExecuteBatchOK(UPDATE, 1, 1);
+    PreparedStatement insert = stubExecuteBatchOK(INSERT);
     createClassUnderTest().upsert(twoRows);
+    verifyZeroInteractions(insert);
+  }
+
+  @Test
+  public void testUpsertTwoBothExistsingNoInfo() throws SQLException,
+      OrmException {
+    stubExecuteUpdateOK(UPDATE, 1, 1);
+    PreparedStatement insert = stubExecuteUpdateOK(INSERT);
+    createClassUnderTestNoInfo().upsert(twoRows);
+    verifyZeroInteractions(insert);
   }
 
   @Test
@@ -273,6 +418,15 @@ public class TestJdbcAccess {
     stubExecuteBatchOK(UPDATE, 1, 0);
     PreparedStatement insert = stubExecuteBatchOK(INSERT, 1);
     createClassUnderTest().upsert(twoRows);
+    verifyIds(insert, 2);
+  }
+
+  @Test
+  public void testUpsertTwoFirstExistsingNoInfo() throws SQLException,
+      OrmException {
+    stubExecuteUpdateOK(UPDATE, 1, 0);
+    PreparedStatement insert = stubExecuteUpdateOK(INSERT, 1);
+    createClassUnderTestNoInfo().upsert(twoRows);
     verifyIds(insert, 2);
   }
 
@@ -285,19 +439,30 @@ public class TestJdbcAccess {
   }
 
   @Test
-  public void testUpsertTwoUpdateCountsAreNull() throws SQLException, OrmException {
+  public void testUpsertTwoUpdateCountsAreNull() throws SQLException,
+      OrmException {
     stubExecuteBatchNull(UPDATE);
     PreparedStatement insert = stubExecuteBatchOK(INSERT, 1, 1);
     createClassUnderTest().upsert(twoRows);
     verifyIds(insert, 1, 2);
   }
 
-  private PreparedStatement stubExecuteBatchNull(String command) throws SQLException {
+  private PreparedStatement stubExecuteBatchNull(String command)
+      throws SQLException {
     PreparedStatement ps = setupPreparedStatementForBatch(null);
     stub(conn.prepareStatement(command)).toReturn(ps);
     return ps;
   }
 
+
+  @Test
+  public void testUpsertTwoSecondExistsingNoInfo() throws SQLException,
+      OrmException {
+    stubExecuteUpdateOK(UPDATE, 0, 1);
+    PreparedStatement insert = stubExecuteUpdateOK(INSERT, 1);
+    createClassUnderTestNoInfo().upsert(twoRows);
+    verifyIds(insert, 1);
+  }
 
   @Test
   public void testDeleteOneExisting() throws SQLException, OrmException {
@@ -306,10 +471,30 @@ public class TestJdbcAccess {
   }
 
   @Test
+  public void testDeleteOneExistingNoInfo() throws SQLException, OrmException {
+    stubExecuteUpdateOK(DELETE, 1);
+    createClassUnderTestNoInfo().delete(oneRow);
+  }
+
+  @Test
   public void testDeleteOneNotExisting() throws SQLException, OrmException {
     stubExecuteBatchOK(DELETE, 0);
+    JdbcAccess<Data, Data.DataKey> classUnderTest = createClassUnderTest();
     try {
-      createClassUnderTest().delete(oneRow);
+      classUnderTest.delete(oneRow);
+      fail("missing OrmConcurrencyException");
+    } catch (OrmConcurrencyException e) {
+      // expected
+    }
+  }
+
+  @Test
+  public void testDeleteOneDeletedNoInfo() throws SQLException, OrmException {
+    stubExecuteUpdateOK(DELETE, 0);
+    JdbcAccess<Data, Data.DataKey> classUnderTest =
+        createClassUnderTestNoInfo();
+    try {
+      classUnderTest.delete(oneRow);
       fail("missing OrmConcurrencyException");
     } catch (OrmConcurrencyException e) {
       // expected
