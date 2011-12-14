@@ -1,4 +1,4 @@
-// Copyright 2008 Google Inc.
+// Copyright (C) 2011 The Android Open Source Project
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -298,4 +298,17 @@ public abstract class SqlDialect {
       String fromColumn, ColumnModel col) throws OrmException;
 
   public abstract String getNextSequenceValueSql(String seqname);
+
+  /**
+   * Does the array returned by the PreparedStatement.executeBatch method return
+   * the exact number of rows updated for every row in the batch?
+   *
+   * @return <code>true</code> if the executeBatch method returns the number of
+   *         rows affected for every row in the batch; <code>false</code> if it
+   *         may return Statement.SUCESS_NO_INFO
+   */
+  public boolean canDetermineIndividualBatchUpdateCounts() {
+    return true;
+
+  }
 }
