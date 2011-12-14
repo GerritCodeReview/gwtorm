@@ -16,6 +16,8 @@ package com.google.gwtorm.jdbc;
 
 
 import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
+import static java.sql.Statement.SUCCESS_NO_INFO;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
@@ -188,6 +190,21 @@ public class TestJdbcAccess {
     return classUnderTest;
   }
 
+  private JdbcAccess<Data, Data.DataKey> createClassUnderTestTotalCountOnly(int totalCount)
+      throws SQLException {
+    final SqlDialect dialect = mock(SqlDialect.class);
+    when(dialect.canDetermineIndividualBatchUpdateCounts()).thenReturn(FALSE);
+    when(dialect.canDetermineTotalBatchUpdateCount()).thenReturn(TRUE);
+    when(dialect.executeBatch(any(PreparedStatement.class))).thenReturn(totalCount);
+    when(
+        dialect.convertError(any(String.class), any(String.class),
+            any(SQLException.class))).thenCallRealMethod();
+    JdbcSchema schema = setupSchema(dialect);
+
+    JdbcAccess<Data, Data.DataKey> classUnderTest = new DataJdbcAccess(schema);
+    return classUnderTest;
+  }
+
   private JdbcSchema setupSchema(final SqlDialect dialect) {
     @SuppressWarnings("rawtypes")
     Database db = mock(Database.class);
@@ -216,6 +233,13 @@ public class TestJdbcAccess {
   public void testInsertOne() throws OrmException, SQLException {
     stubExecuteBatchOK(INSERT, 1);
     createClassUnderTest().insert(oneRow);
+  }
+
+  @Test
+  public void testInsertNoInfoButTotalUpdateCount() throws OrmException, SQLException {
+    int[] updateCounts = {SUCCESS_NO_INFO};
+    stubExecuteBatchOK(INSERT, updateCounts);
+    createClassUnderTestTotalCountOnly(1).insert(oneRow);
   }
 
   @Test
@@ -377,6 +401,15 @@ public class TestJdbcAccess {
   }
 
   @Test
+  public void testUpsertOneNotExistingNoInfoButTotalUpdateCount()
+      throws OrmException,      SQLException {
+    stubExecuteUpdateOK(UPDATE, 0);
+    PreparedStatement insert = stubExecuteBatchOK(INSERT, 1);
+    createClassUnderTestTotalCountOnly(1).upsert(oneRow);
+    verifyIds(insert, 1);
+  }
+
+  @Test
   public void testUpsertTwoNotExistingZeroLengthArray() throws SQLException,
       OrmException {
     stubExecuteBatchOK(UPDATE);
@@ -390,6 +423,15 @@ public class TestJdbcAccess {
     stubExecuteBatchOK(UPDATE, 0, 0);
     PreparedStatement insert = stubExecuteBatchOK(INSERT, 1, 1);
     createClassUnderTest().upsert(twoRows);
+    verifyIds(insert, 1, 2);
+  }
+
+  @Test
+  public void testUpsertTwoNotExistsingNoInfoButTotalUpdateCount()
+      throws SQLException,      OrmException {
+    stubExecuteUpdateOK(UPDATE, 0, 0);
+    PreparedStatement insert = stubExecuteBatchOK(INSERT, 1, 1);
+    createClassUnderTestTotalCountOnly(2).upsert(twoRows);
     verifyIds(insert, 1, 2);
   }
 
@@ -437,6 +479,15 @@ public class TestJdbcAccess {
   }
 
   @Test
+  public void testUpsertTwoFirstExistsingNoInfoButTotalUpdateCount() throws SQLException,
+      OrmException {
+    stubExecuteUpdateOK(UPDATE, 1, 0);
+    PreparedStatement insert = stubExecuteBatchOK(INSERT, 1);
+    createClassUnderTestTotalCountOnly(1).upsert(twoRows);
+    verifyIds(insert, 2);
+  }
+
+  @Test
   public void testUpsertTwoSecondExisting() throws SQLException, OrmException {
     stubExecuteBatchOK(UPDATE, 0, 1);
     PreparedStatement insert = stubExecuteBatchOK(INSERT, 1);
@@ -459,6 +510,15 @@ public class TestJdbcAccess {
     stubExecuteUpdateOK(UPDATE, 0, 1);
     PreparedStatement insert = stubExecuteUpdateOK(INSERT, 1);
     createClassUnderTestNoInfo().upsert(twoRows);
+    verifyIds(insert, 1);
+  }
+
+  @Test
+  public void testUpsertTwoSecondExistsingNoInfoButTotalUpdateCount() throws SQLException,
+      OrmException {
+    stubExecuteUpdateOK(UPDATE, 0, 1);
+    PreparedStatement insert = stubExecuteBatchOK(INSERT, 1);
+    createClassUnderTestTotalCountOnly(1).upsert(twoRows);
     verifyIds(insert, 1);
   }
 
