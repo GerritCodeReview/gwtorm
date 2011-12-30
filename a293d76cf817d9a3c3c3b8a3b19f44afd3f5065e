@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAABwn///zQ\u003d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 10
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1003883
+      },
+      "writtenOn": "2011-12-30T08:17:53Z",
+      "side": 1,
+      "message": "It is not clear to me why you modified all the methods, not just the upsert?",
+      "revId": "a293d76cf817d9a3c3c3b8a3b19f44afd3f5065e",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABwn///zU\u003d",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1003883
+      },
+      "writtenOn": "2011-12-30T08:17:53Z",
+      "side": 1,
+      "message": "Are you sure that this matches the batch behavior?  Does a single row failure in the middle abort the way you are aborting?",
+      "revId": "a293d76cf817d9a3c3c3b8a3b19f44afd3f5065e",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
