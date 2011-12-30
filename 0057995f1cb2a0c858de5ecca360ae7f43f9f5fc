@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAABwn///zc\u003d",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1003883
+      },
+      "writtenOn": "2011-12-30T08:03:10Z",
+      "side": 1,
+      "message": "I think you could just skip the forloop if you set inserts \u003d allInstances here.  Or perhaps you dispense with allIntances and add the elements to inserts right up front and then reverse the logic in the else below to delete the successes (although, that would require using the iterator.remove and would likely be slower)?",
+      "revId": "0057995f1cb2a0c858de5ecca360ae7f43f9f5fc",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
