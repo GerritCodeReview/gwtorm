@@ -16,6 +16,24 @@
       "revId": "0057995f1cb2a0c858de5ecca360ae7f43f9f5fc",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAB43////c\u003d",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1007114
+      },
+      "writtenOn": "2012-01-09T16:24:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "AAABwn///zc\u003d",
+      "revId": "0057995f1cb2a0c858de5ecca360ae7f43f9f5fc",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
