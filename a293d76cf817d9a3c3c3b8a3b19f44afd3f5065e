@@ -69,6 +69,24 @@
       "revId": "a293d76cf817d9a3c3c3b8a3b19f44afd3f5065e",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAB5X////8\u003d",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1003883
+      },
+      "writtenOn": "2012-01-09T16:49:13Z",
+      "side": 1,
+      "message": "Just to be clear, by \"the batch case\" I was not referring to your new batch code, but rather I was referring to line 438 (which used to be called on line 172) in the execute(final PreparedStatement ps, final int cnt) method it does a:\n\n   final int[] states \u003d ps.executeBatch();\n\nDoes ps.exectueBatch() abort in the middle if it fails a single update?  It seems like the error method of returning an array implies that it wouldn\u0027t.",
+      "parentUuid": "AAAB43////o\u003d",
+      "revId": "a293d76cf817d9a3c3c3b8a3b19f44afd3f5065e",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
