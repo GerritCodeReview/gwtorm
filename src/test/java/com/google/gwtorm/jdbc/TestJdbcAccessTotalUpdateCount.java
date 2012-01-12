@@ -15,22 +15,26 @@
 package com.google.gwtorm.jdbc;
 
 import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.google.gwtorm.schema.sql.SqlDialect;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 @RunWith(Parameterized.class)
-public class TestJdbcAccessNonBatching extends AbstractTestJdbcAccess {
+public class TestJdbcAccessTotalUpdateCount extends AbstractTestJdbcAccess {
 
-  public TestJdbcAccessNonBatching(IterableProvider<Data> dataProvider)
+  public TestJdbcAccessTotalUpdateCount(IterableProvider<Data> dataProvider)
       throws SQLException {
     super(dataProvider);
   }
@@ -38,7 +42,7 @@ public class TestJdbcAccessNonBatching extends AbstractTestJdbcAccess {
   @Override
   protected void assertCorrectUpdating(PreparedStatement ps, int... ids)
       throws SQLException {
-    assertUsedNonBatchingOnly(ps, ids);
+    verify(dialect).executeBatch(ps);
   }
 
   @Override
@@ -48,12 +52,28 @@ public class TestJdbcAccessNonBatching extends AbstractTestJdbcAccess {
   }
 
   @Override
-  protected SqlDialect createDialect() {
-    final SqlDialect dialect = mock(SqlDialect.class);
+  protected SqlDialect createDialect() throws SQLException {
+    SqlDialect dialect = mock(SqlDialect.class);
     when(dialect.canDetermineIndividualBatchUpdateCounts()).thenReturn(FALSE);
+    when(dialect.canDetermineTotalBatchUpdateCount()).thenReturn(TRUE);
+    when(dialect.executeBatch(any(PreparedStatement.class))).thenAnswer(
+        new Answer<Integer>() {
+
+          @Override
+          public Integer answer(InvocationOnMock invocation) throws Throwable {
+            if (sqlException != null) {
+              throw sqlException;
+            }
+            if (totalUpdateCount == null) {
+              throw new IllegalStateException("totalCount is not set");
+            }
+            return totalUpdateCount;
+          }
+        });
     when(
         dialect.convertError(any(String.class), any(String.class),
             any(SQLException.class))).thenCallRealMethod();
+
     return dialect;
   }
 

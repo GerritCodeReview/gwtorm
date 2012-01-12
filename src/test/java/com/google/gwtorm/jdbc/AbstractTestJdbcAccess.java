@@ -177,8 +177,8 @@ public abstract class AbstractTestJdbcAccess {
     }
   }
 
-  protected static void assertUsedBatchingOnly(PreparedStatement ps,
-      int ...ids) throws SQLException {
+  protected static void assertUsedBatchingOnly(PreparedStatement ps, int... ids)
+      throws SQLException {
     verify(ps, times(ids.length)).addBatch();
     verify(ps).executeBatch();
     verify(ps, never()).executeUpdate();
@@ -186,7 +186,7 @@ public abstract class AbstractTestJdbcAccess {
   }
 
   protected static void assertUsedNonBatchingOnly(PreparedStatement ps,
-      int ... ids) throws SQLException {
+      int... ids) throws SQLException {
     verify(ps, never()).addBatch();
     verify(ps, never()).executeBatch();
     verify(ps, times(ids.length)).executeUpdate();
@@ -197,13 +197,16 @@ public abstract class AbstractTestJdbcAccess {
     verifyZeroInteractions(insert);
   }
 
-  protected abstract void assertCorrectUpdating(PreparedStatement ps, int ... ids)
-      throws SQLException;
+  protected abstract void assertCorrectUpdating(PreparedStatement ps,
+      int... ids) throws SQLException;
 
-  private static void assertExpectedIdsUsed(PreparedStatement statement,
-      int... ids) throws SQLException {
+  protected abstract void assertCorrectAttempting(PreparedStatement ps,
+      int... ids) throws SQLException;
+
+  private static void assertExpectedIdsUsed(PreparedStatement ps, int... ids)
+      throws SQLException {
     for (int id : ids) {
-      verify(statement).setInt(1, id);
+      verify(ps).setInt(1, id);
     }
   }
 
@@ -292,7 +295,7 @@ public abstract class AbstractTestJdbcAccess {
 
     classUnderTest.upsert(oneRow);
 
-    assertCorrectUpdating(update, 1);
+    assertCorrectAttempting(update, 1);
     assertNotUsed(insert);
   }
 
@@ -309,7 +312,7 @@ public abstract class AbstractTestJdbcAccess {
       assertSame(e.getCause(), exception);
     }
 
-    assertCorrectUpdating(update, 1);
+    assertCorrectAttempting(update, 1);
   }
 
   @Test
@@ -319,7 +322,7 @@ public abstract class AbstractTestJdbcAccess {
 
     classUnderTest.upsert(oneRow);
 
-    assertCorrectUpdating(update, 1);
+    assertCorrectAttempting(update, 1);
     assertCorrectUpdating(insert, 1);
   }
 
@@ -331,7 +334,7 @@ public abstract class AbstractTestJdbcAccess {
 
     classUnderTest.upsert(twoRows);
 
-    assertCorrectUpdating(update, 1, 2);
+    assertCorrectAttempting(update, 1, 2);
     assertCorrectUpdating(insert, 1, 2);
   }
 
@@ -342,7 +345,7 @@ public abstract class AbstractTestJdbcAccess {
 
     classUnderTest.upsert(twoRows);
 
-    assertCorrectUpdating(update, 1, 2);
+    assertCorrectAttempting(update, 1, 2);
     assertCorrectUpdating(insert, 1, 2);
   }
 
@@ -353,7 +356,7 @@ public abstract class AbstractTestJdbcAccess {
 
     classUnderTest.upsert(twoRows);
 
-    assertCorrectUpdating(update, 1, 2);
+    assertCorrectAttempting(update, 1, 2);
     assertNotUsed(insert);
   }
 
@@ -364,7 +367,7 @@ public abstract class AbstractTestJdbcAccess {
 
     classUnderTest.upsert(twoRows);
 
-    assertCorrectUpdating(update, 1, 2);
+    assertCorrectAttempting(update, 1, 2);
     assertCorrectUpdating(insert, 2);
   }
 
@@ -376,7 +379,7 @@ public abstract class AbstractTestJdbcAccess {
 
     classUnderTest.upsert(twoRows);
 
-    assertCorrectUpdating(update, 1, 2);
+    assertCorrectAttempting(update, 1, 2);
     assertCorrectUpdating(insert, 1, 2);
   }
 
@@ -387,7 +390,7 @@ public abstract class AbstractTestJdbcAccess {
 
     classUnderTest.upsert(twoRows);
 
-    assertCorrectUpdating(update, 1, 2);
+    assertCorrectAttempting(update, 1, 2);
     assertCorrectUpdating(insert, 1);
   }
 

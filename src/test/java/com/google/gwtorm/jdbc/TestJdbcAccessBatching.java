@@ -40,6 +40,12 @@ public class TestJdbcAccessBatching extends AbstractTestJdbcAccess {
   }
 
   @Override
+  protected void assertCorrectAttempting(PreparedStatement ps,
+      int ... ids) throws SQLException {
+    assertUsedBatchingOnly(ps, ids);
+  }
+
+  @Override
   protected SqlDialect createDialect() {
     return mock(SqlDialect.class, CALLS_REAL_METHODS);
   }
