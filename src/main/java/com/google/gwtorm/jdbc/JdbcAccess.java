@@ -151,43 +151,157 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
   @Override
   public void insert(final Iterable<T> instances) throws OrmException {
     try {
-      PreparedStatement ps = null;
-      try {
-        int cnt = 0;
-        for (final T o : instances) {
-          if (ps == null) {
-            ps = schema.getConnection().prepareStatement(getInsertOneSql());
-          }
-          bindOneInsert(ps, o);
-          ps.addBatch();
-          cnt++;
-        }
-        execute(ps, cnt);
-      } finally {
-        if (ps != null) {
-          ps.close();
-        }
+      if (schema.getDialect().canDetermineIndividualBatchUpdateCounts()) {
+        insertAsBatch(instances);
+      } else {
+        insertIndividually(instances);
       }
     } catch (SQLException e) {
       throw convertError("insert", e);
     }
   }
 
+  private void insertIndividually(Iterable<T> instances) throws SQLException,
+      OrmConcurrencyException {
+    PreparedStatement ps = null;
+    try {
+      boolean concurrencyViolationDetected = false;
+      for (final T o : instances) {
+        if (ps == null) {
+          ps = schema.getConnection().prepareStatement(getInsertOneSql());
+        }
+        bindOneInsert(ps, o);
+        int updateCount = ps.executeUpdate();
+        if (updateCount != 1) {
+          concurrencyViolationDetected = true;
+        }
+      }
+      if (concurrencyViolationDetected) {
+        throw new OrmConcurrencyException();
+      }
+    } finally {
+      if (ps != null) {
+        ps.close();
+      }
+    }
+  }
+
+  private void insertAsBatch(final Iterable<T> instances) throws SQLException,
+      OrmConcurrencyException {
+    PreparedStatement ps = null;
+    try {
+      int cnt = 0;
+      for (final T o : instances) {
+        if (ps == null) {
+          ps = schema.getConnection().prepareStatement(getInsertOneSql());
+        }
+        bindOneInsert(ps, o);
+        ps.addBatch();
+        cnt++;
+      }
+      execute(ps, cnt);
+    } finally {
+      if (ps != null) {
+        ps.close();
+      }
+    }
+  }
+
   @Override
   public void update(final Iterable<T> instances) throws OrmException {
     try {
+      if (schema.getDialect().canDetermineIndividualBatchUpdateCounts()) {
+        updateAsBatch(instances);
+      } else {
+        updateIndividually(instances);
+      }
+    } catch (SQLException e) {
+      throw convertError("update", e);
+    }
+  }
+
+  private void updateIndividually(Iterable<T> instances) throws SQLException,
+      OrmConcurrencyException {
+    PreparedStatement ps = null;
+    try {
+      boolean concurrencyViolationDetected = false;
+      for (final T o : instances) {
+        if (ps == null) {
+          ps = schema.getConnection().prepareStatement(getUpdateOneSql());
+        }
+        bindOneUpdate(ps, o);
+        int updateCount = ps.executeUpdate();
+        if (updateCount != 1) {
+          concurrencyViolationDetected = true;
+        }
+      }
+      if (concurrencyViolationDetected) {
+        throw new OrmConcurrencyException();
+      }
+    } finally {
+      if (ps != null) {
+        ps.close();
+      }
+    }
+  }
+
+  private void updateAsBatch(final Iterable<T> instances) throws SQLException,
+      OrmConcurrencyException {
+    PreparedStatement ps = null;
+    try {
+      int cnt = 0;
+      for (final T o : instances) {
+        if (ps == null) {
+          ps = schema.getConnection().prepareStatement(getUpdateOneSql());
+        }
+        bindOneUpdate(ps, o);
+        ps.addBatch();
+        cnt++;
+      }
+      execute(ps, cnt);
+    } finally {
+      if (ps != null) {
+        ps.close();
+      }
+    }
+  }
+
+  /**
+   * Attempt to update instances.
+   *
+   * @param instances the instances to attempt to update
+   * @return collection of instances that cannot be updated as they are not yet
+   *         existing
+   */
+  private Collection<T> attemptUpdate(final Iterable<T> instances)
+      throws OrmException {
+    if (schema.getDialect().canDetermineIndividualBatchUpdateCounts()) {
+      return attemptUpdateAsBatch(instances);
+    } else {
+      return attemptUpdatesIndividually(instances);
+    }
+  }
+
+  private Collection<T> attemptUpdatesIndividually(Iterable<T> instances)
+      throws OrmException {
+    Collection<T> inserts = null;
+    try {
       PreparedStatement ps = null;
       try {
-        int cnt = 0;
+        List<T> allInstances = new ArrayList<T>();
         for (final T o : instances) {
           if (ps == null) {
             ps = schema.getConnection().prepareStatement(getUpdateOneSql());
           }
           bindOneUpdate(ps, o);
-          ps.addBatch();
-          cnt++;
+          int updateCount = ps.executeUpdate();
+          if (updateCount != 1) {
+            if (inserts == null) {
+              inserts = new ArrayList<T>();
+            }
+            inserts.add(o);          }
+          allInstances.add(o);
         }
-        execute(ps, cnt);
       } finally {
         if (ps != null) {
           ps.close();
@@ -196,12 +310,21 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
     } catch (SQLException e) {
       throw convertError("update", e);
     }
+    return inserts;
   }
 
   @Override
   public void upsert(final Iterable<T> instances) throws OrmException {
-    // Assume update first, it will cheaply tell us if the row is missing.
-    //
+  // Assume update first, it will cheaply tell us if the row is missing.
+  Collection<T> inserts = attemptUpdate(instances);
+
+    if (inserts != null) {
+      insert(inserts);
+    }
+  }
+
+  private Collection<T> attemptUpdateAsBatch(final Iterable<T> instances)
+      throws OrmException {
     Collection<T> inserts = null;
     try {
       PreparedStatement ps = null;
@@ -244,33 +367,65 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
       throw convertError("update", e);
     }
 
-    if (inserts != null) {
-      insert(inserts);
-    }
+    return inserts;
   }
 
   @Override
   public void delete(final Iterable<T> instances) throws OrmException {
     try {
-      PreparedStatement ps = null;
-      try {
-        int cnt = 0;
-        for (final T o : instances) {
-          if (ps == null) {
-            ps = schema.getConnection().prepareStatement(getDeleteOneSql());
-          }
-          bindOneDelete(ps, o);
-          ps.addBatch();
-          cnt++;
-        }
-        execute(ps, cnt);
-      } finally {
-        if (ps != null) {
-          ps.close();
-        }
+      if (schema.getDialect().canDetermineIndividualBatchUpdateCounts()) {
+        deleteAsBatch(instances);
+      } else {
+        deleteIndividually(instances);
       }
     } catch (SQLException e) {
       throw convertError("delete", e);
+    }
+  }
+
+  private void deleteIndividually(Iterable<T> instances) throws SQLException,
+      OrmConcurrencyException {
+    PreparedStatement ps = null;
+    try {
+      boolean concurrencyViolationDetected = false;
+      for (final T o : instances) {
+        if (ps == null) {
+          ps = schema.getConnection().prepareStatement(getDeleteOneSql());
+        }
+        bindOneDelete(ps, o);
+        int updateCount = ps.executeUpdate();
+        if (updateCount != 1) {
+          concurrencyViolationDetected = true;
+        }
+      }
+      if (concurrencyViolationDetected) {
+        throw new OrmConcurrencyException();
+      }
+    } finally {
+      if (ps != null) {
+        ps.close();
+      }
+    }
+  }
+
+  private void deleteAsBatch(final Iterable<T> instances) throws SQLException,
+      OrmConcurrencyException {
+    PreparedStatement ps = null;
+    try {
+      int cnt = 0;
+      for (final T o : instances) {
+        if (ps == null) {
+          ps = schema.getConnection().prepareStatement(getDeleteOneSql());
+        }
+        bindOneDelete(ps, o);
+        ps.addBatch();
+        cnt++;
+      }
+      execute(ps, cnt);
+    } finally {
+      if (ps != null) {
+        ps.close();
+      }
     }
   }
 
