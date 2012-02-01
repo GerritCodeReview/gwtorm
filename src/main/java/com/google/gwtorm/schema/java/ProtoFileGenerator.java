@@ -77,6 +77,9 @@ class ProtoFileGenerator {
 
     seen.clear();
     for (RelationModel r : rels) {
+      generateMessage(r.getPrimaryKey().getField(), out, true);
+    }
+    for (RelationModel r : rels) {
       generateMessage(r, out);
     }
 
@@ -94,20 +97,24 @@ class ProtoFileGenerator {
   private void generateMessage(RelationModel rel, PrintWriter out) {
     List<ColumnModel> cols = sortColumns(rel.getFields());
     for (ColumnModel c : cols) {
-      generateMessage(c, out);
+      generateMessage(c, out, false);
     }
 
+    ColumnModel pk = rel.getPrimaryKey().getField();
     out.print("message " + getMessageName(rel) + " {\n");
     for (ColumnModel c : cols) {
       out.append("\t");
-      out.append(c.isNotNull() ? "required" : "optional");
-      out.append(" " + getType(c) + " " + getName(c) + " = "
-          + c.getColumnID() + ";\n");
+      out.append(pk.equals(c) ? "required" : "optional");
+      out.append(" ").append(getType(c)).append(" ");
+      out.append(getName(c));
+      out.append(" = ").append(Integer.toString(c.getColumnID()));
+      out.append(";\n");
     }
     out.print("}\n\n");
   }
 
-  private void generateMessage(ColumnModel parent, PrintWriter out) {
+  private void generateMessage(ColumnModel parent, PrintWriter out,
+      boolean required) {
     // Handle base cases
     if (!parent.isNested()) {
       return;
@@ -117,16 +124,17 @@ class ProtoFileGenerator {
 
     List<ColumnModel> children = sortColumns(parent.getNestedColumns());
     for (ColumnModel child : children) {
-      generateMessage(child, out);
+      generateMessage(child, out, required);
     }
 
     out.print("message " + getType(parent) + " {\n");
     for (ColumnModel child : children) {
       out.append("\t");
-      out.append(child.isNotNull() ? "required" : "optional");
-      out.append(" " + getType(child) + " "
-          + Util.makeSqlFriendly(child.getFieldName()) + " = "
-          + child.getColumnID() + ";\n");
+      out.append(required ? "required" : "optional");
+      out.append(" ").append(getType(child)).append(" ");
+      out.append(Util.makeSqlFriendly(child.getFieldName()));
+      out.append(" = ").append(Integer.toString(child.getColumnID()));
+      out.append(";\n");
     }
     out.print("}\n\n");
 
