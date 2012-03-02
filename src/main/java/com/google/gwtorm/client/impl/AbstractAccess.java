@@ -14,6 +14,8 @@
 
 package com.google.gwtorm.client.impl;
 
+import com.google.common.util.concurrent.CheckedFuture;
+import com.google.common.util.concurrent.Futures;
 import com.google.gwtorm.client.Access;
 import com.google.gwtorm.client.AtomicUpdate;
 import com.google.gwtorm.client.Key;
@@ -33,6 +35,14 @@ public abstract class AbstractAccess<E, K extends Key<?>>
   @Override
   public void beginTransaction(K key) throws OrmException {
     // Do nothing by default.
+  }
+
+  public CheckedFuture<E, OrmException> getAsync(K key) {
+    try {
+      return Futures.immediateCheckedFuture(get(key));
+    } catch (OrmException e) {
+      return Futures.immediateFailedCheckedFuture(e);
+    }
   }
 
   public ResultSet<E> get(final Iterable<K> keys) throws OrmException {
