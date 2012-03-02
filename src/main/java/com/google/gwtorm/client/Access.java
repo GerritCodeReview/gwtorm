@@ -14,6 +14,8 @@
 
 package com.google.gwtorm.client;
 
+import com.google.common.util.concurrent.CheckedFuture;
+
 import java.util.Map;
 
 /**
@@ -90,6 +92,21 @@ public interface Access<T extends Object, K extends Key<?>> {
    * @throws UnsupportedOperationException the key type doesn't implement Key.
    */
   T get(K key) throws OrmException;
+
+  /**
+   * Lookup a single entity asynchronously via its primary key.
+   * <p>
+   * This method is only implemented if the entity's primary key is defined to
+   * be an implementation of the {@link Key} interface. Otherwise the method
+   * throws {@link UnsupportedOperationException}.
+   *
+   * @param key the primary key instance; must not be null.
+   * @return a {@link CheckedFuture} for the entity; the
+   *         {@link CheckedFuture#get()} will return null if no entity has
+   *         this key.
+   * @throws UnsupportedOperationException the key type doesn't implement Key.
+   */
+  CheckedFuture<T, OrmException> getAsync(K key);
 
   /**
    * Lookup multiple entities via their primary key.
