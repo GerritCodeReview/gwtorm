@@ -14,15 +14,15 @@
 
 package com.google.gwtorm.nosql;
 
-import com.google.gwtorm.client.Access;
-import com.google.gwtorm.client.OrmConcurrencyException;
-import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.data.PersonAccess;
 import com.google.gwtorm.data.PhoneBookDb;
 import com.google.gwtorm.data.TestPerson;
 import com.google.gwtorm.jdbc.JdbcExecutor;
 import com.google.gwtorm.jdbc.JdbcSchema;
 import com.google.gwtorm.nosql.heap.MemoryDatabase;
+import com.google.gwtorm.server.Access;
+import com.google.gwtorm.server.OrmConcurrencyException;
+import com.google.gwtorm.server.OrmException;
 
 import junit.framework.TestCase;
 

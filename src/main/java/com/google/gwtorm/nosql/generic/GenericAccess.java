@@ -14,19 +14,19 @@
 
 package com.google.gwtorm.nosql.generic;
 
-import com.google.gwtorm.client.Access;
-import com.google.gwtorm.client.AtomicUpdate;
 import com.google.gwtorm.client.Key;
-import com.google.gwtorm.client.OrmConcurrencyException;
-import com.google.gwtorm.client.OrmDuplicateKeyException;
-import com.google.gwtorm.client.OrmException;
-import com.google.gwtorm.client.ResultSet;
-import com.google.gwtorm.client.impl.AbstractResultSet;
-import com.google.gwtorm.client.impl.ListResultSet;
 import com.google.gwtorm.nosql.IndexFunction;
 import com.google.gwtorm.nosql.IndexKeyBuilder;
 import com.google.gwtorm.nosql.IndexRow;
 import com.google.gwtorm.nosql.NoSqlAccess;
+import com.google.gwtorm.server.AbstractResultSet;
+import com.google.gwtorm.server.Access;
+import com.google.gwtorm.server.AtomicUpdate;
+import com.google.gwtorm.server.ListResultSet;
+import com.google.gwtorm.server.OrmConcurrencyException;
+import com.google.gwtorm.server.OrmDuplicateKeyException;
+import com.google.gwtorm.server.OrmException;
+import com.google.gwtorm.server.ResultSet;
 import com.google.protobuf.ByteString;
 
 import java.util.ArrayList;

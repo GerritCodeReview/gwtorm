@@ -14,9 +14,9 @@
 
 package com.google.gwtorm.schema;
 
-import com.google.gwtorm.client.OrmException;
-import com.google.gwtorm.client.Sequence;
 import com.google.gwtorm.schema.sql.SqlDialect;
+import com.google.gwtorm.server.OrmException;
+import com.google.gwtorm.server.Sequence;
 
 public class SequenceModel {
   protected String methodName;

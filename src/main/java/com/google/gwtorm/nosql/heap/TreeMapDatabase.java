@@ -14,9 +14,9 @@
 
 package com.google.gwtorm.nosql.heap;
 
-import com.google.gwtorm.client.OrmException;
-import com.google.gwtorm.client.Schema;
 import com.google.gwtorm.nosql.generic.GenericDatabase;
+import com.google.gwtorm.server.OrmException;
+import com.google.gwtorm.server.Schema;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.UnknownFieldSet;
 

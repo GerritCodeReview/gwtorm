@@ -12,21 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.gwtorm.client;
+package com.google.gwtorm.server;
+
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Any data store read or write error.
+ * Annotation marking a query function in a {@link Access} interface as the key.
+ *
+ * @see Access
  */
-public class OrmRuntimeException extends RuntimeException {
-  public OrmRuntimeException(final String message) {
-    super(message);
-  }
-
-  public OrmRuntimeException(final String message, final Throwable why) {
-    super(message, why);
-  }
-
-  public OrmRuntimeException(final Throwable why) {
-    super(why);
-  }
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface PrimaryKey {
+  /**
+   * @return name of the field in the entity which contains the primary key.
+   */
+  String value();
 }

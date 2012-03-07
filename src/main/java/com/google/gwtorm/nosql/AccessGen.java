@@ -15,8 +15,6 @@
 package com.google.gwtorm.nosql;
 
 import com.google.gwtorm.client.Key;
-import com.google.gwtorm.client.OrmException;
-import com.google.gwtorm.client.ResultSet;
 import com.google.gwtorm.protobuf.CodecFactory;
 import com.google.gwtorm.protobuf.ProtobufCodec;
 import com.google.gwtorm.schema.ColumnModel;
@@ -27,6 +25,8 @@ import com.google.gwtorm.schema.RelationModel;
 import com.google.gwtorm.schema.Util;
 import com.google.gwtorm.server.CodeGenSupport;
 import com.google.gwtorm.server.GeneratedClassLoader;
+import com.google.gwtorm.server.OrmException;
+import com.google.gwtorm.server.ResultSet;
 
 import org.antlr.runtime.tree.Tree;
 import org.objectweb.asm.ClassWriter;

@@ -14,11 +14,11 @@
 
 package com.google.gwtorm.data;
 
-import com.google.gwtorm.client.Access;
-import com.google.gwtorm.client.OrmException;
-import com.google.gwtorm.client.PrimaryKey;
-import com.google.gwtorm.client.Query;
-import com.google.gwtorm.client.ResultSet;
+import com.google.gwtorm.server.Access;
+import com.google.gwtorm.server.OrmException;
+import com.google.gwtorm.server.PrimaryKey;
+import com.google.gwtorm.server.Query;
+import com.google.gwtorm.server.ResultSet;
 
 public interface PersonAccess extends Access<TestPerson, TestPerson.Key> {
   @PrimaryKey("name")

@@ -14,9 +14,6 @@
 
 package com.google.gwtorm.server;
 
-import com.google.gwtorm.client.Access;
-import com.google.gwtorm.client.OrmConcurrencyException;
-import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.data.PersonAccess;
 import com.google.gwtorm.data.PhoneBookDb;
 import com.google.gwtorm.data.TestPerson;

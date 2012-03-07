@@ -15,7 +15,6 @@
 
 package com.google.gwtorm.schema.sql;
 
-import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.data.PhoneBookDb;
 import com.google.gwtorm.data.PhoneBookDb2;
 import com.google.gwtorm.data.TestAddress;
@@ -24,6 +23,7 @@ import com.google.gwtorm.jdbc.Database;
 import com.google.gwtorm.jdbc.JdbcExecutor;
 import com.google.gwtorm.jdbc.JdbcSchema;
 import com.google.gwtorm.jdbc.SimpleDataSource;
+import com.google.gwtorm.server.OrmException;
 
 import junit.framework.TestCase;
 

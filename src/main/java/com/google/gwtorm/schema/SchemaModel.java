@@ -14,8 +14,8 @@
 
 package com.google.gwtorm.schema;
 
-import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.schema.sql.SqlDialect;
+import com.google.gwtorm.server.OrmException;
 
 import java.util.Collection;
 import java.util.HashSet;

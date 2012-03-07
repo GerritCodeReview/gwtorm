@@ -12,21 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.gwtorm.client;
+package com.google.gwtorm.server;
 
 /**
  * Any data store read or write error.
  */
-public class OrmException extends Exception {
-  public OrmException(final String message) {
+public class OrmRuntimeException extends RuntimeException {
+  public OrmRuntimeException(final String message) {
     super(message);
   }
 
-  public OrmException(final String message, final Throwable why) {
+  public OrmRuntimeException(final String message, final Throwable why) {
     super(message, why);
   }
 
-  public OrmException(final Throwable why) {
+  public OrmRuntimeException(final Throwable why) {
     super(why);
   }
 }

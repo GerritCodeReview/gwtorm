@@ -14,7 +14,6 @@
 
 package com.google.gwtorm.server;
 
-import com.google.gwtorm.client.OrmException;
 
 import java.io.File;
 import java.io.FileOutputStream;

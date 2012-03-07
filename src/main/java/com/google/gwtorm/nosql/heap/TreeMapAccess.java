@@ -14,9 +14,9 @@
 
 package com.google.gwtorm.nosql.heap;
 
-import com.google.gwtorm.client.Access;
 import com.google.gwtorm.client.Key;
 import com.google.gwtorm.nosql.generic.GenericAccess;
+import com.google.gwtorm.server.Access;
 
 /** Base implementation for {@link Access} in a {@link TreeMapDatabase}. */
 public abstract class TreeMapAccess<T, K extends Key<?>> extends

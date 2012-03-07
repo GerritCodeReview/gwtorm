@@ -14,10 +14,10 @@
 
 package com.google.gwtorm.nosql.generic;
 
-import com.google.gwtorm.client.OrmException;
-import com.google.gwtorm.client.Schema;
 import com.google.gwtorm.nosql.NoSqlDatabase;
 import com.google.gwtorm.nosql.NoSqlSchema;
+import com.google.gwtorm.server.OrmException;
+import com.google.gwtorm.server.Schema;
 
 import java.util.concurrent.TimeUnit;
 

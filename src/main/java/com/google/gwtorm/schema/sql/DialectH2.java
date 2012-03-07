@@ -14,10 +14,10 @@
 
 package com.google.gwtorm.schema.sql;
 
-import com.google.gwtorm.client.OrmDuplicateKeyException;
-import com.google.gwtorm.client.OrmException;
-import com.google.gwtorm.client.StatementExecutor;
 import com.google.gwtorm.schema.ColumnModel;
+import com.google.gwtorm.server.OrmDuplicateKeyException;
+import com.google.gwtorm.server.OrmException;
+import com.google.gwtorm.server.StatementExecutor;
 
 import java.sql.Connection;
 import java.sql.ResultSet;

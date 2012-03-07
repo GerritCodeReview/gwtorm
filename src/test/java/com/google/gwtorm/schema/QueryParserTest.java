@@ -14,7 +14,7 @@
 
 package com.google.gwtorm.schema;
 
-import com.google.gwtorm.client.OrmException;
+import com.google.gwtorm.server.OrmException;
 
 import junit.framework.TestCase;
 

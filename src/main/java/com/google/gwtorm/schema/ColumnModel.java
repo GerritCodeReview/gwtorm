@@ -15,7 +15,7 @@
 package com.google.gwtorm.schema;
 
 import com.google.gwtorm.client.Column;
-import com.google.gwtorm.client.OrmException;
+import com.google.gwtorm.server.OrmException;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;

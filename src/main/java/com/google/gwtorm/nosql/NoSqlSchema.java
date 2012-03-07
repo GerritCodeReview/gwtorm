@@ -14,10 +14,10 @@
 
 package com.google.gwtorm.nosql;
 
-import com.google.gwtorm.client.OrmException;
-import com.google.gwtorm.client.Schema;
-import com.google.gwtorm.client.StatementExecutor;
 import com.google.gwtorm.server.AbstractSchema;
+import com.google.gwtorm.server.OrmException;
+import com.google.gwtorm.server.Schema;
+import com.google.gwtorm.server.StatementExecutor;
 
 /** Internal base class for implementations of {@link Schema}. */
 public abstract class NoSqlSchema extends AbstractSchema {

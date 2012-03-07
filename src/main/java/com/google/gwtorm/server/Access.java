@@ -12,9 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.gwtorm.client;
+package com.google.gwtorm.server;
 
 import com.google.common.util.concurrent.CheckedFuture;
+import com.google.gwtorm.client.Column;
+import com.google.gwtorm.client.Key;
 
 import java.util.Map;
 

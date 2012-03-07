@@ -15,14 +15,14 @@
 package com.google.gwtorm.nosql;
 
 import com.google.gwtorm.client.KeyUtil;
-import com.google.gwtorm.client.OrmException;
-import com.google.gwtorm.client.Schema;
-import com.google.gwtorm.client.SchemaFactory;
 import com.google.gwtorm.schema.RelationModel;
 import com.google.gwtorm.schema.SchemaModel;
 import com.google.gwtorm.schema.java.JavaSchemaModel;
 import com.google.gwtorm.server.GeneratedClassLoader;
+import com.google.gwtorm.server.OrmException;
+import com.google.gwtorm.server.Schema;
 import com.google.gwtorm.server.SchemaConstructorGen;
+import com.google.gwtorm.server.SchemaFactory;
 import com.google.gwtorm.server.SchemaGen;
 import com.google.gwtorm.server.StandardKeyEncoder;
 

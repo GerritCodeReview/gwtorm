@@ -14,12 +14,12 @@
 
 package com.google.gwtorm.nosql;
 
-import com.google.gwtorm.client.Access;
 import com.google.gwtorm.client.Key;
-import com.google.gwtorm.client.OrmException;
-import com.google.gwtorm.client.ResultSet;
-import com.google.gwtorm.client.impl.AbstractAccess;
 import com.google.gwtorm.protobuf.ProtobufCodec;
+import com.google.gwtorm.server.AbstractAccess;
+import com.google.gwtorm.server.Access;
+import com.google.gwtorm.server.OrmException;
+import com.google.gwtorm.server.ResultSet;
 
 /** Internal base class for implementations of {@link Access}. */
 public abstract class NoSqlAccess<T, K extends Key<?>> extends

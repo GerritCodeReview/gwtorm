@@ -14,8 +14,6 @@
 
 package com.google.gwtorm.server;
 
-import com.google.gwtorm.client.OrmException;
-import com.google.gwtorm.client.Schema;
 
 /** Base implementation any generated schema must implement. */
 public abstract class AbstractSchema implements Schema {
