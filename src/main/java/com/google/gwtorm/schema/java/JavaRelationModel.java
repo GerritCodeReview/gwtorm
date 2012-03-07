@@ -14,15 +14,15 @@
 
 package com.google.gwtorm.schema.java;
 
-import com.google.gwtorm.client.Access;
 import com.google.gwtorm.client.Column;
-import com.google.gwtorm.client.OrmException;
-import com.google.gwtorm.client.PrimaryKey;
-import com.google.gwtorm.client.Query;
-import com.google.gwtorm.client.Relation;
-import com.google.gwtorm.client.ResultSet;
 import com.google.gwtorm.schema.QueryModel;
 import com.google.gwtorm.schema.RelationModel;
+import com.google.gwtorm.server.Access;
+import com.google.gwtorm.server.OrmException;
+import com.google.gwtorm.server.PrimaryKey;
+import com.google.gwtorm.server.Query;
+import com.google.gwtorm.server.Relation;
+import com.google.gwtorm.server.ResultSet;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

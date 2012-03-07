@@ -12,9 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.gwtorm.client;
+package com.google.gwtorm.server;
 
-/** Executes statements against the schema. */
-public interface StatementExecutor {
-  void execute(String sql) throws OrmException;
+/** Indicates one or more entities were modified concurrently. */
+public class OrmConcurrencyException extends OrmException {
+  public OrmConcurrencyException() {
+    super("Concurrent modification detected");
+  }
+
+  public OrmConcurrencyException(final String message) {
+    super(message);
+  }
+
+  public OrmConcurrencyException(final String message, final Throwable why) {
+    super(message, why);
+  }
 }

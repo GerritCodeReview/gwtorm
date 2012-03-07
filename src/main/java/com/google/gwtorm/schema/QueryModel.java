@@ -14,11 +14,11 @@
 
 package com.google.gwtorm.schema;
 
-import com.google.gwtorm.client.OrmException;
-import com.google.gwtorm.client.Query;
 import com.google.gwtorm.schema.QueryParser.Column;
 import com.google.gwtorm.schema.sql.SqlBooleanTypeInfo;
 import com.google.gwtorm.schema.sql.SqlDialect;
+import com.google.gwtorm.server.OrmException;
+import com.google.gwtorm.server.Query;
 
 import org.antlr.runtime.CommonToken;
 import org.antlr.runtime.tree.CommonTree;

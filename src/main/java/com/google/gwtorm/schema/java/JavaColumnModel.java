@@ -15,10 +15,10 @@
 package com.google.gwtorm.schema.java;
 
 import com.google.gwtorm.client.Column;
-import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.client.RowVersion;
 import com.google.gwtorm.schema.ColumnModel;
 import com.google.gwtorm.schema.Util;
+import com.google.gwtorm.server.OrmException;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;

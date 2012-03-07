@@ -12,16 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.gwtorm.client.impl;
+package com.google.gwtorm.server;
 
 import com.google.common.util.concurrent.CheckedFuture;
 import com.google.common.util.concurrent.Futures;
-import com.google.gwtorm.client.Access;
-import com.google.gwtorm.client.AtomicUpdate;
 import com.google.gwtorm.client.Key;
-import com.google.gwtorm.client.OrmConcurrencyException;
-import com.google.gwtorm.client.OrmException;
-import com.google.gwtorm.client.ResultSet;
 
 import java.util.ArrayList;
 import java.util.Collections;

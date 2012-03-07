@@ -14,12 +14,12 @@
 
 package com.google.gwtorm.jdbc;
 
-import com.google.gwtorm.client.Access;
 import com.google.gwtorm.client.Key;
-import com.google.gwtorm.client.OrmConcurrencyException;
-import com.google.gwtorm.client.OrmException;
-import com.google.gwtorm.client.impl.AbstractAccess;
-import com.google.gwtorm.client.impl.ListResultSet;
+import com.google.gwtorm.server.AbstractAccess;
+import com.google.gwtorm.server.Access;
+import com.google.gwtorm.server.ListResultSet;
+import com.google.gwtorm.server.OrmConcurrencyException;
+import com.google.gwtorm.server.OrmException;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -38,7 +38,7 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
   }
 
   @Override
-  public final com.google.gwtorm.client.ResultSet<T> get(final Iterable<K> keys)
+  public final com.google.gwtorm.server.ResultSet<T> get(final Iterable<K> keys)
       throws OrmException {
     final Collection<K> keySet;
     if (keys instanceof Collection) {
@@ -71,7 +71,7 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
     }
   }
 
-  protected com.google.gwtorm.client.ResultSet<T> getBySqlIn(
+  protected com.google.gwtorm.server.ResultSet<T> getBySqlIn(
       final Collection<K> keys) throws OrmException {
     return super.get(keys);
   }
@@ -126,7 +126,7 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
     }
   }
 
-  protected com.google.gwtorm.client.ResultSet<T> queryList(
+  protected com.google.gwtorm.server.ResultSet<T> queryList(
       final PreparedStatement ps) throws OrmException {
     final ResultSet rs;
     try {

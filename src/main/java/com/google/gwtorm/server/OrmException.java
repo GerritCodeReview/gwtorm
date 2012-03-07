@@ -1,4 +1,4 @@
-// Copyright 2009 Google Inc.
+// Copyright 2008 Google Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,19 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.gwtorm.client;
+package com.google.gwtorm.server;
 
-/** Indicates one or more entities were modified concurrently. */
-public class OrmConcurrencyException extends OrmException {
-  public OrmConcurrencyException() {
-    super("Concurrent modification detected");
-  }
-
-  public OrmConcurrencyException(final String message) {
+/**
+ * Any data store read or write error.
+ */
+public class OrmException extends Exception {
+  public OrmException(final String message) {
     super(message);
   }
 
-  public OrmConcurrencyException(final String message, final Throwable why) {
+  public OrmException(final String message, final Throwable why) {
     super(message, why);
+  }
+
+  public OrmException(final Throwable why) {
+    super(why);
   }
 }

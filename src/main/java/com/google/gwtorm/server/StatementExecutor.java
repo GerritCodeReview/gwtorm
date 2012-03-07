@@ -12,15 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.gwtorm.client;
+package com.google.gwtorm.server;
 
-/** Indicates one or more entities were concurrently inserted with the same key. */
-public class OrmDuplicateKeyException extends OrmException {
-  public OrmDuplicateKeyException(final String msg) {
-    super(msg);
-  }
 
-  public OrmDuplicateKeyException(final String msg, final Throwable why) {
-    super(msg, why);
-  }
+/** Executes statements against the schema. */
+public interface StatementExecutor {
+  void execute(String sql) throws OrmException;
 }

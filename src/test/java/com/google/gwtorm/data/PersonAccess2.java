@@ -14,9 +14,9 @@
 
 package com.google.gwtorm.data;
 
-import com.google.gwtorm.client.Access;
-import com.google.gwtorm.client.OrmException;
-import com.google.gwtorm.client.PrimaryKey;
+import com.google.gwtorm.server.Access;
+import com.google.gwtorm.server.OrmException;
+import com.google.gwtorm.server.PrimaryKey;
 
 public interface PersonAccess2 extends Access<TestPerson2, TestPerson.Key> {
   @PrimaryKey("name")

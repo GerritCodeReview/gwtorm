@@ -14,8 +14,8 @@
 
 package com.google.gwtorm.nosql.heap;
 
-import com.google.gwtorm.client.OrmException;
-import com.google.gwtorm.client.Schema;
+import com.google.gwtorm.server.OrmException;
+import com.google.gwtorm.server.Schema;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

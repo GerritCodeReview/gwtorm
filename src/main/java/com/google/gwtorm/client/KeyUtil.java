@@ -14,9 +14,6 @@
 
 package com.google.gwtorm.client;
 
-import com.google.gwtorm.server.StandardKeyEncoder;
-
-
 /** Common utility functions for {@link Key} implementors. */
 public class KeyUtil {
   private static Encoder ENCODER_IMPL;
@@ -24,9 +21,11 @@ public class KeyUtil {
   /**
    * Set the encoder implementation to a valid implementation.
    * <p>
-   * Server-side code needs to set the encoder to a {@link StandardKeyEncoder}
-   * instance prior to invoking any methods in this class. Typically this is
-   * done by the {@link SchemaFactory} implementation's static initializer.
+   * Server-side code needs to set the encoder to a
+   * {@link com.google.gwtorm.server.StandardKeyEncoder} instance prior to
+   * invoking any methods in this class. Typically this is done by the
+   * {@link com.google.gwtorm.server.SchemaFactory} implementation's static
+   * initializer.
    */
   public static void setEncoderImpl(final Encoder e) {
     ENCODER_IMPL = e;

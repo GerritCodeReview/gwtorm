@@ -14,9 +14,9 @@
 
 package com.google.gwtorm.data;
 
-import com.google.gwtorm.client.Relation;
-import com.google.gwtorm.client.Schema;
-import com.google.gwtorm.client.Sequence;
+import com.google.gwtorm.server.Relation;
+import com.google.gwtorm.server.Schema;
+import com.google.gwtorm.server.Sequence;
 
 public interface PhoneBookDb extends Schema {
   @Relation(id = 1)

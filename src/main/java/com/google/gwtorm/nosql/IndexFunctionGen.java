@@ -14,13 +14,13 @@
 
 package com.google.gwtorm.nosql;
 
-import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.schema.ColumnModel;
 import com.google.gwtorm.schema.QueryModel;
 import com.google.gwtorm.schema.QueryParser;
 import com.google.gwtorm.schema.Util;
 import com.google.gwtorm.server.CodeGenSupport;
 import com.google.gwtorm.server.GeneratedClassLoader;
+import com.google.gwtorm.server.OrmException;
 
 import org.antlr.runtime.tree.Tree;
 import org.objectweb.asm.ClassWriter;

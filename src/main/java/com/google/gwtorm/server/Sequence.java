@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.gwtorm.client;
+package com.google.gwtorm.server;
+
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

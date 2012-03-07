@@ -14,13 +14,13 @@
 
 package com.google.gwtorm.nosql;
 
-import com.google.gwtorm.client.OrmException;
 import com.google.gwtorm.data.PhoneBookDb;
 import com.google.gwtorm.data.TestPerson;
 import com.google.gwtorm.schema.QueryModel;
 import com.google.gwtorm.schema.RelationModel;
 import com.google.gwtorm.schema.java.JavaSchemaModel;
 import com.google.gwtorm.server.GeneratedClassLoader;
+import com.google.gwtorm.server.OrmException;
 
 import junit.framework.TestCase;
 

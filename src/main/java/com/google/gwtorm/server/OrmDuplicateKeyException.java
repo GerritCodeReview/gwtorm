@@ -1,4 +1,4 @@
-// Copyright 2008 Google Inc.
+// Copyright 2009 Google Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,23 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.gwtorm.client;
+package com.google.gwtorm.server;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+/** Indicates one or more entities were concurrently inserted with the same key. */
+public class OrmDuplicateKeyException extends OrmException {
+  public OrmDuplicateKeyException(final String msg) {
+    super(msg);
+  }
 
-/**
- * Annotation marking a query function in a {@link Access} interface as the key.
- *
- * @see Access
- */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface PrimaryKey {
-  /**
-   * @return name of the field in the entity which contains the primary key.
-   */
-  String value();
+  public OrmDuplicateKeyException(final String msg, final Throwable why) {
+    super(msg, why);
+  }
 }

@@ -14,13 +14,13 @@
 
 package com.google.gwtorm.nosql.heap;
 
-import com.google.gwtorm.client.AtomicUpdate;
-import com.google.gwtorm.client.OrmException;
-import com.google.gwtorm.client.ResultSet;
-import com.google.gwtorm.client.Schema;
-import com.google.gwtorm.client.impl.ListResultSet;
 import com.google.gwtorm.nosql.generic.GenericSchema;
 import com.google.gwtorm.nosql.generic.Row;
+import com.google.gwtorm.server.AtomicUpdate;
+import com.google.gwtorm.server.ListResultSet;
+import com.google.gwtorm.server.OrmException;
+import com.google.gwtorm.server.ResultSet;
+import com.google.gwtorm.server.Schema;
 
 import java.util.ArrayList;
 import java.util.List;

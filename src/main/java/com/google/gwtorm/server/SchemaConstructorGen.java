@@ -14,9 +14,6 @@
 
 package com.google.gwtorm.server;
 
-import com.google.gwtorm.client.OrmException;
-import com.google.gwtorm.client.Schema;
-import com.google.gwtorm.client.SchemaFactory;
 import com.google.gwtorm.schema.Util;
 
 import org.objectweb.asm.ClassWriter;
