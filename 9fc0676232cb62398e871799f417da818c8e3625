@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAADqn///9w\u003d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2012-03-07T20:36:54Z",
+      "side": 1,
+      "message": "Please use a comment format like:\n\n  Refactor client code to reduce GWT includes\n\n  blah blah blah blah blah",
+      "revId": "9fc0676232cb62398e871799f417da818c8e3625",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
