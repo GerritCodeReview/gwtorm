@@ -83,14 +83,21 @@ class ProtoFileGenerator {
       generateMessage(r, out);
     }
 
-    out.print("message Any" + schemaName + " {\n");
+    out.print("message Any" + schemaName + "PrimaryKey {\n");
+    for (RelationModel r : sortRelations(rels)) {
+      ColumnModel pk = r.getPrimaryKey().getField();
+      out.print("\toptional " + getType(pk) + " "
+          + r.getRelationName().toLowerCase() + " = " + r.getRelationID()
+          + ";\n");
+    }
+    out.print("}\n");
 
+    out.print("message Any" + schemaName + " {\n");
     for (RelationModel r : sortRelations(rels)) {
       out.print("\toptional " + getMessageName(r) + " "
           + r.getRelationName().toLowerCase() + " = " + r.getRelationID()
           + ";\n");
     }
-
     out.print("}\n");
   }
 
