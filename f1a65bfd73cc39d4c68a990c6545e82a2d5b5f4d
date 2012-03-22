@@ -16,6 +16,23 @@
       "revId": "f1a65bfd73cc39d4c68a990c6545e82a2d5b5f4d",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAEJ3///+w\u003d",
+        "filename": "src/main/java/com/google/gwtorm/schema/java/ProtoFileGenerator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1010008
+      },
+      "writtenOn": "2012-03-22T14:56:43Z",
+      "side": 1,
+      "message": "Looking at the generated output, I think you want another \\n here.",
+      "revId": "f1a65bfd73cc39d4c68a990c6545e82a2d5b5f4d",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
