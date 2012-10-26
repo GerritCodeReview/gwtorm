@@ -23,8 +23,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -32,15 +32,15 @@ public abstract class RelationModel {
   protected String methodName;
   protected String relationName;
   protected Relation relation;
-  protected final LinkedHashMap<String, ColumnModel> fieldsByFieldName;
-  protected final LinkedHashMap<String, ColumnModel> columnsByColumnName;
+  protected final Map<String, ColumnModel> fieldsByFieldName;
+  protected final Map<String, ColumnModel> columnsByColumnName;
   protected final SortedMap<Integer, ColumnModel> columnsById;
   protected KeyModel primaryKey;
   protected Collection<QueryModel> queries;
 
   protected RelationModel() {
-    fieldsByFieldName = new LinkedHashMap<String, ColumnModel>();
-    columnsByColumnName = new LinkedHashMap<String, ColumnModel>();
+    fieldsByFieldName = new TreeMap<String, ColumnModel>();
+    columnsByColumnName = new TreeMap<String, ColumnModel>();
     columnsById = new TreeMap<Integer, ColumnModel>();
     queries = new ArrayList<QueryModel>();
   }

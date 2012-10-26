@@ -19,10 +19,9 @@ import com.google.gwtorm.server.OrmException;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
-
+import java.util.TreeMap;
 
 public abstract class SchemaModel {
   protected final Set<String> allNames;
@@ -31,8 +30,8 @@ public abstract class SchemaModel {
 
   protected SchemaModel() {
     allNames = new HashSet<String>();
-    relations = new LinkedHashMap<String, RelationModel>();
-    sequences = new LinkedHashMap<String, SequenceModel>();
+    relations = new TreeMap<String, RelationModel>();
+    sequences = new TreeMap<String, SequenceModel>();
   }
 
   protected void add(final RelationModel r) throws OrmException {
