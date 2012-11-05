@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAALT3////0\u003d",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/SimpleDataSource.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1011727
+      },
+      "writtenOn": "2012-11-05T17:30:22Z",
+      "side": 1,
+      "message": "Would it be appropriate to return driver.getParentLogger() instead?  Of course, since that\u0027s a new API in Java 7, you\u0027d need to reflectively call it if you want to continue compiling for Java 6. :/",
+      "revId": "d6fdc18769500070faf57e21423b0dc18d237292",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
