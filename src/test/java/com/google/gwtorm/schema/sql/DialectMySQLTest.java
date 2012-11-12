@@ -33,18 +33,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Properties;
 import java.util.Set;
 
-public class DialectMySQLTest {
-  private Connection db;
-  private JdbcExecutor executor;
-  private SqlDialect dialect;
-  private Database<PhoneBookDb> phoneBook;
+public class DialectMySQLTest extends SqlDialectTest {
   private Database<PhoneBookDb2> phoneBook2;
 
   @Before
