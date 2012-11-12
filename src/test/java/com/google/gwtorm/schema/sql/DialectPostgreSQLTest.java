@@ -34,7 +34,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -43,11 +42,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
-public class DialectPostgreSQLTest {
-  private Connection db;
-  private JdbcExecutor executor;
-  private SqlDialect dialect;
-  private Database<PhoneBookDb> phoneBook;
+public class DialectPostgreSQLTest extends SqlDialectTest {
   private Database<PhoneBookDb2> phoneBook2;
 
   @Before
