@@ -43,11 +43,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
-public class DialectPostgreSQLTest {
-  private Connection db;
-  private JdbcExecutor executor;
-  private SqlDialect dialect;
-  private Database<PhoneBookDb> phoneBook;
+public class DialectPostgreSQLTest extends SqlDialectTest {
   private Database<PhoneBookDb2> phoneBook2;
 
   @Before

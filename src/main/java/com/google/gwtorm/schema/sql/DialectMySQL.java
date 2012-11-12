@@ -214,4 +214,9 @@ public class DialectMySQL extends SqlDialect {
     r.append(getSqlTypeInfo(col).getSqlType(col, this));
     stmt.execute(r.toString());
   }
+
+  @Override
+  public OrmException convertError(String op, String entity, SQLException err) {
+    return fallbackConvertError(op, entity, err);
+  }
 }
