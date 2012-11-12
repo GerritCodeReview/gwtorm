@@ -41,12 +41,7 @@ import java.util.Collections;
 import java.util.Properties;
 import java.util.Set;
 
-public class DialectH2Test {
-  private Connection db;
-  private JdbcExecutor executor;
-  private SqlDialect dialect;
-  private Database<PhoneBookDb> phoneBook;
-  private Database<PhoneBookDb2> phoneBook2;
+public class DialectH2Test extends SqlDialectTest {
 
   @Before
   public void setUp() throws Exception {
