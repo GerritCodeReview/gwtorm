@@ -16,6 +16,24 @@
       "revId": "cafd867fcc3ac5c36803965cde055b18ee16b082",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAALgX////k\u003d",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/SqlDialect.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1011767
+      },
+      "writtenOn": "2012-11-12T13:04:27Z",
+      "side": 1,
+      "message": "Ok. Will submit a patch with a better commit message",
+      "parentUuid": "AAALgX////8\u003d",
+      "revId": "cafd867fcc3ac5c36803965cde055b18ee16b082",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
