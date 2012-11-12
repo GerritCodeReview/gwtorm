@@ -38,9 +38,9 @@ public class DialectH2 extends SqlDialect {
       final SQLException err) {
     switch (getSQLStateInt(err)) {
       case 23001: // UNIQUE CONSTRAINT VIOLATION
+      case 23505: // DUPLICATE_KEY_1
         return new OrmDuplicateKeyException(entity, err);
 
-      case 23000: // CHECK CONSTRAINT VIOLATION
       default:
         return super.convertError(op, entity, err);
     }
