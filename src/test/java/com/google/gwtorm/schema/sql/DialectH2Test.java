@@ -32,7 +32,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -41,12 +40,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
-public class DialectH2Test {
-  private Connection db;
-  private JdbcExecutor executor;
-  private SqlDialect dialect;
-  private Database<PhoneBookDb> phoneBook;
-  private Database<PhoneBookDb2> phoneBook2;
+public class DialectH2Test extends SqlDialectTest {
 
   @Before
   public void setUp() throws Exception {
