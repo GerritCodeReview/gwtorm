@@ -42,7 +42,7 @@ public class DialectH2 extends SqlDialect {
 
       case 23000: // CHECK CONSTRAINT VIOLATION
       default:
-        return super.convertError(op, entity, err);
+        return fallbackConvertError(op, entity, err);
     }
   }
 
