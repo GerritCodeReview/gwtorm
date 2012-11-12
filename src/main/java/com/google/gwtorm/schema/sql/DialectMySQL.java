@@ -17,8 +17,11 @@ package com.google.gwtorm.schema.sql;
 import com.google.gwtorm.client.Column;
 import com.google.gwtorm.schema.ColumnModel;
 import com.google.gwtorm.schema.SequenceModel;
+import com.google.gwtorm.server.OrmDuplicateKeyException;
 import com.google.gwtorm.server.OrmException;
 import com.google.gwtorm.server.StatementExecutor;
+
+import com.mysql.jdbc.MysqlErrorNumbers;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -204,8 +207,13 @@ public class DialectMySQL extends SqlDialect {
     stmt.execute(r.toString());
   }
 
-    @Override
-    public OrmException convertError(String op, String entity, SQLException err) {
+  @Override
+  public OrmException convertError(String op, String entity, SQLException err) {
+    switch (err.getErrorCode()) {
+      case MysqlErrorNumbers.ER_DUP_ENTRY:
+        return new OrmDuplicateKeyException(entity, err);
+      default:
         return fallbackConvertError(op, entity, err);
     }
+  }
 }
