@@ -15,6 +15,7 @@
 package com.google.gwtorm.schema.sql;
 
 import com.google.gwtorm.schema.ColumnModel;
+import com.google.gwtorm.server.OrmDuplicateKeyException;
 import com.google.gwtorm.server.OrmException;
 import com.google.gwtorm.server.StatementExecutor;
 
@@ -147,5 +148,15 @@ public class DialectOracle extends SqlDialect {
   @Override
   public boolean isStatementDelimiterSupported() {
     return false;
+  }
+
+  @Override
+  public OrmException convertError(String op, String entity, SQLException err) {
+    switch (err.getErrorCode()) {
+      case 1: // ORA-00001: unique constraint violated
+        return new OrmDuplicateKeyException(entity, err);
+      default:
+        return super.convertError(op, entity, err);
+    }
   }
 }
