@@ -19,6 +19,8 @@ import com.google.gwtorm.server.OrmDuplicateKeyException;
 import com.google.gwtorm.server.OrmException;
 import com.google.gwtorm.server.StatementExecutor;
 
+import org.h2.constant.ErrorCode;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -37,7 +39,9 @@ public class DialectH2 extends SqlDialect {
   public OrmException convertError(final String op, final String entity,
       final SQLException err) {
     switch (getSQLStateInt(err)) {
-      case 23001: // UNIQUE CONSTRAINT VIOLATION
+      case ErrorCode.DUPLICATE_KEY_1:
+      case 23001: // What is this code? It cannot be found
+                  // in http://www.h2database.com/javadoc/org/h2/constant/ErrorCode.html
         return new OrmDuplicateKeyException(entity, err);
 
       case 23000: // CHECK CONSTRAINT VIOLATION
