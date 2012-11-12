@@ -397,7 +397,7 @@ limitations under the License.
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
       <version>1.3.168</version>
-      <scope>test</scope>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
