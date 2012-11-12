@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAALgX////0\u003d",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/DialectMySQL.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1011027
+      },
+      "writtenOn": "2012-11-12T10:55:39Z",
+      "side": 1,
+      "message": "Maybe rather call super.convertError(). Then you can do without the fallback method introduced in the predecessor.",
+      "revId": "901ec4a468263f128b20273967404c675e678515",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
