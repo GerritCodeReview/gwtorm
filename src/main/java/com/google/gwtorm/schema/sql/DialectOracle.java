@@ -15,6 +15,7 @@
 package com.google.gwtorm.schema.sql;
 
 import com.google.gwtorm.schema.ColumnModel;
+import com.google.gwtorm.server.OrmDuplicateKeyException;
 import com.google.gwtorm.server.OrmException;
 import com.google.gwtorm.server.StatementExecutor;
 
@@ -147,5 +148,17 @@ public class DialectOracle extends SqlDialect {
   @Override
   public boolean isStatementDelimiterSupported() {
     return false;
+  }
+
+  @Override
+  public OrmException convertError(String op, String entity, SQLException err) {
+    switch (err.getErrorCode()) {
+      case 1022: // ER_DUP_KEY
+      case 1062: // ER_DUP_ENTRY
+      case 1169: // ER_DUP_UNIQUE;
+        return new OrmDuplicateKeyException(entity, err);
+      default:
+        return fallbackConvertError(op, entity, err);
+    }
   }
 }

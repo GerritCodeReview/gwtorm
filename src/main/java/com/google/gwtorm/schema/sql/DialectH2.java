@@ -37,12 +37,14 @@ public class DialectH2 extends SqlDialect {
   public OrmException convertError(final String op, final String entity,
       final SQLException err) {
     switch (getSQLStateInt(err)) {
-      case 23001: // UNIQUE CONSTRAINT VIOLATION
+      case 23505: // DUPLICATE_KEY_1
+      case 23001: // What is this code? It cannot be found
+                  // in http://www.h2database.com/javadoc/org/h2/constant/ErrorCode.html
         return new OrmDuplicateKeyException(entity, err);
 
       case 23000: // CHECK CONSTRAINT VIOLATION
       default:
-        return super.convertError(op, entity, err);
+        return fallbackConvertError(op, entity, err);
     }
   }
 

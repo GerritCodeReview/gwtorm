@@ -138,15 +138,19 @@ public abstract class SqlDialect {
   }
 
   /**
-   * Convert a driver specific exception into an {@link OrmException}.
+   * Convert a driver specific exception into an {@link OrmException} and in the
+   * case of duplicate key, convert into an {@link OrmDuplicateKeyException}
    *
    * @param op short description of the operation, e.g. "update" or "fetch".
    * @param entity name of the entity being accessed by the operation.
    * @param err the driver specific exception.
    * @return an OrmException the caller can throw.
    */
-  public OrmException convertError(final String op, final String entity,
-      final SQLException err) {
+  public abstract OrmException convertError(final String op, final String entity,
+      final SQLException err);
+
+  protected OrmException fallbackConvertError(final String op,
+      final String entity, final SQLException err) {
     if (err.getCause() == null && err.getNextException() != null) {
       err.initCause(err.getNextException());
     }

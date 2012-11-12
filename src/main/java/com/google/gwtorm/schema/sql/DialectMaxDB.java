@@ -92,7 +92,7 @@ public class DialectMaxDB extends SqlDialect {
         return new OrmDuplicateKeyException(entity, err);
       }
     }
-    return super.convertError(op, entity, err);
+    return fallbackConvertError(op, entity, err);
   }
 
   @Override
