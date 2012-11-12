@@ -62,7 +62,7 @@ public class DialectPostgreSQL extends SqlDialect {
       case 23502: // NOT NULL CONSTRAINT VIOLATION
       case 23001: // RESTRICT VIOLATION
       default:
-        return super.convertError(op, entity, err);
+        return fallbackConvertError(op, entity, err);
     }
   }
 
