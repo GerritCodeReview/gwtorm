@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAALsH///0Q\u003d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2012-11-18T13:39:06Z",
+      "side": 1,
+      "message": "Commit message subject should be a meaningful summary of the change",
+      "revId": "83193394a9c4768c441374411980d0048c9d2fa0",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAALsH///0U\u003d",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/DialectMySQL.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2012-11-18T13:39:06Z",
+      "side": 1,
+      "message": "Isn\u0027t there a constant defined for this?",
+      "revId": "83193394a9c4768c441374411980d0048c9d2fa0",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
