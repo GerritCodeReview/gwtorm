@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAALsH///0c\u003d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2012-11-18T13:37:32Z",
+      "side": 1,
+      "message": "Please wrap the commit message with shorter lines.",
+      "revId": "52ebd5b3efa597bc1e7bcc6eb6c0c03ebf8de8e6",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAALsH///0g\u003d",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/SqlDialectTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2012-11-18T13:37:32Z",
+      "side": 1,
+      "message": "Copyright header is missing",
+      "revId": "52ebd5b3efa597bc1e7bcc6eb6c0c03ebf8de8e6",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
