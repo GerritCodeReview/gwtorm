@@ -33,6 +33,24 @@
       "revId": "83193394a9c4768c441374411980d0048c9d2fa0",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAL2n///+w\u003d",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/DialectMySQL.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1011767
+      },
+      "writtenOn": "2012-11-21T15:10:20Z",
+      "side": 1,
+      "message": "Yes there is and we included it in patch set 4. However it enforces us add compile scope dependency on mysql-connector-java  instead of only test scope",
+      "parentUuid": "AAALsH///0U\u003d",
+      "revId": "83193394a9c4768c441374411980d0048c9d2fa0",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
