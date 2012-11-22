@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAL3X////U\u003d",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/SqlDialectTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2012-11-22T07:27:00Z",
+      "side": 1,
+      "message": "Shouldn\u0027t the copyright be \"The Android Open Source Project\"?",
+      "revId": "59aa0e652e87801b8e04aa17fc670e2f015b61b4",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
