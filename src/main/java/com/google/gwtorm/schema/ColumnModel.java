@@ -14,6 +14,7 @@
 
 package com.google.gwtorm.schema;
 
+import com.google.common.base.Strings;
 import com.google.gwtorm.client.Column;
 import com.google.gwtorm.server.OrmException;
 
@@ -34,6 +35,7 @@ public abstract class ColumnModel {
   protected boolean rowVersion;
   protected boolean inPrimaryKey;
   protected boolean notNull;
+  protected String defaultValue;
 
   protected ColumnModel() {
     nestedColumns = Collections.<ColumnModel> emptyList();
@@ -53,6 +55,7 @@ public abstract class ColumnModel {
       throw new OrmException("Field " + fieldName + " cannot have id < 1");
     }
     notNull = column.notNull();
+    defaultValue = column.defaultValue();
   }
 
   protected void initNestedColumns(final Collection<? extends ColumnModel> col)
@@ -156,6 +159,14 @@ public abstract class ColumnModel {
 
   public boolean isNotNull() {
     return notNull;
+  }
+
+  public String getDefaultValue() {
+    return defaultValue;
+  }
+
+  public boolean hasDefaultValue() {
+    return !Strings.isNullOrEmpty(defaultValue);
   }
 
   public abstract boolean isCollection();

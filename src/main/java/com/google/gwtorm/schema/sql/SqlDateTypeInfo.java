@@ -33,10 +33,22 @@ public class SqlDateTypeInfo extends SqlTypeInfo {
   public String getSqlType(final ColumnModel col, final SqlDialect dialect) {
     final StringBuilder r = new StringBuilder();
     r.append(dialect.getSqlTypeName(getSqlTypeConstant()));
+    r.append(getDefaultDefinition(col));
     if (col.isNotNull()) {
-      r.append(" DEFAULT '1900-01-01'");
       r.append(" NOT NULL");
     }
     return r.toString();
+  }
+
+  private String getDefaultDefinition(final ColumnModel column) {
+    if (!column.hasDefaultValue() && !column.isNotNull()) {
+      return "";
+    }
+
+    if (column.hasDefaultValue()) {
+      return " DEFAULT '" + column.getDefaultValue() + "'";
+    }
+
+    return " DEFAULT '1900-01-01'";
   }
 }

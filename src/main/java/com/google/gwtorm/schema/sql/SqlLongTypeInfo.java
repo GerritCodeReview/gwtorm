@@ -33,10 +33,22 @@ public class SqlLongTypeInfo extends SqlTypeInfo {
   public String getSqlType(final ColumnModel column, final SqlDialect dialect) {
     final StringBuilder r = new StringBuilder();
     r.append(dialect.getSqlTypeName(getSqlTypeConstant()));
+    r.append(getDefaultDefinition(column));
     if (column.isNotNull()) {
-      r.append(" DEFAULT 0");
       r.append(" NOT NULL");
     }
     return r.toString();
+  }
+
+  private String getDefaultDefinition(final ColumnModel column) {
+    if (!column.hasDefaultValue() && !column.isNotNull()) {
+      return "";
+    }
+
+    if (column.hasDefaultValue()) {
+      return " DEFAULT " + column.getDefaultValue();
+    }
+
+    return " DEFAULT 0";
   }
 }

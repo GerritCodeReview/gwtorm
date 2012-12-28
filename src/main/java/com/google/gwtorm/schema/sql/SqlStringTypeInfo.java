@@ -54,12 +54,24 @@ public class SqlStringTypeInfo extends SqlTypeInfo {
       r.append(dialect.getSqlTypeName(Types.LONGVARCHAR));
     }
 
+    r.append(getDefaultDefinition(col));
     if (col.isNotNull()) {
-      r.append(" DEFAULT ''");
       r.append(" NOT NULL");
     }
 
     return r.toString();
+  }
+
+  private String getDefaultDefinition(final ColumnModel column) {
+    if (!column.hasDefaultValue() && !column.isNotNull()) {
+      return "";
+    }
+
+    if (column.hasDefaultValue()) {
+      return " DEFAULT '" + column.getDefaultValue() + "'";
+    }
+
+    return " DEFAULT ''";
   }
 
   @Override

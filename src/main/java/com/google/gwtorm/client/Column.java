@@ -50,4 +50,6 @@ public @interface Column {
    * @return is a value required. Defaults to true (NOT NULL).
    */
   boolean notNull() default true;
+
+  String defaultValue() default "";
 }
