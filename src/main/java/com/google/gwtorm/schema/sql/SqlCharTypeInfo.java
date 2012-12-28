@@ -27,11 +27,23 @@ public class SqlCharTypeInfo extends SqlTypeInfo {
   public String getSqlType(final ColumnModel column, final SqlDialect dialect) {
     final StringBuilder r = new StringBuilder();
     r.append("CHAR(1)");
+    r.append(getDefaultDefinition(column));
     if (column.isNotNull()) {
-      r.append(" DEFAULT ' '");
       r.append(" NOT NULL");
     }
     return r.toString();
+  }
+
+  private String getDefaultDefinition(final ColumnModel column) {
+    if (!column.hasDefaultValue() && !column.isNotNull()) {
+      return "";
+    }
+
+    if (column.hasDefaultValue()) {
+      return " DEFAULT '" + column.getDefaultValue(Character.class) + "'";
+    }
+
+    return " DEFAULT ' '";
   }
 
   @Override
