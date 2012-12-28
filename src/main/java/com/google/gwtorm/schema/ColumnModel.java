@@ -34,6 +34,7 @@ public abstract class ColumnModel {
   protected boolean rowVersion;
   protected boolean inPrimaryKey;
   protected boolean notNull;
+  protected Object defaultValue;
 
   protected ColumnModel() {
     nestedColumns = Collections.<ColumnModel> emptyList();
@@ -53,6 +54,21 @@ public abstract class ColumnModel {
       throw new OrmException("Field " + fieldName + " cannot have id < 1");
     }
     notNull = column.notNull();
+  }
+
+  /**
+   * Initializes the default value for this column. The default value can be set
+   * only once.
+   *
+   * @param defaultValue the default value that should be set
+   * @throws IllegalStateException is thrown if the default value is already set
+   */
+  protected void initDefaultValue(final Object defaultValue) {
+    if (this.defaultValue != null) {
+      throw new IllegalStateException("Column " + columnName
+          + " can have at most one default value");
+    }
+    this.defaultValue = defaultValue;
   }
 
   protected void initNestedColumns(final Collection<? extends ColumnModel> col)
@@ -156,6 +172,30 @@ public abstract class ColumnModel {
 
   public boolean isNotNull() {
     return notNull;
+  }
+
+  /**
+   * Returns the default value for this column.
+   *
+   * @param clazz the class of the default value type that is expected
+   * @return the default value, <code>null</code> if no default value was set
+   * @throws IllegalStateException if a default value was defined but the type
+   *         of the default value does not match the expected type
+   */
+  public <T> T getDefaultValue(Class<T> clazz) {
+    if (defaultValue != null) {
+      if (!clazz.isAssignableFrom(defaultValue.getClass())) {
+        throw new IllegalStateException("Column " + columnName + " of type "
+            + clazz.getName() + " cannot have default value of type "
+            + defaultValue.getClass().getName());
+      }
+      return clazz.cast(defaultValue);
+    }
+    return null;
+  }
+
+  public boolean hasDefaultValue() {
+    return defaultValue != null;
   }
 
   public abstract boolean isCollection();
