@@ -28,10 +28,18 @@ public class SqlCharTypeInfo extends SqlTypeInfo {
     final StringBuilder r = new StringBuilder();
     r.append("CHAR(1)");
     if (column.isNotNull()) {
-      r.append(" DEFAULT ' '");
+      r.append(getDefaultDefinition(column));
       r.append(" NOT NULL");
     }
     return r.toString();
+  }
+
+  private String getDefaultDefinition(final ColumnModel column) {
+    if (column.hasDefaultValue()) {
+      return " DEFAULT '" + column.getDefaultValue(Character.class) + "'";
+    }
+
+    return " DEFAULT ' '";
   }
 
   @Override

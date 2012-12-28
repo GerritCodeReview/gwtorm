@@ -34,9 +34,17 @@ public class SqlShortTypeInfo extends SqlTypeInfo {
     final StringBuilder r = new StringBuilder();
     r.append(dialect.getSqlTypeName(getSqlTypeConstant()));
     if (column.isNotNull()) {
-      r.append(" DEFAULT 0");
+      r.append(getDefaultDefinition(column));
       r.append(" NOT NULL");
     }
     return r.toString();
+  }
+
+  private String getDefaultDefinition(final ColumnModel column) {
+    if (column.hasDefaultValue()) {
+      return " DEFAULT " + column.getDefaultValue(Short.class);
+    }
+
+    return " DEFAULT 0";
   }
 }

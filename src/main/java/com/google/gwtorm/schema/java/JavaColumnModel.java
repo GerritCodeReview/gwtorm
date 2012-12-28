@@ -17,11 +17,13 @@ package com.google.gwtorm.schema.java;
 import com.google.common.base.Function;
 import com.google.common.collect.Ordering;
 import com.google.gwtorm.client.Column;
+import com.google.gwtorm.client.DefaultValue;
 import com.google.gwtorm.client.RowVersion;
 import com.google.gwtorm.schema.ColumnModel;
 import com.google.gwtorm.schema.Util;
 import com.google.gwtorm.server.OrmException;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
@@ -53,6 +55,7 @@ public class JavaColumnModel extends ColumnModel {
     genericType = field.getGenericType();
 
     initName(fieldName, field.getAnnotation(Column.class));
+    initDefaultValue();
 
     if (Modifier.isPrivate(field.getModifiers())) {
       throw new OrmException("Field " + field.getName() + " of "
@@ -70,6 +73,27 @@ public class JavaColumnModel extends ColumnModel {
     }
 
     initNested();
+  }
+
+  private void initDefaultValue() {
+    for (final Annotation a : field.getAnnotations()) {
+      final Class<? extends Annotation> t = a.annotationType();
+      if (t.getAnnotation(DefaultValue.class) != null) {
+        if (!isNotNull()) {
+          throw new IllegalStateException("Column " + getColumnName()
+              + " must be not nullable if default value is defined.");
+        }
+        final Object defaultValue;
+        try {
+          defaultValue = t.getDeclaredMethod("value").invoke(a);
+        } catch (Exception e) {
+          throw new IllegalStateException(
+              "Failed to invoke 'value()' method of annotation " + t.getName()
+                  + ": " + e.getMessage(), e);
+        }
+        initDefaultValue(defaultValue);
+      }
+    }
   }
 
   public JavaColumnModel(Field f, final String fieldPath, final int columnId,

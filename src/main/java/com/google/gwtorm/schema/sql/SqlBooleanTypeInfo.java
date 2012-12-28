@@ -26,14 +26,25 @@ import java.sql.Types;
 public class SqlBooleanTypeInfo extends SqlTypeInfo {
   @Override
   public String getSqlType(final ColumnModel column, final SqlDialect dialect) {
-    final String f = getFalseLiteralValue();
+    final String name = column.getColumnName();
+    final String t = getTrueLiteralValue();
     final StringBuilder r = new StringBuilder();
     r.append("CHAR(1)");
     if (column.isNotNull()) {
-      r.append(" DEFAULT " + f);
+      r.append(getDefaultDefinition(column));
       r.append(" NOT NULL");
     }
     return r.toString();
+  }
+
+  private String getDefaultDefinition(final ColumnModel column) {
+    if (column.hasDefaultValue()) {
+      return " DEFAULT "
+          + (column.getDefaultValue(Boolean.class) ? getTrueLiteralValue()
+              : getFalseLiteralValue());
+    }
+
+    return " DEFAULT " + getFalseLiteralValue();
   }
 
   @Override

@@ -34,8 +34,17 @@ public class SqlTimestampTypeInfo extends SqlTypeInfo {
     final StringBuilder r = new StringBuilder();
     r.append(dialect.getSqlTypeName(getSqlTypeConstant()));
     if (col.isNotNull()) {
+      r.append(getDefaultDefinition(col));
       r.append(" NOT NULL");
     }
     return r.toString();
+  }
+
+  private String getDefaultDefinition(final ColumnModel column) {
+    if (column.hasDefaultValue()) {
+      return " DEFAULT '" + column.getDefaultValue(String.class) + "'";
+    }
+
+    return "";
   }
 }
