@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "NeEpKk1U",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1003935
+      },
+      "writtenOn": "2013-01-02T10:26:42Z",
+      "side": 1,
+      "message": "I\u0027ve now defined different annotations for the different default value types.\n\nDone.",
+      "parentUuid": "NcXF.eF8",
+      "revId": "6e121be43e5db5473b3cea19498af61b58bf5285",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "NcVF5dHQ",
         "filename": "src/main/java/com/google/gwtorm/schema/sql/SqlBooleanTypeInfo.java",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2013-01-01T22:29:58Z",
       "side": 1,
       "message": "I think here we want to say @Column(defaultValue\u003d\"true\") in the annotation but have this translate to the return value of getTrueLiteralValue or getFalseLiteralValue when creating SQL text. So check the default value matches \"true\" or \"false\" before picking what text you put into the DEFAULT statement.",
+      "revId": "6e121be43e5db5473b3cea19498af61b58bf5285",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "NeGpPV2Q",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/SqlBooleanTypeInfo.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003935
+      },
+      "writtenOn": "2013-01-02T10:26:42Z",
+      "side": 1,
+      "message": "The default value is now typed by using @BooleanDefault(defaultValue \u003d true). The boolean default value is then converted to String by using getTrueLiteralValue or getFalseLiteralValue.\n\nDone.",
+      "parentUuid": "NcVF5dHQ",
       "revId": "6e121be43e5db5473b3cea19498af61b58bf5285",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
