@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "O8ZHNHLs",
+        "filename": "src/main/java/com/google/gwtorm/schema/RelationModel.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2013-01-29T19:20:21Z",
+      "side": 1,
+      "message": "So what you are saying is I broke it here:\n\n  commit d891d46635625f1c30ff6885eac5cb55bea84ed6\n  Author: Shawn O. Pearce \u003csop@google.com\u003e\n  Date:   Fri Oct 26 10:14:20 2012 -0700\n\n    Keep relations and columns sorted by name\n    \n    Sorting by the order they are discovered from the class file may\n    be random under Java 7, leading to constantly changing output from\n    the ProtoFileGenerator. Instead use TreeSet to always sort by name.\n\nand you are putting it back the way it was? The proto generator will go back to producing big and unnecessary deltas.",
+      "revId": "fdcd4363e046a8052156250116f4feb9d049b728",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
