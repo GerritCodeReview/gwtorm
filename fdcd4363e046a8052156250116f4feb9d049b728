@@ -34,6 +34,24 @@
       "revId": "fdcd4363e046a8052156250116f4feb9d049b728",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "O8dHHpJQ",
+        "filename": "src/main/java/com/google/gwtorm/schema/RelationModel.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2013-01-29T19:27:17Z",
+      "side": 1,
+      "message": "OK then before reverting the TreeMap I\u0027d like to see a change that fixes the proto generator. :-)",
+      "parentUuid": "PBzv6FwE",
+      "revId": "fdcd4363e046a8052156250116f4feb9d049b728",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
