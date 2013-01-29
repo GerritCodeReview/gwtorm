@@ -14,6 +14,8 @@
 
 package com.google.gwtorm.schema;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.gwtorm.schema.sql.SqlDialect;
 import com.google.gwtorm.server.OrmException;
 import com.google.gwtorm.server.PrimaryKey;
@@ -26,7 +28,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
-import java.util.TreeMap;
 
 public abstract class RelationModel {
   protected String methodName;
@@ -39,10 +40,10 @@ public abstract class RelationModel {
   protected Collection<QueryModel> queries;
 
   protected RelationModel() {
-    fieldsByFieldName = new TreeMap<String, ColumnModel>();
-    columnsByColumnName = new TreeMap<String, ColumnModel>();
-    columnsById = new TreeMap<Integer, ColumnModel>();
-    queries = new ArrayList<QueryModel>();
+    fieldsByFieldName = Maps.newLinkedHashMap();
+    columnsByColumnName = Maps.newLinkedHashMap();
+    columnsById = Maps.newTreeMap();
+    queries = Lists.newArrayList();
   }
 
   protected void initName(final String method, final Relation rel)
