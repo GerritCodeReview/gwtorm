@@ -362,8 +362,8 @@ limitations under the License.
 
   <distributionManagement>
     <repository>
-      <id>gerrit-maven</id>
-      <url>s3://gerrit-maven@commondatastorage.googleapis.com</url>
+      <id>gerrit-maven-repository</id>
+      <url>gs://gerrit-maven</url>
       <uniqueVersion>true</uniqueVersion>
     </repository>
   </distributionManagement>
