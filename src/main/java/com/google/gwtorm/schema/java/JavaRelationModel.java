@@ -65,7 +65,7 @@ class JavaRelationModel extends RelationModel {
     final List<JavaColumnModel> col = new ArrayList<JavaColumnModel>();
     Class<?> in = entityType;
     while (in != null) {
-      for (final Field f : in.getDeclaredFields()) {
+      for (final Field f : JavaColumnModel.getDeclaredFields(in)) {
         if (f.getAnnotation(Column.class) != null) {
           col.add(new JavaColumnModel(f));
         }

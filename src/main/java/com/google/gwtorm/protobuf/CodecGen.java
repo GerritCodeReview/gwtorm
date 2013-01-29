@@ -114,7 +114,7 @@ class CodecGen<T> implements Opcodes {
   private static JavaColumnModel[] scanFields(Class<?> in) throws OrmException {
     final Collection<JavaColumnModel> col = new ArrayList<JavaColumnModel>();
     while (in != null) {
-      for (final Field f : in.getDeclaredFields()) {
+      for (final Field f : JavaColumnModel.getDeclaredFields(in)) {
         if (f.getAnnotation(Column.class) != null) {
           col.add(new JavaColumnModel(f));
         }

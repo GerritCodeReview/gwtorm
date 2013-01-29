@@ -14,6 +14,8 @@
 
 package com.google.gwtorm.schema.java;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Ordering;
 import com.google.gwtorm.client.Column;
 import com.google.gwtorm.client.RowVersion;
 import com.google.gwtorm.schema.ColumnModel;
@@ -25,10 +27,20 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
 public class JavaColumnModel extends ColumnModel {
+  public static List<Field> getDeclaredFields(Class<?> in) {
+    return Ordering.natural().onResultOf(new Function<Field, String>() {
+      @Override
+      public String apply(Field f) {
+        return f.getName();
+      }
+    }).sortedCopy(Arrays.asList(in.getDeclaredFields()));
+  }
+
   private final Field field;
   private final String fieldName;
   private final Class<?> primitiveType;
@@ -76,7 +88,7 @@ public class JavaColumnModel extends ColumnModel {
       final List<JavaColumnModel> col = new ArrayList<JavaColumnModel>();
       Class<?> in = primitiveType;
       while (in != null) {
-        for (final Field f : in.getDeclaredFields()) {
+        for (final Field f : getDeclaredFields(in)) {
           if (f.getAnnotation(Column.class) != null) {
             col.add(new JavaColumnModel(f));
           }
