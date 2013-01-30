@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "PC5cjRKo",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2013-01-30T11:23:20Z",
+      "side": 1,
+      "message": "\"repositories\"",
+      "revId": "9d15a7f82d8c1e2aa9caad5b1a5bdfe03b042d8c",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "PC3dC8EI",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2013-01-30T11:23:20Z",
+      "side": 1,
+      "message": "\"repository\"",
+      "revId": "9d15a7f82d8c1e2aa9caad5b1a5bdfe03b042d8c",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "PC1dH7FA",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 366,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2013-01-30T11:23:20Z",
+      "side": 1,
+      "message": "Remove the trailing slash on the URL, otherwise it tries to download the file with a double slash:\n\nhttps://gerrit-maven.commondatastorage.googleapis.com//com/googlesource/gerrit/gs-maven-wagon/3.3/gs-maven-wagon-3.3.jar",
+      "revId": "9d15a7f82d8c1e2aa9caad5b1a5bdfe03b042d8c",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
