@@ -360,6 +360,13 @@ limitations under the License.
     </dependency>
   </dependencies>
 
+  <pluginRepositories>
+    <pluginRepository>
+      <id>gerrit-maven</id>
+      <url>https://gerrit-maven.commondatastorage.googleapis.com/</url>
+    </pluginRepository>
+  </pluginRepositories>
+
   <distributionManagement>
     <repository>
       <id>gerrit-maven-repository</id>
