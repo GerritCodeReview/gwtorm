@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "PIcEjIqk",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 1003935
+      },
+      "writtenOn": "2013-01-30T11:49:18Z",
+      "side": 1,
+      "message": "Really wierd. It\u0027s just the opposite for me. Never understood why Maven has to differentiate between repositories and pluginRepositories :-( Maybe somebody else has an explanation for this incosistent behaviour between our systems.",
+      "parentUuid": "PC-c14Nc",
+      "revId": "9d15a7f82d8c1e2aa9caad5b1a5bdfe03b042d8c",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "PC3dC8EI",
         "filename": "pom.xml",
         "patchSetId": 1
