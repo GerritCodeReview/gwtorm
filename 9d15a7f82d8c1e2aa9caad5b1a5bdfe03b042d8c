@@ -73,6 +73,24 @@
     },
     {
       "key": {
+        "uuid": "PC7c-aLQ",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2013-01-30T11:59:32Z",
+      "side": 1,
+      "message": "I\u0027m never sure if it\u0027s maven or the proxy here at the office.  In cases like this I usually check it at home where I have a direct internet connection - if it still doesn\u0027t work there then I know it\u0027s maven. I\u0027ll check this again later when I get home.\n\nAnyway, the only reason I was trying to build this project is because I couldn\u0027t build gerrit in Eclipse after upgrading to 1.6 and thought a build from source might help.\n\nIt didn\u0027t.  In the end I fixed it by building gerrit with \"install\" on the command line.  Then the Eclipse build magically worked.",
+      "parentUuid": "PIcEjIqk",
+      "revId": "9d15a7f82d8c1e2aa9caad5b1a5bdfe03b042d8c",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "PC3dC8EI",
         "filename": "pom.xml",
         "patchSetId": 1
