@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "P7hR1lFY",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/DialectMySQL.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2013-02-15T04:54:31Z",
+      "side": 1,
+      "message": "Indentation is 2 columns too far.",
+      "revId": "c9fe5dfb3af274d75baf7cdbe373e00d794db260",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
