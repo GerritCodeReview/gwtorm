@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "Ue0dajjg",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1010008
+      },
+      "writtenOn": "2013-05-08T08:07:41Z",
+      "side": 1,
+      "message": "DialectPostgreSQL and DialectMySQL to match the class names.",
+      "revId": "c9fe5dfb3af274d75baf7cdbe373e00d794db260",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "P7hR1lFY",
         "filename": "src/main/java/com/google/gwtorm/schema/sql/DialectMySQL.java",
         "patchSetId": 6
@@ -13,6 +30,57 @@
       "writtenOn": "2013-02-15T04:54:31Z",
       "side": 1,
       "message": "Indentation is 2 columns too far.",
+      "revId": "c9fe5dfb3af274d75baf7cdbe373e00d794db260",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "Ue8c2fuo",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/SqlDialectTest.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1010008
+      },
+      "writtenOn": "2013-05-08T08:07:41Z",
+      "side": 1,
+      "message": "Nit: extra blank line",
+      "revId": "c9fe5dfb3af274d75baf7cdbe373e00d794db260",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "UeydlmvE",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/SqlDialectTest.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1010008
+      },
+      "writtenOn": "2013-05-08T08:07:41Z",
+      "side": 1,
+      "message": "OrmDuplicateKeyException is a subclass of OrmException so I think you want to either assertFalse(e instanceof OrmDuplicateKeyException) or add another catch clause with fail() in the body above this one.",
+      "revId": "c9fe5dfb3af274d75baf7cdbe373e00d794db260",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "Uf4MlXrg",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/SqlDialectTest.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1010008
+      },
+      "writtenOn": "2013-05-08T08:07:41Z",
+      "side": 1,
+      "message": "Nit: extra blank line",
       "revId": "c9fe5dfb3af274d75baf7cdbe373e00d794db260",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
