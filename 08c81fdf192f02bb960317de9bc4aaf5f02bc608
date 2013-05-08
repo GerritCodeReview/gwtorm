@@ -16,6 +16,24 @@
       "revId": "08c81fdf192f02bb960317de9bc4aaf5f02bc608",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "Udowlh7g",
+        "filename": "pom.xml",
+        "patchSetId": 6
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2013-05-08T14:00:49Z",
+      "side": 0,
+      "message": "Just like with the MySQL one, use scope provided here.",
+      "parentUuid": "Uf0MMRkk",
+      "revId": "08c81fdf192f02bb960317de9bc4aaf5f02bc608",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
