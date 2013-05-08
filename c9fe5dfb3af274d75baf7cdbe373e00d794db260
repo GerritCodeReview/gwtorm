@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "UbxM5rOA",
+        "filename": "pom.xml",
+        "patchSetId": 6
+      },
+      "lineNbr": 352,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2013-05-08T13:55:52Z",
+      "side": 0,
+      "message": "Like Dave said we can\u0027t package MySQL in Gerrit because the connector is under the GPL. The end-user is free to slide the connector in, or any other database client at installation time.\n\nChange the scope to provided if you want to reference this from dialect specific Java code.",
+      "revId": "c9fe5dfb3af274d75baf7cdbe373e00d794db260",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
