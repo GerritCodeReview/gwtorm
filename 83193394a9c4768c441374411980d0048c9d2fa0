@@ -51,6 +51,24 @@
       "revId": "83193394a9c4768c441374411980d0048c9d2fa0",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "Ue2dIcnQ",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/DialectMySQL.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1010008
+      },
+      "writtenOn": "2013-05-08T08:01:07Z",
+      "side": 1,
+      "message": "We should check with Shawn on this but ISTR we intentionally don\u0027t bundle mysql-connector-java with the gwtorm release jars, maybe due to it being GPL?",
+      "parentUuid": "AAAL2n///+w\u003d",
+      "revId": "83193394a9c4768c441374411980d0048c9d2fa0",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
