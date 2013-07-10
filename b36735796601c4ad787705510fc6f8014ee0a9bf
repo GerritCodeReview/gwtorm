@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "877edc23_ecec8b48",
+        "filename": "src/main/java/com/google/gwtorm/schema/Util.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2013-07-10T21:33:35Z",
+      "side": 1,
+      "message": "I don\u0027t think String.hashCode is stable enough across JRE versions to assume this in the database schema. I would prefer to use a function we know won\u0027t ever change, e.g. CRC32. Try instead:\n\n  java.util.zip.CRC32 crc \u003d new CRC32();\n  crc.update(friendlyName.getBytes(\"UTF-8\"));\n  Integer.toHexString((int) crc.getValue());\n\nOr use a truncated MD-5 or SHA-1 here.",
+      "revId": "b36735796601c4ad787705510fc6f8014ee0a9bf",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
