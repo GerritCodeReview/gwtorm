@@ -15,6 +15,7 @@
 package com.google.gwtorm.schema;
 
 
+
 public class Util {
   private static int nameCounter;
 

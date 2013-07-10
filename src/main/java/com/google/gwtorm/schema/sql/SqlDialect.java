@@ -43,6 +43,7 @@ public abstract class SqlDialect {
     DIALECTS.add(new DialectH2());
     DIALECTS.add(new DialectPostgreSQL());
     DIALECTS.add(new DialectMySQL());
+    DIALECTS.add(new DialectOracle());
   }
 
   public static void register(SqlDialect dialect) {
