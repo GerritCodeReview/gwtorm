@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "677ba837_4bfca5f1",
+        "filename": "src/main/java/com/google/gwtorm/schema/Util.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2013-07-10T23:29:04Z",
+      "side": 1,
+      "message": "Modify RelationModel\u0027s SQL generator functions to let the dialect have control over the column name. Then the OracleDialect can do truncation with the hash.",
+      "parentUuid": "675488b1_c3e71664",
+      "revId": "c59637c0f62f435816e66539b6a1148a1eebad35",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "877edc23_acf68312",
         "filename": "src/main/java/com/google/gwtorm/schema/Util.java",
         "patchSetId": 2
