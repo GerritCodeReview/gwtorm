@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "877edc23_acf68312",
+        "filename": "src/main/java/com/google/gwtorm/schema/Util.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2013-07-10T22:31:31Z",
+      "side": 1,
+      "message": "since you imported the class you don\u0027t need the package prefix here. Yea i was bad in the comment I gave you, sorry.",
+      "revId": "c59637c0f62f435816e66539b6a1148a1eebad35",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "677ba837_ebec7148",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/DialectOracle.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2013-07-10T22:31:31Z",
+      "side": 1,
+      "message": "maybe call this tables?",
+      "revId": "c59637c0f62f435816e66539b6a1148a1eebad35",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
