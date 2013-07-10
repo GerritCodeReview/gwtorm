@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "67f808d3_83f6de12",
+        "filename": "src/main/java/com/google/gwtorm/schema/Util.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1011722
+      },
+      "writtenOn": "2013-07-10T22:29:36Z",
+      "side": 1,
+      "message": "Is there any risk that this code will be hit by non oracle databases and change the column names gerrit expects to find in the database? Does this require a migration?",
+      "revId": "b36735796601c4ad787705510fc6f8014ee0a9bf",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "877edc23_ecec8b48",
         "filename": "src/main/java/com/google/gwtorm/schema/Util.java",
         "patchSetId": 1
