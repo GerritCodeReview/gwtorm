@@ -41,7 +41,12 @@ public class Util {
         r.append(c);
       }
     }
-    return r.toString();
+    String friendlyName = r.toString();
+    if (friendlyName.length() > 30) {
+      String identifier = Integer.toHexString(friendlyName.hashCode());
+      friendlyName = friendlyName.substring(0, 21) + identifier;
+    }
+    return friendlyName;
   }
 
   public static String any(final String a, final String b) {
