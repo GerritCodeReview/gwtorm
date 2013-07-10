@@ -14,6 +14,9 @@
 
 package com.google.gwtorm.schema;
 
+import java.io.UnsupportedEncodingException;
+import java.util.zip.CRC32;
+
 
 public class Util {
   private static int nameCounter;
@@ -41,7 +44,18 @@ public class Util {
         r.append(c);
       }
     }
-    return r.toString();
+    String friendlyName = r.toString();
+    if (friendlyName.length() > 30) {
+      java.util.zip.CRC32 crc = new CRC32();
+      try {
+        crc.update(friendlyName.getBytes("UTF-8"));
+      } catch (UnsupportedEncodingException e) {
+        throw new RuntimeException("UnsupportedEncodingException", e);
+      }
+      String identifier = Integer.toHexString((int) crc.getValue());
+      friendlyName = friendlyName.substring(0, 21) + identifier;
+    }
+    return friendlyName;
   }
 
   public static String any(final String a, final String b) {
