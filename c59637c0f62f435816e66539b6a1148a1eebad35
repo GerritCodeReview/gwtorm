@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "877edc23_4cfcbff1",
+        "filename": "src/main/java/com/google/gwtorm/schema/Util.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2013-07-10T22:32:40Z",
+      "side": 1,
+      "message": "Andrew\u0027s comment from patch set 1 is spot on. This will break non-Oracle databases by renaming columns in the schema.",
+      "revId": "c59637c0f62f435816e66539b6a1148a1eebad35",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "877edc23_acf68312",
         "filename": "src/main/java/com/google/gwtorm/schema/Util.java",
         "patchSetId": 2
