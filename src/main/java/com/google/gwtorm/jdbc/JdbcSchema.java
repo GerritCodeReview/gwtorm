@@ -120,6 +120,19 @@ public abstract class JdbcSchema extends AbstractSchema {
     getDialect().renameColumn(e, table, from, col);
   }
 
+  public void renameColumn(final StatementExecutor e, String table, String from,
+      String to) throws OrmException {
+    final RelationModel rel = findRelationModel(table);
+    if (rel == null) {
+      throw new OrmException("Relation " + table + " not defined");
+    }
+    final ColumnModel col = rel.getColumn(to);
+    if (col == null) {
+      throw new OrmException("Relation " + table + " does not have " + to);
+    }
+    getDialect().renameColumn(e, table, from, col);
+  }
+
   private RelationModel findRelationModel(String table) {
     for (final RelationModel rel : dbDef.getSchemaModel().getRelations()) {
       if (table.equalsIgnoreCase(rel.getRelationName())) {
