@@ -1244,7 +1244,6 @@ class CodecGen<T> implements Opcodes {
     final Type codecType;
     final Type pojoType;
 
-    @SuppressWarnings("unchecked")
     NestedCodec(String field, Class impl, Type pojoType) {
       this.field = field;
       this.codecType = Type.getType(impl);
