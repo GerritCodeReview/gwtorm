@@ -190,6 +190,18 @@ public class DialectMySQL extends SqlDialect {
   }
 
   @Override
+  public void renameTable(StatementExecutor e, String from,
+      String to) throws OrmException {
+    final StringBuilder r = new StringBuilder();
+    r.append("RENAME TABLE ");
+    r.append(from);
+    r.append(" TO ");
+    r.append(to);
+    r.append(" ");
+    e.execute(r.toString());
+  }
+
+  @Override
   public void renameColumn(StatementExecutor stmt, String tableName,
       String fromColumn, ColumnModel col) throws OrmException {
     StringBuffer r = new StringBuffer();

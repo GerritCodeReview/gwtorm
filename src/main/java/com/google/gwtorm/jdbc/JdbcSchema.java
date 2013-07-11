@@ -99,6 +99,20 @@ public abstract class JdbcSchema extends AbstractSchema {
     }
   }
 
+  public void renameTable(final StatementExecutor e, String from, String to)
+      throws OrmException {
+    try {
+      final Statement s = getConnection().createStatement();
+      try {
+        getDialect().renameTable(e, from, to);
+      } finally {
+        s.close();
+      }
+    } catch (SQLException err) {
+      throw new OrmException("Cannot rename table " + from + " to " + to, err);
+    }
+  }
+
   public void renameField(final StatementExecutor e, String table, String from,
       String to) throws OrmException {
     final RelationModel rel = findRelationModel(table);
