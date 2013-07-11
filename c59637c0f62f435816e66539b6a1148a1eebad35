@@ -127,6 +127,24 @@
     },
     {
       "key": {
+        "uuid": "675488b1_a373faab",
+        "filename": "src/main/java/com/google/gwtorm/schema/Util.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2013-07-11T22:49:58Z",
+      "side": 1,
+      "message": "The things begin get complicated here. To rename table is trivially. The pain is with column, because we have check constraint on it. So i successfully corrupted my H2 database because renameColumn only renames (for now) the column itself and let the check constraint untouched:\n\n http://pastebin.com/hp2UUtTJ\n\nAfter such a \"migration\" we have:\n\n Caused by: org.h2.jdbc.JdbcSQLException: Column  \n \"SHOW_USERNAME_IN_REVIEW_CATEGORY\" not found; SQL statement:\n CREATE CACHED TABLE PUBLIC.ACCOUNTS(\n    CONTACT_FILED_ON TIMESTAMP,\n    [...]\n    SHOW_USER_IN_REVIEW CHAR(1) DEFAULT \u0027N\u0027 NOT NULL CHECK (SHOW_USERNAME_IN_REVIEW_CATEGORY IN(\u0027Y\u0027, \u0027N\u0027)),\n\nNote the difference between the changed column name and still old check constraint. I think something like that should work:\n\n    execute(\"create table ACCOUNTS (ACCOUNT_ID INT DEFAULT 0 NOT NULL, SHOW_USERNAME_IN_REVIEW_CATEGORY CHAR(1) DEFAULT \u0027N\u0027 NOT NULL)\");\n    execute(\"ALTER TABLE ACCOUNTS ADD CONSTRAINT SHOW_USERNAME_IN_REVIEW_CHECK CHECK (SHOW_USERNAME_IN_REVIEW_CATEGORY IN (\u0027Y\u0027, \u0027N\u0027))\");\n    execute(\"ALTER TABLE ACCOUNTS DROP CONSTRAINT SHOW_USERNAME_IN_REVIEW_CHECK\");\n    execute(\"ALTER TABLE ACCOUNTS ALTER COLUMN SHOW_USERNAME_IN_REVIEW_CATEGORY RENAME TO SHOW_USER_IN_REVIEW\");\n    execute(\"ALTER TABLE ACCOUNTS ADD CONSTRAINT SHOW_USER_IN_REVIEW_CHECK CHECK (SHOW_USER_IN_REVIEW IN(\u0027Y\u0027, \u0027N\u0027))\");",
+      "parentUuid": "6712c80f_13f94c01",
+      "revId": "c59637c0f62f435816e66539b6a1148a1eebad35",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "877edc23_acf68312",
         "filename": "src/main/java/com/google/gwtorm/schema/Util.java",
         "patchSetId": 2
