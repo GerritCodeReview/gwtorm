@@ -91,6 +91,24 @@
     },
     {
       "key": {
+        "uuid": "a75a00db_0538d2d2",
+        "filename": "src/main/java/com/google/gwtorm/schema/Util.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2013-07-11T12:57:13Z",
+      "side": 1,
+      "message": "Thanks for sharing this. I am working on this migration.\n\nAnother advantage of having identical name of all tables/indexes/columns across different data base vendors is the fact, that the data base content can be easily migrated across data bases:\n\n* unload form PostgreSQL\n* load into Oracle\n\n(or other way around)",
+      "parentUuid": "a75a00db_652bc684",
+      "revId": "c59637c0f62f435816e66539b6a1148a1eebad35",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "877edc23_acf68312",
         "filename": "src/main/java/com/google/gwtorm/schema/Util.java",
         "patchSetId": 2
