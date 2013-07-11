@@ -234,6 +234,25 @@ public abstract class SqlDialect {
   }
 
   /**
+   * Rename an existing table.
+   *
+   * @param e statement to use to execute the SQL command(s).
+   * @param from source table name
+   * @param to destination table name
+   * @throws OrmException the table could not be renamed.
+   */
+  public void renameTable(StatementExecutor e, String from,
+      String to) throws OrmException {
+    final StringBuilder r = new StringBuilder();
+    r.append("ALTER TABLE ");
+    r.append(from);
+    r.append(" RENAME TO ");
+    r.append(to);
+    r.append(" ");
+    e.execute(r.toString());
+  }
+
+  /**
    * List all sequences in the current database schema.
    *
    * @param db connection to the schema.

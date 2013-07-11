@@ -182,4 +182,22 @@ public class DialectMySQLTest {
       p2.close();
     }
   }
+
+  @Test
+  public void testRenameTable() throws SQLException, OrmException {
+    assertTrue(dialect.listTables(db).isEmpty());
+    execute("CREATE TABLE foo (cnt INT)");
+    Set<String> s = dialect.listTables(db);
+    assertEquals(1, s.size());
+    assertTrue(s.contains("foo"));
+    final PhoneBookDb p = phoneBook.open();
+    try {
+      ((JdbcSchema) p).renameTable(executor, "foo", "bar");
+    } finally {
+      p.close();
+    }
+    s = dialect.listTables(db);
+    assertTrue(s.contains("bar"));
+    assertFalse(s.contains("for"));
+  }
 }

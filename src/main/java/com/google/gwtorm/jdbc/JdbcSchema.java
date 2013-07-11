@@ -14,6 +14,7 @@
 
 package com.google.gwtorm.jdbc;
 
+import com.google.common.base.Preconditions;
 import com.google.gwtorm.schema.ColumnModel;
 import com.google.gwtorm.schema.RelationModel;
 import com.google.gwtorm.schema.SchemaModel;
@@ -96,6 +97,22 @@ public abstract class JdbcSchema extends AbstractSchema {
       if (!have.contains(c.getColumnName().toLowerCase())) {
         dialect.addColumn(e, rel.getRelationName(), c);
       }
+    }
+  }
+
+  public void renameTable(final StatementExecutor e, String from, String to)
+      throws OrmException {
+    Preconditions.checkNotNull(from);
+    Preconditions.checkNotNull(to);
+    try {
+      final Statement s = getConnection().createStatement();
+      try {
+        getDialect().renameTable(e, from, to);
+      } finally {
+        s.close();
+      }
+    } catch (SQLException err) {
+      throw new OrmException("Cannot rename table " + from + " to " + to, err);
     }
   }
 
