@@ -199,6 +199,10 @@ public abstract class RelationModel {
     return fieldsByFieldName.get(name);
   }
 
+  public ColumnModel getColumn(final String name) {
+    return columnsByColumnName.get(name);
+  }
+
   public String getCreateTableSql(final SqlDialect dialect) {
     final StringBuilder r = new StringBuilder();
     r.append("CREATE TABLE ");
