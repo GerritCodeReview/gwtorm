@@ -14,6 +14,7 @@
 
 package com.google.gwtorm.jdbc;
 
+import com.google.common.base.Preconditions;
 import com.google.gwtorm.schema.ColumnModel;
 import com.google.gwtorm.schema.RelationModel;
 import com.google.gwtorm.schema.SchemaModel;
@@ -96,6 +97,14 @@ public abstract class JdbcSchema extends AbstractSchema {
         dialect.addColumn(e, rel.getRelationName(), c);
       }
     }
+  }
+
+  public void renameTable(final StatementExecutor e, String from, String to)
+      throws OrmException {
+    Preconditions.checkNotNull(e);
+    Preconditions.checkNotNull(from);
+    Preconditions.checkNotNull(to);
+    getDialect().renameTable(e, from, to);
   }
 
   public void renameField(final StatementExecutor e, String table, String from,
