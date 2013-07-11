@@ -109,6 +109,24 @@
     },
     {
       "key": {
+        "uuid": "6712c80f_13f94c01",
+        "filename": "src/main/java/com/google/gwtorm/schema/Util.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2013-07-11T22:37:35Z",
+      "side": 1,
+      "message": "These 3 renames would suck, but I think we could get through it with relatively low pain. Ironically SQL databases like PostgreSQL may be worse off here.",
+      "parentUuid": "675488b1_e33ed2c4",
+      "revId": "c59637c0f62f435816e66539b6a1148a1eebad35",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "877edc23_acf68312",
         "filename": "src/main/java/com/google/gwtorm/schema/Util.java",
         "patchSetId": 2
