@@ -18,10 +18,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import com.google.gwtorm.data.PhoneBookDb;
-import com.google.gwtorm.data.PhoneBookDb2;
 import com.google.gwtorm.data.Address;
 import com.google.gwtorm.data.Person;
+import com.google.gwtorm.data.PhoneBookDb;
+import com.google.gwtorm.data.PhoneBookDb2;
 import com.google.gwtorm.jdbc.Database;
 import com.google.gwtorm.jdbc.JdbcExecutor;
 import com.google.gwtorm.jdbc.JdbcSchema;
@@ -158,5 +158,23 @@ public class DialectH2Test {
     } finally {
       p2.close();
     }
+  }
+
+  @Test
+  public void testRenameTable() throws SQLException, OrmException {
+    assertTrue(dialect.listTables(db).isEmpty());
+    execute("CREATE TABLE foo (cnt INT)");
+    Set<String> s = dialect.listTables(db);
+    assertEquals(1, s.size());
+    assertTrue(s.contains("foo"));
+    final PhoneBookDb p = phoneBook.open();
+    try {
+      ((JdbcSchema) p).renameTable(executor, "foo", "bar");
+    } finally {
+      p.close();
+    }
+    s = dialect.listTables(db);
+    assertTrue(s.contains("bar"));
+    assertFalse(s.contains("for"));
   }
 }
