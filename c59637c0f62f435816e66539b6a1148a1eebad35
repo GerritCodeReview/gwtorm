@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "675488b1_e33ed2c4",
+        "filename": "src/main/java/com/google/gwtorm/schema/Util.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2013-07-11T12:23:12Z",
+      "side": 1,
+      "message": "Another approach would be to migrate the Schema and rename these 3 identifiers to meet 30 char length restriction:\n\n* ACCOUNT_GROUP_INCLUDES_BY_UUID\n* ACCOUNT_GROUP_INCLUDES_BY_UUID_AUDIT\n* ACCOUNTS.SHOW_USERNAME_IN_REVIEW_CATEGORY\n\nWe did already a lot of accommodations to Gerrit data base design to satisfy different SQL and NoSQL dialects. Why not yet another one?",
+      "parentUuid": "677ba837_4bfca5f1",
+      "revId": "c59637c0f62f435816e66539b6a1148a1eebad35",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "877edc23_acf68312",
         "filename": "src/main/java/com/google/gwtorm/schema/Util.java",
         "patchSetId": 2
