@@ -27,6 +27,7 @@ import org.junit.Test;
 
 
 public class IntKeyTestCase {
+  @SuppressWarnings("serial")
   private abstract static class IntKeyImpl<T extends Key<?>> extends IntKey<T> {
     @Column(id = 1)
     int id;
@@ -46,18 +47,21 @@ public class IntKeyTestCase {
     }
   }
 
+  @SuppressWarnings("serial")
   private static class Parent extends IntKeyImpl<Key<?>> {
     public Parent(int n) {
       super(n);
     }
   }
 
+  @SuppressWarnings("serial")
   private static class UnrelatedEntity extends IntKeyImpl<Key<?>> {
     public UnrelatedEntity(int n) {
       super(n);
     }
   }
 
+  @SuppressWarnings("serial")
   private static class Child extends IntKeyImpl<Parent> {
     private Parent parent;
 

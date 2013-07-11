@@ -14,6 +14,7 @@
 
 package com.google.gwtorm.schema;
 
+@SuppressWarnings("serial")
 class QueryParseInternalException extends RuntimeException {
   QueryParseInternalException(String message) {
     super(message);

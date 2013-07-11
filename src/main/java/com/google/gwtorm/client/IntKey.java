@@ -24,6 +24,7 @@ import java.io.Serializable;
  *
  * @param <P> the parent key type. Use {@link Key} if no parent key is needed.
  */
+@SuppressWarnings("serial")
 public abstract class IntKey<P extends Key<?>> implements Key<P>, Serializable {
   /**
    * @return id of the entity instance.

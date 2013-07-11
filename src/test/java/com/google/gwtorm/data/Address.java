@@ -18,6 +18,7 @@ import com.google.gwtorm.client.Column;
 import com.google.gwtorm.client.StringKey;
 
 public class Address {
+  @SuppressWarnings("serial")
   public static class Key extends StringKey<Person.Key> {
     @Column(id = 1)
     protected Person.Key owner;

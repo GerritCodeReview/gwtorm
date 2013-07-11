@@ -15,6 +15,7 @@
 package com.google.gwtorm.server;
 
 /** Indicates one or more entities were concurrently inserted with the same key. */
+@SuppressWarnings("serial")
 public class OrmDuplicateKeyException extends OrmException {
   public OrmDuplicateKeyException(final String msg) {
     super(msg);

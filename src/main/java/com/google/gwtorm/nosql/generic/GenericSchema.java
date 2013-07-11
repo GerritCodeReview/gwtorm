@@ -327,9 +327,11 @@ public abstract class GenericSchema extends NoSqlSchema {
     }
   }
 
+  @SuppressWarnings("serial")
   private static class KeyExists extends RuntimeException {
   }
 
+  @SuppressWarnings("serial")
   private static class NoMoreValues extends RuntimeException {
   }
 }

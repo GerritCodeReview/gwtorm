@@ -26,6 +26,7 @@ import org.junit.Test;
 
 
 public class StringKeyTestCase {
+  @SuppressWarnings("serial")
   private abstract static class StringKeyImpl<T extends Key<?>> extends
       StringKey<T> {
     @Column(id = 1)
@@ -46,18 +47,21 @@ public class StringKeyTestCase {
     }
   }
 
+  @SuppressWarnings("serial")
   private static class Parent extends StringKeyImpl<Key<?>> {
     public Parent(String n) {
       super(n);
     }
   }
 
+  @SuppressWarnings("serial")
   private static class UnrelatedEntity extends StringKeyImpl<Key<?>> {
     public UnrelatedEntity(String n) {
       super(n);
     }
   }
 
+  @SuppressWarnings("serial")
   private static class Child extends StringKeyImpl<Parent> {
     private Parent parent;
 

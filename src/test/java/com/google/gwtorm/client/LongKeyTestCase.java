@@ -26,6 +26,7 @@ import org.junit.Test;
 
 
 public class LongKeyTestCase {
+  @SuppressWarnings("serial")
   private abstract static class LongKeyImpl<T extends Key<?>> extends
       LongKey<T> {
     @Column(id = 1)
@@ -46,18 +47,21 @@ public class LongKeyTestCase {
     }
   }
 
+  @SuppressWarnings("serial")
   private static class Parent extends LongKeyImpl<Key<?>> {
     public Parent(long n) {
       super(n);
     }
   }
 
+  @SuppressWarnings("serial")
   private static class UnrelatedEntity extends LongKeyImpl<Key<?>> {
     public UnrelatedEntity(long n) {
       super(n);
     }
   }
 
+  @SuppressWarnings("serial")
   private static class Child extends LongKeyImpl<Parent> {
     private Parent parent;
 

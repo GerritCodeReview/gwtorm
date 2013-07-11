@@ -19,6 +19,7 @@ import com.google.gwtorm.client.StringKey;
 
 
 public class Person {
+  @SuppressWarnings("serial")
   public static class Key extends StringKey<com.google.gwtorm.client.Key<?>> {
     @Column(id = 1, length = 20)
     protected String name;

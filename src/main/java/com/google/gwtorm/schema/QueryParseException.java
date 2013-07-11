@@ -14,6 +14,7 @@
 
 package com.google.gwtorm.schema;
 
+@SuppressWarnings("serial")
 public class QueryParseException extends Exception {
   public QueryParseException(final String message) {
     super(message);

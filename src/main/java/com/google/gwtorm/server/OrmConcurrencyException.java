@@ -15,6 +15,7 @@
 package com.google.gwtorm.server;
 
 /** Indicates one or more entities were modified concurrently. */
+@SuppressWarnings("serial")
 public class OrmConcurrencyException extends OrmException {
   public OrmConcurrencyException() {
     super("Concurrent modification detected");

@@ -51,6 +51,7 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
     db = s;
   }
 
+  @SuppressWarnings("serial")
   protected LinkedHashMap<K, byte[]> cache() {
     if (cache == null) {
       cache = new LinkedHashMap<K, byte[]>(8) {
@@ -564,6 +565,7 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
     return IndexRow.CODEC.encodeToByteArray(IndexRow.forKey(now, key));
   }
 
+  @SuppressWarnings("serial")
   private static class IndexException extends RuntimeException {
     final OrmException cause;
 
