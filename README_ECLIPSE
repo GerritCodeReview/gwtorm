@@ -25,14 +25,28 @@ The unit tests assume there is a local PostgreSQL and MySQL server
 listening on their respective default ports, with the following
 database configuration:
 
-PostgreSQL:
+PostgreSQL
+~~~~~~~~~~
+
+Run the following commands from the shell (not from inside the psql
+console):
 
   createuser -S -D -R -E -P gwtorm
-  Password: gwtorm
-
   createdb -E UTF-8 -O gwtorm gwtorm
 
-MySQL:
+When prompted for the password, enter 'gwtorm'.
+
+It may be necessary to run the commands as the postgres user.  In this
+case, prefix the commands with `sudo -u postgres`.
+
+MySQL
+~~~~~
+
+Enter the mysql console:
+
+  $ mysql
+
+Run the following commands:
 
   create user 'gwtorm'@'localhost' identified by 'gwtorm';
   create database gwtorm;
