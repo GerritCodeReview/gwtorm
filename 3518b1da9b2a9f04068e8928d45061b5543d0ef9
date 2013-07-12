@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e7bb1839_92153a50",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcSchema.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2013-07-12T03:10:35Z",
+      "side": 1,
+      "message": "This checks the `to` value but then raises an error if it does not exist.  Shouldn\u0027t it be the opposite, i.e. raising an error if `to` _does_ exist?\n\nAnd should there be a separate check that `from` exists?",
+      "revId": "3518b1da9b2a9f04068e8928d45061b5543d0ef9",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e7bb1839_b2103e60",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcSchema.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2013-07-12T03:10:35Z",
+      "side": 1,
+      "message": "s/table/column",
+      "revId": "3518b1da9b2a9f04068e8928d45061b5543d0ef9",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e7bb1839_f20ac62d",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectH2Test.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2013-07-12T03:10:35Z",
+      "side": 1,
+      "message": "Is it possible to wrap the long lines?",
+      "revId": "3518b1da9b2a9f04068e8928d45061b5543d0ef9",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
