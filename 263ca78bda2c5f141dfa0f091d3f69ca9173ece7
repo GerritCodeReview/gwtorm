@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e7bb1839_5203d21e",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcSchema.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2013-07-12T03:05:09Z",
+      "side": 1,
+      "message": "- trim the `from` and `to` values?\n- check for null/empty values?",
+      "revId": "263ca78bda2c5f141dfa0f091d3f69ca9173ece7",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
