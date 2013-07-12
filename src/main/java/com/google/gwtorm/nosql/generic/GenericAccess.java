@@ -454,6 +454,7 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
     encodePrimaryKey(b, key);
 
     try {
+      @SuppressWarnings("unchecked")
       final T[] res = (T[]) new Object[3];
       db.atomicUpdate(b.toByteArray(), new AtomicUpdate<byte[]>() {
         @Override
