@@ -80,7 +80,6 @@ class IndexFunctionGen<T> implements Opcodes {
     Iterator<QueryModel.OrderBy> orderby = orderByLeaves(query.getOrderBy()).iterator();
     while (p < myFields.size() && orderby.hasNext()) {
       QueryModel.OrderBy o = orderby.next();
-      ColumnModel c = o.column;
       if (!myFields.get(p).equals(o)) {
         myFields.add(o);
         break;

@@ -89,7 +89,6 @@ public abstract class JdbcSchema extends AbstractSchema {
   private void addColumns(final StatementExecutor e, final RelationModel rel)
       throws SQLException, OrmException {
     final SqlDialect dialect = dbDef.getDialect();
-    final SchemaModel model = dbDef.getSchemaModel();
     Set<String> have = dialect.listColumns( //
         getConnection(), rel.getRelationName().toLowerCase());
     for (final ColumnModel c : rel.getColumns()) {
@@ -177,7 +176,6 @@ public abstract class JdbcSchema extends AbstractSchema {
   private void pruneColumns(final StatementExecutor e, final RelationModel rel)
       throws SQLException, OrmException {
     final SqlDialect dialect = dbDef.getDialect();
-    final SchemaModel model = dbDef.getSchemaModel();
     HashSet<String> want = new HashSet<String>();
     for (final ColumnModel c : rel.getColumns()) {
       want.add(c.getColumnName().toLowerCase());

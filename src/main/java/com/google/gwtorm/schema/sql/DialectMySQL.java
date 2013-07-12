@@ -38,7 +38,6 @@ public class DialectMySQL extends SqlDialect {
       public String getSqlType(final ColumnModel col, final SqlDialect dialect) {
         final Column column = col.getColumnAnnotation();
         final StringBuilder r = new StringBuilder();
-        final int type;
 
         if (column.length() <= 0) {
           r.append("VARCHAR(255) BINARY");

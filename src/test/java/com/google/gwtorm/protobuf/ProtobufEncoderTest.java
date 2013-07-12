@@ -79,6 +79,7 @@ public class ProtobufEncoderTest {
     assertNull(a.location());
 
     Person.Key k = new Person.Key("bob");
+    @SuppressWarnings("unused")
     Person p = new Person(k, 42);
     Address b = new Address(new Address.Key(k, "ny"), "ny");
 
@@ -94,6 +95,7 @@ public class ProtobufEncoderTest {
   public void testDecodeEmptiesByteBuffer() {
     ProtobufCodec<Person> e = CodecFactory.encoder(Person.class);
     ByteBuffer buf = ByteBuffer.wrap(testingBin);
+    @SuppressWarnings("unused")
     Person p = e.decode(buf);
     assertEquals(0, buf.remaining());
     assertEquals(testingBin.length, buf.position());

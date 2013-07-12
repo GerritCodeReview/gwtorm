@@ -26,8 +26,6 @@ import java.sql.Types;
 public class SqlBooleanTypeInfo extends SqlTypeInfo {
   @Override
   public String getSqlType(final ColumnModel column, final SqlDialect dialect) {
-    final String name = column.getColumnName();
-    final String t = getTrueLiteralValue();
     final String f = getFalseLiteralValue();
     final StringBuilder r = new StringBuilder();
     r.append("CHAR(1)");
