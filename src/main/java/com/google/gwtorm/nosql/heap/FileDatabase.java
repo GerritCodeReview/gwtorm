@@ -301,6 +301,7 @@ public class FileDatabase<T extends Schema> extends
     }
   }
 
+  @SuppressWarnings("rawtypes")
   public static abstract class LoggingAccess extends TreeMapAccess {
     protected LoggingAccess(LoggingSchema s) {
       super(s);

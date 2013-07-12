@@ -187,6 +187,7 @@ public class IndexFunctionTest {
     assertEqualToBuilderResult(new byte[] {}, b);
   }
 
+  @SuppressWarnings("rawtypes")
   private IndexFunction<Person> index(String name, String query)
       throws OrmException {
     final QueryModel qm = new QueryModel(people, name, query);

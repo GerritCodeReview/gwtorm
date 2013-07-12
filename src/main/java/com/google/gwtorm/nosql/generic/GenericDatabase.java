@@ -47,6 +47,7 @@ import java.util.concurrent.TimeUnit;
  * @param <S> type of the implementation's base for Schema implementations.
  * @param <A> type of the implementation's base for Access implementations.
  */
+@SuppressWarnings("rawtypes")
 public abstract class GenericDatabase<T extends Schema, S extends GenericSchema, A extends GenericAccess>
     extends NoSqlDatabase<T, S, A> {
   private static final long DEFAULT_FOSSIL_AGE =

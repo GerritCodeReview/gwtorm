@@ -47,6 +47,7 @@ import com.google.gwtorm.server.StandardKeyEncoder;
  * @param <S> type of the implementation's base for Schema implementations.
  * @param <A> type of the implementation's base for Access implementations.
  */
+@SuppressWarnings("rawtypes")
 public abstract class NoSqlDatabase<T extends Schema, S extends NoSqlSchema, A extends NoSqlAccess>
     implements SchemaFactory<T> {
   static {

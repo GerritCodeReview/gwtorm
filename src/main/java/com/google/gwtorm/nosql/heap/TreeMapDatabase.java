@@ -37,6 +37,7 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * @param <T> type of the application schema.
  */
+@SuppressWarnings("rawtypes")
 abstract class TreeMapDatabase<T extends Schema, S extends TreeMapSchema, A extends TreeMapAccess>
     extends GenericDatabase<T, S, A> {
 

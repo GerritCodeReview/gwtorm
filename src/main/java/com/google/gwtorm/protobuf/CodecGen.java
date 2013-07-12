@@ -312,7 +312,7 @@ class CodecGen<T> implements Opcodes {
     }
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({"unchecked", "rawtypes"})
   private NestedCodec nestedFor(JavaColumnModel f) {
     Class clazz = f.getNestedClass();
     NestedCodec n = nestedCodecs.get(clazz);
@@ -1244,7 +1244,7 @@ class CodecGen<T> implements Opcodes {
     final Type codecType;
     final Type pojoType;
 
-    NestedCodec(String field, Class impl, Type pojoType) {
+    NestedCodec(String field, Class<?> impl, Type pojoType) {
       this.field = field;
       this.codecType = Type.getType(impl);
       this.pojoType = pojoType;

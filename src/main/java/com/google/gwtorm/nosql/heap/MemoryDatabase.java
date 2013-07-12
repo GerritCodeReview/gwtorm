@@ -28,6 +28,7 @@ import com.google.gwtorm.server.Schema;
  * @param <T> type of the application schema.
  * @see FileDatabase
  */
+@SuppressWarnings("rawtypes")
 public class MemoryDatabase<T extends Schema> extends
     TreeMapDatabase<T, TreeMapSchema, TreeMapAccess> {
 

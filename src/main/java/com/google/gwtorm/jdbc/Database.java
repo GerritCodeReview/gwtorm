@@ -88,7 +88,7 @@ public class Database<T extends Schema> implements SchemaFactory<T> {
     implDialect = dialect;
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({"unchecked", "rawtypes"})
   private Class<T> generate(final SqlDialect dialect,
       final GeneratedClassLoader loader) throws OrmException {
     return new SchemaGen(loader, schemaModel, getClass(), JdbcSchema.class,

@@ -26,7 +26,7 @@ import java.io.Serializable;
  */
 @SuppressWarnings("serial")
 public abstract class StringKey<P extends Key<?>> implements Key<P>,
-    Serializable, Comparable<StringKey> {
+    Serializable, Comparable<StringKey<?>> {
   /**
    * @return name of the entity instance.
    */
@@ -64,7 +64,7 @@ public abstract class StringKey<P extends Key<?>> implements Key<P>,
   }
 
   @Override
-  public int compareTo(final StringKey other) {
+  public int compareTo(final StringKey<?> other) {
     return get().compareTo(other.get());
   }
 

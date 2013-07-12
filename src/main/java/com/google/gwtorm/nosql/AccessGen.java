@@ -70,6 +70,7 @@ class AccessGen implements Opcodes {
 
   AccessGen(final GeneratedClassLoader loader, final RelationModel rm,
       final Class<? extends NoSqlSchema> schemaClazz,
+      @SuppressWarnings("rawtypes")
       final Class<? extends NoSqlAccess> accessClazz) throws OrmException {
     classLoader = loader;
     model = rm;
@@ -119,7 +120,7 @@ class AccessGen implements Opcodes {
     return c;
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({"unchecked", "rawtypes"})
   private void initObjectCodec(final Class<?> clazz) throws OrmException {
     ProtobufCodec oc = CodecFactory.encoder(modelClass);
     if (model.getRelationID() > 0) {
@@ -143,7 +144,7 @@ class AccessGen implements Opcodes {
     }
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({"unchecked", "rawtypes"})
   private void initQueryIndexes(final Class<?> clazz) throws OrmException {
     final Collection<QueryModel> queries = model.getQueries();
     final ArrayList<IndexFunction> indexes = new ArrayList<IndexFunction>();
@@ -158,7 +159,7 @@ class AccessGen implements Opcodes {
       e.setAccessible(true);
       e.set(null, indexes.toArray(new IndexFunction[indexes.size()]));
 
-      for (IndexFunction f : indexes) {
+      for (IndexFunction<?> f : indexes) {
         e = clazz.getDeclaredField("index_" + f.getName());
         e.setAccessible(true);
         e.set(null, f);
