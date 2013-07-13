@@ -401,4 +401,13 @@ public abstract class SqlDialect {
     return totalUpdateCount;
   }
 
+  /**
+   * Some database doesn't like statement delimiters in scripts (semicolon)
+   *
+   * @return <code>true</code> statement delimiter in script is accepted,
+   *         <code>false</code> otherwise
+   */
+  public boolean canHandleStatementDelimiterInScript() {
+    return true;
+  }
 }
