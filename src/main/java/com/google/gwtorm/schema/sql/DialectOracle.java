@@ -120,4 +120,9 @@ public class DialectOracle extends SqlDialect {
   public boolean selectHasLimit() {
     return false;
   }
+
+  @Override
+  public boolean isStatementDelimiterSupported() {
+    return false;
+  }
 }
