@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "a7c680d7_a5747e97",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcSchema.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2013-07-14T08:37:43Z",
+      "side": 1,
+      "message": "this is how it supposed to work, consider the following sample:\n\nSchema #1\n \n create table foo (bar int);\n\nSchema #2: column \"bar\" should be renamed in \"baz\".\n\n renameColumn(e, \"foo\", \"bar\", \"baz\")\n\nis called. At this time the situation is as following:\n\n Database | Schema\n ----------------------------\n bar      | baz\n\nWe need to column definition (\"baz\" in this example) to produce the \"alter table\" statement, because some databases, i. e. MySQL need complete column type to rename a column. Clearly we can no obtain this information with old column name, because it was removed from the Schema and only exists in the database.\n\nThat why\n\n rel.getColumn(\"baz\")\n\nis correct here.",
+      "parentUuid": "e7bb1839_92153a50",
+      "revId": "3518b1da9b2a9f04068e8928d45061b5543d0ef9",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e7bb1839_b2103e60",
         "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcSchema.java",
         "patchSetId": 1
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "a7c680d7_8579828f",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcSchema.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2013-07-14T08:37:43Z",
+      "side": 1,
+      "message": "it supposed to prefix the column with the table name, i. e.:\n\n \"Cannot rename foo.bar to baz\"\n\nin example above",
+      "parentUuid": "e7bb1839_b2103e60",
+      "revId": "3518b1da9b2a9f04068e8928d45061b5543d0ef9",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e7bb1839_f20ac62d",
         "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectH2Test.java",
         "patchSetId": 1
@@ -47,6 +83,24 @@
       "writtenOn": "2013-07-12T03:10:35Z",
       "side": 1,
       "message": "Is it possible to wrap the long lines?",
+      "revId": "3518b1da9b2a9f04068e8928d45061b5543d0ef9",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "477b0460_a262deeb",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectH2Test.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2013-07-14T08:37:43Z",
+      "side": 1,
+      "message": "Done\n\nremoved now, because it was only a POC that we don\u0027t need. H2: we add a new column, update the values and remove the old column.",
+      "parentUuid": "e7bb1839_f20ac62d",
       "revId": "3518b1da9b2a9f04068e8928d45061b5543d0ef9",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
