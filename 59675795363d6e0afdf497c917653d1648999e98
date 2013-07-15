@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6712c80f_934d5c51",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/SqlDialect.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2013-07-15T11:37:01Z",
+      "side": 1,
+      "message": "\"Some databases don\u0027t support delimiters (semicolons) in scripts.\"",
+      "revId": "59675795363d6e0afdf497c917653d1648999e98",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e7bb1839_f229265f",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/SqlDialect.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 410,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2013-07-15T11:37:01Z",
+      "side": 1,
+      "message": "\u0027isStatementDelimiterSupported\u0027\n\n?",
+      "revId": "59675795363d6e0afdf497c917653d1648999e98",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
