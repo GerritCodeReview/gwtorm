@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "58d688dc_b100a014",
+        "filename": "pom.xml",
+        "patchSetId": 7
+      },
+      "lineNbr": 362,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2013-08-05T21:02:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3858f440_2851cbde",
+      "revId": "1785036b0ba9e7cc0bd84378f297918aad0b0400",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3858f440_485cfff6",
         "filename": "pom.xml",
         "patchSetId": 7
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "58d688dc_510ff442",
+        "filename": "pom.xml",
+        "patchSetId": 7
+      },
+      "lineNbr": 368,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2013-08-05T21:02:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3858f440_485cfff6",
+      "revId": "1785036b0ba9e7cc0bd84378f297918aad0b0400",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b84b0473_e4951a8a",
         "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectOracleSQLTest.java",
         "patchSetId": 7
@@ -47,6 +83,24 @@
       "writtenOn": "2013-08-05T19:19:37Z",
       "side": 1,
       "message": "I think we need something in the pom.xml to allow this test to be skipped. I won\u0027t have an Oracle installation available to test the Oracle glue before making a release.",
+      "revId": "1785036b0ba9e7cc0bd84378f297918aad0b0400",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b84b0473_04df1653",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectOracleSQLTest.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2013-08-05T21:02:21Z",
+      "side": 1,
+      "message": "Done\n\nsolved using (relatively) new junit feature: conditionally unit test activation with Assume class. Bump junit version to 4.11 for that:\n\n try {\n      Class.forName(ORACLE_DRIVER);\n    } catch (Exception e) {\n      org.junit.Assume.assumeNoException(e);\n    }\n\nIf assumeNoException called in method annotated with @Before annotation, then the whole test is skipped, using the default maven profile: `no-proprietary-databases`\n\n Running com.google.gwtorm.schema.sql.DialectOracleSQLTest\nTests run: 4, Failures: 0, Errors: 0, Skipped: 4, Time elapsed: 0.001 sec\n\nAnd now with `all` maven profile activated:\n\n mvn package -P all\n\n Running com.google.gwtorm.schema.sql.DialectOracleSQLTest\nTests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.264 sec\n\n\nThe best is: on one machine i don\u0027t have PostgreSQL \u0026 MySQL available, so i applied the same approach for those databases too in the same change, burring it here ;-)\n\n Running com.google.gwtorm.schema.sql.DialectMySQLTest\nTests run: 4, Failures: 0, Errors: 0, Skipped: 4, Time elapsed: 0.102 sec\nRunning com.google.gwtorm.schema.sql.DialectPostgreSQLTest\nTests run: 4, Failures: 0, Errors: 0, Skipped: 4, Time elapsed: 0.01 sec`",
+      "parentUuid": "b84b0473_e4951a8a",
       "revId": "1785036b0ba9e7cc0bd84378f297918aad0b0400",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
