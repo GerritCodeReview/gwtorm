@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3858f440_c83eaf9f",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcSchema.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2013-08-05T19:13:00Z",
+      "side": 1,
+      "message": "Unused, you can delete this.",
+      "revId": "d6a25d18d38a23c6473dd7e69c0e8c156c86c9fb",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3858f440_a84b7b2f",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcSchema.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2013-08-05T19:13:00Z",
+      "side": 1,
+      "message": "Apparently this also unused. Maybe add a new parent commit to remove this?",
+      "revId": "d6a25d18d38a23c6473dd7e69c0e8c156c86c9fb",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
