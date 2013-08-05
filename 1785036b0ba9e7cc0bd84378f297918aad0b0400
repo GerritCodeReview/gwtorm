@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3858f440_2851cbde",
+        "filename": "pom.xml",
+        "patchSetId": 7
+      },
+      "lineNbr": 362,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2013-08-05T19:19:37Z",
+      "side": 1,
+      "message": "You can use a Maven profile to do this. Profiles can have dependency sections and allow the Oracle driver to be selected with e.g. -Poracle. Which might also allow selection of the Oracle glue test to run.",
+      "revId": "1785036b0ba9e7cc0bd84378f297918aad0b0400",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3858f440_485cfff6",
+        "filename": "pom.xml",
+        "patchSetId": 7
+      },
+      "lineNbr": 368,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2013-08-05T19:19:37Z",
+      "side": 1,
+      "message": "This should also have \u003cscope\u003eprovided\u003c/scope\u003e to prevent Maven from assuming a build of gwtorm bundled into something else should automatically drag in the Oracle JDBC driver.",
+      "revId": "1785036b0ba9e7cc0bd84378f297918aad0b0400",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b84b0473_e4951a8a",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectOracleSQLTest.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2013-08-05T19:19:37Z",
+      "side": 1,
+      "message": "I think we need something in the pom.xml to allow this test to be skipped. I won\u0027t have an Oracle installation available to test the Oracle glue before making a release.",
+      "revId": "1785036b0ba9e7cc0bd84378f297918aad0b0400",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
