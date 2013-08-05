@@ -108,17 +108,7 @@ public abstract class JdbcSchema extends AbstractSchema {
     if (col == null) {
       throw new OrmException("Relation " + table + " does not have " + to);
     }
-    try {
-      final Statement s = getConnection().createStatement();
-      try {
-        getDialect().renameColumn(e, table, from, col);
-      } finally {
-        s.close();
-      }
-    } catch (SQLException err) {
-      throw new OrmException("Cannot rename " + table + "." + from + " to "
-          + to, err);
-    }
+    getDialect().renameColumn(e, table, from, col);
   }
 
   private RelationModel findRelationModel(String table) {
