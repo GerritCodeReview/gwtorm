@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d87c38a6_75876863",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcSchema.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2013-08-05T21:01:19Z",
+      "side": 1,
+      "message": "Sorry for not documented it better: the difference is how the columns are obtained:\n\n  public ColumnModel getField(final String name) {\n    return fieldsByFieldName.get(name);\n  }\n\n  public ColumnModel getColumn(final String name) {\n    return columnsByColumnName.get(name);\n  }\n\nSo that nested columns only work with getColumn() and not with getField()",
+      "parentUuid": "3858f440_8848b733",
+      "revId": "c94b79044cc4938d2e904c762bec7ca6454b2284",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b84b0473_0491569d",
         "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcSchema.java",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2013-08-05T19:14:32Z",
       "side": 1,
       "message": "Unused",
+      "revId": "c94b79044cc4938d2e904c762bec7ca6454b2284",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "58d688dc_310ef044",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcSchema.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2013-08-05T21:01:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b84b0473_0491569d",
       "revId": "c94b79044cc4938d2e904c762bec7ca6454b2284",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
