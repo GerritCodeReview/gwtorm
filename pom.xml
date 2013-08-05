@@ -43,6 +43,27 @@ limitations under the License.
     </developer>
   </developers>
 
+  <profiles>
+    <profile>
+      <id>all</id>
+      <dependencies>
+        <!-- add here further proprietary databases: IBM DB2, MAX DB, ... -->
+        <dependency>
+          <groupId>com.oracle</groupId>
+          <artifactId>ojdbc6</artifactId>
+          <version>11.2.0.3</version>
+          <scope>provided</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>no-proprietary-databases</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+    </profile>
+  </profiles>
+
   <licenses>
     <license>
       <name>Apache License, 2.0</name>
@@ -320,7 +341,7 @@ limitations under the License.
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.0</version>
+      <version>4.11</version>
       <scope>test</scope>
     </dependency>
 
@@ -358,6 +379,7 @@ limitations under the License.
       <version>2.4.1</version>
       <scope>provided</scope>
     </dependency>
+
   </dependencies>
 
   <pluginRepositories>

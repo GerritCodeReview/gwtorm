@@ -1,4 +1,4 @@
-// Copyright 2009 Google Inc.
+// Copyright 2013 The Android Open Source Project
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 package com.google.gwtorm.schema.sql;
 
 import static org.junit.Assert.assertEquals;
@@ -20,10 +19,10 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeNoException;
 
-import com.google.gwtorm.data.PhoneBookDb;
-import com.google.gwtorm.data.PhoneBookDb2;
 import com.google.gwtorm.data.Address;
 import com.google.gwtorm.data.Person;
+import com.google.gwtorm.data.PhoneBookDb;
+import com.google.gwtorm.data.PhoneBookDb2;
 import com.google.gwtorm.jdbc.Database;
 import com.google.gwtorm.jdbc.JdbcExecutor;
 import com.google.gwtorm.jdbc.JdbcSchema;
@@ -41,7 +40,8 @@ import java.util.Collections;
 import java.util.Properties;
 import java.util.Set;
 
-public class DialectPostgreSQLTest {
+public class DialectOracleSQLTest {
+  private final static String ORACLE_DRIVER = "oracle.jdbc.driver.OracleDriver";
   private Connection db;
   private JdbcExecutor executor;
   private SqlDialect dialect;
@@ -50,22 +50,23 @@ public class DialectPostgreSQLTest {
 
   @Before
   public void setUp() throws Exception {
-    Class.forName(org.postgresql.Driver.class.getName());
+    try {
+      Class.forName(ORACLE_DRIVER);
+    } catch (Exception e) {
+      assumeNoException(e);
+    }
 
-    final String database = "gwtorm";
-    final String user = "gwtorm";
+    final String sid = "xe"; // Oracle instance name
+    final String user = "gwtorm"; // Oracle schema=user name=database
     final String pass = "gwtorm";
 
-    try {
-      db = DriverManager.getConnection("jdbc:postgresql:" + database, user, pass);
-    } catch (Throwable t) {
-      assumeNoException(t);
-    }
+    db = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:"
+        + sid, user, pass);
     executor = new JdbcExecutor(db);
-    dialect = new DialectPostgreSQL().refine(db);
+    dialect = new DialectOracle().refine(db);
 
     final Properties p = new Properties();
-    p.setProperty("driver", org.postgresql.Driver.class.getName());
+    p.setProperty("driver", ORACLE_DRIVER);
     p.setProperty("url", db.getMetaData().getURL());
     p.setProperty("user", user);
     p.setProperty("password", pass);
@@ -79,6 +80,7 @@ public class DialectPostgreSQLTest {
 
     drop("TABLE addresses");
     drop("TABLE foo");
+    drop("TABLE bar");
     drop("TABLE people");
   }
 
@@ -145,7 +147,7 @@ public class DialectPostgreSQLTest {
       execute("CREATE SEQUENCE cnt");
       execute("CREATE TABLE foo (cnt INT)");
 
-      execute("ALTER TABLE people ADD COLUMN fake_name VARCHAR(20)");
+      execute("ALTER TABLE people ADD fake_name VARCHAR(20)");
       execute("ALTER TABLE people DROP COLUMN registered");
       execute("DROP TABLE addresses");
       execute("DROP SEQUENCE address_id");
@@ -203,5 +205,6 @@ public class DialectPostgreSQLTest {
     s = dialect.listTables(db);
     assertTrue(s.contains("bar"));
     assertFalse(s.contains("for"));
+
   }
 }

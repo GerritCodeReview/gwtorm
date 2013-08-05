@@ -18,6 +18,7 @@ package com.google.gwtorm.schema.sql;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeNoException;
 
 import com.google.gwtorm.data.PhoneBookDb;
 import com.google.gwtorm.data.PhoneBookDb2;
@@ -57,7 +58,11 @@ public class DialectMySQLTest {
     final String pass = "gwtorm";
 
     final String url = "jdbc:mysql://" + host + "/" + database;
-    db = DriverManager.getConnection(url, user, pass);
+    try {
+      db = DriverManager.getConnection(url, user, pass);
+    } catch (Throwable t) {
+      assumeNoException(t);
+    }
     executor = new JdbcExecutor(db);
     dialect = new DialectMySQL().refine(db);
 
