@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "18da5033_9ff93302",
+        "filename": "README_ORACLE",
+        "patchSetId": 8
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2013-08-07T23:35:37Z",
+      "side": 1,
+      "message": "Since you can enable multiple profiles at once I would prefer this to be called oracle. If we add another driver for foobar we could test both with -P oracle,foobar (for example).",
+      "revId": "4d0255c862ac39c4b3a9b644c206bba802181a7e",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "18da5033_bff6f70e",
+        "filename": "pom.xml",
+        "patchSetId": 8
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2013-08-07T23:35:37Z",
+      "side": 1,
+      "message": "I would prefer the profiles to be below the huge block of license text. Maybe position at line 297 in the old version?",
+      "revId": "4d0255c862ac39c4b3a9b644c206bba802181a7e",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "38d55400_60f05217",
+        "filename": "pom.xml",
+        "patchSetId": 8
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2013-08-07T23:35:37Z",
+      "side": 1,
+      "message": "oracle",
+      "revId": "4d0255c862ac39c4b3a9b644c206bba802181a7e",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "38d55400_80f55608",
+        "filename": "pom.xml",
+        "patchSetId": 8
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2013-08-07T23:35:37Z",
+      "side": 1,
+      "message": "I would prefer one profile per database.",
+      "revId": "4d0255c862ac39c4b3a9b644c206bba802181a7e",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "38d55400_40eb4e29",
+        "filename": "pom.xml",
+        "patchSetId": 8
+      },
+      "lineNbr": 382,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2013-08-07T23:35:37Z",
+      "side": 1,
+      "message": "Unnecessary introduction of a blank line.",
+      "revId": "4d0255c862ac39c4b3a9b644c206bba802181a7e",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "38d55400_a0f97a01",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectPostgreSQLTest.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2013-08-07T23:35:37Z",
+      "side": 1,
+      "message": "Why are we making this change for PostgreSQL and MySQL? Its not covered in your commit message and I\u0027m not familiar enough with this assert in JUnit to know why this is a good idea.",
+      "revId": "4d0255c862ac39c4b3a9b644c206bba802181a7e",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
