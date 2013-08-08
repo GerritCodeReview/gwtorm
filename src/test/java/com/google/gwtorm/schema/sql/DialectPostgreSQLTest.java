@@ -18,6 +18,7 @@ package com.google.gwtorm.schema.sql;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeNoException;
 
 import com.google.gwtorm.data.PhoneBookDb;
 import com.google.gwtorm.data.PhoneBookDb2;
@@ -55,7 +56,11 @@ public class DialectPostgreSQLTest {
     final String user = "gwtorm";
     final String pass = "gwtorm";
 
-    db = DriverManager.getConnection("jdbc:postgresql:" + database, user, pass);
+    try {
+      db = DriverManager.getConnection("jdbc:postgresql:" + database, user, pass);
+    } catch (Throwable t) {
+      assumeNoException(t);
+    }
     executor = new JdbcExecutor(db);
     dialect = new DialectPostgreSQL().refine(db);
 
