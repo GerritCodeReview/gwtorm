@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d8c43863_55094c3a",
+        "filename": "src/main/java/com/google/gwtorm/schema/java/JavaColumnModel.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2013-08-08T12:52:01Z",
+      "side": 1,
+      "message": "Why initialization of the default value is extracted in its own method instead to extend initName with defaultValue parameter, keeping the whole   column initialization code in one place?\n\nBy keeping the initialization in the same place you could implement additional logical checks, like the column is Nullable (notNull \u003d false), but a default value was provided and throw immediately IllegalStateException(), and wouldn\u0027t need to check that programming error on all other places, see my comments in SqlShortTypeInfo.java",
+      "revId": "8cb15488d357c166e003df65bb3063bb7173048a",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "78b42cde_5a09753a",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/SqlShortTypeInfo.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2013-08-08T12:52:01Z",
+      "side": 1,
+      "message": "Move that statement to the if into the next line \n\n if (column.isNotNull()) {\n\nblock here and in all other *TypeInfo classes?\n\ngetDefaultDefinition() method has that check:\n\n if (!column.hasDefaultValue() \u0026\u0026 !column.isNotNull()) {\n\nthat seems to be a programming error and should be catched in column initialization code, see the comment to JavaColumnModel.java",
+      "revId": "8cb15488d357c166e003df65bb3063bb7173048a",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d8c43863_750e4845",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/SqlShortTypeInfo.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2013-08-08T12:52:01Z",
+      "side": 1,
+      "message": "that becomes\n\n if (!column.hasDefaultValue()) { ...\n\nhere and in all other *TypeInfo classes, because we have already thrown IllegalStateException if this was not the case in initName() method.",
+      "revId": "8cb15488d357c166e003df65bb3063bb7173048a",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
