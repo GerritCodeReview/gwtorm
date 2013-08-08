@@ -1,0 +1,13 @@
+Oracle has an issue with availability of jdbc driver in public maven repository.
+
+To test DialectOracle ojdbc6.jar is needed.
+
+1. Obtain the driver either from your local installation or download it from Oracle technet site
+2. Install the driver:
+
+mvn install:install-file -DgroupId=com.oracle -DartifactId=ojdbc6 \
+  -Dversion=11.2.0.3 -Dpackaging=jar -Dfile=<path to ojdbc6.jar> -DgeneratePom=true
+
+3. Use specific maven profile to run Oracle related unit tests:
+
+mvn package -P oracle

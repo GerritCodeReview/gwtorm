@@ -252,6 +252,26 @@ limitations under the License.
     </license>
   </licenses>
 
+  <profiles>
+    <profile>
+      <id>oracle</id>
+      <dependencies>
+        <dependency>
+          <groupId>com.oracle</groupId>
+          <artifactId>ojdbc6</artifactId>
+          <version>11.2.0.3</version>
+          <scope>provided</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>skip-proprietary-databases</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+    </profile>
+  </profiles>
+
   <build>
     <plugins>
       <plugin>
@@ -320,7 +340,7 @@ limitations under the License.
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.0</version>
+      <version>4.11</version>
       <scope>test</scope>
     </dependency>
 
