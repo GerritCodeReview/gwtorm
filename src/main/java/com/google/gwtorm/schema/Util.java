@@ -41,8 +41,15 @@ public class Util {
         r.append(c);
       }
     }
-    return r.toString();
+    String friendlyName = r.toString();
+    if (friendlyName.length() > 30) {
+      throw new IllegalArgumentException(String.format(
+          "Identifier '%s' for name '%s' is greater then 30 characters",
+          friendlyName, name));
+    }
+    return friendlyName;
   }
+
 
   public static String any(final String a, final String b) {
     if (a != null && a.length() > 0) {
