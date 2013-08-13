@@ -44,7 +44,7 @@ public class Util {
     String friendlyName = r.toString();
     if (friendlyName.length() > 30) {
       throw new IllegalArgumentException(String.format(
-          "Identifier '%s' for name '%s' is greater then 30 characters",
+          "Identifier '%s' for name '%s' is greater than 30 characters",
           friendlyName, name));
     }
     return friendlyName;
