@@ -16,6 +16,23 @@
       "revId": "58b90c7dd86541088a224e205d050d164668fe06",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d818b82e_b55cc028",
+        "filename": "src/main/java/com/google/gwtorm/schema/Util.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2013-08-13T06:55:20Z",
+      "side": 1,
+      "message": "It probably doesn\u0027t hurt to update the error message too, will do ,-)",
+      "revId": "58b90c7dd86541088a224e205d050d164668fe06",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
