@@ -187,6 +187,22 @@ public class PhoneBookDbTestCase {
   }
 
   @Test
+  public void testDefaultValues() throws Exception {
+    final PhoneBookDb schema = openAndCreate();
+    final PersonAccess sp = schema.people();
+    final Person p1 = new Person(new Person.Key("Bob"), 18);
+    sp.insert(Collections.singleton(p1));
+
+    final Person p2 = sp.get(sp.primaryKey(p1));
+    assertEquals(p2.getBooleanDefault(), Boolean.FALSE.booleanValue());
+    assertEquals(p2.getCharDefault(), Character.MIN_VALUE);
+    assertEquals(p2.getIntDefault(), Integer.MIN_VALUE);
+    assertEquals(p2.getLongDefault(), Long.MIN_VALUE);
+    assertEquals(p2.getShortDefault(), Short.MIN_VALUE);
+    assertEquals(p2.getStringDefault(), "foo");
+  }
+
+  @Test
   public void testGetAsyncOnePerson() throws Exception {
     final PhoneBookDb schema = openAndCreate();
     final PersonAccess sp = schema.people();

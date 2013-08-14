@@ -14,7 +14,13 @@
 
 package com.google.gwtorm.data;
 
+import com.google.gwtorm.client.BooleanDefault;
+import com.google.gwtorm.client.CharDefault;
 import com.google.gwtorm.client.Column;
+import com.google.gwtorm.client.IntDefault;
+import com.google.gwtorm.client.LongDefault;
+import com.google.gwtorm.client.ShortDefault;
+import com.google.gwtorm.client.StringDefault;
 import com.google.gwtorm.client.StringKey;
 
 
@@ -51,6 +57,30 @@ public class Person {
   @Column(id = 3)
   protected boolean registered;
 
+  @Column(id = 4)
+  @BooleanDefault(false)
+  protected boolean booleanDefault;
+
+  @Column(id = 5)
+  @CharDefault(Character.MIN_VALUE)
+  protected char charDefault;
+
+  @Column(id = 6)
+  @IntDefault(Integer.MIN_VALUE)
+  protected int intDefault;
+
+  @Column(id = 7)
+  @LongDefault(Long.MIN_VALUE)
+  protected long longDefault;
+
+  @Column(id = 8)
+  @ShortDefault(Short.MIN_VALUE)
+  protected short shortDefault;
+
+  @Column(id = 9)
+  @StringDefault("foo")
+  protected String stringDefault;
+
   protected Person() {
   }
 
@@ -81,6 +111,30 @@ public class Person {
 
   public void unregister() {
     registered = false;
+  }
+
+  public boolean getBooleanDefault() {
+    return booleanDefault;
+  }
+
+  public char getCharDefault() {
+    return charDefault;
+  }
+
+  public int getIntDefault() {
+    return intDefault;
+  }
+
+  public long getLongDefault() {
+    return longDefault;
+  }
+
+  public short getShortDefault() {
+    return shortDefault;
+  }
+
+  public String getStringDefault() {
+    return stringDefault;
   }
 
   @Override
