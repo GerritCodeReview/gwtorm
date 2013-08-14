@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "b8fce4ed_dc552dcb",
+        "filename": "src/main/java/com/google/gwtorm/client/BooleanDefault.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003935
+      },
+      "writtenOn": "2013-08-14T11:34:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b8b4e4fc_bcefc133",
+      "revId": "8cb15488d357c166e003df65bb3063bb7173048a",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d8c43863_55094c3a",
         "filename": "src/main/java/com/google/gwtorm/schema/java/JavaColumnModel.java",
         "patchSetId": 4
@@ -54,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "3802b4bb_a1d48438",
+        "filename": "src/main/java/com/google/gwtorm/schema/java/JavaColumnModel.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003935
+      },
+      "writtenOn": "2013-08-14T11:34:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b8b4e4fc_9cf4050b",
+      "revId": "8cb15488d357c166e003df65bb3063bb7173048a",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "986c8049_43f0c616",
         "filename": "src/main/java/com/google/gwtorm/schema/java/JavaColumnModel.java",
         "patchSetId": 4
@@ -65,6 +101,24 @@
       "writtenOn": "2013-08-09T00:00:20Z",
       "side": 1,
       "message": "I wonder if these shouldn\u0027t be \"value\" instead as then its the default annotation.",
+      "revId": "8cb15488d357c166e003df65bb3063bb7173048a",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3802b4bb_c1cff8a0",
+        "filename": "src/main/java/com/google/gwtorm/schema/java/JavaColumnModel.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1003935
+      },
+      "writtenOn": "2013-08-14T11:34:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "986c8049_43f0c616",
       "revId": "8cb15488d357c166e003df65bb3063bb7173048a",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
@@ -88,6 +142,24 @@
     },
     {
       "key": {
+        "uuid": "3802b4bb_01da9062",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/SqlShortTypeInfo.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003935
+      },
+      "writtenOn": "2013-08-14T11:34:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "78b42cde_5a09753a",
+      "revId": "8cb15488d357c166e003df65bb3063bb7173048a",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d8c43863_750e4845",
         "filename": "src/main/java/com/google/gwtorm/schema/sql/SqlShortTypeInfo.java",
         "patchSetId": 4
@@ -99,6 +171,24 @@
       "writtenOn": "2013-08-08T12:52:01Z",
       "side": 1,
       "message": "that becomes\n\n if (!column.hasDefaultValue()) { ...\n\nhere and in all other *TypeInfo classes, because we have already thrown IllegalStateException if this was not the case in initName() method.",
+      "revId": "8cb15488d357c166e003df65bb3063bb7173048a",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b8fce4ed_3c6b7190",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/SqlShortTypeInfo.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003935
+      },
+      "writtenOn": "2013-08-14T11:34:53Z",
+      "side": 1,
+      "message": "Actually this check should be removed now.\n\nIf there is no default value set and we know that the column is not null we want to set \u00270\u0027 default as we do below.\n\nDone.",
+      "parentUuid": "d8c43863_750e4845",
       "revId": "8cb15488d357c166e003df65bb3063bb7173048a",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
