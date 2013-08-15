@@ -53,11 +53,35 @@ public class DialectOracle extends SqlDialect {
     try {
       ResultSet rs = s.executeQuery("SELECT table_name FROM user_tables");
       try {
-        HashSet<String> tables = new HashSet<String>();
+        Set<String> tables = new HashSet<String>();
         while (rs.next()) {
           tables.add(rs.getString(1).toLowerCase());
         }
         return tables;
+      } finally {
+        rs.close();
+      }
+    } finally {
+      s.close();
+    }
+  }
+
+  @Override
+  public Set<String> listIndexes(final Connection db, String tableName)
+      throws SQLException {
+    Statement s = db.createStatement();
+    tableName = tableName.toUpperCase();
+    try {
+      ResultSet rs =
+          s.executeQuery(String.format(
+              "SELECT distinct index_name FROM user_indexes "
+                  + "where table_name = '%s'", tableName));
+      try {
+        Set<String> indexes = new HashSet<String>();
+        while (rs.next()) {
+          indexes.add(rs.getString(1).toLowerCase());
+        }
+        return indexes;
       } finally {
         rs.close();
       }
@@ -72,7 +96,7 @@ public class DialectOracle extends SqlDialect {
     try {
       ResultSet rs = s.executeQuery("SELECT sequence_name FROM user_sequences");
       try {
-        HashSet<String> sequences = new HashSet<String>();
+        Set<String> sequences = new HashSet<String>();
         while (rs.next()) {
           sequences.add(rs.getString(1).toLowerCase());
         }

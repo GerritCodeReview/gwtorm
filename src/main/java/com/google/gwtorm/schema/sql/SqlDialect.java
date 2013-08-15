@@ -224,7 +224,7 @@ public abstract class SqlDialect {
     final String[] types = new String[] {"TABLE"};
     final ResultSet rs = db.getMetaData().getTables(null, null, null, types);
     try {
-      HashSet<String> tables = new HashSet<String>();
+      Set<String> tables = new HashSet<String>();
       while (rs.next()) {
         tables.add(rs.getString("TABLE_NAME").toLowerCase());
       }
@@ -251,6 +251,35 @@ public abstract class SqlDialect {
     r.append(to);
     r.append(" ");
     e.execute(r.toString());
+  }
+
+  /**
+   * List all indexes in the current database schema.
+   *
+   * @param db connection to the schema.
+   * @param tableName the table to list indexes from, in lowercase.
+   * @return set of declared indexes, in lowercase.
+   * @throws SQLException the indexes cannot be listed.
+   */
+  public Set<String> listIndexes(final Connection db, String tableName)
+      throws SQLException {
+    final DatabaseMetaData meta = db.getMetaData();
+    if (meta.storesUpperCaseIdentifiers()) {
+      tableName = tableName.toUpperCase();
+    } else if (meta.storesLowerCaseIdentifiers()) {
+      tableName = tableName.toLowerCase();
+    }
+
+    ResultSet rs = meta.getIndexInfo(null, null, tableName, false, true);
+    try {
+      Set<String> indexes = new HashSet<String>();
+      while (rs.next()) {
+        indexes.add(rs.getString("INDEX_NAME").toLowerCase());
+      }
+      return indexes;
+    } finally {
+      rs.close();
+    }
   }
 
   /**
