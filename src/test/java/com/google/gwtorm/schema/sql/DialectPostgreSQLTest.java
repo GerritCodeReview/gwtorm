@@ -79,6 +79,7 @@ public class DialectPostgreSQLTest {
 
     drop("TABLE addresses");
     drop("TABLE foo");
+    drop("TABLE bar");
     drop("TABLE people");
   }
 
@@ -134,6 +135,20 @@ public class DialectPostgreSQLTest {
     assertEquals(1, s.size());
     assertFalse(s.contains("cnt"));
     assertTrue(s.contains("foo"));
+  }
+
+  @Test
+  public void testListIndexes() throws OrmException, SQLException {
+    assertTrue(dialect.listTables(db).isEmpty());
+
+    execute("CREATE TABLE foo (cnt INT, bar INT, baz INT)");
+    execute("CREATE UNIQUE INDEX FOO_PRIMARY_IND ON foo(cnt)");
+    execute("CREATE INDEX FOO_SECOND_IND ON foo(bar, baz)");
+
+    Set<String> s = dialect.listIndexes(db, "foo");
+    assertEquals(2, s.size());
+    assertTrue(s.contains("foo_primary_ind"));
+    assertTrue(s.contains("foo_second_ind"));
   }
 
   @Test
