@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "6de70c95_82e53a5a",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/DialectOracle.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2013-08-16T06:45:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "584e8857_d1efa432",
+      "revId": "815ac039a7b1a89f734048ac59dac69da908aa54",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "584e8857_b1ea2024",
         "filename": "src/main/java/com/google/gwtorm/schema/sql/DialectOracle.java",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2013-08-16T00:11:36Z",
       "side": 1,
       "message": "Don\u0027t use String.format, this could be bad if the input name contained \u0027. I would prefer to use a prepared statement here even if Oracle\u0027s optimizer produces a less than optimal plan for this query.",
+      "revId": "815ac039a7b1a89f734048ac59dac69da908aa54",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4dec087a_81e53a5a",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/DialectOracle.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2013-08-16T06:45:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "584e8857_b1ea2024",
       "revId": "815ac039a7b1a89f734048ac59dac69da908aa54",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
