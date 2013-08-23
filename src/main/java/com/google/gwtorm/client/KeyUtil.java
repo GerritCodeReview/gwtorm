@@ -90,6 +90,7 @@ public class KeyUtil {
     if (comma < 0 && parent != null) {
       throw new IllegalArgumentException("Not enough components: " + in);
     }
+    assert(parent != null);
     parent.fromString(in.substring(0, comma));
     return decode(in.substring(comma + 1));
   }
