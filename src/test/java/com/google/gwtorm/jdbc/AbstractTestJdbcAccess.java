@@ -459,6 +459,7 @@ public abstract class AbstractTestJdbcAccess {
       super(s);
     }
 
+    @Override
     public String getRelationName() {
       return "Data";
     }

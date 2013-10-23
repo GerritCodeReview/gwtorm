@@ -98,6 +98,7 @@ public class SimpleDataSource implements DataSource {
     return sqle;
   }
 
+  @Override
   public Connection getConnection() throws SQLException {
     if (driver != null) {
       return driver.connect(url, connectionInfo);
@@ -105,6 +106,7 @@ public class SimpleDataSource implements DataSource {
     return DriverManager.getConnection(url, connectionInfo);
   }
 
+  @Override
   public Connection getConnection(String user, String password)
       throws SQLException {
     if (driver != null) {
@@ -120,29 +122,36 @@ public class SimpleDataSource implements DataSource {
     return DriverManager.getConnection(url, user, password);
   }
 
+  @Override
   public PrintWriter getLogWriter() {
     return logWriter;
   }
 
+  @Override
   public void setLogWriter(final PrintWriter out) {
     logWriter = out;
   }
 
+  @Override
   public int getLoginTimeout() {
     return 0;
   }
 
+  @Override
   public void setLoginTimeout(int seconds) {
   }
 
+  @Override
   public boolean isWrapperFor(Class<?> iface) {
     return false;
   }
 
+  @Override
   public <T> T unwrap(Class<T> iface) throws SQLException {
     throw new SQLException(getClass().getName() + " wraps nothing");
   }
 
+  @Override
   public Logger getParentLogger() throws SQLFeatureNotSupportedException {
     throw new SQLFeatureNotSupportedException();
   }

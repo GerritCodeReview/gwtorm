@@ -30,6 +30,7 @@ public interface ResultSet<T> extends Iterable<T> {
    * <code>hasNext()</code> returns false) {@link #close()} will be
    * automatically called.
    */
+  @Override
   Iterator<T> iterator();
 
   /**

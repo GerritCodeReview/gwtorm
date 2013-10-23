@@ -31,11 +31,14 @@ public interface Key<P extends Key<?>> {
    */
   public P getParentKey();
 
+  @Override
   public int hashCode();
 
+  @Override
   public boolean equals(Object o);
 
   /** @return the key, encoded in a string format . */
+  @Override
   public String toString();
 
   /** Reset this key instance to represent the data in the supplied string. */

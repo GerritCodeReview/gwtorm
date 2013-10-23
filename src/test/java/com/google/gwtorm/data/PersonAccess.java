@@ -21,6 +21,7 @@ import com.google.gwtorm.server.Query;
 import com.google.gwtorm.server.ResultSet;
 
 public interface PersonAccess extends Access<Person, Person.Key> {
+  @Override
   @PrimaryKey("name")
   Person get(Person.Key key) throws OrmException;
 

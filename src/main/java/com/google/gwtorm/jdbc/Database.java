@@ -117,6 +117,7 @@ public class Database<T extends Schema> implements SchemaFactory<T> {
    *         The JDBC exception detail should be examined to determine the root
    *         cause of the connection failure.
    */
+  @Override
   public T open() throws OrmException {
     return implFactory.open();
   }

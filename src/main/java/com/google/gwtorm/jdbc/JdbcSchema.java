@@ -48,6 +48,7 @@ public abstract class JdbcSchema extends AbstractSchema {
     return dbDef.getDialect();
   }
 
+  @Override
   public void updateSchema(final StatementExecutor e) throws OrmException {
     try {
       createSequences(e);
@@ -141,6 +142,7 @@ public abstract class JdbcSchema extends AbstractSchema {
     return null;
   }
 
+  @Override
   public void pruneSchema(final StatementExecutor e) throws OrmException {
     try {
       pruneSequences(e);
@@ -204,6 +206,7 @@ public abstract class JdbcSchema extends AbstractSchema {
     return getDialect().nextLong(getConnection(), poolName);
   }
 
+  @Override
   public void close() {
     if (conn != null) {
       try {

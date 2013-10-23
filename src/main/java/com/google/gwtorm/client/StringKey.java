@@ -38,6 +38,7 @@ public abstract class StringKey<P extends Key<?>> implements Key<P>,
   /**
    * @return the parent key instance; null if this is a root level key.
    */
+  @Override
   public P getParentKey() {
     return null;
   }
@@ -79,6 +80,7 @@ public abstract class StringKey<P extends Key<?>> implements Key<P>,
     return r.toString();
   }
 
+  @Override
   public void fromString(final String in) {
     set(KeyUtil.parseFromString(getParentKey(), in));
   }

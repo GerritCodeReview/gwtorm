@@ -37,6 +37,7 @@ public abstract class IntKey<P extends Key<?>> implements Key<P>, Serializable {
   /**
    * @return the parent key instance; null if this is a root level key.
    */
+  @Override
   public P getParentKey() {
     return null;
   }
@@ -72,6 +73,7 @@ public abstract class IntKey<P extends Key<?>> implements Key<P>, Serializable {
     return r.toString();
   }
 
+  @Override
   public void fromString(final String in) {
     set(Integer.parseInt(KeyUtil.parseFromString(getParentKey(), in)));
   }

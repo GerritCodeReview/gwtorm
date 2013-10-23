@@ -45,6 +45,7 @@ public abstract class AbstractResultSet<T> implements ResultSet<T> {
     };
   }
 
+  @Override
   public List<T> toList() {
     List<T> r = new ArrayList<T>();
     for (T obj : this) {

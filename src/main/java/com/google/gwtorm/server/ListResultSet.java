@@ -26,10 +26,12 @@ public class ListResultSet<T> implements ResultSet<T> {
     items = r;
   }
 
+  @Override
   public Iterator<T> iterator() {
     return toList().iterator();
   }
 
+  @Override
   public List<T> toList() {
     if (items == null) {
       throw new IllegalStateException("Results already obtained");
@@ -39,6 +41,7 @@ public class ListResultSet<T> implements ResultSet<T> {
     return r;
   }
 
+  @Override
   public void close() {
     items = null;
   }

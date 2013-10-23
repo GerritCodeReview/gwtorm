@@ -32,6 +32,7 @@ public abstract class AbstractAccess<E, K extends Key<?>>
     // Do nothing by default.
   }
 
+  @Override
   public CheckedFuture<E, OrmException> getAsync(K key) {
     try {
       return Futures.immediateCheckedFuture(get(key));
@@ -40,6 +41,7 @@ public abstract class AbstractAccess<E, K extends Key<?>>
     }
   }
 
+  @Override
   public ResultSet<E> get(final Iterable<K> keys) throws OrmException {
     final ArrayList<E> r = new ArrayList<E>();
     for (final K key : keys) {
@@ -51,6 +53,7 @@ public abstract class AbstractAccess<E, K extends Key<?>>
     return new ListResultSet<E>(r);
   }
 
+  @Override
   public Map<K, E> toMap(final Iterable<E> c) {
     try {
       final HashMap<K, E> r = new HashMap<K, E>();
