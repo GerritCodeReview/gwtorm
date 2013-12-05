@@ -52,6 +52,24 @@
       "revId": "a1be014512546814d02f129ace664758e07a9779",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43bf82de_176e94d3",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2013-12-05T02:56:02Z",
+      "side": 1,
+      "message": "There are some other commits on master that have not been released yet.  Is it worth making a release to get those?\n\nIf we do release a new version, can I do it?  I would like to check if the subproject deployment works according to the instructions we have in the documentation.",
+      "parentUuid": "a3cbde64_623936b9",
+      "revId": "a1be014512546814d02f129ace664758e07a9779",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
