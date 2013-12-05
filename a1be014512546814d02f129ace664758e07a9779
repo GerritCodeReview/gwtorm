@@ -88,6 +88,24 @@
       "revId": "a1be014512546814d02f129ace664758e07a9779",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43bf82de_f7c7a081",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2013-12-05T07:05:29Z",
+      "side": 1,
+      "message": "I don\u0027t have a working environment on my main development box because maven doesn\u0027t work through the corporate proxy, but it works (kind of) on my laptop if I connect to the internet over my phone\u0027s wifi hotspot.",
+      "parentUuid": "63bac6ef_b85c792e",
+      "revId": "a1be014512546814d02f129ace664758e07a9779",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
