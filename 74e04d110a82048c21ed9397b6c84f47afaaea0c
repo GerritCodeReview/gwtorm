@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d22fc28a_eb1cd182",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2014-01-20T00:35:43Z",
+      "side": 1,
+      "message": "Why are these updates needed?\n\nAre they all interdependent?  If not, it might be better to do each one in a separate change.",
+      "revId": "74e04d110a82048c21ed9397b6c84f47afaaea0c",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
