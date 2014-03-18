@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5ca689d4_9ff193bd",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/DialectMaxDB.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2014-03-18T21:27:01Z",
+      "side": 1,
+      "message": "nit: blank line between import and class, no space at start of class decl",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 7
+      },
+      "revId": "36274f6df5c65cd6db7c7dfdac76ceddd70bc75b",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5ca689d4_7fd7ef12",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/DialectMaxDB.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2014-03-18T21:27:01Z",
+      "side": 1,
+      "message": "nit: declare constructor before methods",
+      "revId": "36274f6df5c65cd6db7c7dfdac76ceddd70bc75b",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
