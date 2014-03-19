@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "3cab959f_3e2f2971",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2014-03-19T00:46:17Z",
+      "side": 1,
+      "message": "returns",
+      "range": {
+        "startLine": 15,
+        "startChar": 10,
+        "endLine": 15,
+        "endChar": 17
+      },
+      "revId": "36274f6df5c65cd6db7c7dfdac76ceddd70bc75b",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5ca689d4_9ff193bd",
         "filename": "src/main/java/com/google/gwtorm/schema/sql/DialectMaxDB.java",
         "patchSetId": 2
