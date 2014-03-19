@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "3c4715ee_9ee2dd41",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2014-03-19T23:16:25Z",
+      "side": 1,
+      "message": "Are you aware that your author and committer names are configured differently?",
+      "range": {
+        "startLine": 2,
+        "startChar": 0,
+        "endLine": 4,
+        "endChar": 50
+      },
+      "revId": "d1cd4cd59f5df509bf1b229acaaaf0bcd6e42aad",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9cc5617b_d915f325",
         "filename": "README_MAXDB",
         "patchSetId": 6
