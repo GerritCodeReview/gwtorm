@@ -1,0 +1,23 @@
+To test DialectMaxDB a SAP MaxDB JDBC driver "sapdbc.jar" is needed. It is
+not available in a public maven repository. However, the driver can be found
+in your MaxDB installation at the following location:
+
+- on Windows 64bit at "C:\Program Files\sdb\MaxDB\runtime\jar\sapdbc.jar"
+- on Linux at "/opt/sdb/MaxDB/runtime/jar/sapdbc.jar"
+
+To execute tests on MaxDB, you firstly need to create a test user with an
+associated empty schema in your database. Then you can execute the tests
+using maven with the profile "maxdb". The following properties need to be set:
+
+maxdb.driver.jar=<path to maxdb jdbc driver>
+maxdb.url=<url of test database>
+maxdb.user=<user name>
+maxdb.password=<password of test user>
+
+So the complete command would be:
+
+mvn package -P maxdb
+  -Dmaxdb.driver.jar=<path to maxdb jdbc driver>
+  -Dmaxdb.url=<url of test database>
+  -Dmaxdb.user=<user name>
+  -Dmaxdb.password=<password of test user>

@@ -44,6 +44,7 @@ public abstract class SqlDialect {
     DIALECTS.add(new DialectPostgreSQL());
     DIALECTS.add(new DialectMySQL());
     DIALECTS.add(new DialectOracle());
+    DIALECTS.add(new DialectMaxDB());
   }
 
   public static void register(SqlDialect dialect) {
