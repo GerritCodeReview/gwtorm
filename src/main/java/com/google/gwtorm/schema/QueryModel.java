@@ -339,7 +339,8 @@ public class QueryModel {
       case QueryParser.LIMIT:
         if (fmt.dialect.selectHasLimit()) {
           final Tree p = node.getChild(0);
-          if (p.getType() == QueryParser.CONSTANT_INTEGER) {
+          if (p.getType() == QueryParser.CONSTANT_INTEGER
+              || p.getType() == QueryParser.PLACEHOLDER) {
             fmt.buf.append(" LIMIT ");
             fmt.buf.append(p.getText());
           }
