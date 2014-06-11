@@ -26,6 +26,11 @@ limitations under the License.
   <description>Tiny ORM</description>
   <url>https://gerrit.googlesource.com/gwtorm</url>
 
+  <scm>
+    <url>https://gerrit.googlesource.com/gwtorm</url>
+    <connection>https://gerrit.googlesource.com/gwtorm</connection>
+  </scm>
+
   <mailingLists>
     <mailingList>
       <name>repo-discuss mailing list</name>
