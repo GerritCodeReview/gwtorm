@@ -22,6 +22,30 @@
       "revId": "73046edc70dd8bb63ee5df18e5ad82acb7c894df",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f5478b2_8326fea8",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2014-06-11T12:08:25Z",
+      "side": 1,
+      "message": "The version should be incremented in a separate change when we release 1.12",
+      "parentUuid": "bfaa1cea_0c2e5780",
+      "range": {
+        "startLine": 24,
+        "startChar": 11,
+        "endLine": 24,
+        "endChar": 24
+      },
+      "revId": "73046edc70dd8bb63ee5df18e5ad82acb7c894df",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
