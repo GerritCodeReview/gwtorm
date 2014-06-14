@@ -37,7 +37,9 @@ import org.junit.Test;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
@@ -73,24 +75,19 @@ public class DialectPostgreSQLTest {
         new Database<PhoneBookDb>(new SimpleDataSource(p), PhoneBookDb.class);
     phoneBook2 =
         new Database<PhoneBookDb2>(new SimpleDataSource(p), PhoneBookDb2.class);
+  }
 
+  @After
+  public void tearDown() {
+    // Database content must be flushed because
+    // tests assume that the database is empty
     drop("SEQUENCE address_id");
     drop("SEQUENCE cnt");
 
     drop("TABLE addresses");
     drop("TABLE foo");
     drop("TABLE people");
-  }
 
-  private void drop(String drop) {
-    try {
-      execute("DROP " + drop);
-    } catch (OrmException e) {
-    }
-  }
-
-  @After
-  public void tearDown() {
     if (executor != null) {
       executor.close();
     }
@@ -104,6 +101,13 @@ public class DialectPostgreSQLTest {
       }
     }
     db = null;
+  }
+
+  private void drop(String drop) {
+    try {
+      execute("DROP " + drop);
+    } catch (OrmException e) {
+    }
   }
 
   private void execute(final String sql) throws OrmException {
@@ -203,5 +207,31 @@ public class DialectPostgreSQLTest {
     s = dialect.listTables(db);
     assertTrue(s.contains("bar"));
     assertFalse(s.contains("for"));
+  }
+
+  @Test
+  public void testRollbackTransaction() throws SQLException, OrmException {
+    PhoneBookDb schema = phoneBook.open();
+    schema.updateSchema(executor);
+    schema.people().beginTransaction(null);
+    ArrayList<Person> all = new ArrayList<>();
+    all.add(new Person(new Person.Key("Bob"), 18));
+    schema.people().insert(all);
+    schema.rollback();
+    List<Person> r = schema.people().olderThan(10).toList();
+    assertEquals(0, r.size());
+  }
+
+  @Test
+  public void testCommitTransaction() throws SQLException, OrmException {
+    PhoneBookDb schema = phoneBook.open();
+    schema.updateSchema(executor);
+    schema.people().beginTransaction(null);
+    ArrayList<Person> all = new ArrayList<>();
+    all.add(new Person(new Person.Key("Bob"), 18));
+    schema.people().insert(all);
+    schema.commit();
+    List<Person> r = schema.people().olderThan(10).toList();
+    assertEquals(1, r.size());
   }
 }

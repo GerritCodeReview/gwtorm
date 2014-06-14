@@ -49,6 +49,36 @@ public abstract class JdbcSchema extends AbstractSchema {
     return dbDef.getDialect();
   }
 
+  @Override
+  public void commit() throws OrmException {
+    try {
+      conn.commit();
+    } catch (SQLException err) {
+      throw new OrmException("Cannot commit transaction", err);
+    } finally {
+      try {
+        conn.setAutoCommit(true);
+      } catch (SQLException err) {
+        throw new OrmException("Cannot set auto commit mode", err);
+      }
+    }
+  }
+
+  @Override
+  public void rollback() throws OrmException {
+    try {
+      conn.rollback();
+    } catch (SQLException err) {
+      throw new OrmException("Cannot rollback transaction", err);
+    } finally {
+      try {
+        conn.setAutoCommit(true);
+      } catch (SQLException err) {
+        throw new OrmException("Cannot set auto commit mode", err);
+      }
+    }
+  }
+
   public void updateSchema(final StatementExecutor e) throws OrmException {
     try {
       createSequences(e);
