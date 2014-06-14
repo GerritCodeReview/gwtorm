@@ -27,7 +27,6 @@ import com.google.gwtorm.server.StatementExecutor;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -47,6 +46,36 @@ public abstract class JdbcSchema extends AbstractSchema {
 
   public final SqlDialect getDialect() {
     return dbDef.getDialect();
+  }
+
+  @Override
+  public void commit() throws OrmException {
+    try {
+      conn.commit();
+    } catch (SQLException err) {
+      throw new OrmException("Cannot commit transaction", err);
+    } finally {
+      try {
+        conn.setAutoCommit(true);
+      } catch (SQLException err) {
+        throw new OrmException("Cannot set auto commit mode", err);
+      }
+    }
+  }
+
+  @Override
+  public void rollback() throws OrmException {
+    try {
+      conn.rollback();
+    } catch (SQLException err) {
+      throw new OrmException("Cannot rollback transaction", err);
+    } finally {
+      try {
+        conn.setAutoCommit(true);
+      } catch (SQLException err) {
+        throw new OrmException("Cannot set auto commit mode", err);
+      }
+    }
   }
 
   public void updateSchema(final StatementExecutor e) throws OrmException {
