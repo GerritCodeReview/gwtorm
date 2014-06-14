@@ -79,14 +79,6 @@ public class DialectMaxDBTest {
         new Database<PhoneBookDb>(new SimpleDataSource(p), PhoneBookDb.class);
     phoneBook2 =
         new Database<PhoneBookDb2>(new SimpleDataSource(p), PhoneBookDb2.class);
-
-    drop("SEQUENCE address_id");
-    drop("SEQUENCE cnt");
-
-    drop("TABLE addresses");
-    drop("TABLE foo");
-    drop("TABLE bar");
-    drop("TABLE people");
   }
 
   private void drop(String drop) {
@@ -98,6 +90,16 @@ public class DialectMaxDBTest {
 
   @After
   public void tearDown() {
+    // Database content must be flushed because
+    // tests assume that the database is empty
+    drop("SEQUENCE address_id");
+    drop("SEQUENCE cnt");
+
+    drop("TABLE addresses");
+    drop("TABLE foo");
+    drop("TABLE bar");
+    drop("TABLE people");
+
     if (executor != null) {
       executor.close();
     }
