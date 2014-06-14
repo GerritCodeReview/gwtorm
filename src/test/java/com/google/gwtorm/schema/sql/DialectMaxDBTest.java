@@ -40,6 +40,8 @@ import org.junit.Test;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
@@ -79,14 +81,6 @@ public class DialectMaxDBTest {
         new Database<PhoneBookDb>(new SimpleDataSource(p), PhoneBookDb.class);
     phoneBook2 =
         new Database<PhoneBookDb2>(new SimpleDataSource(p), PhoneBookDb2.class);
-
-    drop("SEQUENCE address_id");
-    drop("SEQUENCE cnt");
-
-    drop("TABLE addresses");
-    drop("TABLE foo");
-    drop("TABLE bar");
-    drop("TABLE people");
   }
 
   private void drop(String drop) {
@@ -98,6 +92,16 @@ public class DialectMaxDBTest {
 
   @After
   public void tearDown() {
+    // Database content must be flushed because
+    // tests assume that the database is empty
+    drop("SEQUENCE address_id");
+    drop("SEQUENCE cnt");
+
+    drop("TABLE addresses");
+    drop("TABLE foo");
+    drop("TABLE bar");
+    drop("TABLE people");
+
     if (executor != null) {
       executor.close();
     }
@@ -326,4 +330,29 @@ public class DialectMaxDBTest {
     }
   }
 
+  @Test
+  public void testRollbackTransaction() throws SQLException, OrmException {
+    PhoneBookDb schema = phoneBook.open();
+    schema.updateSchema(executor);
+    schema.people().beginTransaction(null);
+    ArrayList<Person> all = new ArrayList<>();
+    all.add(new Person(new Person.Key("Bob"), 18));
+    schema.people().insert(all);
+    schema.rollback();
+    List<Person> r = schema.people().olderThan(10).toList();
+    assertEquals(0, r.size());
+  }
+
+  @Test
+  public void testCommitTransaction() throws SQLException, OrmException {
+    PhoneBookDb schema = phoneBook.open();
+    schema.updateSchema(executor);
+    schema.people().beginTransaction(null);
+    ArrayList<Person> all = new ArrayList<>();
+    all.add(new Person(new Person.Key("Bob"), 18));
+    schema.people().insert(all);
+    schema.commit();
+    List<Person> r = schema.people().olderThan(10).toList();
+    assertEquals(1, r.size());
+  }
 }
