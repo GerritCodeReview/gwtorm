@@ -75,24 +75,19 @@ public class DialectMySQLTest {
         new Database<PhoneBookDb>(new SimpleDataSource(p), PhoneBookDb.class);
     phoneBook2 =
         new Database<PhoneBookDb2>(new SimpleDataSource(p), PhoneBookDb2.class);
+  }
 
+  @After
+  public void tearDown() {
+    // Database content must be flushed because
+    // tests assume that the database is empty
     drop("TABLE address_id");
     drop("TABLE addresses");
     drop("TABLE cnt");
     drop("TABLE bar");
     drop("TABLE foo");
     drop("TABLE people");
-  }
 
-  private void drop(String drop) {
-    try {
-      execute("DROP " + drop);
-    } catch (OrmException e) {
-    }
-  }
-
-  @After
-  public void tearDown() {
     if (executor != null) {
       executor.close();
     }
@@ -106,6 +101,13 @@ public class DialectMySQLTest {
       }
     }
     db = null;
+  }
+
+  private void drop(String drop) {
+    try {
+      execute("DROP " + drop);
+    } catch (OrmException e) {
+    }
   }
 
   private void execute(final String sql) throws OrmException {
