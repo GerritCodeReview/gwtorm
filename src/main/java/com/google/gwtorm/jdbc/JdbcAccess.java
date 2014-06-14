@@ -39,6 +39,15 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
   }
 
   @Override
+  public void beginTransaction(K key) throws OrmException {
+    try {
+      schema.getConnection().setAutoCommit(false);
+    } catch (SQLException e) {
+      throw convertError("beginTransaction", e);
+    }
+  }
+
+  @Override
   public final com.google.gwtorm.server.ResultSet<T> get(final Iterable<K> keys)
       throws OrmException {
     final Collection<K> keySet;
