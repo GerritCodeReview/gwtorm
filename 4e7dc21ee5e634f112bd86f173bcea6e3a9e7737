@@ -49,6 +49,69 @@
     },
     {
       "key": {
+        "uuid": "0424bda2_762670df",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1016473
+      },
+      "writtenOn": "2014-06-17T19:12:36Z",
+      "side": 1,
+      "message": "Why we not put beginTransaction(K key) in Schema.\nAnd pass (K key) here?\n\nGood to be clear we do not support/or support nested transaction. (Save point in Oracle)\n\n// call 1 \nent.beginTransaction(K key)\n\n// call 2 \nent.beginTransaction(K key)\n\n// End tr for call 2\nschema.commt()\n\n// End tr for call 1\nschema.commt()\n\nCall 2 is ignored, or is not supported.",
+      "range": {
+        "startLine": 43,
+        "startChar": 0,
+        "endLine": 43,
+        "endChar": 4
+      },
+      "revId": "4e7dc21ee5e634f112bd86f173bcea6e3a9e7737",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0424bda2_9607cc36",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcSchema.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1016473
+      },
+      "writtenOn": "2014-06-17T19:12:36Z",
+      "side": 1,
+      "message": "Begin transaction is in Access interface (Let\u0027t say table/entity level)\nAnd Commit/Roolback on Schema level.\n\nThis do not work with GAE transaction model where we have transaction at the entity group.\n\nFor JDBC is fine. (One connection, one database)",
+      "range": {
+        "startLine": 52,
+        "startChar": 2,
+        "endLine": 52,
+        "endChar": 8
+      },
+      "revId": "4e7dc21ee5e634f112bd86f173bcea6e3a9e7737",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4485179_c3e4564a",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectOracleSQLTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1016473
+      },
+      "writtenOn": "2014-06-17T19:12:36Z",
+      "side": 1,
+      "message": "Where we have full valid code like:\n\n  beginTransaction();\n  try {\n    insertPatchSetAncestors();\n    insertPatchSets();\n    updateChange();\n    commit();\n  } catch (OrmException e) {\n    rollback();\n  }\n\nFor me valid place for rollback(); is in  finally block.\nSimple NPE generate invalid state here.",
+      "revId": "4e7dc21ee5e634f112bd86f173bcea6e3a9e7737",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0424bda2_b6f1a806",
         "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectOracleSQLTest.java",
         "patchSetId": 3
