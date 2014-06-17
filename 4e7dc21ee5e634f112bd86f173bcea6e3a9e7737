@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a4485179_e3e7524c",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2014-06-17T18:22:19Z",
+      "side": 1,
+      "message": "Can you be more precise on what do you mean by sanitiy checks? Would\n\n  Preconditions.checkNotNull(key);\n\nbe sufficient?",
+      "parentUuid": "3f2c6c7a_480a1f41",
+      "range": {
+        "startLine": 42,
+        "startChar": 31,
+        "endLine": 42,
+        "endChar": 37
+      },
+      "revId": "4e7dc21ee5e634f112bd86f173bcea6e3a9e7737",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0424bda2_b6f1a806",
         "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectOracleSQLTest.java",
         "patchSetId": 3
