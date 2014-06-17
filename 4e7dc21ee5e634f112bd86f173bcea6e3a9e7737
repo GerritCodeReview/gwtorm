@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "3f2c6c7a_480a1f41",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1010008
+      },
+      "writtenOn": "2014-06-17T16:59:15Z",
+      "side": 1,
+      "message": "In the transaction model implied by Access (and required by googlesource.com), there can only be one transaction open at a time, and any mutation operations can only operate on entities sharing the same root key (the last non-null key returned by iterated getParentKey() calls).\n\nThat is not strictly required for this implementation, but it would be nice to have sanity checks, so it stops being so easy to write code that passes on a SQL dialect but fails on googlesource.com.",
+      "range": {
+        "startLine": 42,
+        "startChar": 31,
+        "endLine": 42,
+        "endChar": 37
+      },
+      "revId": "4e7dc21ee5e634f112bd86f173bcea6e3a9e7737",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0424bda2_b6f1a806",
         "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectOracleSQLTest.java",
         "patchSetId": 3
