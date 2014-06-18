@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "0424bda2_b623e8c6",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2014-06-18T06:49:59Z",
+      "side": 1,
+      "message": "OK, now i understand what you mean: to save here key as  entityGroupKey and the type, and check in every Access method (by generating new byte code) that mutated entity belongs to the entityGroup (through getParentKey() call through the whole hierarchie until getParentKey() returns null).\n\nBut then again, this is a really nice to have, and shouldn\u0027t prevent us from merging this change as is and fixing highest priority bug we can have: intermittent data corruption +  corrupted changes hanging forever in merge queue in \"Submitted, Merge pending\" state. Once this is fixed on all stable branches (most important 2.8.x and 2.9), we can consider to implement that nice to have check. TBH, given that we are going to evacuate the database backend and migrate it to Git, i am not convinced it worth doing it at all.\n\nJust checked: on master:\n\n  $ git grep beginTransaction\n\nproduces only 18 matches in source code and i am not sure that we are going to see new location next time. And what kind of breakage you would catch? Something that\u0027s really unlikely to happen without to be discovered during debug/test cycle:\n\n  Change foo \u003d ...;\n  Change bar \u003d ...;\n  try {\n    db.changes().begingTransaction(foo.getId());\n    PatchSet.Id psBarId \u003d \n      ChangeUtil.nextPatchSetId(repo, bar.currentPatchSetId());\n    PatchSet psBar \u003d new PatchSet(psBarId);\n    // popuplate psBar\n    [...]\n    // the next statement would throw GroupEntityMismatch exception:\n    // Transaction was started for group entity 4711 (type\u003d\u0027change\u0027),\n    // but the mutated entity belongs to group entity 4712 (type\u003d\u0027change\u0027)\n    db.patchSets().insert(Collections.singleton(psBarId));\n\nAgain, we could (optinally) do that but only on master and only after we\u0027ve fixed this higest priority bug on stable branches.",
+      "parentUuid": "3f2c6c7a_480a1f41",
+      "range": {
+        "startLine": 42,
+        "startChar": 31,
+        "endLine": 42,
+        "endChar": 37
+      },
+      "revId": "4e7dc21ee5e634f112bd86f173bcea6e3a9e7737",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0424bda2_762670df",
         "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
         "patchSetId": 3
