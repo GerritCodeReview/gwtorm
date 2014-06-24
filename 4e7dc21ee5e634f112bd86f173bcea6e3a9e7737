@@ -97,6 +97,30 @@
     },
     {
       "key": {
+        "uuid": "04767d12_a6dee61f",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2014-06-24T18:33:37Z",
+      "side": 1,
+      "message": "Wow! That\u0027s really subtle. The same patchSetInsert code works as expected or fails in case of cherry-pick. Gustaf\u0027s question how comes the same code worked for me was really justified ;-)",
+      "parentUuid": "44a155b9_600e3255",
+      "range": {
+        "startLine": 42,
+        "startChar": 31,
+        "endLine": 42,
+        "endChar": 37
+      },
+      "revId": "4e7dc21ee5e634f112bd86f173bcea6e3a9e7737",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0424bda2_762670df",
         "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
         "patchSetId": 3
@@ -154,6 +178,24 @@
       "writtenOn": "2014-06-24T16:04:20Z",
       "side": 1,
       "message": "I imagine there is some reason for this due to schema upgrades but it\u0027s non-obvious why you would want to drop tables in setUp. Add a short comment?",
+      "revId": "4e7dc21ee5e634f112bd86f173bcea6e3a9e7737",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2481c117_87e1e6ea",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectH2Test.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2014-06-24T18:33:37Z",
+      "side": 1,
+      "message": "Moved the database flushing from setUp() to tearDown(). Here and in other places.\n\nDone",
+      "parentUuid": "44a155b9_400b2e43",
       "revId": "4e7dc21ee5e634f112bd86f173bcea6e3a9e7737",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
