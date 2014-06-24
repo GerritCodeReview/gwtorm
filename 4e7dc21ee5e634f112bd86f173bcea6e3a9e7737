@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "44a155b9_600e3255",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1010008
+      },
+      "writtenOn": "2014-06-24T16:04:20Z",
+      "side": 1,
+      "message": "Iae76682a is a real-world example of a bugfix we had to make that was only discovered once it hit production.\n\nAs I said elsewhere I\u0027m fine with this for now. These issues are easy to track down in our logs, but rolling back releases and whatnot is always a bit of a pain. So I\u0027m hoping I don\u0027t regret my decision :)",
+      "parentUuid": "0424bda2_b623e8c6",
+      "range": {
+        "startLine": 42,
+        "startChar": 31,
+        "endLine": 42,
+        "endChar": 37
+      },
+      "revId": "4e7dc21ee5e634f112bd86f173bcea6e3a9e7737",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0424bda2_762670df",
         "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
         "patchSetId": 3
@@ -113,6 +137,23 @@
         "endLine": 52,
         "endChar": 8
       },
+      "revId": "4e7dc21ee5e634f112bd86f173bcea6e3a9e7737",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44a155b9_400b2e43",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectH2Test.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1010008
+      },
+      "writtenOn": "2014-06-24T16:04:20Z",
+      "side": 1,
+      "message": "I imagine there is some reason for this due to schema upgrades but it\u0027s non-obvious why you would want to drop tables in setUp. Add a short comment?",
       "revId": "4e7dc21ee5e634f112bd86f173bcea6e3a9e7737",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
