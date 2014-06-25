@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "2481c117_c7f3de7b",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2014-06-25T09:44:31Z",
+      "side": 1,
+      "message": "See my other comment.",
+      "parentUuid": "2481c117_e7be229b",
+      "range": {
+        "startLine": 42,
+        "startChar": 14,
+        "endLine": 42,
+        "endChar": 30
+      },
+      "revId": "1324d618941127d1b76cb22c96cb75ec73ab8fa7",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2481c117_07cdf643",
         "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcSchema.java",
         "patchSetId": 7
@@ -59,6 +83,24 @@
       "writtenOn": "2014-06-25T09:22:07Z",
       "side": 1,
       "message": "I think there should be an explicit beginTransaction method here. It is asymmetric that beginTransaction is on the JdbcAccess and commit and rollback are here, I think.\n\nWhat should happen if a transaction has already begun? Should there be support for nested transactions?\n\nMaybe it would be easiest to have an explicit setAutoCommit method instead of beginTransaction and commit/rollback setting the auto commit mode.",
+      "revId": "1324d618941127d1b76cb22c96cb75ec73ab8fa7",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04767d12_86e9ea91",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcSchema.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2014-06-25T09:44:31Z",
+      "side": 1,
+      "message": "Note that we have two different binding for GWTORM with completely different transaction semantic:\n\n* Jdbc dialect (byte code generation)\n* NoSQL dialect (natively written)\n\nWhile Jdbc dialects can include any entities in transaction boundaries, for NoSQL dialect only child entities can be included in transaction for when parent entity start transaction. That why it\u0027s very natural to say that begin transaction on access object.\n\nThis change was supposed to be applied on stable-2.8 branch. That why we can only do minimal changes: no refactoring or moving methods around, that wouldn\u0027t work for NoSQL bindings (the code that you are not seeing, because it wasn\u0027t open sourced).\n\nCurrently efforts are underway to evacuate the database and move the Gerrit storage in Git notes.",
+      "parentUuid": "2481c117_07cdf643",
       "revId": "1324d618941127d1b76cb22c96cb75ec73ab8fa7",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
