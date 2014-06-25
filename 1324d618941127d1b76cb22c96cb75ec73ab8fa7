@@ -143,6 +143,24 @@
     },
     {
       "key": {
+        "uuid": "04767d12_661eaef5",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcSchema.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1007114
+      },
+      "writtenOn": "2014-06-25T11:11:55Z",
+      "side": 1,
+      "message": "If for NoSQL a transaction can\u0027t span entities we might rather put commit and rollback on the access object as well.",
+      "parentUuid": "04767d12_86e9ea91",
+      "revId": "1324d618941127d1b76cb22c96cb75ec73ab8fa7",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2481c117_67ccf245",
         "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectMaxDBTest.java",
         "patchSetId": 7
