@@ -144,6 +144,30 @@
     },
     {
       "key": {
+        "uuid": "2481c117_e7d702cb",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1007114
+      },
+      "writtenOn": "2014-06-25T09:21:59Z",
+      "side": 1,
+      "message": "We could expose set/GetAutoCommit on the schema and let the caller deal with the issue of nested transactions.",
+      "parentUuid": "0424bda2_762670df",
+      "range": {
+        "startLine": 43,
+        "startChar": 0,
+        "endLine": 43,
+        "endChar": 4
+      },
+      "revId": "4e7dc21ee5e634f112bd86f173bcea6e3a9e7737",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0424bda2_9607cc36",
         "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcSchema.java",
         "patchSetId": 3
