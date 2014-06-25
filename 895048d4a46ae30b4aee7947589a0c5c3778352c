@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e4d0893d_75e8281c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2014-06-25T05:53:03Z",
+      "side": 1,
+      "message": "Remove this? The change is going to be verified on those before being merged.  Better to have the new patch set now than after someone has put Verified+1 and having the new patch set knocking it off.",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 69
+      },
+      "revId": "895048d4a46ae30b4aee7947589a0c5c3778352c",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
