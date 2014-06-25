@@ -72,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "04767d12_2624b64b",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1016473
+      },
+      "writtenOn": "2014-06-25T10:20:16Z",
+      "side": 1,
+      "message": "On NoSql level (AppEngine) \nis used this key, or root class (parent key) ?\n\nIn doc I see:\n\nDatastoreService datastore \u003d DatastoreServiceFactory.getDatastoreService();\n\nTransaction txn \u003d datastore.beginTransaction();",
+      "parentUuid": "2481c117_c7f3de7b",
+      "revId": "1324d618941127d1b76cb22c96cb75ec73ab8fa7",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2481c117_07cdf643",
         "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcSchema.java",
         "patchSetId": 7
@@ -101,6 +119,24 @@
       "side": 1,
       "message": "Note that we have two different binding for GWTORM with completely different transaction semantic:\n\n* Jdbc dialect (byte code generation)\n* NoSQL dialect (natively written)\n\nWhile Jdbc dialects can include any entities in transaction boundaries, for NoSQL dialect only child entities can be included in transaction for when parent entity start transaction. That why it\u0027s very natural to say that begin transaction on access object.\n\nThis change was supposed to be applied on stable-2.8 branch. That why we can only do minimal changes: no refactoring or moving methods around, that wouldn\u0027t work for NoSQL bindings (the code that you are not seeing, because it wasn\u0027t open sourced).\n\nCurrently efforts are underway to evacuate the database and move the Gerrit storage in Git notes.",
       "parentUuid": "2481c117_07cdf643",
+      "revId": "1324d618941127d1b76cb22c96cb75ec73ab8fa7",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04767d12_061fbaf3",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcSchema.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1016473
+      },
+      "writtenOn": "2014-06-25T10:20:16Z",
+      "side": 1,
+      "message": "It is possible to have beginTransaction here ?\n\npublic void beginTransaction(K key) throws OrmException {...}\n\nIf I have Car and Person\nCreate Car(7) and Update Person(2) with  Car(7) \n\nThen what sens to have:\ncarAccess.beginTransaction(new Car.Id(7)) // We do not have this record\npersonAccess.beginTransaction(new Person.Id(2)) {\n     // Create  Car(7)\n     // Update Person(2)\n    commit();\n} \n\nmake more sens to have:\n\nschema.beginTransaction(new Person.Id(7))\nor\nschema.beginTransaction(Person.Key.getClass()) \n\n\nIs not natural to start on access class and end on schema.",
+      "parentUuid": "04767d12_86e9ea91",
       "revId": "1324d618941127d1b76cb22c96cb75ec73ab8fa7",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
