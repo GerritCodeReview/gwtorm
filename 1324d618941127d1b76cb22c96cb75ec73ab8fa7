@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2481c117_c7c11e14",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1007114
+      },
+      "writtenOn": "2014-06-25T09:22:07Z",
+      "side": 1,
+      "message": "The argument key is not used.",
+      "range": {
+        "startLine": 42,
+        "startChar": 31,
+        "endLine": 42,
+        "endChar": 36
+      },
+      "revId": "1324d618941127d1b76cb22c96cb75ec73ab8fa7",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2481c117_e7be229b",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcAccess.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1007114
+      },
+      "writtenOn": "2014-06-25T09:22:07Z",
+      "side": 1,
+      "message": "This method seems to have been introduced for testing only. Why not use beginTransaction on the schema in the tests? Also, I think it is a bit asymmetric that there are no commit and rollback methods here.",
+      "range": {
+        "startLine": 42,
+        "startChar": 14,
+        "endLine": 42,
+        "endChar": 30
+      },
+      "revId": "1324d618941127d1b76cb22c96cb75ec73ab8fa7",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2481c117_07cdf643",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcSchema.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1007114
+      },
+      "writtenOn": "2014-06-25T09:22:07Z",
+      "side": 1,
+      "message": "I think there should be an explicit beginTransaction method here. It is asymmetric that beginTransaction is on the JdbcAccess and commit and rollback are here, I think.\n\nWhat should happen if a transaction has already begun? Should there be support for nested transactions?\n\nMaybe it would be easiest to have an explicit setAutoCommit method instead of beginTransaction and commit/rollback setting the auto commit mode.",
+      "revId": "1324d618941127d1b76cb22c96cb75ec73ab8fa7",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2481c117_67ccf245",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectMaxDBTest.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1007114
+      },
+      "writtenOn": "2014-06-25T09:22:07Z",
+      "side": 1,
+      "message": "A test is missing that asserts rollback semantics when the schema is closed in non-auto-commit mode before a commit occurs.",
+      "revId": "1324d618941127d1b76cb22c96cb75ec73ab8fa7",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
