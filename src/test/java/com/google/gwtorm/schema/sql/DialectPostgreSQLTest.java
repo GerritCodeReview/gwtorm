@@ -79,6 +79,7 @@ public class DialectPostgreSQLTest {
 
     drop("TABLE addresses");
     drop("TABLE foo");
+    drop("TABLE bar");
     drop("TABLE people");
   }
 

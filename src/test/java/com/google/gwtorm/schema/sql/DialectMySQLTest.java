@@ -79,6 +79,7 @@ public class DialectMySQLTest {
     drop("TABLE address_id");
     drop("TABLE addresses");
     drop("TABLE cnt");
+    drop("TABLE bar");
     drop("TABLE foo");
     drop("TABLE people");
   }
