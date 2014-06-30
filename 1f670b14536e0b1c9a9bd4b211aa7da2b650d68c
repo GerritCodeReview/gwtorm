@@ -22,6 +22,30 @@
       "revId": "1f670b14536e0b1c9a9bd4b211aa7da2b650d68c",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0402fd8c_467b5246",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2014-06-30T08:41:22Z",
+      "side": 1,
+      "message": "The drop already existed in the oracle test.\n\nNote: I can\u0027t actually run the oracle tests anyway because I don\u0027t have it installed.",
+      "parentUuid": "e4716954_4d435956",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 40
+      },
+      "revId": "1f670b14536e0b1c9a9bd4b211aa7da2b650d68c",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
