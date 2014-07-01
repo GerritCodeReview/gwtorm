@@ -68,6 +68,30 @@
       "revId": "c67a886dbb7917edaccdbf561b81a4a85f5f1992",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2469c174_e72a629f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2014-07-01T06:15:53Z",
+      "side": 1,
+      "message": "It fails for me even on that commit.\n\nDid you just check it out now and it passed for you?\n\nWhat version of maven are you using?",
+      "parentUuid": "e4716954_8dc14139",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 5
+      },
+      "revId": "c67a886dbb7917edaccdbf561b81a4a85f5f1992",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
