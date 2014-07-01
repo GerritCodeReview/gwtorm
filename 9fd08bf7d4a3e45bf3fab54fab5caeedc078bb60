@@ -22,6 +22,30 @@
       "revId": "9fd08bf7d4a3e45bf3fab54fab5caeedc078bb60",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c45705b3_842fe6ad",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectPostgreSQLTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2014-07-01T08:26:16Z",
+      "side": 1,
+      "message": "Hmm.  It was failing with the error that I pasted, and then after adding this line it passes.\n\nNow I tested it again, and it passes without this change.\n\nWill upload a new patch set to remove it.",
+      "parentUuid": "a44db111_bb4ec7f3",
+      "range": {
+        "startLine": 93,
+        "startChar": 4,
+        "endLine": 93,
+        "endChar": 22
+      },
+      "revId": "9fd08bf7d4a3e45bf3fab54fab5caeedc078bb60",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
