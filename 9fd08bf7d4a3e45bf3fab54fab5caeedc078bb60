@@ -46,6 +46,30 @@
       "revId": "9fd08bf7d4a3e45bf3fab54fab5caeedc078bb60",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a44db111_7b511f91",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectPostgreSQLTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2014-07-01T08:38:52Z",
+      "side": 1,
+      "message": "And I know why. It was failing for the same reason that you described in your conditional skipping fix change, that checking out my commit where i introduced conditional test skipping was still failing and not skipping. And the reason for that is:\n\n Maven is crap and totally sucks.\n\nAnd after one year life with Buck we have forgotten that the first command in poop Maven era is *always*:\n\n  mvn clean\n\nAnd only after that you can proceed with:\n\n  mvn test\n\nor whatever. That because Maven is crap and totally  sucks. Have i said it already? ;)",
+      "parentUuid": "c45705b3_842fe6ad",
+      "range": {
+        "startLine": 93,
+        "startChar": 4,
+        "endLine": 93,
+        "endChar": 22
+      },
+      "revId": "9fd08bf7d4a3e45bf3fab54fab5caeedc078bb60",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
