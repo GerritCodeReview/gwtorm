@@ -35,6 +35,7 @@ import com.google.gwtorm.server.OrmException;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.sql.Connection;
@@ -56,13 +57,17 @@ public class DialectMaxDBTest {
   private Database<PhoneBookDb> phoneBook;
   private Database<PhoneBookDb2> phoneBook2;
 
-  @Before
-  public void setUp() throws Exception {
+  @BeforeClass
+  public static void before() {
     try {
       Class.forName(MAXDB_DRIVER);
     } catch (Exception e) {
       assumeNoException(e);
     }
+  }
+
+  @Before
+  public void setUp() throws Exception {
 
     final String url = System.getProperty(MAXDB_URL_KEY);
     final String user = System.getProperty(MAXDB_USER_KEY);

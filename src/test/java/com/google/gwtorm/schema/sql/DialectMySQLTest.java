@@ -32,6 +32,7 @@ import com.google.gwtorm.server.OrmException;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.sql.Connection;
@@ -44,27 +45,31 @@ import java.util.Properties;
 import java.util.Set;
 
 public class DialectMySQLTest {
+  private static final String host = "localhost";
+  private static final String database = "gwtorm";
+  private static final String user = "gwtorm";
+  private static final String pass = "gwtorm";
+  private static final String url = "jdbc:mysql://" + host + "/" + database;
   private Connection db;
   private JdbcExecutor executor;
   private SqlDialect dialect;
   private Database<PhoneBookDb> phoneBook;
   private Database<PhoneBookDb2> phoneBook2;
 
-  @Before
-  public void setUp() throws Exception {
-    Class.forName(com.mysql.jdbc.Driver.class.getName());
-
-    final String host = "localhost";
-    final String database = "gwtorm";
-    final String user = "gwtorm";
-    final String pass = "gwtorm";
-
-    final String url = "jdbc:mysql://" + host + "/" + database;
+  @BeforeClass
+  public static void before() {
+    Connection c;
     try {
-      db = DriverManager.getConnection(url, user, pass);
+      c = DriverManager.getConnection(url, user, pass);
+      c.close();
     } catch (Throwable t) {
       assumeNoException(t);
     }
+  }
+
+  @Before
+  public void setUp() throws Exception {
+    db = DriverManager.getConnection(url, user, pass);
     executor = new JdbcExecutor(db);
     dialect = new DialectMySQL().refine(db);
 
