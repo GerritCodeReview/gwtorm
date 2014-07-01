@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a44db111_bb4ec7f3",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectPostgreSQLTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2014-07-01T08:22:21Z",
+      "side": 1,
+      "message": "Why this change? cnt is a sequence, that was already dropped on line 89, and not a table. And there is no\n\n  create table cnt ... \n\nstatement executed in entire PostgreSQL test (and other unit tests except MySQL)..\n\nNote, that MySQL dialect contains drop(\"cnt\") because it lacks sequence feature and sequences on MySQL are emulated over normal tables that possesses column with type serial; List sequences scan all tables in schema and recognize all tables that have column from type serial as sequences.\n\nAll other supported Jdbc dialects:\n\n* H2\n* PostgreSQL\n* Oracle\n* MaxDB/SaoDB\n\nhave native sequence support and donÄt create cnt table. but cnt sequence.",
+      "range": {
+        "startLine": 93,
+        "startChar": 4,
+        "endLine": 93,
+        "endChar": 22
+      },
+      "revId": "9fd08bf7d4a3e45bf3fab54fab5caeedc078bb60",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
