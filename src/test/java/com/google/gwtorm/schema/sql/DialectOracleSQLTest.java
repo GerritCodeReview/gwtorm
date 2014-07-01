@@ -80,6 +80,10 @@ public class DialectOracleSQLTest {
 
   @After
   public void tearDown() {
+    if (executor == null) {
+      return;
+    }
+
     // Database content must be flushed because
     // tests assume that the database is empty
     drop("SEQUENCE address_id");
