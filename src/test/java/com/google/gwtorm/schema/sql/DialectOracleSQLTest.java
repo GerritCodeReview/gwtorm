@@ -31,6 +31,7 @@ import com.google.gwtorm.server.OrmException;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.sql.Connection;
@@ -43,21 +44,24 @@ import java.util.Properties;
 import java.util.Set;
 
 public class DialectOracleSQLTest {
-  private final static String ORACLE_DRIVER = "oracle.jdbc.driver.OracleDriver";
+  private static final String ORACLE_DRIVER = "oracle.jdbc.driver.OracleDriver";
   private Connection db;
   private JdbcExecutor executor;
   private SqlDialect dialect;
   private Database<PhoneBookDb> phoneBook;
   private Database<PhoneBookDb2> phoneBook2;
 
-  @Before
-  public void setUp() throws Exception {
+  @BeforeClass
+  public static void before() {
     try {
       Class.forName(ORACLE_DRIVER);
     } catch (Exception e) {
       assumeNoException(e);
     }
+  }
 
+  @Before
+  public void setUp() throws Exception {
     final String sid = "xe"; // Oracle instance name
     final String user = "gwtorm"; // Oracle schema=user name=database
     final String pass = "gwtorm";
