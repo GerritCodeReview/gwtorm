@@ -79,6 +79,10 @@ public class DialectPostgreSQLTest {
 
   @After
   public void tearDown() {
+    if (executor == null) {
+      return;
+    }
+
     // Database content must be flushed because
     // tests assume that the database is empty
     drop("SEQUENCE address_id");
@@ -86,6 +90,7 @@ public class DialectPostgreSQLTest {
 
     drop("TABLE addresses");
     drop("TABLE foo");
+    drop("TABLE cnt");
     drop("TABLE bar");
     drop("TABLE people");
 
