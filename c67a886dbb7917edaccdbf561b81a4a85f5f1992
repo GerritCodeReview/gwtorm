@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a44db111_7b103fde",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2014-07-01T06:07:11Z",
+      "side": 1,
+      "message": "That is not accurate. You may have installed database, but it wasn\u0027t started, or password expired or whatever else went wrong.",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 61
+      },
+      "revId": "c67a886dbb7917edaccdbf561b81a4a85f5f1992",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a44db111_5b1303ec",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2014-07-01T06:07:11Z",
+      "side": 1,
+      "message": "Recently we started to referene changes as abbreviated SHA-1. This saves place and linkify the reference: If4ae2aaec.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 40
+      },
+      "revId": "c67a886dbb7917edaccdbf561b81a4a85f5f1992",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4716954_8dc14139",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2014-07-01T06:07:11Z",
+      "side": 1,
+      "message": "Evidently that is not true, at least at the time the change you are referencing was submitted:\n\n  $ cd gwtorm\n  $ git checkout 83984feae9dd071120980cade49e1dc4e2b8d0cd\n  $ mvn package\n  [...]\n  Running com.google.gwtorm.schema.sql.DialectMySQLTest\n  Tests run: 4, Failures: 0, Errors: 0, Skipped: 4, Time elapsed: 0.1 sec\n  Running com.google.gwtorm.schema.sql.DialectPostgreSQLTest\n  Tests run: 4, Failures: 0, Errors: 0, Skipped: 4, Time elapsed: 0.011 sec\n  Running com.google.gwtorm.schema.sql.DialectH2Test\n  Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.073 sec\n  Running com.google.gwtorm.schema.sql.DialectOracleSQLTest\n  Tests run: 4, Failures: 0, Errors: 0, Skipped: 4, Time elapsed: 0.002 sec\n  [...]\n\nThe still not answered question is why it doesn\u0027t work now. Yet, this change provides a work around for problem we don\u0027t (fully) understand.",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 5
+      },
+      "revId": "c67a886dbb7917edaccdbf561b81a4a85f5f1992",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
