@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2469c174_0799b697",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1010737
+      },
+      "writtenOn": "2014-07-02T05:45:14Z",
+      "side": 1,
+      "message": "Do we _really_ want to call rollback() in a finally clause? That seems a little bit odd.\n\nIf the commit() was successful then there shouldn\u0027t be any transaction to rollback - which may itself then throw another exception?\n\nReading further, I see that JdbcSchema#rollback() only rollsback when autoCommit is disabled, but then tries to enable autoCommit (somewhat misleading to unfamiliar readers, but maybe not an actual issue? ).",
+      "range": {
+        "startLine": 18,
+        "startChar": 4,
+        "endLine": 18,
+        "endChar": 12
+      },
+      "revId": "3633e0b4f7953d2fda44203cf414e1137d31fe28",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
