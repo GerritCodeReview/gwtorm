@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "44b7954c_1017845f",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcSchema.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1016473
+      },
+      "writtenOn": "2014-07-02T09:52:09Z",
+      "side": 1,
+      "message": "Do not do that!\nDo not make sens.\n\nAny JDBC driver if do not have data to commit, do not throw Exception.\n\nThis logic make sens for rollback() only.",
+      "revId": "8832e883d1261f5496f84ebc7284c10cd71930d6",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
