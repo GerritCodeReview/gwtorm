@@ -46,6 +46,30 @@
       "revId": "3633e0b4f7953d2fda44203cf414e1137d31fe28",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c45705b3_649c2a89",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1010737
+      },
+      "writtenOn": "2014-07-02T07:10:29Z",
+      "side": 1,
+      "message": "Maybe I\u0027m missing something, I get that `updateChange()` may throw an exception and you want to roll back, but surely you rollback ONLY if there\u0027s an exception - usually in a `catch` block not a `finally`.\n\nA lot of database drivers/servers will throw an exception if you try to rollback when there\u0027s no active transaction either, it just seems odd to always call the rollback is all.\n\n+2 on the fast turn around and fixing the issue at hand tho :)",
+      "parentUuid": "24bc6131_2f118973",
+      "range": {
+        "startLine": 18,
+        "startChar": 4,
+        "endLine": 18,
+        "endChar": 12
+      },
+      "revId": "3633e0b4f7953d2fda44203cf414e1137d31fe28",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
