@@ -54,9 +54,9 @@ public class DialectPostgreSQLTest {
   public void setUp() throws Exception {
     Class.forName(org.postgresql.Driver.class.getName());
 
-    final String database = "gwtorm";
-    final String user = "gwtorm";
-    final String pass = "gwtorm";
+    final String database = "reviewdb";
+    final String user = "gerrit2";
+    final String pass = "reviewdb";
 
     try {
       db = DriverManager.getConnection("jdbc:postgresql:" + database, user, pass);
@@ -221,6 +221,19 @@ public class DialectPostgreSQLTest {
     schema.rollback();
     List<Person> r = schema.people().olderThan(10).toList();
     assertEquals(0, r.size());
+  }
+
+  @Test
+  public void testRollbackNoTransaction() throws SQLException, OrmException {
+    PhoneBookDb schema = phoneBook.open();
+    schema.updateSchema(executor);
+    ArrayList<Person> all = new ArrayList<Person>();
+    all.add(new Person(new Person.Key("Bob"), 18));
+    schema.people().insert(all);
+    schema.commit();
+    schema.rollback();
+    List<Person> r = schema.people().olderThan(10).toList();
+    assertEquals(1, r.size());
   }
 
   @Test
