@@ -22,6 +22,30 @@
       "revId": "3633e0b4f7953d2fda44203cf414e1137d31fe28",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "24bc6131_2f118973",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2014-07-02T06:22:05Z",
+      "side": 1,
+      "message": "| Do we _really_ want to call rollback() in a finally clause?\n\nYes, we do. Because something can go wrong in between, e. g. in updateChange() conuccrent modification exception may be thrown (optimistic database locking).\n\n| I see that JdbcSchema#rollback() only rollsback when autoCommit is disabled, but then tries to enable autoCommit\n\nYes, you are right, but it works and we don\u0027t care.",
+      "parentUuid": "2469c174_0799b697",
+      "range": {
+        "startLine": 18,
+        "startChar": 4,
+        "endLine": 18,
+        "endChar": 12
+      },
+      "revId": "3633e0b4f7953d2fda44203cf414e1137d31fe28",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
