@@ -57,6 +57,24 @@
       "revId": "8832e883d1261f5496f84ebc7284c10cd71930d6",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44b7954c_1081443c",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcSchema.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1016473
+      },
+      "writtenOn": "2014-07-02T11:02:07Z",
+      "side": 1,
+      "message": "I was wrong.\n\nPG throw:\n\norg.postgresql.util.PSQLException: Cannot commit when autoCommit is enabled.\n\tat org.postgresql.jdbc2.AbstractJdbc2Connection.commit(AbstractJdbc2Connection.java:705)\n\nIn this case code is good.\n\n// Repetitive commit(); calls works only in autocomit code.\ndb.setAutoCommit(false);\ndb.commit();\ndb.commit();\ndb.commit();\ndb.commit();",
+      "parentUuid": "44b7954c_1017845f",
+      "revId": "8832e883d1261f5496f84ebc7284c10cd71930d6",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
