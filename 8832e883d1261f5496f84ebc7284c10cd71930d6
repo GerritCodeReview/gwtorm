@@ -34,6 +34,29 @@
       "revId": "8832e883d1261f5496f84ebc7284c10cd71930d6",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "24bc6131_0f17655f",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcSchema.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2014-07-02T10:10:25Z",
+      "side": 1,
+      "message": "You are mixing two different use cases. Use case 1:\n\n  beginTransaction()\n  commit()\n\nthis works, because beginTransaction() set autoCommit\u003dfalse and commit is successful even though nothing to commit.\n\nUse case 2:\n\n  open Connection with autoCommit\u003dtrue\n  commit()\n\nEvidently, this doesn\u0027t work on all Jdbc dialects supported by Gerrit. E. g. this doesn\u0027t work on PostgreSQL for the same reason why rollback() doesn\u0027t work. To see the failure, remove this if-guard above and run PostgreSQL unit test:\n\n  testRollbackNoTransaction()\n\nit is failing with:\n\n  Cannot commit when autoCommit is enabled.\n\nor some such.",
+      "range": {
+        "startLine": 54,
+        "startChar": 6,
+        "endLine": 54,
+        "endChar": 34
+      },
+      "revId": "8832e883d1261f5496f84ebc7284c10cd71930d6",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
