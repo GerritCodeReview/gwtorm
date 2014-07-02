@@ -70,6 +70,24 @@
       "revId": "3633e0b4f7953d2fda44203cf414e1137d31fe28",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "24bc6131_cf343d02",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1016473
+      },
+      "writtenOn": "2014-07-02T09:52:25Z",
+      "side": 1,
+      "message": "if we work with JDBC driver, driver always throw SQLException.\nAnd is easy to catch.\n\nIn this case we have custom code, NPE exception, concurect exception, runtime exception.\n\nIs hard to catch. We need to catch Throwable class to be sure we catch all posible exceptions. And to do rollback() and to throw again.\n\nCode with:\n{\n} finally {\t17\n    rollback();\n}\nIs simple and elegant.\n\nAnd now, if autoCommit \u003d true. \nrollback() do nothink. Problem is solved.",
+      "parentUuid": "c45705b3_649c2a89",
+      "revId": "3633e0b4f7953d2fda44203cf414e1137d31fe28",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
