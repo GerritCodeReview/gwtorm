@@ -75,6 +75,30 @@
       "revId": "8832e883d1261f5496f84ebc7284c10cd71930d6",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2469c174_a7430a26",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcSchema.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1010737
+      },
+      "writtenOn": "2014-07-02T11:05:03Z",
+      "side": 1,
+      "message": "+1 I wasn\u0027t aware that beginTransaction() was also setting autoCommit\u003dfalse - I blame unfamiliarity with the code.",
+      "parentUuid": "24bc6131_0f17655f",
+      "range": {
+        "startLine": 54,
+        "startChar": 6,
+        "endLine": 54,
+        "endChar": 34
+      },
+      "revId": "8832e883d1261f5496f84ebc7284c10cd71930d6",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
