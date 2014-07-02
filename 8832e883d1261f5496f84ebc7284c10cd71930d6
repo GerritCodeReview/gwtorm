@@ -16,6 +16,24 @@
       "revId": "8832e883d1261f5496f84ebc7284c10cd71930d6",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c45705b3_e449fa47",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcSchema.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2014-07-02T10:04:07Z",
+      "side": 1,
+      "message": "If this is wrong, please change your review to -1 instead of +1.",
+      "parentUuid": "44b7954c_1017845f",
+      "revId": "8832e883d1261f5496f84ebc7284c10cd71930d6",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
