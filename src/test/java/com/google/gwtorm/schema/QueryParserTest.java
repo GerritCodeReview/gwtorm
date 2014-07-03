@@ -197,28 +197,4 @@ public class QueryParserTest {
       assertEquals("a", ((QueryParser.Column) aId).getField().getFieldName());
     }
   }
-
-  @Test
-  public void testLimitWithConstant() throws QueryParseException {
-    final Tree t = parse("LIMIT 1");
-    assertNotNull(t);
-    assertEquals(QueryParser.LIMIT, t.getType());
-    assertEquals(1, t.getChildCount());
-    {
-      final Tree c = t.getChild(0);
-      assertEquals(QueryParser.CONSTANT_INTEGER, c.getType());
-    }
-  }
-
-  @Test
-  public void testLimitWithPlaceholder() throws QueryParseException {
-    final Tree t = parse("LIMIT ?");
-    assertNotNull(t);
-    assertEquals(QueryParser.LIMIT, t.getType());
-    assertEquals(1, t.getChildCount());
-    {
-      final Tree c = t.getChild(0);
-      assertEquals(QueryParser.PLACEHOLDER, c.getType());
-    }
-  }
 }
