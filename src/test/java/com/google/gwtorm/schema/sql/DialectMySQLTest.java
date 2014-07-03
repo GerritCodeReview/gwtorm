@@ -20,10 +20,10 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeNoException;
 
-import com.google.gwtorm.data.PhoneBookDb;
-import com.google.gwtorm.data.PhoneBookDb2;
 import com.google.gwtorm.data.Address;
 import com.google.gwtorm.data.Person;
+import com.google.gwtorm.data.PhoneBookDb;
+import com.google.gwtorm.data.PhoneBookDb2;
 import com.google.gwtorm.jdbc.Database;
 import com.google.gwtorm.jdbc.JdbcExecutor;
 import com.google.gwtorm.jdbc.JdbcSchema;
@@ -34,22 +34,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
-public class DialectMySQLTest {
-  private Connection db;
-  private JdbcExecutor executor;
-  private SqlDialect dialect;
-  private Database<PhoneBookDb> phoneBook;
-  private Database<PhoneBookDb2> phoneBook2;
-
+public class DialectMySQLTest extends SqlDialectTest {
   @Before
   public void setUp() throws Exception {
     Class.forName(com.mysql.jdbc.Driver.class.getName());
@@ -227,44 +218,5 @@ public class DialectMySQLTest {
     s = dialect.listTables(db);
     assertTrue(s.contains("bar"));
     assertFalse(s.contains("for"));
-  }
-
-  @Test
-  public void testRollbackTransaction() throws SQLException, OrmException {
-    PhoneBookDb schema = phoneBook.open();
-    schema.updateSchema(executor);
-    schema.people().beginTransaction(null);
-    ArrayList<Person> all = new ArrayList<>();
-    all.add(new Person(new Person.Key("Bob"), 18));
-    schema.people().insert(all);
-    schema.rollback();
-    List<Person> r = schema.people().olderThan(10).toList();
-    assertEquals(0, r.size());
-  }
-
-  @Test
-  public void testRollbackNoTransaction() throws SQLException, OrmException {
-    PhoneBookDb schema = phoneBook.open();
-    schema.updateSchema(executor);
-    ArrayList<Person> all = new ArrayList<Person>();
-    all.add(new Person(new Person.Key("Bob"), 18));
-    schema.people().insert(all);
-    schema.commit();
-    schema.rollback();
-    List<Person> r = schema.people().olderThan(10).toList();
-    assertEquals(1, r.size());
-  }
-
-  @Test
-  public void testCommitTransaction() throws SQLException, OrmException {
-    PhoneBookDb schema = phoneBook.open();
-    schema.updateSchema(executor);
-    schema.people().beginTransaction(null);
-    ArrayList<Person> all = new ArrayList<>();
-    all.add(new Person(new Person.Key("Bob"), 18));
-    schema.people().insert(all);
-    schema.commit();
-    List<Person> r = schema.people().olderThan(10).toList();
-    assertEquals(1, r.size());
   }
 }

@@ -33,22 +33,14 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
-public class DialectOracleSQLTest {
+public class DialectOracleSQLTest extends SqlDialectTest {
   private final static String ORACLE_DRIVER = "oracle.jdbc.driver.OracleDriver";
-  private Connection db;
-  private JdbcExecutor executor;
-  private SqlDialect dialect;
-  private Database<PhoneBookDb> phoneBook;
-  private Database<PhoneBookDb2> phoneBook2;
 
   @Before
   public void setUp() throws Exception {
@@ -228,44 +220,5 @@ public class DialectOracleSQLTest {
     s = dialect.listTables(db);
     assertTrue(s.contains("bar"));
     assertFalse(s.contains("for"));
-  }
-
-  @Test
-  public void testRollbackTransaction() throws SQLException, OrmException {
-    PhoneBookDb schema = phoneBook.open();
-    schema.updateSchema(executor);
-    schema.people().beginTransaction(null);
-    ArrayList<Person> all = new ArrayList<>();
-    all.add(new Person(new Person.Key("Bob"), 18));
-    schema.people().insert(all);
-    schema.rollback();
-    List<Person> r = schema.people().olderThan(10).toList();
-    assertEquals(0, r.size());
-  }
-
-  @Test
-  public void testRollbackNoTransaction() throws SQLException, OrmException {
-    PhoneBookDb schema = phoneBook.open();
-    schema.updateSchema(executor);
-    ArrayList<Person> all = new ArrayList<Person>();
-    all.add(new Person(new Person.Key("Bob"), 18));
-    schema.people().insert(all);
-    schema.commit();
-    schema.rollback();
-    List<Person> r = schema.people().olderThan(10).toList();
-    assertEquals(1, r.size());
-  }
-
-  @Test
-  public void testCommitTransaction() throws SQLException, OrmException {
-    PhoneBookDb schema = phoneBook.open();
-    schema.updateSchema(executor);
-    schema.people().beginTransaction(null);
-    ArrayList<Person> all = new ArrayList<>();
-    all.add(new Person(new Person.Key("Bob"), 18));
-    schema.people().insert(all);
-    schema.commit();
-    List<Person> r = schema.people().olderThan(10).toList();
-    assertEquals(1, r.size());
   }
 }
