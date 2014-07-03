@@ -51,7 +51,9 @@ public abstract class JdbcSchema extends AbstractSchema {
   @Override
   public void commit() throws OrmException {
     try {
-      conn.commit();
+      if (!conn.getAutoCommit()) {
+        conn.commit();
+      }
     } catch (SQLException err) {
       throw new OrmException("Cannot commit transaction", err);
     } finally {
@@ -66,7 +68,9 @@ public abstract class JdbcSchema extends AbstractSchema {
   @Override
   public void rollback() throws OrmException {
     try {
-      conn.rollback();
+      if (!conn.getAutoCommit()) {
+        conn.rollback();
+      }
     } catch (SQLException err) {
       throw new OrmException("Cannot rollback transaction", err);
     } finally {
