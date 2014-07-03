@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "248aa19d_ff4d5f81",
+        "filename": "pom.xml",
+        "patchSetId": 7
+      },
+      "lineNbr": 414,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2014-07-03T09:06:43Z",
+      "side": 1,
+      "message": "unneeded change.",
+      "revId": "79973d418d121e9fb2fe94077800bf0bdccdba15",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "248aa19d_df489b74",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/DialectMySQL.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2014-07-03T09:06:43Z",
+      "side": 1,
+      "message": "No dependencies on GPL based libraries.",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 40
+      },
+      "revId": "79973d418d121e9fb2fe94077800bf0bdccdba15",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "048f5dae_fe4d6181",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/DialectMySQL.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2014-07-03T09:06:43Z",
+      "side": 1,
+      "message": "This is not needed. Just use the numbers and not GPL licensed dependencies [1]:\n\n http://www.docjar.com/html/api/com/mysql/jdbc/MysqlErrorNumbers.java.html\n  public final static int ER_DUP_KEY \u003d 1022;\n\nSo what you want is:\n\n  switch (err.getErrorCode()) {\n      case 1022: // ER_DUP_KEY\n      case 1062: // ER_DUP_ENTRY\n      case 1169: // ER_DUP_UNIQUE;\n        return new OrmDuplicateKeyException(entity, err);\n      default:\n        return fallbackConvertError(op, entity, err);\n    }",
+      "range": {
+        "startLine": 224,
+        "startChar": 11,
+        "endLine": 224,
+        "endChar": 41
+      },
+      "revId": "79973d418d121e9fb2fe94077800bf0bdccdba15",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
