@@ -736,20 +736,22 @@ class AccessGen implements Opcodes {
       if (hasLimitParam || !dialect.selectHasLimit()) {
         mv.visitVarInsn(ALOAD, psvar);
         if (hasLimitParam) {
-          CodeGenSupport cgs2 = new CodeGenSupport(mv) {
-            @Override
-            public void pushSqlHandle() {
-              mv.visitVarInsn(ALOAD, psvar);
-            }
+          if (dialect.selectHasLimit()) {
+            CodeGenSupport cgs2 = new CodeGenSupport(mv) {
+              @Override
+              public void pushSqlHandle() {
+                mv.visitVarInsn(ALOAD, psvar);
+              }
 
-            @Override
-            public void pushFieldValue() {
-              final int n = argIdx[0];
-              loadVar(pTypes[n], pVars[n]);
-            }
-          };
-          cgs2.resetColumnIndex(cgs.getColumnIndex() + 1);
-          dialect.getSqlTypeInfo(Integer.TYPE).generatePreparedStatementSet(cgs2);
+              @Override
+              public void pushFieldValue() {
+                final int n = argIdx[0];
+                loadVar(pTypes[n], pVars[n]);
+              }
+            };
+            cgs2.resetColumnIndex(cgs.getColumnIndex() + 1);
+            dialect.getSqlTypeInfo(Integer.TYPE).generatePreparedStatementSet(cgs2);
+          }
           mv.visitVarInsn(ILOAD, pVars[pTypes.length - 1]);
         } else {
           cgs.push(info.getStaticLimit());
