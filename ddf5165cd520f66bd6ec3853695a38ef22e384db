@@ -22,6 +22,30 @@
       "revId": "ddf5165cd520f66bd6ec3853695a38ef22e384db",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "847b4d5f_22840e4c",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/DialectOracle.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2014-07-03T11:42:38Z",
+      "side": 1,
+      "message": "Hmm.  I found a site that was listing these as Oracle codes (I noticed they were same as MySQL).\n\nCan\u0027t find it again now (I\u0027m on a different computer) and am now finding pages that say 23000 as you said.  Will check again tomorrow at the office.",
+      "parentUuid": "048f5dae_fe5721fe",
+      "range": {
+        "startLine": 156,
+        "startChar": 6,
+        "endLine": 158,
+        "endChar": 34
+      },
+      "revId": "ddf5165cd520f66bd6ec3853695a38ef22e384db",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
