@@ -39,8 +39,6 @@ import org.junit.Test;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
@@ -326,44 +324,5 @@ public class DialectMaxDBTest extends SqlDialectTest {
     } finally {
       p.close();
     }
-  }
-
-  @Test
-  public void testRollbackTransaction() throws SQLException, OrmException {
-    PhoneBookDb schema = phoneBook.open();
-    schema.updateSchema(executor);
-    schema.people().beginTransaction(null);
-    ArrayList<Person> all = new ArrayList<>();
-    all.add(new Person(new Person.Key("Bob"), 18));
-    schema.people().insert(all);
-    schema.rollback();
-    List<Person> r = schema.people().olderThan(10).toList();
-    assertEquals(0, r.size());
-  }
-
-  @Test
-  public void testRollbackNoTransaction() throws SQLException, OrmException {
-    PhoneBookDb schema = phoneBook.open();
-    schema.updateSchema(executor);
-    ArrayList<Person> all = new ArrayList<Person>();
-    all.add(new Person(new Person.Key("Bob"), 18));
-    schema.people().insert(all);
-    schema.commit();
-    schema.rollback();
-    List<Person> r = schema.people().olderThan(10).toList();
-    assertEquals(1, r.size());
-  }
-
-  @Test
-  public void testCommitTransaction() throws SQLException, OrmException {
-    PhoneBookDb schema = phoneBook.open();
-    schema.updateSchema(executor);
-    schema.people().beginTransaction(null);
-    ArrayList<Person> all = new ArrayList<>();
-    all.add(new Person(new Person.Key("Bob"), 18));
-    schema.people().insert(all);
-    schema.commit();
-    List<Person> r = schema.people().olderThan(10).toList();
-    assertEquals(1, r.size());
   }
 }
