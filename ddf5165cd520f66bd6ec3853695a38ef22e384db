@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "048f5dae_fe5721fe",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/DialectOracle.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2014-07-03T10:18:38Z",
+      "side": 1,
+      "message": "These seem to be MySQL specific. Oracle seems to use: 23000.",
+      "range": {
+        "startLine": 156,
+        "startChar": 6,
+        "endLine": 158,
+        "endChar": 34
+      },
+      "revId": "ddf5165cd520f66bd6ec3853695a38ef22e384db",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
