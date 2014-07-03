@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "048f5dae_be53d925",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2014-07-03T08:30:22Z",
+      "side": 1,
+      "message": "This change is a no op: nothing is fixed.",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 39
+      },
+      "revId": "6274b32ce8ff8cc8ea80d2910d7b5e069715bb42",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "048f5dae_7e2151bd",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/DialectMySQL.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2014-07-03T08:30:22Z",
+      "side": 1,
+      "message": "The whole purpose of this change was to overwrite convertError() message in MySQL dialect. Yet this implementation just call the base method. The bug that is claimed to be fixed in the commit message isn\u0027t fixed.",
+      "range": {
+        "startLine": 220,
+        "startChar": 4,
+        "endLine": 220,
+        "endChar": 49
+      },
+      "revId": "6274b32ce8ff8cc8ea80d2910d7b5e069715bb42",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
