@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "248aa19d_bf5d9722",
+        "filename": "pom.xml",
+        "patchSetId": 7
+      },
+      "lineNbr": 400,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2014-07-03T09:33:46Z",
+      "side": 1,
+      "message": "Unneeded change,",
+      "range": {
+        "startLine": 400,
+        "startChar": 13,
+        "endLine": 400,
+        "endChar": 21
+      },
+      "revId": "d66d671fed4bae435c29448154d74bd7d1bf0e22",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "248aa19d_9f58d333",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/DialectH2.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2014-07-03T09:33:46Z",
+      "side": 1,
+      "message": "Why this is needed? In [1] is defined as\n\n  public static final int DUPLICATE_KEY_1 \u003d 23001;\n\nBut this included on the follow line.\n\n  [1] http://www.docjar.com/html/api/org/h2/constant/ErrorCode.java.html",
+      "range": {
+        "startLine": 42,
+        "startChar": 6,
+        "endLine": 42,
+        "endChar": 36
+      },
+      "revId": "d66d671fed4bae435c29448154d74bd7d1bf0e22",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
