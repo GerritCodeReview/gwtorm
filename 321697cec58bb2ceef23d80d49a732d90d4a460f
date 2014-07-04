@@ -123,6 +123,24 @@
       "revId": "321697cec58bb2ceef23d80d49a732d90d4a460f",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "048f5dae_5eaf3582",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/AccessGen.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 739,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2014-07-04T09:32:31Z",
+      "side": 1,
+      "message": "Will try to push a fix today.",
+      "parentUuid": "e48b29a1_dd526b11",
+      "revId": "321697cec58bb2ceef23d80d49a732d90d4a460f",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
