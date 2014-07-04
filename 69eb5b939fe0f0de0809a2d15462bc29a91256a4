@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "048f5dae_be8e791d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2014-07-04T09:50:38Z",
+      "side": 1,
+      "message": "Usually on this place we always have subjects of commits that are going to be merged. Why is this missing this time, e. g. I28c4a3f57 .",
+      "revId": "69eb5b939fe0f0de0809a2d15462bc29a91256a4",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
