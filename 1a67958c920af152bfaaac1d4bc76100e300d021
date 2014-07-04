@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "248aa19d_bfa83768",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2014-07-04T13:44:16Z",
+      "side": 1,
+      "message": "That\u0027s not accurate and not clear from the above what wasn\u0027t necessary. setMaxRows() call wasn\u0027t necessary, or more precisely: code generation for invocation of setMaxRows() method wasn\u0027t needed.",
+      "range": {
+        "startLine": 33,
+        "startChar": 16,
+        "endLine": 33,
+        "endChar": 37
+      },
+      "revId": "1a67958c920af152bfaaac1d4bc76100e300d021",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
