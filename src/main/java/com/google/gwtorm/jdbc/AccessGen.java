@@ -733,33 +733,35 @@ class AccessGen implements Opcodes {
     }
 
     if (info.hasLimit()) {
-      if (hasLimitParam || !dialect.selectHasLimit()) {
+      if (!dialect.selectHasLimit()) {
+        // ps.setMaxRows(...)
         mv.visitVarInsn(ALOAD, psvar);
         if (hasLimitParam) {
-          if (dialect.selectHasLimit()) {
-            CodeGenSupport cgs2 = new CodeGenSupport(mv) {
-              @Override
-              public void pushSqlHandle() {
-                mv.visitVarInsn(ALOAD, psvar);
-              }
-
-              @Override
-              public void pushFieldValue() {
-                final int n = argIdx[0];
-                loadVar(pTypes[n], pVars[n]);
-              }
-            };
-            cgs2.resetColumnIndex(cgs.getColumnIndex() + 1);
-            dialect.getSqlTypeInfo(Integer.TYPE).generatePreparedStatementSet(cgs2);
-          }
           mv.visitVarInsn(ILOAD, pVars[pTypes.length - 1]);
         } else {
           cgs.push(info.getStaticLimit());
         }
+        mv.visitVarInsn(ALOAD, psvar);
         mv.visitMethodInsn(INVOKEINTERFACE, Type.getType(
             PreparedStatement.class).getInternalName(), "setMaxRows", Type
             .getMethodDescriptor(Type.VOID_TYPE, new Type[] {Type.INT_TYPE}));
-      }
+      } else if (hasLimitParam) {
+        // ps.setInt(...) for the "LIMIT ?"
+        CodeGenSupport cgs2 = new CodeGenSupport(mv) {
+          @Override
+          public void pushSqlHandle() {
+            mv.visitVarInsn(ALOAD, psvar);
+          }
+
+          @Override
+          public void pushFieldValue() {
+            final int n = argIdx[0];
+            loadVar(pTypes[n], pVars[n]);
+          }
+        };
+        cgs2.resetColumnIndex(cgs.getColumnIndex() + 1);
+        dialect.getSqlTypeInfo(Integer.TYPE).generatePreparedStatementSet(cgs2);
+      } // else: static "LIMIT N" on a dialect which supports LIMIT > nothing to do
     }
 
     mv.visitVarInsn(ALOAD, 0);
