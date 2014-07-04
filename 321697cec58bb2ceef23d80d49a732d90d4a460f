@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e48b29a1_9d58e333",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2014-07-04T09:16:57Z",
+      "side": 1,
+      "message": "I\u0027d prefer to leave it.",
+      "parentUuid": "248aa19d_1fe203ee",
+      "range": {
+        "startLine": 13,
+        "startChar": 18,
+        "endLine": 13,
+        "endChar": 28
+      },
+      "revId": "321697cec58bb2ceef23d80d49a732d90d4a460f",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "048f5dae_1eb5add2",
         "filename": "src/main/java/com/google/gwtorm/jdbc/AccessGen.java",
         "patchSetId": 3
