@@ -22,6 +22,29 @@
       "revId": "1a67958c920af152bfaaac1d4bc76100e300d021",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "248aa19d_dfadfb76",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/AccessGen.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 736,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2014-07-04T13:49:23Z",
+      "side": 1,
+      "message": "This is not the rule but exception: all dialects support selectHasLimit, only Oracle not. I would prefer to switch the conditions and start with positive case:\n\n if (dialect.selectHasLimit()) {\n   ...\n } else {\n   ...\n }",
+      "range": {
+        "startLine": 736,
+        "startChar": 10,
+        "endLine": 736,
+        "endChar": 35
+      },
+      "revId": "1a67958c920af152bfaaac1d4bc76100e300d021",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
