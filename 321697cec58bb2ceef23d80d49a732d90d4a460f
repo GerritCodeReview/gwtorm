@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "248aa19d_1fe203ee",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2014-07-04T09:12:31Z",
+      "side": 1,
+      "message": "When referencing a closed change we usually prefer using the commit-id instead of the change-id.",
+      "range": {
+        "startLine": 13,
+        "startChar": 18,
+        "endLine": 13,
+        "endChar": 28
+      },
+      "revId": "321697cec58bb2ceef23d80d49a732d90d4a460f",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "048f5dae_1eb5add2",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/AccessGen.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 739,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2014-07-04T09:12:31Z",
+      "side": 1,
+      "message": "This chain of if statements is becoming hard to follow but the bugfix is OK.\nI would submit this as is for 1.7.\n\nFor the master I will try to restructure this code for better readability. We basically don\u0027t need both:\n\n  ps.setInt(...) // for the LIMIT ? parameter\n\nand:\n\n  ps.setMaxRows(...)\n\nbut either one or the other (depending on the dialect\u0027s support for the LIMIT).\n\nBtw, if you are maintaining the gwtorm support for Oracle then consider making use of the ROWNUM and, in for newer Oracle versions, FETCH NEXT \u003cN\u003e ROWS ONLY as an Oracle specific implementation of the LIMIT clause.",
+      "revId": "321697cec58bb2ceef23d80d49a732d90d4a460f",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
