@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "248aa19d_9fb7f3e6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2014-07-04T09:19:09Z",
+      "side": 1,
+      "message": "Leaving it as is then.",
+      "parentUuid": "e48b29a1_9d58e333",
+      "range": {
+        "startLine": 13,
+        "startChar": 18,
+        "endLine": 13,
+        "endChar": 28
+      },
+      "revId": "321697cec58bb2ceef23d80d49a732d90d4a460f",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "048f5dae_1eb5add2",
         "filename": "src/main/java/com/google/gwtorm/jdbc/AccessGen.java",
         "patchSetId": 3
@@ -77,6 +101,24 @@
       "writtenOn": "2014-07-04T09:17:42Z",
       "side": 1,
       "message": "Will you be able to fix it for master for 1.13?",
+      "parentUuid": "048f5dae_1eb5add2",
+      "revId": "321697cec58bb2ceef23d80d49a732d90d4a460f",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "248aa19d_7f022fd8",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/AccessGen.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 739,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2014-07-04T09:19:09Z",
+      "side": 1,
+      "message": "| This chain of if statements is becoming hard to follow but the bugfix is OK. I would submit this as is for 1.7.\n\n+1 to refactor it on master (i started already restructuring of unite tests there) and let it as is on stable 1.7.\n\n| Btw, if you are maintaining the gwtorm support for Oracle then ...\n\nI am not ;-) I just provided the original implementation and David P. asked me to test upcoming 2.8.6.1 release on it and i noticed it was broken since your change. I don\u0027t use Oracle and not interested in improving it.",
       "parentUuid": "048f5dae_1eb5add2",
       "revId": "321697cec58bb2ceef23d80d49a732d90d4a460f",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
