@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "847b4d5f_02162a1c",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/DialectH2.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1010008
+      },
+      "writtenOn": "2014-07-07T18:29:48Z",
+      "side": 0,
+      "message": "Unrelated change?",
+      "revId": "156e898cbf64d208f2eeb4f0a4f54fff606e3036",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "847b4d5f_220b2ef6",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/DialectMySQL.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1010008
+      },
+      "writtenOn": "2014-07-07T18:29:48Z",
+      "side": 1,
+      "message": "In H2 you removed the conversion for unique constraint violations. Why do you have cases here besides ER_DUP_KEY?",
+      "revId": "e1688a8a7dbad91cc8001abd8280d43055e17df5",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e48b29a1_5d99fb96",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/DialectOracle.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1010008
+      },
+      "writtenOn": "2014-07-07T18:29:48Z",
+      "side": 1,
+      "message": "Add comments as in other dialects.",
+      "revId": "e1688a8a7dbad91cc8001abd8280d43055e17df5",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e48b29a1_7d96b769",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/SqlDialectTest.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1010008
+      },
+      "writtenOn": "2014-07-07T18:29:48Z",
+      "side": 1,
+      "message": "Please do this refactoring in a separate change, and make the duplicate key changes in a followup to that one.",
+      "revId": "e1688a8a7dbad91cc8001abd8280d43055e17df5",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
