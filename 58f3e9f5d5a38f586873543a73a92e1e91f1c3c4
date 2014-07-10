@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "590a2015_58b15d15",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/SqlDialectTest.java",
+        "patchSetId": 15
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2014-07-10T09:09:58Z",
+      "side": 1,
+      "message": "Duplicate",
+      "range": {
+        "startLine": 86,
+        "startChar": 25,
+        "endLine": 86,
+        "endChar": 33
+      },
+      "revId": "58f3e9f5d5a38f586873543a73a92e1e91f1c3c4",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7915242e_791b0766",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/SqlDialectTest.java",
+        "patchSetId": 15
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2014-07-10T09:09:58Z",
+      "side": 1,
+      "message": "\"Orm\" to be consistent with the actual exception name.",
+      "range": {
+        "startLine": 86,
+        "startChar": 22,
+        "endLine": 86,
+        "endChar": 25
+      },
+      "revId": "58f3e9f5d5a38f586873543a73a92e1e91f1c3c4",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7915242e_59204388",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/SqlDialectTest.java",
+        "patchSetId": 15
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2014-07-10T09:09:58Z",
+      "side": 1,
+      "message": "Should be \"An\" but probably better to just remove.",
+      "range": {
+        "startLine": 107,
+        "startChar": 22,
+        "endLine": 107,
+        "endChar": 23
+      },
+      "revId": "58f3e9f5d5a38f586873543a73a92e1e91f1c3c4",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
