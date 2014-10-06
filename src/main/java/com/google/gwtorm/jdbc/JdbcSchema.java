@@ -251,4 +251,14 @@ public abstract class JdbcSchema extends AbstractSchema {
       conn = null;
     }
   }
+
+  public void restartSequences(StatementExecutor e) throws SQLException,
+       OrmException {
+    SqlDialect dialect = dbDef.getDialect();
+    SchemaModel model = dbDef.getSchemaModel();
+    for (SequenceModel s : model.getSequences()) {
+      e.execute(dialect.getDropSequenceSql(s.getSequenceName()));
+      e.execute(s.getCreateSequenceSql(dialect));
+    }
+  }
 }
