@@ -94,6 +94,30 @@
       "revId": "c24bbd74ab03d77c924c214a92dab2ae8d163d40",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "307ae4aa_54f7cc38",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2014-10-07T15:45:52Z",
+      "side": 1,
+      "message": "Sure, that\u0027s the way to go, but we still would need to somehow conditionally manipulate Buck\u0027s dependency graph to include ojdbc6.jar for Oracle driver on machine where it\u0027s available. Or may be it would be enough to include the optional driver in system class path?",
+      "parentUuid": "90571041_774c708d",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 41
+      },
+      "revId": "c24bbd74ab03d77c924c214a92dab2ae8d163d40",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
