@@ -22,6 +22,30 @@
       "revId": "c24bbd74ab03d77c924c214a92dab2ae8d163d40",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0db3405_d07e7ca1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1010008
+      },
+      "writtenOn": "2014-10-07T13:30:16Z",
+      "side": 1,
+      "message": "It\u0027s more of an educated guess, really. I\u0027ll ask Shawn.",
+      "parentUuid": "f0d12ce3_52fcd484",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 41
+      },
+      "revId": "c24bbd74ab03d77c924c214a92dab2ae8d163d40",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
