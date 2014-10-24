@@ -33,12 +33,27 @@ import java.util.List;
 
 public class JavaColumnModel extends ColumnModel {
   public static List<Field> getDeclaredFields(Class<?> in) {
-    return Ordering.natural().onResultOf(new Function<Field, String>() {
+    return sort(Arrays.asList(in.getDeclaredFields()));
+  }
+
+  static List<Field> sort(List<Field> fields) {
+    return new Ordering<Field>() {
       @Override
-      public String apply(Field f) {
-        return f.getName();
+      public int compare(Field f1, Field f2) {
+        Column a1 = f1.getAnnotation(Column.class);
+        Column a2 = f2.getAnnotation(Column.class);
+        if (a1 == null && a2 == null) {
+          return f1.getName().compareTo(f2.getName());
+        }
+        if (a1 == null) {
+          return 1;
+        }
+        if (a2 == null) {
+          return -1;
+        }
+        return a1.id() - a2.id();
       }
-    }).sortedCopy(Arrays.asList(in.getDeclaredFields()));
+    }.sortedCopy(fields);
   }
 
   private final Field field;
