@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "f5bafe9a_2af67ff3",
+        "filename": "src/main/java/com/google/gwtorm/schema/java/JavaColumnModel.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2014-10-27T12:02:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "955d4234_47bd0ede",
+      "revId": "54220780e7372952fa17a901b6dfb64312e08a6f",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d515fa2f_f99ef73b",
         "filename": "src/main/java/com/google/gwtorm/schema/java/JavaColumnModel.java",
         "patchSetId": 1
@@ -48,6 +66,24 @@
       "side": 1,
       "message": "It should be quite easy to test this method. Will provide a test.",
       "parentUuid": "d515fa2f_f99ef73b",
+      "revId": "54220780e7372952fa17a901b6dfb64312e08a6f",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "55c2ea1e_8d19c19b",
+        "filename": "src/main/java/com/google/gwtorm/schema/java/JavaColumnModel.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2014-10-27T12:02:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b53fa6b4_10d3c497",
       "revId": "54220780e7372952fa17a901b6dfb64312e08a6f",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
