@@ -45,6 +45,30 @@
       "revId": "111f90f606956865419035172536b7dc0d9d4af9",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "55dcaa2f_fdcec766",
+        "filename": "src/test/java/com/google/gwtorm/schema/java/DeclaredFieldsOrderTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2014-11-03T08:51:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b52086df_a87dfba5",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 21
+      },
+      "revId": "111f90f606956865419035172536b7dc0d9d4af9",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
