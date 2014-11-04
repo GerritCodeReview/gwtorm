@@ -21,7 +21,7 @@ limitations under the License.
   <groupId>com.google.gerrit</groupId>
   <artifactId>gwtorm</artifactId>
   <packaging>jar</packaging>
-  <version>1.14-SNAPSHOT</version>
+  <version>1.15-SNAPSHOT</version>
   <name>gwtorm</name>
   <description>Tiny ORM</description>
   <url>https://gerrit.googlesource.com/gwtorm</url>
