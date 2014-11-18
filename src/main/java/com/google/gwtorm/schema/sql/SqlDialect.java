@@ -14,6 +14,7 @@
 
 package com.google.gwtorm.schema.sql;
 
+import com.google.common.base.Joiner;
 import com.google.gwtorm.schema.ColumnModel;
 import com.google.gwtorm.schema.RelationModel;
 import com.google.gwtorm.schema.SequenceModel;
@@ -376,6 +377,41 @@ public abstract class SqlDialect {
    */
   public abstract void renameColumn(StatementExecutor e, String tableName,
       String fromColumn, ColumnModel col) throws OrmException;
+
+  /**
+   * Add a primary key for a table.
+   *
+   * @param e statement to use to execute the SQL command(s).
+   * @param tableName table to add the primary key on.
+   * @param columns columns to add the primary key on
+   * @throws OrmException the primary key could not be added.
+   */
+  public void addPrimaryKey(StatementExecutor e, String tableName,
+      List<String> columns) throws OrmException {
+    final StringBuilder r = new StringBuilder();
+    r.append("ALTER TABLE ");
+    r.append(tableName);
+    r.append(" ADD PRIMARY KEY(");
+    r.append(Joiner.on(",").join(columns));
+    r.append(")");
+    e.execute(r.toString());
+  }
+
+  /**
+   * Drop the primary key for a table
+   *
+   * @param e statement to use to execute the SQL command(s).
+   * @param tableName table to remove the primary key from.
+   * @throws OrmException the primary key could not be dropped.
+   */
+  public void dropPrimaryKey(StatementExecutor e, String tableName)
+      throws OrmException {
+    final StringBuilder r = new StringBuilder();
+    r.append("ALTER TABLE ");
+    r.append(tableName);
+    r.append(" DROP PRIMARY KEY");
+    e.execute(r.toString());
+  }
 
   protected abstract String getNextSequenceValueSql(String seqname);
 

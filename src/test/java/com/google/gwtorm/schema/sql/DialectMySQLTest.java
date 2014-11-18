@@ -20,6 +20,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeNoException;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gwtorm.data.Address;
 import com.google.gwtorm.data.Person;
 import com.google.gwtorm.data.PhoneBookDb;
@@ -149,6 +150,19 @@ public class DialectMySQLTest extends SqlDialectTest {
     assertEquals(2, s.size());
     assertTrue(s.contains("foo_primary_ind"));
     assertTrue(s.contains("foo_second_ind"));
+  }
+
+  @Test
+  public void testAddAndDropPrimaryKey() throws OrmException, SQLException {
+    assertTrue(dialect.listTables(db).isEmpty());
+    execute("CREATE TABLE foo (cnt INT)");
+    Set<String> s = dialect.listTables(db);
+    assertEquals(1, s.size());
+    assertTrue(s.contains("foo"));
+    dialect.addPrimaryKey(executor, "foo", ImmutableList.of("cnt"));
+    //TODO: assert that it was added
+    dialect.dropPrimaryKey(executor, "foo");
+    //TODO: assert that it was removed
   }
 
   @Test
