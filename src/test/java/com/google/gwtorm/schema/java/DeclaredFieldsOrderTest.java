@@ -36,10 +36,6 @@ public class DeclaredFieldsOrderTest {
     private String b;
     @Column(id = 3)
     private String a;
-
-    private String d;
-    private String e;
-    private String f;
   }
 
   @Test
