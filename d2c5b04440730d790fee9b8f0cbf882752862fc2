@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a900f9b_efd1e15d",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/SqlDialect.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1010008
+      },
+      "writtenOn": "2014-11-18T17:27:18Z",
+      "side": 1,
+      "message": "This is intended to be overridden, yes? I think you can avoid the suppression if you add it to the Javadoc.",
+      "revId": "d2c5b04440730d790fee9b8f0cbf882752862fc2",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
