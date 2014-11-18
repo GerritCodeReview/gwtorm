@@ -14,7 +14,6 @@
 
 package com.google.gwtorm.schema.java;
 
-import com.google.common.base.Function;
 import com.google.common.collect.Ordering;
 import com.google.gwtorm.client.Column;
 import com.google.gwtorm.client.RowVersion;
