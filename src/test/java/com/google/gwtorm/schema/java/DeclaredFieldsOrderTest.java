@@ -16,7 +16,6 @@ package com.google.gwtorm.schema.java;
 
 import static com.google.gwtorm.schema.java.JavaColumnModel.sort;
 import static com.google.common.collect.Collections2.permutations;
-
 import static org.junit.Assert.assertEquals;
 
 import com.google.gwtorm.client.Column;
@@ -37,8 +36,11 @@ public class DeclaredFieldsOrderTest {
     @Column(id = 3)
     private String a;
 
+    @SuppressWarnings("unused")
     private String d;
+    @SuppressWarnings("unused")
     private String e;
+    @SuppressWarnings("unused")
     private String f;
   }
 
