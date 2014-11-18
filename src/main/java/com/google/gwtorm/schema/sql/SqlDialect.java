@@ -377,6 +377,21 @@ public abstract class SqlDialect {
   public abstract void renameColumn(StatementExecutor e, String tableName,
       String fromColumn, ColumnModel col) throws OrmException;
 
+  /**
+   * Drop the primary key for a table
+   * @param e statement to use to execute the SQL command(s).
+   * @param tableName tableName table to remove the primary key from.
+   * @throws OrmException
+   */
+  public void dropPrimaryKey(StatementExecutor e, String tableName)
+      throws OrmException {
+    final StringBuilder r = new StringBuilder();
+    r.append("ALTER TABLE ");
+    r.append(tableName);
+    r.append(" DROP PRIMARY KEY");
+    e.execute(r.toString());
+  }
+
   protected abstract String getNextSequenceValueSql(String seqname);
 
   /**

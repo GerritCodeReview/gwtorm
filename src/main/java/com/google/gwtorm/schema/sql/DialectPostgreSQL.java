@@ -91,6 +91,18 @@ public class DialectPostgreSQL extends SqlDialect {
   }
 
   @Override
+  public void dropPrimaryKey(StatementExecutor e, String tableName)
+      throws OrmException {
+    final StringBuilder r = new StringBuilder();
+    r.append("ALTER TABLE ");
+    r.append(tableName);
+    r.append(" DROP CONSTRAINT ");
+    r.append(tableName);
+    r.append("_pkey");
+    e.execute(r.toString());
+  }
+
+  @Override
   public Set<String> listSequences(Connection db) throws SQLException {
     Statement s = db.createStatement();
     try {
