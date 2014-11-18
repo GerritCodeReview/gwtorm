@@ -369,7 +369,7 @@ public abstract class SqlDialect {
    * Rename an existing column in a table.
    *
    * @param e statement to use to execute the SQL command(s).
-   * @param tableName table to add the column onto.
+   * @param tableName table to rename the column in.
    * @param fromColumn source column name
    * @param col destination column definition
    * @throws OrmException the column could not be renamed.
