@@ -350,7 +350,7 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
           cnt++;
         }
 
-        if (0 < cnt) {
+        if (0 < cnt && ps != null) {
           final int[] states = ps.executeBatch();
           if (states == null) {
             inserts = allInstances;
