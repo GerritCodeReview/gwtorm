@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ae09f12_4b6125f6",
+        "filename": "src/test/java/com/google/gwtorm/schema/java/DeclaredFieldsOrderTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003935
+      },
+      "writtenOn": "2014-11-18T09:28:14Z",
+      "side": 0,
+      "message": "I believe these fields are part of the test below and should not be removed. Would the test succeed without them?",
+      "range": {
+        "startLine": 40,
+        "startChar": 4,
+        "endLine": 42,
+        "endChar": 21
+      },
+      "revId": "5aa2f690136f8941fa447f54bb8a0997ff1eb404",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
