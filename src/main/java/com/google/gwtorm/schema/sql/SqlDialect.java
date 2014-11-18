@@ -90,7 +90,8 @@ public abstract class SqlDialect {
   public abstract boolean handles(String url, Connection c) throws SQLException;
 
   /** Select a better dialect definition for this connection */
-  public SqlDialect refine(final Connection c) throws SQLException {
+  @SuppressWarnings("unused")
+  public SqlDialect refine(final Connection c) throws SQLException  {
     return this;
   }
 
