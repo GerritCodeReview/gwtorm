@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "daea87ee_f1fd687f",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/SqlDialect.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 390,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2014-11-18T13:18:34Z",
+      "side": 1,
+      "message": "This is not exactly what I meant by providing an API to add a primary key :-)\n\nWe don\u0027t need a general purpose addPrimaryKey which simply creates a primary key on any given set of columns. OK, this method may stay but it still leaves the responsibility on the caller to find out the proper primary key columns. See the relationPK method in [1].\n\nThe gwtorm is able to find the primary key columns for a given RelationModel. How otherwise it would create a complete DB schema.\nWhat would really be nice to have is something like:\n\n  public void addPrimaryKey(StatementExecutor e, RelationModel m)\n\nand the method would then find out the primary key columns and create a primary key. Maybe this method doesn\u0027t belong to this class (by its level of abstraction) but should go somewhere else.\n\n[1] https://gerrit-review.googlesource.com/#/c/61361/5/gerrit-pgm/src/main/java/com/google/gerrit/pgm/init/UpdatePrimaryKeys.java",
+      "range": {
+        "startLine": 381,
+        "startChar": 0,
+        "endLine": 390,
+        "endChar": 49
+      },
+      "revId": "3d212e67542fcc6ff2f17ccfe1bbaa149ffa2cb1",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
