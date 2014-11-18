@@ -14,6 +14,7 @@
 
 package com.google.gwtorm.jdbc;
 
+import com.google.common.base.Preconditions;
 import com.google.gwtorm.client.Key;
 import com.google.gwtorm.server.AbstractAccess;
 import com.google.gwtorm.server.Access;
@@ -351,6 +352,7 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
         }
 
         if (0 < cnt) {
+          Preconditions.checkNotNull(ps);
           final int[] states = ps.executeBatch();
           if (states == null) {
             inserts = allInstances;
