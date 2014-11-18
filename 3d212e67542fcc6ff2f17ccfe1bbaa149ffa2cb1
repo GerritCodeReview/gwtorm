@@ -22,6 +22,30 @@
       "revId": "3d212e67542fcc6ff2f17ccfe1bbaa149ffa2cb1",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a900f9b_2fffe9c1",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/SqlDialect.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 390,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2014-11-18T22:02:49Z",
+      "side": 1,
+      "message": "I agree that, addPrimaryKey() as define above is a bit out of context here, because it moves the responsibility to caller to retrieve the keys and (not less important as we know now) to provide the columns in the right order. When we starting to extend gwtorm with this kind of methods, then i think that the best would be to add a method:\n\n rebuildPrimaryKey(StatementExecutor e, RelationModel m);\n\nwhich would drop and re-create primary key taking in account SQL dialect abstraction.\n\nOr even to meet our current use case:\n\n  rebuildPrimaryKeyWhenWrongColumnOrder(\n    StatementExecutor e,\n    RelationModel m)\n\nwhith more or less the code that is currently in your schema migration in gerrit. This still leaves the question how we would short cut the whole primary key rebuild post step, so that it could be skipped for sites that don\u0027t suffer from this problem (or for site that re-run unit step, after the wrong column order wa fixed), so we would need a method:\n\n  listTableWithWrongPrimaryKeyColumnOrder()\n\nAll this let me think that we could just leave it as is and not to do it at all ;-)",
+      "parentUuid": "daea87ee_f1fd687f",
+      "range": {
+        "startLine": 381,
+        "startChar": 0,
+        "endLine": 390,
+        "endChar": 49
+      },
+      "revId": "3d212e67542fcc6ff2f17ccfe1bbaa149ffa2cb1",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
