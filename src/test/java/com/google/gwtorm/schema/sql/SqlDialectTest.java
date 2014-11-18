@@ -44,7 +44,7 @@ public abstract class SqlDialectTest {
   protected Database<PhoneBookDb2> phoneBook2;
 
   @Test
-  public void testRollbackTransaction() throws SQLException, OrmException {
+  public void testRollbackTransaction() throws OrmException {
     PhoneBookDb schema = phoneBook.open();
     schema.updateSchema(executor);
     schema.people().beginTransaction(null);

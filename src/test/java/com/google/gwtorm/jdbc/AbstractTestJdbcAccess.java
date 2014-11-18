@@ -225,7 +225,7 @@ public abstract class AbstractTestJdbcAccess {
   }
 
   @Test
-  public void testInsertOneException() throws OrmException, SQLException {
+  public void testInsertOneException() throws SQLException {
     sqlException = new BatchUpdateException();
     PreparedStatement insert =
         stubStatementThrowExceptionOnExecute(INSERT, sqlException);
@@ -284,7 +284,7 @@ public abstract class AbstractTestJdbcAccess {
   }
 
   @Test
-  public void testUpsertNothing() throws OrmException, SQLException {
+  public void testUpsertNothing() throws OrmException {
     classUnderTest.upsert(noData);
   }
 
@@ -300,7 +300,7 @@ public abstract class AbstractTestJdbcAccess {
   }
 
   @Test
-  public void upsertOneException() throws OrmException, SQLException {
+  public void upsertOneException() throws SQLException {
     SQLException exception = new BatchUpdateException();
     PreparedStatement update =
         stubStatementThrowExceptionOnExecute(UPDATE, exception);

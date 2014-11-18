@@ -89,8 +89,13 @@ public abstract class SqlDialect {
 
   public abstract boolean handles(String url, Connection c) throws SQLException;
 
-  /** Select a better dialect definition for this connection */
-  public SqlDialect refine(final Connection c) throws SQLException {
+  /** Select a better dialect definition for this connection.
+   *
+   * @param c the connection
+   * @return a dialect instance
+   * @throws SQLException
+   */
+  public SqlDialect refine(final Connection c) throws SQLException  {
     return this;
   }
 
