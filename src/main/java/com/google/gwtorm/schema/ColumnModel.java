@@ -57,7 +57,7 @@ public abstract class ColumnModel {
 
   protected void initNestedColumns(final Collection<? extends ColumnModel> col)
       throws OrmException {
-    nestedColumns = new ArrayList<ColumnModel>(col);
+    nestedColumns = new ArrayList<>(col);
     recomputeColumnNames();
     if (!isNotNull()) {
       // If we permit NULL we need to make sure our contained columns
@@ -68,7 +68,7 @@ public abstract class ColumnModel {
       }
     }
 
-    Set<Integer> ids = new HashSet<Integer>();
+    Set<Integer> ids = new HashSet<>();
     for (final ColumnModel c : nestedColumns) {
       if (!ids.add(c.columnId)) {
         throw new OrmException("Duplicate @Column id " + c.columnId + " in "
@@ -108,7 +108,7 @@ public abstract class ColumnModel {
   }
 
   public Collection<ColumnModel> getAllLeafColumns() {
-    final ArrayList<ColumnModel> r = new ArrayList<ColumnModel>();
+    final ArrayList<ColumnModel> r = new ArrayList<>();
     for (final ColumnModel c : nestedColumns) {
       if (c.isNested()) {
         r.addAll(c.getAllLeafColumns());

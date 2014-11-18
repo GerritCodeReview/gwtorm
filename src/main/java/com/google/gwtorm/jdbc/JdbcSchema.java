@@ -194,7 +194,7 @@ public abstract class JdbcSchema extends AbstractSchema {
       OrmException {
     final SqlDialect dialect = dbDef.getDialect();
     final SchemaModel model = dbDef.getSchemaModel();
-    HashSet<String> want = new HashSet<String>();
+    HashSet<String> want = new HashSet<>();
     for (final SequenceModel s : model.getSequences()) {
       want.add(s.getSequenceName().toLowerCase());
     }
@@ -209,7 +209,7 @@ public abstract class JdbcSchema extends AbstractSchema {
       OrmException {
     final SqlDialect dialect = dbDef.getDialect();
     final SchemaModel model = dbDef.getSchemaModel();
-    HashSet<String> want = new HashSet<String>();
+    HashSet<String> want = new HashSet<>();
     for (final RelationModel r : model.getRelations()) {
       want.add(r.getRelationName().toLowerCase());
     }
@@ -223,7 +223,7 @@ public abstract class JdbcSchema extends AbstractSchema {
   private void pruneColumns(final StatementExecutor e, final RelationModel rel)
       throws SQLException, OrmException {
     final SqlDialect dialect = dbDef.getDialect();
-    HashSet<String> want = new HashSet<String>();
+    HashSet<String> want = new HashSet<>();
     for (final ColumnModel c : rel.getColumns()) {
       want.add(c.getColumnName().toLowerCase());
     }

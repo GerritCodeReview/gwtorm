@@ -70,9 +70,9 @@ public class DialectMaxDBTest extends SqlDialectTest {
     p.setProperty("user", user);
     p.setProperty("password", pass);
     phoneBook =
-        new Database<PhoneBookDb>(new SimpleDataSource(p), PhoneBookDb.class);
+        new Database<>(new SimpleDataSource(p), PhoneBookDb.class);
     phoneBook2 =
-        new Database<PhoneBookDb2>(new SimpleDataSource(p), PhoneBookDb2.class);
+        new Database<>(new SimpleDataSource(p), PhoneBookDb2.class);
   }
 
   private void drop(String drop) {

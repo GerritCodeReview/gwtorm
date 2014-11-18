@@ -60,7 +60,7 @@ public class DialectH2 extends SqlDialect {
               + " FROM INFORMATION_SCHEMA.SEQUENCES"
               + " WHERE SEQUENCE_SCHEMA = 'PUBLIC'");
       try {
-        HashSet<String> sequences = new HashSet<String>();
+        HashSet<String> sequences = new HashSet<>();
         while (rs.next()) {
           sequences.add(rs.getString(1).toLowerCase());
         }

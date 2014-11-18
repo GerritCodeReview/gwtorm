@@ -54,7 +54,7 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
     if (keys instanceof Collection) {
       keySet = (Collection<K>) keys;
     } else {
-      keySet = new ArrayList<K>();
+      keySet = new ArrayList<>();
       for (final K k : keys) {
         keySet.add(k);
       }
@@ -64,16 +64,16 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
       case 0:
         // Nothing requested, nothing to return.
         //
-        return new ListResultSet<T>(Collections.<T> emptyList());
+        return new ListResultSet<>(Collections.<T> emptyList());
 
       case 1: {
         // Only one key requested, use a faster equality lookup.
         //
         final T entity = get(keySet.iterator().next());
         if (entity != null) {
-          return new ListResultSet<T>(Collections.singletonList(entity));
+          return new ListResultSet<>(Collections.singletonList(entity));
         }
-        return new ListResultSet<T>(Collections.<T> emptyList());
+        return new ListResultSet<>(Collections.<T> emptyList());
       }
 
       default:
@@ -144,7 +144,7 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
       if (!rs.next()) {
         rs.close();
         ps.close();
-        return new ListResultSet<T>(Collections.<T> emptyList());
+        return new ListResultSet<>(Collections.<T> emptyList());
       }
     } catch (SQLException err) {
       try {
@@ -154,7 +154,7 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
       }
       throw convertError("fetch", err);
     }
-    return new JdbcResultSet<T, K>(this, rs, ps);
+    return new JdbcResultSet<>(this, rs, ps);
   }
 
   @Override
@@ -297,7 +297,7 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
     try {
       PreparedStatement ps = null;
       try {
-        List<T> allInstances = new ArrayList<T>();
+        List<T> allInstances = new ArrayList<>();
         for (final T o : instances) {
           if (ps == null) {
             ps = schema.getConnection().prepareStatement(getUpdateOneSql());
@@ -306,7 +306,7 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
           int updateCount = ps.executeUpdate();
           if (updateCount != 1) {
             if (inserts == null) {
-              inserts = new ArrayList<T>();
+              inserts = new ArrayList<>();
             }
             inserts.add(o);          }
           allInstances.add(o);
@@ -339,7 +339,7 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
       PreparedStatement ps = null;
       try {
         int cnt = 0;
-        List<T> allInstances = new ArrayList<T>();
+        List<T> allInstances = new ArrayList<>();
         for (final T o : instances) {
           if (ps == null) {
             ps = schema.getConnection().prepareStatement(getUpdateOneSql());
@@ -359,7 +359,7 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
             for (T o : allInstances) {
               if (states.length <= i || states[i] != 1) {
                 if (inserts == null) {
-                  inserts = new ArrayList<T>(cnt - i);
+                  inserts = new ArrayList<>(cnt - i);
                 }
                 inserts.add(o);
               }

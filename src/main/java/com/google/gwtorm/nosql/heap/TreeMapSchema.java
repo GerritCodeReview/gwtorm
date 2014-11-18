@@ -52,7 +52,7 @@ public abstract class TreeMapSchema extends GenericSchema {
       boolean order) {
     db.lock.lock();
     try {
-      final List<Row> res = new ArrayList<Row>();
+      final List<Row> res = new ArrayList<>();
       for (Map.Entry<byte[], byte[]> ent : entries(fromKey, toKey)) {
         res.add(new Row(ent.getKey(), ent.getValue()));
 
@@ -60,7 +60,7 @@ public abstract class TreeMapSchema extends GenericSchema {
           break;
         }
       }
-      return new ListResultSet<Row>(res);
+      return new ListResultSet<>(res);
     } finally {
       db.lock.unlock();
     }

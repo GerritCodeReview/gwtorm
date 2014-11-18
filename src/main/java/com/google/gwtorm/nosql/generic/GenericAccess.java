@@ -221,15 +221,15 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
     b.addRaw(toKey);
     toKey = b.toByteArray();
 
-    final ArrayList<T> res = new ArrayList<T>();
+    final ArrayList<T> res = new ArrayList<>();
     byte[] lastKey = fromKey;
 
     SCAN: for (;;) {
       List<CandidateRow> scanned;
       if (0 < limit) {
-        scanned = new ArrayList<CandidateRow>(limit);
+        scanned = new ArrayList<>(limit);
       } else {
-        scanned = new ArrayList<CandidateRow>();
+        scanned = new ArrayList<>();
       }
 
       boolean needData = false;
@@ -247,9 +247,8 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
         // object stored within. For these rows we need to fetch the real
         // data row and join it against the index information.
         //
-        HashMap<ByteString, CandidateRow> byKey =
-            new HashMap<ByteString, CandidateRow>();
-        List<byte[]> toFetch = new ArrayList<byte[]>(scanned.size());
+        HashMap<ByteString, CandidateRow> byKey = new HashMap<>();
+        List<byte[]> toFetch = new ArrayList<>(scanned.size());
 
         for (CandidateRow idxRow : scanned) {
           if (!idxRow.hasData()) {
@@ -329,7 +328,7 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
       lastKey = b.toByteArray();
     }
 
-    return new ListResultSet<T>(res);
+    return new ListResultSet<>(res);
   }
 
   @Override

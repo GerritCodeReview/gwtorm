@@ -29,9 +29,9 @@ public abstract class SchemaModel {
   protected final Map<String, SequenceModel> sequences;
 
   protected SchemaModel() {
-    allNames = new HashSet<String>();
-    relations = new TreeMap<String, RelationModel>();
-    sequences = new TreeMap<String, SequenceModel>();
+    allNames = new HashSet<>();
+    relations = new TreeMap<>();
+    sequences = new TreeMap<>();
   }
 
   protected void add(final RelationModel r) throws OrmException {

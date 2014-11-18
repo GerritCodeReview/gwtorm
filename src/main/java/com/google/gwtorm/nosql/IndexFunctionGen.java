@@ -60,7 +60,7 @@ class IndexFunctionGen<T> implements Opcodes {
     classLoader = loader;
     query = qm;
 
-    myFields = new ArrayList<QueryModel.OrderBy>();
+    myFields = new ArrayList<>();
 
     // Only add each parameter column once, but in the order used.
     // This avoids a range test on the same column from duplicating
@@ -95,7 +95,7 @@ class IndexFunctionGen<T> implements Opcodes {
   }
 
   private static List<ColumnModel> leaves(List<ColumnModel> in) {
-    ArrayList<ColumnModel> r = new ArrayList<ColumnModel>(in.size());
+    ArrayList<ColumnModel> r = new ArrayList<>(in.size());
     for (ColumnModel m : in) {
       if (m.isNested()) {
         r.addAll(m.getAllLeafColumns());
@@ -107,7 +107,7 @@ class IndexFunctionGen<T> implements Opcodes {
   }
 
   private static List<QueryModel.OrderBy> orderByLeaves(List<QueryModel.OrderBy> in) {
-    ArrayList<QueryModel.OrderBy> r = new ArrayList<QueryModel.OrderBy>(in.size());
+    ArrayList<QueryModel.OrderBy> r = new ArrayList<>(in.size());
     for (QueryModel.OrderBy m : in) {
       if (m.column.isNested()) {
         for (ColumnModel c : m.column.getAllLeafColumns()) {
@@ -198,7 +198,7 @@ class IndexFunctionGen<T> implements Opcodes {
     mv.visitTypeInsn(CHECKCAST, pojoType.getInternalName());
     mv.visitVarInsn(ASTORE, 1);
 
-    Set<ColumnModel> checked = new HashSet<ColumnModel>();
+    Set<ColumnModel> checked = new HashSet<>();
     for (QueryModel.OrderBy orderby : myFields) {
       checkNotNullFields(Collections.singleton(orderby.column), checked, mv, cgs);
     }

@@ -147,7 +147,7 @@ class AccessGen implements Opcodes {
   @SuppressWarnings({"unchecked", "rawtypes"})
   private void initQueryIndexes(final Class<?> clazz) throws OrmException {
     final Collection<QueryModel> queries = model.getQueries();
-    final ArrayList<IndexFunction> indexes = new ArrayList<IndexFunction>();
+    final ArrayList<IndexFunction> indexes = new ArrayList<>();
     for (QueryModel m : queries) {
       if (needsIndexFunction(m)) {
         indexes.add(new IndexFunctionGen(classLoader, m, modelClass).create());
@@ -521,7 +521,7 @@ class AccessGen implements Opcodes {
       case 0: // nil node used to join other nodes together
       case QueryParser.WHERE:
       case QueryParser.AND: {
-        List<Tree> res = new ArrayList<Tree>();
+        List<Tree> res = new ArrayList<>();
         for (int i = 0; i < node.getChildCount(); i++) {
           res.addAll(compareOpsOnly(node.getChild(i)));
         }

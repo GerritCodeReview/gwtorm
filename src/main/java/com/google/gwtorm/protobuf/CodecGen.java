@@ -74,7 +74,7 @@ class CodecGen<T> implements Opcodes {
     classLoader = loader;
     pojo = t;
     pojoType = Type.getType(pojo);
-    nestedCodecs = new HashMap<Class<?>, NestedCodec>();
+    nestedCodecs = new HashMap<>();
   }
 
   public ProtobufCodec<T> create() throws OrmException {
@@ -112,7 +112,7 @@ class CodecGen<T> implements Opcodes {
   }
 
   private static JavaColumnModel[] scanFields(Class<?> in) throws OrmException {
-    final Collection<JavaColumnModel> col = new ArrayList<JavaColumnModel>();
+    final Collection<JavaColumnModel> col = new ArrayList<>();
     while (in != null) {
       for (final Field f : JavaColumnModel.getDeclaredFields(in)) {
         if (f.getAnnotation(Column.class) != null) {

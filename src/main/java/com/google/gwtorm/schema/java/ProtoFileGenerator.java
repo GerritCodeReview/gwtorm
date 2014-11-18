@@ -54,8 +54,8 @@ class ProtoFileGenerator {
   ProtoFileGenerator(String schemaName, Collection<RelationModel> relations) {
     this.schemaName = schemaName;
     this.rels = relations;
-    this.seen = new HashSet<String>();
-    this.collisions = new HashSet<String>();
+    this.seen = new HashSet<>();
+    this.collisions = new HashSet<>();
   }
 
   void print(PrintWriter out) {
@@ -181,14 +181,14 @@ class ProtoFileGenerator {
   }
 
   private static List<ColumnModel> sortColumns(Collection<ColumnModel> cols) {
-    ArrayList<ColumnModel> list = new ArrayList<ColumnModel>(cols);
+    ArrayList<ColumnModel> list = new ArrayList<>(cols);
     Collections.sort(list, COLUMN_COMPARATOR);
     return list;
   }
 
   private static List<RelationModel> sortRelations(
       Collection<RelationModel> rels) {
-    ArrayList<RelationModel> list = new ArrayList<RelationModel>(rels);
+    ArrayList<RelationModel> list = new ArrayList<>(rels);
     Collections.sort(list, RELATION_COMPARATOR);
     return list;
   }

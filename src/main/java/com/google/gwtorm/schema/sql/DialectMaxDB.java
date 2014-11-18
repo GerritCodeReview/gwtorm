@@ -59,7 +59,7 @@ public class DialectMaxDB extends SqlDialect {
       final ResultSet rs =
           s.executeQuery("SELECT sequence_name FROM sequences");
       try {
-        HashSet<String> sequences = new HashSet<String>();
+        HashSet<String> sequences = new HashSet<>();
         while (rs.next()) {
           sequences.add(rs.getString(1).toLowerCase());
         }

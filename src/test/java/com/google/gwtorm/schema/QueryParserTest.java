@@ -67,7 +67,7 @@ public class QueryParserTest {
   protected Tree parse(final String str) throws QueryParseException {
     final RelationModel dummy = new RelationModel() {
       {
-        final Collection<ColumnModel> c = new ArrayList<ColumnModel>();
+        final Collection<ColumnModel> c = new ArrayList<>();
         try {
           c.add(new DummyColumn(1, "name"));
           c.add(new DummyColumn(2, "a"));

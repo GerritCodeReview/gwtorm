@@ -63,7 +63,7 @@ public class SimpleDataSource implements DataSource {
     if (driverName != null) {
       ClassLoader cl = threadCL();
       if (classpath != null && classpath.length() > 0) {
-        final List<URL> urls = new ArrayList<URL>();
+        final List<URL> urls = new ArrayList<>();
         for (final String path : classpath.split(File.pathSeparator)) {
           try {
             urls.add(new URL(path));

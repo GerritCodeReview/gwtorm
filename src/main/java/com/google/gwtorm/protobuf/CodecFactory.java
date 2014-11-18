@@ -48,7 +48,7 @@ public final class CodecFactory {
       encoder = get(loader, cacheName);
     }
     if (encoder == null) {
-      final CodecGen<T> gen = new CodecGen<T>(loader, type);
+      final CodecGen<T> gen = new CodecGen<>(loader, type);
       try {
         encoder = gen.create();
       } catch (OrmException e) {
