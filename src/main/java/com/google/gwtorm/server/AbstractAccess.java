@@ -43,20 +43,20 @@ public abstract class AbstractAccess<E, K extends Key<?>>
 
   @Override
   public ResultSet<E> get(final Iterable<K> keys) throws OrmException {
-    final ArrayList<E> r = new ArrayList<E>();
+    final ArrayList<E> r = new ArrayList<>();
     for (final K key : keys) {
       final E o = get(key);
       if (o != null) {
         r.add(o);
       }
     }
-    return new ListResultSet<E>(r);
+    return new ListResultSet<>(r);
   }
 
   @Override
   public Map<K, E> toMap(final Iterable<E> c) {
     try {
-      final HashMap<K, E> r = new HashMap<K, E>();
+      final HashMap<K, E> r = new HashMap<>();
       for (final E e : c) {
         r.put(primaryKey(e), e);
       }

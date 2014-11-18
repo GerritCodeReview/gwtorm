@@ -62,7 +62,7 @@ class JavaRelationModel extends RelationModel {
   }
 
   private void initColumns() throws OrmException {
-    final List<JavaColumnModel> col = new ArrayList<JavaColumnModel>();
+    final List<JavaColumnModel> col = new ArrayList<>();
     Class<?> in = entityType;
     while (in != null) {
       for (final Field f : JavaColumnModel.getDeclaredFields(in)) {

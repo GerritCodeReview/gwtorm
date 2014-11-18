@@ -37,7 +37,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class SqlDialect {
   private static final List<SqlDialect> DIALECTS =
-      new CopyOnWriteArrayList<SqlDialect>();
+      new CopyOnWriteArrayList<>();
 
   static {
     DIALECTS.add(new DialectH2());
@@ -66,7 +66,7 @@ public abstract class SqlDialect {
   protected final Map<Integer, String> typeNames;
 
   protected SqlDialect() {
-    types = new HashMap<Class<?>, SqlTypeInfo>();
+    types = new HashMap<>();
     types.put(Boolean.TYPE, new SqlBooleanTypeInfo());
     types.put(Short.TYPE, new SqlShortTypeInfo());
     types.put(Integer.TYPE, new SqlIntTypeInfo());
@@ -77,7 +77,7 @@ public abstract class SqlDialect {
     types.put(java.sql.Timestamp.class, new SqlTimestampTypeInfo());
     types.put(byte[].class, new SqlByteArrayTypeInfo());
 
-    typeNames = new HashMap<Integer, String>();
+    typeNames = new HashMap<>();
     typeNames.put(Types.VARBINARY, "BLOB");
     typeNames.put(Types.DATE, "DATE");
     typeNames.put(Types.SMALLINT, "SMALLINT");
@@ -225,7 +225,7 @@ public abstract class SqlDialect {
     final String[] types = new String[] {"TABLE"};
     final ResultSet rs = db.getMetaData().getTables(null, null, null, types);
     try {
-      Set<String> tables = new HashSet<String>();
+      Set<String> tables = new HashSet<>();
       while (rs.next()) {
         tables.add(rs.getString("TABLE_NAME").toLowerCase());
       }
@@ -273,7 +273,7 @@ public abstract class SqlDialect {
 
     ResultSet rs = meta.getIndexInfo(null, null, tableName, false, true);
     try {
-      Set<String> indexes = new HashSet<String>();
+      Set<String> indexes = new HashSet<>();
       while (rs.next()) {
         indexes.add(rs.getString("INDEX_NAME").toLowerCase());
       }
@@ -312,7 +312,7 @@ public abstract class SqlDialect {
 
     ResultSet rs = meta.getColumns(null, null, tableName, null);
     try {
-      HashSet<String> columns = new HashSet<String>();
+      HashSet<String> columns = new HashSet<>();
       while (rs.next()) {
         columns.add(rs.getString("COLUMN_NAME").toLowerCase());
       }

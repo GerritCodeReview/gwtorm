@@ -68,7 +68,7 @@ public class QueryModel {
   }
 
   public List<ColumnModel> getParameters() {
-    final ArrayList<ColumnModel> r = new ArrayList<ColumnModel>();
+    final ArrayList<ColumnModel> r = new ArrayList<>();
     if (parsedQuery != null) {
       findParameters(r, parsedQuery);
     }
@@ -100,7 +100,7 @@ public class QueryModel {
   }
 
   public List<OrderBy> getOrderBy() {
-    ArrayList<OrderBy> r = new ArrayList<OrderBy>();
+    ArrayList<OrderBy> r = new ArrayList<>();
     if (parsedQuery != null) {
       Tree node = findOrderBy(parsedQuery);
       if (node != null) {

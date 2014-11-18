@@ -36,7 +36,7 @@ public class ListResultSet<T> implements ResultSet<T> {
     if (items == null) {
       throw new IllegalStateException("Results already obtained");
     }
-    final List<T> r = new ArrayList<T>(items);
+    final List<T> r = new ArrayList<>(items);
     items = null;
     return r;
   }

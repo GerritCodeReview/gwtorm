@@ -52,8 +52,8 @@ public class PhoneBookDbTestCase {
     final Properties p = new Properties();
     p.setProperty("driver", org.h2.Driver.class.getName());
     p.setProperty("url", "jdbc:h2:mem:PhoneBookDb" + (runCount++));
-    db = new Database<PhoneBookDb>(new SimpleDataSource(p), PhoneBookDb.class);
-    openSchemas = new ArrayList<PhoneBookDb>();
+    db = new Database<>(new SimpleDataSource(p), PhoneBookDb.class);
+    openSchemas = new ArrayList<>();
   }
 
   @After
@@ -220,7 +220,7 @@ public class PhoneBookDbTestCase {
   @Test
   public void testInsertManyPeople() throws Exception {
     final PhoneBookDb schema = openAndCreate();
-    final ArrayList<Person> all = new ArrayList<Person>();
+    final ArrayList<Person> all = new ArrayList<>();
     all.add(new Person(new Person.Key("Bob"), 18));
     all.add(new Person(new Person.Key("Mary"), 22));
     all.add(new Person(new Person.Key("Zak"), 33));
@@ -316,7 +316,7 @@ public class PhoneBookDbTestCase {
   @Test
   public void testFetchByAge() throws Exception {
     final PhoneBookDb schema = openAndCreate();
-    final ArrayList<Person> all = new ArrayList<Person>();
+    final ArrayList<Person> all = new ArrayList<>();
     all.add(new Person(new Person.Key("Bob"), 18));
     all.add(new Person(new Person.Key("Mary"), 22));
     all.add(new Person(new Person.Key("Zak"), 33));
@@ -331,7 +331,7 @@ public class PhoneBookDbTestCase {
   @Test
   public void testFetchNotPerson() throws Exception {
     final PhoneBookDb schema = openAndCreate();
-    final ArrayList<Person> all = new ArrayList<Person>();
+    final ArrayList<Person> all = new ArrayList<>();
     all.add(new Person(new Person.Key("Bob"), 18));
     all.add(new Person(new Person.Key("Mary"), 22));
     all.add(new Person(new Person.Key("Zak"), 33));

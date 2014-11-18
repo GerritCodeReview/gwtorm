@@ -302,7 +302,7 @@ class AccessGen implements Opcodes {
     cgs.resetColumnIndex(0);
 
     if (type != DmlType.DELETE) {
-      final List<ColumnModel> cols = new ArrayList<ColumnModel>();
+      final List<ColumnModel> cols = new ArrayList<>();
       cols.addAll(model.getDependentFields());
       cols.addAll(model.getRowVersionFields());
       for (final ColumnModel field : cols) {
@@ -397,7 +397,7 @@ class AccessGen implements Opcodes {
       cgs.resetColumnIndex(oldIdx);
     }
 
-    final List<ColumnModel> cols = new ArrayList<ColumnModel>();
+    final List<ColumnModel> cols = new ArrayList<>();
     cols.addAll(model.getDependentFields());
     cols.addAll(model.getRowVersionFields());
     cols.addAll(model.getPrimaryKeyColumns());

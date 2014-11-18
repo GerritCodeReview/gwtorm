@@ -162,14 +162,14 @@ public abstract class GenericSchema extends NoSqlSchema {
    * @throws OrmException the data store cannot process the request.
    */
   public ResultSet<Row> fetchRows(Iterable<byte[]> keys) throws OrmException {
-    List<Row> r = new ArrayList<Row>();
+    List<Row> r = new ArrayList<>();
     for (byte[] key : keys) {
       byte[] val = fetchRow(key);
       if (val != null) {
         r.add(new Row(key, val));
       }
     }
-    return new ListResultSet<Row>(r);
+    return new ListResultSet<>(r);
   }
 
   /**

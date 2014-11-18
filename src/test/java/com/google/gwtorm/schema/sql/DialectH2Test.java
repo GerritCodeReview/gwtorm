@@ -50,9 +50,9 @@ public class DialectH2Test extends SqlDialectTest {
     p.setProperty("driver", org.h2.Driver.class.getName());
     p.setProperty("url", db.getMetaData().getURL());
     phoneBook =
-        new Database<PhoneBookDb>(new SimpleDataSource(p), PhoneBookDb.class);
+        new Database<>(new SimpleDataSource(p), PhoneBookDb.class);
     phoneBook2 =
-        new Database<PhoneBookDb2>(new SimpleDataSource(p), PhoneBookDb2.class);
+        new Database<>(new SimpleDataSource(p), PhoneBookDb2.class);
   }
 
   @After

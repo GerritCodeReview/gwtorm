@@ -153,7 +153,7 @@ public class ProtobufEncoderTest {
     ProtobufCodec<StringList> e = CodecFactory.encoder(StringList.class);
 
     StringList list = new StringList();
-    list.list = new ArrayList<String>();
+    list.list = new ArrayList<>();
     list.list.add("moe");
     list.list.add("larry");
 
@@ -173,7 +173,7 @@ public class ProtobufEncoderTest {
     ProtobufCodec<StringSet> e = CodecFactory.encoder(StringSet.class);
 
     StringSet list = new StringSet();
-    list.list = new TreeSet<String>();
+    list.list = new TreeSet<>();
     list.list.add("larry");
     list.list.add("moe");
 
@@ -193,7 +193,7 @@ public class ProtobufEncoderTest {
     ProtobufCodec<PersonList> e = CodecFactory.encoder(PersonList.class);
 
     PersonList list = new PersonList();
-    list.people = new ArrayList<Person>();
+    list.people = new ArrayList<>();
     list.people.add(new Person(new Person.Key("larry"), 1 << 16));
     list.people.add(new Person(new Person.Key("curly"), 1));
     list.people.add(new Person(new Person.Key("moe"), -1));
@@ -208,7 +208,7 @@ public class ProtobufEncoderTest {
     ProtobufCodec<ItemList> e = CodecFactory.encoder(ItemList.class);
 
     ItemList list = new ItemList();
-    list.list = new ArrayList<Item>();
+    list.list = new ArrayList<>();
     list.list.add(new Item());
     list.list.add(new Item());
 

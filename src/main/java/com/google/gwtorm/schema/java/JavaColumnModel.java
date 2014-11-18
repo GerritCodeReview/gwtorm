@@ -99,7 +99,7 @@ public class JavaColumnModel extends ColumnModel {
 
   private void initNested() throws OrmException {
     if (isNested()) {
-      final List<JavaColumnModel> col = new ArrayList<JavaColumnModel>();
+      final List<JavaColumnModel> col = new ArrayList<>();
       Class<?> in = primitiveType;
       while (in != null) {
         for (final Field f : getDeclaredFields(in)) {

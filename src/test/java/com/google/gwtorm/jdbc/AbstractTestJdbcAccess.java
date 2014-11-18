@@ -86,7 +86,7 @@ public abstract class AbstractTestJdbcAccess {
         @Override
         Iterable<Data> createIterable(Data... data) {
           List<Data> list = Arrays.asList(data);
-          return new ListResultSet<Data>(list);
+          return new ListResultSet<>(list);
         }
       };
 

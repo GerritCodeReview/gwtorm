@@ -94,7 +94,7 @@ public class SchemaGen<S extends AbstractSchema> implements Opcodes {
   }
 
   private void defineRelationClasses() throws OrmException {
-    relations = new ArrayList<RelationGen>();
+    relations = new ArrayList<>();
     for (final RelationModel rel : schema.getRelations()) {
       final Class<?> a = accessGen.create(classLoader, rel);
       relations.add(new RelationGen(rel, a));

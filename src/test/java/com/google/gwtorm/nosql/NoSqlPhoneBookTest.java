@@ -43,8 +43,8 @@ public class NoSqlPhoneBookTest  {
 
   @Before
   public void setUp() throws Exception {
-    db = new MemoryDatabase<PhoneBookDb>(PhoneBookDb.class);
-    openSchemas = new ArrayList<PhoneBookDb>();
+    db = new MemoryDatabase<>(PhoneBookDb.class);
+    openSchemas = new ArrayList<>();
   }
 
   @After
@@ -180,7 +180,7 @@ public class NoSqlPhoneBookTest  {
   @Test
   public void testInsertManyPeople() throws Exception {
     final PhoneBookDb schema = open();
-    final ArrayList<Person> all = new ArrayList<Person>();
+    final ArrayList<Person> all = new ArrayList<>();
     all.add(new Person(new Person.Key("Bob"), 18));
     all.add(new Person(new Person.Key("Mary"), 22));
     all.add(new Person(new Person.Key("Zak"), 33));
@@ -249,7 +249,7 @@ public class NoSqlPhoneBookTest  {
   @Test
   public void testFetchByAge() throws Exception {
     final PhoneBookDb schema = open();
-    final ArrayList<Person> all = new ArrayList<Person>();
+    final ArrayList<Person> all = new ArrayList<>();
     all.add(new Person(new Person.Key("Bob"), 18));
     all.add(new Person(new Person.Key("Mary"), 22));
     all.add(new Person(new Person.Key("Zak"), 33));

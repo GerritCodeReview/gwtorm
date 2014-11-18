@@ -84,7 +84,7 @@ public class Database<T extends Schema> implements SchemaFactory<T> {
     schemaModel = new JavaSchemaModel(schema);
     final GeneratedClassLoader loader = newLoader(schema);
     final Class<T> impl = generate(dialect, loader);
-    implFactory = new SchemaConstructorGen<T>(loader, impl, this).create();
+    implFactory = new SchemaConstructorGen<>(loader, impl, this).create();
     implDialect = dialect;
   }
 

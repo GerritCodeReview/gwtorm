@@ -76,7 +76,7 @@ public abstract class NoSqlDatabase<T extends Schema, S extends NoSqlSchema, A e
     schemaModel = new JavaSchemaModel(appSchema);
     final GeneratedClassLoader loader = newLoader(appSchema);
     final Class<T> impl = generate(schemaBaseType, accessBaseType, loader);
-    implFactory = new SchemaConstructorGen<T>(loader, impl, this).create();
+    implFactory = new SchemaConstructorGen<>(loader, impl, this).create();
   }
 
   @Override

@@ -132,7 +132,7 @@ public class DialectMySQL extends SqlDialect {
     final String[] types = new String[] {"TABLE"};
     final ResultSet rs = db.getMetaData().getTables(null, null, null, types);
     try {
-      HashSet<String> tables = new HashSet<String>();
+      HashSet<String> tables = new HashSet<>();
       while (rs.next()) {
         final String name = rs.getString("TABLE_NAME");
         if (!isSequence(db, name)) {
@@ -150,7 +150,7 @@ public class DialectMySQL extends SqlDialect {
     final String[] types = new String[] {"TABLE"};
     final ResultSet rs = db.getMetaData().getTables(null, null, null, types);
     try {
-      HashSet<String> sequences = new HashSet<String>();
+      HashSet<String> sequences = new HashSet<>();
       while (rs.next()) {
         final String name = rs.getString("TABLE_NAME");
         if (isSequence(db, name)) {

@@ -55,7 +55,7 @@ public class DialectOracle extends SqlDialect {
     try {
       ResultSet rs = s.executeQuery("SELECT table_name FROM user_tables");
       try {
-        Set<String> tables = new HashSet<String>();
+        Set<String> tables = new HashSet<>();
         while (rs.next()) {
           tables.add(rs.getString(1).toLowerCase());
         }
@@ -77,7 +77,7 @@ public class DialectOracle extends SqlDialect {
       s.setString(1, tableName.toUpperCase());
       ResultSet rs = s.executeQuery();
       try {
-        Set<String> indexes = new HashSet<String>();
+        Set<String> indexes = new HashSet<>();
         while (rs.next()) {
           indexes.add(rs.getString(1).toLowerCase());
         }
@@ -96,7 +96,7 @@ public class DialectOracle extends SqlDialect {
     try {
       ResultSet rs = s.executeQuery("SELECT sequence_name FROM user_sequences");
       try {
-        Set<String> sequences = new HashSet<String>();
+        Set<String> sequences = new HashSet<>();
         while (rs.next()) {
           sequences.add(rs.getString(1).toLowerCase());
         }

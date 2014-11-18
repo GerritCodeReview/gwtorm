@@ -34,7 +34,7 @@ public class CodeGenSupport implements Opcodes {
   private Type entityType;
 
   private int lastLocal = 2;
-  private List<Integer> freeLocals = new ArrayList<Integer>(4);
+  private List<Integer> freeLocals = new ArrayList<>(4);
 
   public CodeGenSupport(final MethodVisitor method) {
     mv = method;

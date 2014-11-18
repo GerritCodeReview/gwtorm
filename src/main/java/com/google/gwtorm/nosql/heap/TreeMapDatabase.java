@@ -66,7 +66,7 @@ abstract class TreeMapDatabase<T extends Schema, S extends TreeMapSchema, A exte
     super(schemaBaseType, accessBaseType, appSchema);
 
     lock = new ReentrantLock(true);
-    table = new TreeMap<byte[], byte[]>(HeapKeyComparator.INSTANCE);
+    table = new TreeMap<>(HeapKeyComparator.INSTANCE);
   }
 
   /**
