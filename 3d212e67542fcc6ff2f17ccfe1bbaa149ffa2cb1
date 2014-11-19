@@ -46,6 +46,30 @@
       "revId": "3d212e67542fcc6ff2f17ccfe1bbaa149ffa2cb1",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a072fcb_d7db3c7b",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/SqlDialect.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 390,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2014-11-19T00:38:20Z",
+      "side": 1,
+      "message": "\u003e All this let me think that we could just leave it as is and not to do it at all\n\nConsidering the migration where this will be used is intended to be reverted on master, I agree. I will abandon this.",
+      "parentUuid": "9a900f9b_2fffe9c1",
+      "range": {
+        "startLine": 381,
+        "startChar": 0,
+        "endLine": 390,
+        "endChar": 49
+      },
+      "revId": "3d212e67542fcc6ff2f17ccfe1bbaa149ffa2cb1",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
