@@ -22,6 +22,30 @@
       "revId": "dd10a47df14cccc1b8a42cfe4fa15aff6ec3cba8",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a072fcb_b7ccc8c9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2014-11-19T00:12:14Z",
+      "side": 1,
+      "message": "I\u0027m not sure that it\u0027s actually Kepler specific, so it was a bit misleading to mention it in the commit message.\n\nI\u0027ve just reset the project back to origin/master and reloaded, and can\u0027t get it to reproduce this setting update.\n\nWill abandon.",
+      "parentUuid": "7a751b3d_cecc23cb",
+      "range": {
+        "startLine": 9,
+        "startChar": 42,
+        "endLine": 9,
+        "endChar": 48
+      },
+      "revId": "dd10a47df14cccc1b8a42cfe4fa15aff6ec3cba8",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
