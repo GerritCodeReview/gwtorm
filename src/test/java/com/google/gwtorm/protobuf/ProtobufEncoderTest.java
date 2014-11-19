@@ -79,8 +79,7 @@ public class ProtobufEncoderTest {
     assertNull(a.location());
 
     Person.Key k = new Person.Key("bob");
-    @SuppressWarnings("unused")
-    Person p = new Person(k, 42);
+    new Person(k, 42);
     Address b = new Address(new Address.Key(k, "ny"), "ny");
 
     byte[] act = e.encodeToByteArray(b);
