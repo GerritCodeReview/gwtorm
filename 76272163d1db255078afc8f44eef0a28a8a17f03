@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa8f55a_44688ee7",
+        "filename": "src/test/java/com/google/gwtorm/nosql/IndexFunctionTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1010008
+      },
+      "writtenOn": "2014-11-26T15:05:02Z",
+      "side": 1,
+      "message": "This constructor doesn\u0027t have any side effects does it? In which case you could just delete the whole line. But then we\u0027ll have two identical asserts in a row. So there is something else wrong here. Can we figure out what this pair of lines was actually trying to test?",
+      "revId": "76272163d1db255078afc8f44eef0a28a8a17f03",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f434d81_1e4c2d9e",
+        "filename": "src/test/java/com/google/gwtorm/protobuf/ProtobufEncoderTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1010008
+      },
+      "writtenOn": "2014-11-26T15:05:02Z",
+      "side": 1,
+      "message": "Similar comment, if this has no side effects then the constructor call can be dropped. But this one was explicitly suppressed. What is really going on?",
+      "revId": "76272163d1db255078afc8f44eef0a28a8a17f03",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
