@@ -72,9 +72,6 @@ public class IndexFunctionTest {
 
     p = new Person(new Person.Key(null), 0);
     assertFalse(idx.includes(p));
-
-    b = new IndexKeyBuilder();
-    assertFalse(idx.includes(p));
   }
 
   @Test
