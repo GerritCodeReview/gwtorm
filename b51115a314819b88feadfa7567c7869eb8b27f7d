@@ -22,6 +22,30 @@
       "revId": "b51115a314819b88feadfa7567c7869eb8b27f7d",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ce13adda_e96c55fa",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1010008
+      },
+      "writtenOn": "2015-01-09T17:46:04Z",
+      "side": 1,
+      "message": "I\u0027d say there\u0027s at least a 50/50 chance if I hadn\u0027t included this excuse, you\u0027d have said \"Why not implement createIndex?\" :)",
+      "parentUuid": "ee0eb1b4_aa0acf15",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 61
+      },
+      "revId": "b51115a314819b88feadfa7567c7869eb8b27f7d",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
