@@ -45,6 +45,7 @@ public class JdbcExecutor implements StatementExecutor {
     }
   }
 
+  @Override
   public void close() {
     try {
       stmt.close();

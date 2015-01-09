@@ -55,7 +55,7 @@ package com.google.gwtorm.server;
  * }
  * </pre>
  */
-public interface Schema {
+public interface Schema extends AutoCloseable {
   /** Commit a pending transaction. */
   public void commit() throws OrmException;
 
@@ -72,7 +72,7 @@ public interface Schema {
    * @param e executor to perform (or log) the statements.
    * @throws OrmException one or more objects could not be added to the schema.
    */
-  void updateSchema(StatementExecutor e) throws OrmException;
+  public void updateSchema(StatementExecutor e) throws OrmException;
 
   /**
    * Drop any unused columns, tables, or sequences.
@@ -82,15 +82,12 @@ public interface Schema {
    * @param e executor to perform (or log) the statements.
    * @throws OrmException one or more drops could not be completed.
    */
-  void pruneSchema(StatementExecutor e) throws OrmException;
+  public void pruneSchema(StatementExecutor e) throws OrmException;
 
-  /**
-   * @return access interface for each declared relation.
-   */
-  Access<?, ?>[] allRelations();
+  /** @return access interface for each declared relation. */
+  public Access<?, ?>[] allRelations();
 
-  /**
-   * Close the schema and release all resources.
-   */
-  void close();
+  /** Close the schema and release all resources. */
+  @Override
+  public void close();
 }

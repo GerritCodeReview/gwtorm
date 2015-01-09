@@ -14,8 +14,10 @@
 
 package com.google.gwtorm.server;
 
-
 /** Executes statements against the schema. */
-public interface StatementExecutor {
+public interface StatementExecutor extends AutoCloseable {
   void execute(String sql) throws OrmException;
+
+  @Override
+  void close();
 }
