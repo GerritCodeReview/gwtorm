@@ -147,6 +147,10 @@ public class DialectPostgreSQLTest extends SqlDialectTest {
     Set<String> s = dialect.listIndexes(db, "foo");
     assertEquals(2, s.size());
     assertTrue(s.contains("foo_primary_ind"));
+
+    dialect.dropIndex(executor, "foo", "foo_primary_ind");
+    dialect.dropIndex(executor, "foo", "foo_second_ind");
+    assertEquals(Collections.emptySet(), dialect.listIndexes(db, "foo"));
     assertTrue(s.contains("foo_second_ind"));
   }
 
