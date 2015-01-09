@@ -96,6 +96,11 @@ public class DialectMySQL extends SqlDialect {
   }
 
   @Override
+  protected String getDropIndexSql(String tableName, String name) {
+    return "DROP INDEX " + name + " ON " + tableName;
+  }
+
+  @Override
   protected String getNextSequenceValueSql(final String seqname) {
     return seqname;
   }

@@ -382,6 +382,23 @@ public abstract class SqlDialect {
   public abstract void renameColumn(StatementExecutor e, String tableName,
       String fromColumn, ColumnModel col) throws OrmException;
 
+  /**
+   * Drop one index from a table.
+   *
+   * @param e statement to use to execute the SQL command(s).
+   * @param tableName table to rename the index in.
+   * @param name index name.
+   * @throws OrmException the index could not be renamed.
+   */
+  public void dropIndex(StatementExecutor e, String tableName, String name)
+      throws OrmException {
+    e.execute(getDropIndexSql(tableName, name));
+  }
+
+  protected String getDropIndexSql(String tableName, String name) {
+    return "DROP INDEX " + name;
+  }
+
   protected abstract String getNextSequenceValueSql(String seqname);
 
   /**

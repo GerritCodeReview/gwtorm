@@ -149,6 +149,10 @@ public class DialectMySQLTest extends SqlDialectTest {
     assertEquals(2, s.size());
     assertTrue(s.contains("foo_primary_ind"));
     assertTrue(s.contains("foo_second_ind"));
+
+    dialect.dropIndex(executor, "foo", "foo_primary_ind");
+    dialect.dropIndex(executor, "foo", "foo_second_ind");
+    assertEquals(Collections.emptySet(), dialect.listIndexes(db, "foo"));
   }
 
   @Test
