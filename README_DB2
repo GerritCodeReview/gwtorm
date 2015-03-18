@@ -1,0 +1,18 @@
+DB2 has an issue with availability of jdbc driver in public maven repository.
+
+To test DialectDB2 JDBC Type 4 driver is needed.
+
+1. Obtain the driver either from your local installation or download it from
+IBM DB2 site
+2. Install the driver:
+
+mvn install:install-file -DgroupId=com.ibm.db2 -DartifactId=db2jcc4 \
+  -Dversion=10.5 -Dpackaging=jar -Dfile=<path to db2jcc4.jar> -DgeneratePom=true
+
+mvn install:install-file -DgroupId=com.ibm.db2 -DartifactId=db2jcc_license_cu \
+  -Dversion=10.5 -Dpackaging=jar -Dfile=<path to db2jcc_license_cu.jar> \
+  -DgeneratePom=true
+
+3. Use specific maven profile to run DB2 related unit tests:
+
+mvn package -P db2

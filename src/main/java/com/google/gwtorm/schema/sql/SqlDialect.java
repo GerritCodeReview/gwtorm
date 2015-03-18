@@ -40,6 +40,7 @@ public abstract class SqlDialect {
       new CopyOnWriteArrayList<>();
 
   static {
+    DIALECTS.add(new DialectDB2());
     DIALECTS.add(new DialectH2());
     DIALECTS.add(new DialectPostgreSQL());
     DIALECTS.add(new DialectMySQL());
