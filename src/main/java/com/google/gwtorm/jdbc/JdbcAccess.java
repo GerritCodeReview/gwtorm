@@ -16,6 +16,7 @@ package com.google.gwtorm.jdbc;
 
 import com.google.common.base.Preconditions;
 import com.google.gwtorm.client.Key;
+import com.google.gwtorm.schema.sql.DialectDB2;
 import com.google.gwtorm.server.AbstractAccess;
 import com.google.gwtorm.server.Access;
 import com.google.gwtorm.server.ListResultSet;
@@ -452,9 +453,15 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
     }
   }
 
-  protected OrmException convertError(final String op, final SQLException err) {
+  protected OrmException convertError(final String op, SQLException err) {
     if (err.getCause() == null && err.getNextException() != null) {
-      err.initCause(err.getNextException());
+      // special case for IBM DB2. Exception cause is null:
+      // http://paste.openstack.org/show/193304/
+      if (schema.getDialect() instanceof DialectDB2) {
+        err = err.getNextException();
+      } else {
+        err.initCause(err.getNextException());
+      }
     }
     return schema.getDialect().convertError(op, getRelationName(), err);
   }
