@@ -259,6 +259,23 @@ limitations under the License.
 
   <profiles>
     <profile>
+      <id>db2</id>
+      <dependencies>
+        <dependency>
+          <groupId>com.ibm.db2</groupId>
+          <artifactId>db2jcc4</artifactId>
+          <version>10.5</version>
+          <scope>provided</scope>
+        </dependency>
+        <dependency>
+          <groupId>com.ibm.db2</groupId>
+          <artifactId>db2jcc_license_cu</artifactId>
+          <version>10.5</version>
+          <scope>provided</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
       <id>oracle</id>
       <dependencies>
         <dependency>
