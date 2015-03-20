@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "26856059_311bd0a0",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectDB2Test.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2015-03-20T05:09:26Z",
+      "side": 1,
+      "message": "Is this going to be a problem when gwtorm drops columns for the user? It reads to me like we might have to run this reorg command after we are doing dropping unused columns during a Gerrit schema upgrade.",
+      "range": {
+        "startLine": 169,
+        "startChar": 0,
+        "endLine": 172,
+        "endChar": 63
+      },
+      "revId": "8e64f1b1c5bb1d9612c7d17ebff3eabbd3df52c9",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
