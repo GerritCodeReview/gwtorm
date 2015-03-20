@@ -22,6 +22,30 @@
       "revId": "8e64f1b1c5bb1d9612c7d17ebff3eabbd3df52c9",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e6ec283e_bfbad703",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectDB2Test.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2015-03-20T05:48:09Z",
+      "side": 1,
+      "message": "DB2 is very serious about data integrity and make you work hard to shoot yourself in the foot. I\u0027m not a DBA, but I think that usual procedure of data migration is:\n\n* take a backup\n* DDL (with or without dropping columns)\n* take a backup (optional)\n* reorg table foo for all tables\n* DML\n\nCurrent Gerrit upgrade schema design doesn\u0027t fit good with above workflow.",
+      "parentUuid": "26856059_311bd0a0",
+      "range": {
+        "startLine": 169,
+        "startChar": 0,
+        "endLine": 172,
+        "endChar": 63
+      },
+      "revId": "8e64f1b1c5bb1d9612c7d17ebff3eabbd3df52c9",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
