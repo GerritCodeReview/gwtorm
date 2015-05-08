@@ -14,6 +14,8 @@
 
 package com.google.gwtorm.server;
 
+import com.google.common.annotations.VisibleForTesting;
+
 
 /** Base implementation any generated schema must implement. */
 public abstract class AbstractSchema implements Schema {
@@ -41,4 +43,18 @@ public abstract class AbstractSchema implements Schema {
    *         has been exhausted and no new values are available.
    */
   protected abstract long nextLong(String poolName) throws OrmException;
+
+  /**
+   * Mark the database as locked for access.
+   * <p>
+   * This method is only supposed to be used from unit tests, to verify that
+   * no database access takes place in different code paths. One typical
+   * example is to veriy that the data is loaded from the secondary index
+   * and not from the database.
+   * Implementation is dialect specific.
+   */
+  @VisibleForTesting
+  public void lockDatabaseAccess() {
+    throw new UnsupportedOperationException();
+  }
 }

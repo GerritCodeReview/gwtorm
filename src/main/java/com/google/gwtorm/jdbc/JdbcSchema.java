@@ -34,6 +34,7 @@ import java.util.Set;
 public abstract class JdbcSchema extends AbstractSchema {
   private final Database<?> dbDef;
   private Connection conn;
+  private boolean lockedDatabaseAccess;
 
   protected JdbcSchema(final Database<?> d) throws OrmException {
     dbDef = d;
@@ -41,6 +42,9 @@ public abstract class JdbcSchema extends AbstractSchema {
   }
 
   public final Connection getConnection() {
+    if (lockedDatabaseAccess) {
+      throw new IllegalStateException("Database access was locked");
+    }
     return conn;
   }
 
@@ -250,5 +254,10 @@ public abstract class JdbcSchema extends AbstractSchema {
       }
       conn = null;
     }
+  }
+
+  @Override
+  public void lockDatabaseAccess() {
+    lockedDatabaseAccess = true;
   }
 }
