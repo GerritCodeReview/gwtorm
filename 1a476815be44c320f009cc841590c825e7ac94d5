@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6d0019f0_1b4e3b4a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2015-05-08T07:20:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cd52e522_26b8d6d6",
+      "range": {
+        "startLine": 11,
+        "startChar": 37,
+        "endLine": 11,
+        "endChar": 45
+      },
+      "revId": "1a476815be44c320f009cc841590c825e7ac94d5",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cd52e522_e6a19ea5",
         "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcSchema.java",
         "patchSetId": 3
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "4d119541_ba8ab1e8",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcSchema.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2015-05-08T07:20:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cd52e522_e6a19ea5",
+      "range": {
+        "startLine": 46,
+        "startChar": 55,
+        "endLine": 46,
+        "endChar": 58
+      },
+      "revId": "1a476815be44c320f009cc841590c825e7ac94d5",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cd52e522_06bddac6",
         "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcSchema.java",
         "patchSetId": 3
@@ -59,6 +107,24 @@
       "writtenOn": "2015-05-08T06:51:54Z",
       "side": 1,
       "message": "Don\u0027t we also need an \"unlock\" method?",
+      "revId": "1a476815be44c320f009cc841590c825e7ac94d5",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d0019f0_3b49f741",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcSchema.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2015-05-08T07:20:16Z",
+      "side": 1,
+      "message": "Good question. I was undecided if we should have it or not. That why it is marked with RFC.",
+      "parentUuid": "cd52e522_06bddac6",
       "revId": "1a476815be44c320f009cc841590c825e7ac94d5",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
