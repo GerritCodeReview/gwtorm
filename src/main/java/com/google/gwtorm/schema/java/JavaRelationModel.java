@@ -78,6 +78,9 @@ class JavaRelationModel extends RelationModel {
   private void initQueriesAndKeys() throws OrmException {
     for (final Method m : accessType.getDeclaredMethods()) {
       if (m.getAnnotation(PrimaryKey.class) != null) {
+        if (m.isBridge()) {
+          continue;
+        }
         if (m.getReturnType() != entityType) {
           throw new OrmException("PrimaryKey " + m.getName() + " must return "
               + entityType.getName());
