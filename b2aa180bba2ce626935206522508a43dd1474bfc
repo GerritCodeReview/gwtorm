@@ -46,6 +46,30 @@
       "revId": "b2aa180bba2ce626935206522508a43dd1474bfc",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d7aada8_942004c8",
+        "filename": "src/main/java/com/google/gwtorm/schema/java/JavaRelationModel.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1003935
+      },
+      "writtenOn": "2015-05-11T08:16:25Z",
+      "side": 1,
+      "message": "Ok, looks good to me then.",
+      "parentUuid": "8d7aada8_34325021",
+      "range": {
+        "startLine": 81,
+        "startChar": 7,
+        "endLine": 83,
+        "endChar": 9
+      },
+      "revId": "b2aa180bba2ce626935206522508a43dd1474bfc",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
