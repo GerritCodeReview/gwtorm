@@ -22,6 +22,30 @@
       "revId": "b2aa180bba2ce626935206522508a43dd1474bfc",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d7aada8_34325021",
+        "filename": "src/main/java/com/google/gwtorm/schema/java/JavaRelationModel.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2015-05-11T08:11:10Z",
+      "side": 1,
+      "message": "It\u0027s not needed in else case. The problem is only related to overridden methods. For example consider AccountAccess class:\n\n  public interface AccountAccess extends Access\u003cAccount, Account.Id\u003e {\n  /** Locate an account by our locally generated identity. */\n  @Override\n  @PrimaryKey(\"accountId\")\n  Account get(Account.Id key) throws OrmException;\n  @Query(\"WHERE preferredEmail \u003d ? LIMIT 2\")\n  ResultSet\u003cAccount\u003e byPreferredEmail(String email) throws OrmException;\n  [...]\n\nFor the get() method java8 generates synthetic method, so that m.getReturnType() returns Object class and _not_ Account class. This confuses the if on the next line and exception is thrown. Methods annotated with Query are never overridden.",
+      "parentUuid": "8d7aada8_b4ebc0f0",
+      "range": {
+        "startLine": 81,
+        "startChar": 7,
+        "endLine": 83,
+        "endChar": 9
+      },
+      "revId": "b2aa180bba2ce626935206522508a43dd1474bfc",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
