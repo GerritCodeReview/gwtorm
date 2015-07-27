@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6d349e66_82eb5aea",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1010008
+      },
+      "writtenOn": "2015-07-27T19:37:49Z",
+      "side": 1,
+      "message": "Is this accurate? isBridge() is present in Java 7 as well. Or is this one of the features that was added to the JVM but never actually emitted by the Java compiler until 8?",
+      "range": {
+        "startLine": 7,
+        "startChar": 5,
+        "endLine": 7,
+        "endChar": 28
+      },
+      "revId": "233c781514ec195984eb3161ba1afbbde03ee1ac",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
