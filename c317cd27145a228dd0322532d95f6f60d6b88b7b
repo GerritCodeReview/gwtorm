@@ -22,6 +22,30 @@
       "revId": "c317cd27145a228dd0322532d95f6f60d6b88b7b",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8df712e1_830ffe6b",
+        "filename": "pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 362,
+      "author": {
+        "id": 1010008
+      },
+      "writtenOn": "2015-07-27T19:40:08Z",
+      "side": 1,
+      "message": "Probably? IIUC you can also have Maven figure this out for you:\n\nhttp://maven.apache.org/plugins/maven-javadoc-plugin/javadoc-mojo.html#detectJavaApiLink\n\nBut I don\u0027t think it\u0027s important enough to spend too much time getting exactly right. Nobody uses gwtorm, let alone reads the javadoc in HTML form.",
+      "parentUuid": "cdcf4a9d_95b3c405",
+      "range": {
+        "startLine": 362,
+        "startChar": 18,
+        "endLine": 362,
+        "endChar": 57
+      },
+      "revId": "c317cd27145a228dd0322532d95f6f60d6b88b7b",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
