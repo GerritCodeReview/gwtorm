@@ -22,6 +22,30 @@
       "revId": "233c781514ec195984eb3161ba1afbbde03ee1ac",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd2bca15_f5b77821",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2015-07-27T20:04:07Z",
+      "side": 1,
+      "message": "Yes, that\u0027s correct. For the reference, exactly the same bug was fixed in context of this issue: [1], with this diff: [2].\n\n* [1] https://github.com/google/guice/issues/904\n* [2] https://github.com/google/guice/commit/620dc69c28a1552948a26d7dc24de36c0dcd203c",
+      "parentUuid": "6d349e66_82eb5aea",
+      "range": {
+        "startLine": 7,
+        "startChar": 5,
+        "endLine": 7,
+        "endChar": 28
+      },
+      "revId": "233c781514ec195984eb3161ba1afbbde03ee1ac",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
