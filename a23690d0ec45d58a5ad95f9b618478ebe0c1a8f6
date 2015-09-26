@@ -1,0 +1,169 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aed8553b_7faaaf77",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2015-09-26T19:20:01Z",
+      "side": 1,
+      "message": "s/Preliminary/Add\n\nThis change is expected to be complete to support new database dialect. IOW there is no follow-up change so it doesn\u0027t make any sense to me to call it preliminary. Note, that another change in Gerrit project is needed that uses the new gwtorm release with this change included: [1].\n\n* [1] https://gerrit-review.googlesource.com/71117",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 11
+      },
+      "revId": "a23690d0ec45d58a5ad95f9b618478ebe0c1a8f6",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aed8553b_5fa5eba4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2015-09-26T19:20:01Z",
+      "side": 1,
+      "message": "Link here to the corresponding issue:\n\nBug: Issue 3441",
+      "revId": "a23690d0ec45d58a5ad95f9b618478ebe0c1a8f6",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ced58901_40350e0c",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/DialectDerby.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2015-09-26T19:20:01Z",
+      "side": 1,
+      "message": "Derby driver doesn\u0027t support statement delimiter in batch operation (that is used by Gerrit to set up the schema): [1]. This can be rectified by overriding this method (check Oracle dialect implementation):\n\n  @Override\n  public boolean isStatementDelimiterSupported() {\n    return false;\n  }\n\nDerby doesn\u0027t support LIMIT SQL syntax: [2], [3]. The usage of this function in generated SQLs can be suppressed, when the dialect implementation overrides this method (check Oracle dialect implementation):\n\n  @Override\n  public boolean selectHasLimit() {\n    return false;\n  }\n\nIt could be investigated if the generated statements can be optimized with Derby\u0027s ROW_NUMBER function and/or OFFSET and FETCH clauses, that were added in Derby 10.4 and 10.7 correspondingly.\n\n* [1] http://paste.openstack.org/show/474108\n* [2] http://paste.openstack.org/show/474110\n* [3] http://db.apache.org/derby/faq.html#limit",
+      "revId": "a23690d0ec45d58a5ad95f9b618478ebe0c1a8f6",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aed8553b_3fa02796",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/DialectDerby.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2015-09-26T19:20:01Z",
+      "side": 1,
+      "message": "Copyright 2015 The Android Open Source Project",
+      "revId": "a23690d0ec45d58a5ad95f9b618478ebe0c1a8f6",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aed8553b_9f8e9324",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/DialectDerby.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2015-09-26T19:20:01Z",
+      "side": 1,
+      "message": "Default Derby\u0027s create sequence statement: [1] (that wasn\u0027t overriden), and that doesn\u0027t specified \"start with \u003cnumber\u003e\"  starts with -2147483648. Currently, in Gerrit schema only one sequence is created with \"start with\" SQL DDL:\n\n  @Sequence(startWith \u003d 1000000)\n  int nextAccountId() throws OrmException;\n\nSo, you have two options to fix it, either in the existing method in SqlDialect, e.g. (untested):\n\n  [...]\n  r.append(\" START WITH \");\n  r.append(s.startWith() \u003e 0 ? s.startWith() : 1);\n  [...]\n\nor override the whole method in DialectDerby and adjust it correspondingly.\n\n* [1] https://db.apache.org/derby/docs/10.8/ref/rrefsqljcreatesequence.html",
+      "revId": "a23690d0ec45d58a5ad95f9b618478ebe0c1a8f6",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ced58901_e0662236",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/DialectDerby.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2015-09-26T19:20:01Z",
+      "side": 1,
+      "message": "Nit: Unneeded new lines.",
+      "revId": "a23690d0ec45d58a5ad95f9b618478ebe0c1a8f6",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aed8553b_1f9b6368",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/SqlDialect.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2015-09-26T19:20:01Z",
+      "side": 1,
+      "message": "Nit: Fix/keep the list lexicographically sorted.",
+      "revId": "a23690d0ec45d58a5ad95f9b618478ebe0c1a8f6",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ced58901_0064e62b",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectDerbyTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2015-09-26T19:20:01Z",
+      "side": 1,
+      "message": "Copyright 2015 The Android Open Source Project",
+      "revId": "a23690d0ec45d58a5ad95f9b618478ebe0c1a8f6",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ced58901_20300a1d",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectDerbyTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2015-09-26T19:20:01Z",
+      "side": 1,
+      "message": "Remove this code instead of uncommenting it. Can you elaborate (in the commit message?), what this would mean for a site, that will use Derby, and a column with a constraint will be renamed in Gerrit schema migration change?",
+      "range": {
+        "startLine": 180,
+        "startChar": 0,
+        "endLine": 187,
+        "endChar": 7
+      },
+      "revId": "a23690d0ec45d58a5ad95f9b618478ebe0c1a8f6",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
