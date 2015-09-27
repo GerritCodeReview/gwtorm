@@ -41,6 +41,7 @@ public abstract class SqlDialect {
 
   static {
     DIALECTS.add(new DialectDB2());
+    DIALECTS.add(new DialectDerby());
     DIALECTS.add(new DialectH2());
     DIALECTS.add(new DialectPostgreSQL());
     DIALECTS.add(new DialectMySQL());
@@ -192,10 +193,12 @@ public abstract class SqlDialect {
     r.append("CREATE SEQUENCE ");
     r.append(seq.getSequenceName());
 
-    if (s.startWith() > 0) {
-      r.append(" START WITH ");
-      r.append(s.startWith());
-    }
+    /*
+     * Some gwtorm users seems to imply a start of 1, enforce this constraint
+     * here explicitly
+     */
+    r.append(" START WITH ");
+    r.append(s.startWith() > 0 ? s.startWith() : 1);
 
     if (s.cache() > 0) {
       r.append(" CACHE ");
@@ -462,5 +465,14 @@ public abstract class SqlDialect {
    */
   public boolean isStatementDelimiterSupported() {
     return true;
+  }
+
+  /**
+   * get the SQL LIMIT command segment in the given dialect
+   * @param limit the limit to apply to the result set (either a number or ?)
+   * @return the SQL LIMIT command segment in the given dialect
+   */
+  public String getLimitSql(String limit) {
+    return "LIMIT " + limit;
   }
 }
