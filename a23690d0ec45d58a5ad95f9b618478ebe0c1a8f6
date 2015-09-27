@@ -164,6 +164,30 @@
       "revId": "a23690d0ec45d58a5ad95f9b618478ebe0c1a8f6",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ced58901_a0433a7b",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectDerbyTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2015-09-27T05:33:13Z",
+      "side": 1,
+      "message": "Alternatively, fix the test, by renaming a column without constraint.",
+      "parentUuid": "ced58901_20300a1d",
+      "range": {
+        "startLine": 180,
+        "startChar": 0,
+        "endLine": 187,
+        "endChar": 7
+      },
+      "revId": "a23690d0ec45d58a5ad95f9b618478ebe0c1a8f6",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
