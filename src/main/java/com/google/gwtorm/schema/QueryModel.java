@@ -341,8 +341,8 @@ public class QueryModel {
           final Tree p = node.getChild(0);
           if (p.getType() == QueryParser.CONSTANT_INTEGER
               || p.getType() == QueryParser.PLACEHOLDER) {
-            fmt.buf.append(" LIMIT ");
-            fmt.buf.append(p.getText());
+            fmt.buf.append(' ');
+            fmt.buf.append(fmt.dialect.getLimitSql(p.getText()));
           }
         }
         break;
