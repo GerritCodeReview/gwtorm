@@ -41,6 +41,7 @@ public abstract class SqlDialect {
 
   static {
     DIALECTS.add(new DialectDB2());
+    DIALECTS.add(new DialectDerby());
     DIALECTS.add(new DialectH2());
     DIALECTS.add(new DialectPostgreSQL());
     DIALECTS.add(new DialectMySQL());
@@ -462,5 +463,9 @@ public abstract class SqlDialect {
    */
   public boolean isStatementDelimiterSupported() {
     return true;
+  }
+
+  public String getLimitSql(String limitText) {
+    return "LIMIT " + limitText;
   }
 }
