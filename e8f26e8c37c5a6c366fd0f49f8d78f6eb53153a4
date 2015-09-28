@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "ced58901_a08eda23",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2015-09-28T11:45:56Z",
+      "side": 1,
+      "message": "It would also make sense to mention that this change only adds support for embedded mode. There are two other deployment options for Apache Derby [1] :\n\n* Derby Network Server or standalone mode\n* Embedded Server or hybrid mode\n\n* [1] http://db.apache.org/derby/papers/DerbyTut/ns_intro.html#ns",
+      "revId": "e8f26e8c37c5a6c366fd0f49f8d78f6eb53153a4",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aed8553b_ff95df2b",
         "filename": "/COMMIT_MSG",
         "patchSetId": 4
