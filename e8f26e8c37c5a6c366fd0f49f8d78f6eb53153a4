@@ -1,0 +1,130 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aed8553b_ff95df2b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2015-09-28T06:47:57Z",
+      "side": 1,
+      "message": "I understand the problem, but what I (or another Gerrit developer, who is going to implement database migration change, that renames a column with constraint applied) would like to know, is a solution/workaround to this problem.",
+      "range": {
+        "startLine": 11,
+        "startChar": 37,
+        "endLine": 13,
+        "endChar": 46
+      },
+      "revId": "e8f26e8c37c5a6c366fd0f49f8d78f6eb53153a4",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aed8553b_df981b67",
+        "filename": "src/main/java/com/google/gwtorm/schema/QueryModel.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 346,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2015-09-28T06:47:57Z",
+      "side": 1,
+      "message": "My be remove this line to make the tests pass again?\n\n  Failed tests:  \n  testLimitWithPlaceholder(com.google.gwtorm.schema.QueryModelTest)\n  : expected:\u003c...ROM people T LIMIT ?[]\u003e but was:\u003c...ROM people T LIMIT ?[ ]\u003e\n  testLimitWithConstant(com.google.gwtorm.schema.QueryModelTest)\n  : expected:\u003c...ROM people T LIMIT 5[]\u003e but was:\u003c...ROM people T LIMIT 5[ ]\u003e\n  Tests run: 344, Failures: 2, Errors: 0, Skipped: 54",
+      "range": {
+        "startLine": 346,
+        "startChar": 12,
+        "endLine": 346,
+        "endChar": 32
+      },
+      "revId": "e8f26e8c37c5a6c366fd0f49f8d78f6eb53153a4",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ced58901_209baa68",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/DialectDerby.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2015-09-28T06:47:57Z",
+      "side": 1,
+      "message": "Have you considered to make this change in the base class, for all dialects?",
+      "revId": "e8f26e8c37c5a6c366fd0f49f8d78f6eb53153a4",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ced58901_003b06fd",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/DialectDerby.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2015-09-28T06:47:57Z",
+      "side": 1,
+      "message": "It would be better to say, that Gerrit core makes assumptions, that sequences are starting from 1.",
+      "range": {
+        "startLine": 136,
+        "startChar": 5,
+        "endLine": 138,
+        "endChar": 17
+      },
+      "revId": "e8f26e8c37c5a6c366fd0f49f8d78f6eb53153a4",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ced58901_e03d42f2",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/DialectDerby.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2015-09-28T06:47:57Z",
+      "side": 1,
+      "message": "Nit: Unneeded blank line.",
+      "revId": "e8f26e8c37c5a6c366fd0f49f8d78f6eb53153a4",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ced58901_c0403e71",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectDerbyTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2015-09-28T06:47:57Z",
+      "side": 1,
+      "message": "Left over from old rename: change it to new_age or age2, or, ...",
+      "range": {
+        "startLine": 183,
+        "startChar": 11,
+        "endLine": 183,
+        "endChar": 23
+      },
+      "revId": "e8f26e8c37c5a6c366fd0f49f8d78f6eb53153a4",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
