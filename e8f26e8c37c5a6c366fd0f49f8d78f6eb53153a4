@@ -203,6 +203,30 @@
     },
     {
       "key": {
+        "uuid": "38ce6fa4_34e070fb",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/SqlDialect.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 468,
+      "author": {
+        "id": 1020527
+      },
+      "writtenOn": "2015-09-29T16:56:53Z",
+      "side": 1,
+      "message": "I think this limit can also be \"?\" as far I as saw in the debugger.",
+      "parentUuid": "aed8553b_5f7c0bb1",
+      "range": {
+        "startLine": 468,
+        "startChar": 35,
+        "endLine": 468,
+        "endChar": 44
+      },
+      "revId": "e8f26e8c37c5a6c366fd0f49f8d78f6eb53153a4",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ced58901_c0403e71",
         "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectDerbyTest.java",
         "patchSetId": 4
