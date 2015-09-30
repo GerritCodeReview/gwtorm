@@ -271,6 +271,30 @@
       "revId": "e8f26e8c37c5a6c366fd0f49f8d78f6eb53153a4",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "55a68ed6_fda9c7ae",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectDerbyTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2015-09-30T07:09:50Z",
+      "side": 1,
+      "message": "So, instead of just saying that Derby doesn\u0027t support renaming of columns with constraints applied, and pointing to the Derby  SQL reference, and adding a hacks, renaming age to isRegistered, just implement the algorithms you described in another commit message here. The advantages are; no hacks and the developer that is going t implement suach a migration would just check this code here and know how to do it. Something like that:\n\n  final PhoneBookDb2 p2 \u003d phoneBook2.open();\n    Statement s \u003d db.createStatement();\n    try {\n      ResultSet rs \u003d s.executeQuery(\n          \"select constraintname, checkdefinition from sys.sysconstraints c, sys.systables t, sys.syschecks ch \"\n          + \"WHERE c.tableid \u003d t.tableid and t.tablename \u003d \u0027PEOPLE\u0027 and c.constraintid \u003d ch.constraintid\");\n\n      String constraintName \u003d null;\n      while (rs.next()) {\n        if (rs.getString(2).contains(\"registered\")) {\n          constraintName \u003d rs.getString(1);\n        }\n      }\n      if (Strings.isNullOrEmpty(constraintName)) {\n        fail(\"Constraint not found\");\n      }\n      execute(\"alter table PEOPLE drop constraint \" + constraintName);\n      ((JdbcSchema) p2).renameField(executor, \"people\", \"registered\",\n          \"isRegistered\");\n    } catch (OrmException e) {\n      fail(e.getMessage());\n      e.printStackTrace();\n    } finally {\n      p2.close();\n    }",
+      "parentUuid": "18f7ebe2_4311068e",
+      "range": {
+        "startLine": 183,
+        "startChar": 11,
+        "endLine": 183,
+        "endChar": 23
+      },
+      "revId": "e8f26e8c37c5a6c366fd0f49f8d78f6eb53153a4",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
