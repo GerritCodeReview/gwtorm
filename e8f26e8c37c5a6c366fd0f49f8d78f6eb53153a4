@@ -295,6 +295,30 @@
       "revId": "e8f26e8c37c5a6c366fd0f49f8d78f6eb53153a4",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "75d9d26e_6ebe2fe6",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectDerbyTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1020527
+      },
+      "writtenOn": "2015-09-30T21:03:21Z",
+      "side": 1,
+      "message": "Yes, I also thought about this. sadly there seems no way to get all constraints for a given specific column.\n\n\nI tried this hack:\n\n  @Override\n  public void renameColumn(StatementExecutor e, String tableName,\n      String fromColumn, ColumnModel col) throws OrmException {\n\n    StringBuffer sb \u003d new StringBuffer();\n    sb.append(\"RENAME COLUMN \");\n    sb.append(tableName);\n    sb.append(\u0027.\u0027);\n    sb.append(fromColumn);\n    sb.append(\" TO \");\n    sb.append(col.getColumnName());\n\n    String checkConstraint \u003d this.getSqlTypeInfo(col).getCheckConstraint(col, this);\n\n    while(true) {\n      try {\n        e.execute(sb.toString());\n        e.execute(\"alter table \"+ tableName + \" alter column \" + col.getColumnName() + \u0027 \u0027 + checkConstraint);\n      } catch(OrmException exc) {\n        if(checkConstraint \u003d\u003d null) {\n          throw exc;\n        }\n\n        Throwable cause \u003d exc.getCause();\n        if(cause instanceof SQLSyntaxErrorException) {\n          SQLSyntaxErrorException syntax \u003d (SQLSyntaxErrorException) cause;\n          String message \u003d syntax.getMessage();\n          Pattern pattern \u003d Pattern.compile(\"Renaming column \u0027(\\\\w+)\u0027 will cause check constraint \u0027(\\\\w+)\u0027 to break.\");\n          Matcher matcher \u003d pattern.matcher(message);\n          if(matcher.find()) {\n            String constraintName \u003d matcher.group(2);\n            e.execute(\"alter table \" + tableName + \" drop check \" + constraintName);\n          } else {\n            throw exc;\n          }\n        }\n      }\n    }\n  }",
+      "parentUuid": "55a68ed6_fda9c7ae",
+      "range": {
+        "startLine": 183,
+        "startChar": 11,
+        "endLine": 183,
+        "endChar": 23
+      },
+      "revId": "e8f26e8c37c5a6c366fd0f49f8d78f6eb53153a4",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
