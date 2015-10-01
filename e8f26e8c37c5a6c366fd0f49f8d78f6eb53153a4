@@ -319,6 +319,30 @@
       "revId": "e8f26e8c37c5a6c366fd0f49f8d78f6eb53153a4",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "75d9d26e_2ec8278f",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectDerbyTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2015-10-01T06:31:07Z",
+      "side": 1,
+      "message": "I think we don\u0027t really need to overcomplicate the implementation in renameColumn() method. Gerrit doesn\u0027t use foreign key constraints, only primary keys and check constraints. The probability that primary key column would be renamed is very low. It should be sufficientl to let the removal of the constraint before column renaming and the addition of the constraint after the renaming to the developer who implement schema upgrade. Just add an example how to do it in testUpgradeSchema() for a column with check constraint applied (see my example).",
+      "parentUuid": "75d9d26e_6ebe2fe6",
+      "range": {
+        "startLine": 183,
+        "startChar": 11,
+        "endLine": 183,
+        "endChar": 23
+      },
+      "revId": "e8f26e8c37c5a6c366fd0f49f8d78f6eb53153a4",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
