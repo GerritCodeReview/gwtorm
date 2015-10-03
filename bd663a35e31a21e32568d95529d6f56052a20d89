@@ -73,6 +73,23 @@
       "revId": "bd663a35e31a21e32568d95529d6f56052a20d89",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "55a68ed6_3d45ef80",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectDerbyTest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2015-10-03T11:52:44Z",
+      "side": 1,
+      "message": "Optional: Add the ceck constraint again, after renaming the column? This way the workaround would be complete.",
+      "revId": "bd663a35e31a21e32568d95529d6f56052a20d89",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
