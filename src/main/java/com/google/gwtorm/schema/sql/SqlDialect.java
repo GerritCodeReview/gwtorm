@@ -192,10 +192,12 @@ public abstract class SqlDialect {
     r.append("CREATE SEQUENCE ");
     r.append(seq.getSequenceName());
 
-    if (s.startWith() > 0) {
-      r.append(" START WITH ");
-      r.append(s.startWith());
-    }
+    /*
+     * Some gwtorm users seems to imply a start of 1, enforce this constraint
+     * here explicitly
+     */
+    r.append(" START WITH ");
+    r.append(s.startWith() > 0 ? s.startWith() : 1);
 
     if (s.cache() > 0) {
       r.append(" CACHE ");
