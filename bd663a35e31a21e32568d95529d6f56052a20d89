@@ -59,6 +59,30 @@
     },
     {
       "key": {
+        "uuid": "75d9d26e_8eaa7b6e",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/SqlDialect.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1020527
+      },
+      "writtenOn": "2015-10-03T12:20:21Z",
+      "side": 1,
+      "message": "please see change 71269",
+      "parentUuid": "75d9d26e_6e4bcf97",
+      "range": {
+        "startLine": 196,
+        "startChar": 4,
+        "endLine": 201,
+        "endChar": 52
+      },
+      "revId": "bd663a35e31a21e32568d95529d6f56052a20d89",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "75d9d26e_ee9b3f6b",
         "filename": "src/main/java/com/google/gwtorm/schema/sql/SqlDialect.java",
         "patchSetId": 5
