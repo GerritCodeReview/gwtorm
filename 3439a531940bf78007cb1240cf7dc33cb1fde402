@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "75d9d26e_0e97ab3b",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectDerbyTest.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2015-10-03T18:28:58Z",
+      "side": 1,
+      "message": "Optional: If you havn\u0027t re-created the check constraint after renaming the column as was sugegsted in my previous comment, mention it in the comment here as a TODO, e.g.:\n\n  And re-create with \"alter table add constraint\" statement after column renaming.",
+      "revId": "3439a531940bf78007cb1240cf7dc33cb1fde402",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
