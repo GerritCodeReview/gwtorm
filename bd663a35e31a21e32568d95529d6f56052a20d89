@@ -59,6 +59,29 @@
     },
     {
       "key": {
+        "uuid": "75d9d26e_ee9b3f6b",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/SqlDialect.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 477,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2015-10-03T12:03:02Z",
+      "side": 1,
+      "message": "Optional: This method and corresponding change in QueryModel.java may affect other dialects and thus could be extracted as its own change (as preparation for this change).",
+      "range": {
+        "startLine": 470,
+        "startChar": 2,
+        "endLine": 477,
+        "endChar": 3
+      },
+      "revId": "bd663a35e31a21e32568d95529d6f56052a20d89",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "55a68ed6_9d35230c",
         "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectDerbyTest.java",
         "patchSetId": 5
