@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f92946cb_e906d535",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectDerbyTest.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2015-10-17T15:03:49Z",
+      "side": 1,
+      "message": "Nit: Blank before opening (.",
+      "range": {
+        "startLine": 221,
+        "startChar": 6,
+        "endLine": 221,
+        "endChar": 9
+      },
+      "revId": "858033d4c633b7447f2d8dc356606d2ccaf63344",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d92002e1_a8717bcb",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectDerbyTest.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2015-10-17T15:03:49Z",
+      "side": 1,
+      "message": "constraint, like in previous patch set?",
+      "range": {
+        "startLine": 222,
+        "startChar": 53,
+        "endLine": 222,
+        "endChar": 58
+      },
+      "revId": "858033d4c633b7447f2d8dc356606d2ccaf63344",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f92946cb_c9031124",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectDerbyTest.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2015-10-17T15:03:49Z",
+      "side": 1,
+      "message": "Nit: Blank before opening (.",
+      "range": {
+        "startLine": 226,
+        "startChar": 6,
+        "endLine": 226,
+        "endChar": 9
+      },
+      "revId": "858033d4c633b7447f2d8dc356606d2ccaf63344",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f92946cb_89f9197c",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectDerbyTest.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2015-10-17T15:03:49Z",
+      "side": 1,
+      "message": "constraint?",
+      "range": {
+        "startLine": 227,
+        "startChar": 51,
+        "endLine": 227,
+        "endChar": 56
+      },
+      "revId": "858033d4c633b7447f2d8dc356606d2ccaf63344",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
