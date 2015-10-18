@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d9e9e22c_e0afa2b8",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectDerbyTest.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 1020527
+      },
+      "writtenOn": "2015-10-18T09:59:41Z",
+      "side": 1,
+      "message": "will fix this.",
+      "parentUuid": "f92946cb_e906d535",
+      "range": {
+        "startLine": 221,
+        "startChar": 6,
+        "endLine": 221,
+        "endChar": 9
+      },
+      "revId": "858033d4c633b7447f2d8dc356606d2ccaf63344",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d92002e1_a8717bcb",
         "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectDerbyTest.java",
         "patchSetId": 8
@@ -36,6 +60,30 @@
       "writtenOn": "2015-10-17T15:03:49Z",
       "side": 1,
       "message": "constraint, like in previous patch set?",
+      "range": {
+        "startLine": 222,
+        "startChar": 53,
+        "endLine": 222,
+        "endChar": 58
+      },
+      "revId": "858033d4c633b7447f2d8dc356606d2ccaf63344",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d92002e1_68f3039d",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectDerbyTest.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1020527
+      },
+      "writtenOn": "2015-10-18T09:59:41Z",
+      "side": 1,
+      "message": "my understanding is that we only select column based checks as SYSCHECK table contains only the column based contraints, or doesn\u0027t it?",
+      "parentUuid": "d92002e1_a8717bcb",
       "range": {
         "startLine": 222,
         "startChar": 53,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "d9e9e22c_40b5ae04",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectDerbyTest.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1020527
+      },
+      "writtenOn": "2015-10-18T09:59:41Z",
+      "side": 1,
+      "message": "will fix this.",
+      "parentUuid": "f92946cb_c9031124",
+      "range": {
+        "startLine": 226,
+        "startChar": 6,
+        "endLine": 226,
+        "endChar": 9
+      },
+      "revId": "858033d4c633b7447f2d8dc356606d2ccaf63344",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f92946cb_89f9197c",
         "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectDerbyTest.java",
         "patchSetId": 8
@@ -82,6 +154,30 @@
       "writtenOn": "2015-10-17T15:03:49Z",
       "side": 1,
       "message": "constraint?",
+      "range": {
+        "startLine": 227,
+        "startChar": 51,
+        "endLine": 227,
+        "endChar": 56
+      },
+      "revId": "858033d4c633b7447f2d8dc356606d2ccaf63344",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9e9e22c_20b22a1e",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectDerbyTest.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1020527
+      },
+      "writtenOn": "2015-10-18T09:59:41Z",
+      "side": 1,
+      "message": "I tried to use \"alter table xyz add constraint [constraint_name] check ( ...)\". but this command seems to need an explicit constraint name. So i did fallback to \"alter table xyz add check\" because this command seems to automatically assign a new constraint name.\nand to be more consistent I did then change above \"alter table drop constraint\" command to \"alter table drop check\" so it reads the same for removal and insertion of the check constraint again.",
+      "parentUuid": "f92946cb_89f9197c",
       "range": {
         "startLine": 227,
         "startChar": 51,
