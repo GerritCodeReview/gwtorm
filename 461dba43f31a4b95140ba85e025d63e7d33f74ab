@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3b203791_98b5b90c",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcSchema.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2015-11-13T06:47:31Z",
+      "side": 1,
+      "message": "Do we want to record these errors too?",
+      "range": {
+        "startLine": 67,
+        "startChar": 4,
+        "endLine": 75,
+        "endChar": 5
+      },
+      "revId": "461dba43f31a4b95140ba85e025d63e7d33f74ab",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
