@@ -655,10 +655,14 @@ class AccessGen implements Opcodes {
 
     mv.visitLabel(endbind);
     mv.visitVarInsn(ALOAD, 0);
+    mv.visitLdcInsn("get_many");
     mv.visitVarInsn(ALOAD, psvar);
     mv.visitMethodInsn(INVOKEVIRTUAL, superTypeName, "queryList", Type
-        .getMethodDescriptor(Type.getType(com.google.gwtorm.server.ResultSet.class),
-            new Type[] {Type.getType(PreparedStatement.class)}));
+        .getMethodDescriptor(
+            Type.getType(com.google.gwtorm.server.ResultSet.class),
+            new Type[] {
+              Type.getType(String.class),
+              Type.getType(PreparedStatement.class)}));
     mv.visitInsn(ARETURN);
     mv.visitMaxs(-1, -1);
     mv.visitEnd();
@@ -763,10 +767,14 @@ class AccessGen implements Opcodes {
     }
 
     mv.visitVarInsn(ALOAD, 0);
+    mv.visitLdcInsn(info.getName());
     mv.visitVarInsn(ALOAD, psvar);
     mv.visitMethodInsn(INVOKEVIRTUAL, superTypeName, "queryList", Type
-        .getMethodDescriptor(Type.getType(com.google.gwtorm.server.ResultSet.class),
-            new Type[] {Type.getType(PreparedStatement.class)}));
+        .getMethodDescriptor(
+            Type.getType(com.google.gwtorm.server.ResultSet.class),
+            new Type[] {
+              Type.getType(String.class),
+              Type.getType(PreparedStatement.class)}));
     mv.visitInsn(ARETURN);
     mv.visitMaxs(-1, -1);
     mv.visitEnd();
