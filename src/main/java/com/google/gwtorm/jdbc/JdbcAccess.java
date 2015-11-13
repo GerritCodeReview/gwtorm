@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /** Internal base class for implementations of {@link Access}. */
 public abstract class JdbcAccess<T, K extends Key<?>> extends
@@ -114,6 +115,7 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
   }
 
   protected T queryOne(final PreparedStatement ps) throws OrmException {
+    long start = System.nanoTime();
     try {
       try {
         final ResultSet rs = ps.executeQuery();
@@ -135,19 +137,27 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
       }
     } catch (SQLException e) {
       throw convertError("fetch", e);
+    } finally {
+      schema.getMetrics().recordAccess(
+          getRelationName(),
+          DatabaseMetrics.Operation.SELECT,
+          "get_one",
+          System.nanoTime() - start, TimeUnit.NANOSECONDS);
     }
   }
 
   protected com.google.gwtorm.server.ResultSet<T> queryList(
+      String query,
       final PreparedStatement ps) throws OrmException {
-    final ResultSet rs;
+    long start = System.nanoTime();
     try {
-      rs = ps.executeQuery();
+      ResultSet rs = ps.executeQuery();
       if (!rs.next()) {
         rs.close();
         ps.close();
         return new ListResultSet<>(Collections.<T> emptyList());
       }
+      return new JdbcResultSet<>(this, rs, ps);
     } catch (SQLException err) {
       try {
         ps.close();
@@ -155,12 +165,18 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
         // Ignored.
       }
       throw convertError("fetch", err);
+    } finally {
+      schema.getMetrics().recordAccess(
+          getRelationName(),
+          DatabaseMetrics.Operation.SELECT,
+          query,
+          System.nanoTime() - start, TimeUnit.NANOSECONDS);
     }
-    return new JdbcResultSet<>(this, rs, ps);
   }
 
   @Override
   public void insert(final Iterable<T> instances) throws OrmException {
+    long start = System.nanoTime();
     try {
       if (schema.getDialect().canDetermineTotalBatchUpdateCount()) {
         insertAsBatch(instances);
@@ -169,6 +185,12 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
       }
     } catch (SQLException e) {
       throw convertError("insert", e);
+    } finally {
+      schema.getMetrics().recordAccess(
+          getRelationName(),
+          DatabaseMetrics.Operation.INSERT,
+          null,
+          System.nanoTime() - start, TimeUnit.NANOSECONDS);
     }
   }
 
@@ -220,6 +242,7 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
 
   @Override
   public void update(final Iterable<T> instances) throws OrmException {
+    long start = System.nanoTime();
     try {
       if (schema.getDialect().canDetermineTotalBatchUpdateCount()) {
         updateAsBatch(instances);
@@ -228,6 +251,12 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
       }
     } catch (SQLException e) {
       throw convertError("update", e);
+    } finally {
+      schema.getMetrics().recordAccess(
+          getRelationName(),
+          DatabaseMetrics.Operation.UPDATE,
+          null,
+          System.nanoTime() - start, TimeUnit.NANOSECONDS);
     }
   }
 
@@ -384,6 +413,7 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
 
   @Override
   public void delete(final Iterable<T> instances) throws OrmException {
+    long start = System.nanoTime();
     try {
       if (schema.getDialect().canDetermineTotalBatchUpdateCount()) {
         deleteAsBatch(instances);
@@ -392,6 +422,12 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
       }
     } catch (SQLException e) {
       throw convertError("delete", e);
+    } finally {
+      schema.getMetrics().recordAccess(
+          getRelationName(),
+          DatabaseMetrics.Operation.DELETE,
+          null,
+          System.nanoTime() - start, TimeUnit.NANOSECONDS);
     }
   }
 

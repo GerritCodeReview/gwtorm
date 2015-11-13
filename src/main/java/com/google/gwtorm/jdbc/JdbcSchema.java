@@ -29,6 +29,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /** Internal base class for implementations of {@link Schema}. */
 public abstract class JdbcSchema extends AbstractSchema {
@@ -46,6 +47,10 @@ public abstract class JdbcSchema extends AbstractSchema {
 
   public final SqlDialect getDialect() {
     return dbDef.getDialect();
+  }
+
+  public final DatabaseMetrics getMetrics() {
+    return dbDef.getMetrics();
   }
 
   @Override
@@ -237,7 +242,14 @@ public abstract class JdbcSchema extends AbstractSchema {
 
   @Override
   protected long nextLong(final String poolName) throws OrmException {
-    return getDialect().nextLong(getConnection(), poolName);
+    long start = System.nanoTime();
+    try {
+      return getDialect().nextLong(getConnection(), poolName);
+    } finally {
+      dbDef.getMetrics().recordNextLong(
+          poolName,
+          System.nanoTime() - start, TimeUnit.NANOSECONDS);
+    }
   }
 
   @Override
