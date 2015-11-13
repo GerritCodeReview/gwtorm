@@ -167,7 +167,7 @@ public abstract class AbstractTestJdbcAccess {
     Database db = mock(Database.class);
     try {
       when(db.getDialect()).thenReturn(dialect);
-
+      when(db.getMetrics()).thenReturn(DatabaseMetrics.DISABLED);
       when(db.newConnection()).thenReturn(conn);
 
       JdbcSchema schema = new Schema(db);

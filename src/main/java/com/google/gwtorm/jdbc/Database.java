@@ -56,6 +56,7 @@ public class Database<T extends Schema> implements SchemaFactory<T> {
   private final JavaSchemaModel schemaModel;
   private final SchemaFactory<T> implFactory;
   private final SqlDialect implDialect;
+  private DatabaseMetrics metrics = DatabaseMetrics.DISABLED;
 
   /**
    * Create a new database interface, generating the interface implementations.
@@ -107,6 +108,14 @@ public class Database<T extends Schema> implements SchemaFactory<T> {
 
   SchemaModel getSchemaModel() {
     return schemaModel;
+  }
+
+  public void setDatabaseMetrics(DatabaseMetrics metrics) {
+    this.metrics = metrics != null ? metrics : DatabaseMetrics.DISABLED;
+  }
+
+  public DatabaseMetrics getMetrics() {
+    return metrics;
   }
 
   /**
