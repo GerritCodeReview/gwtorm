@@ -22,6 +22,30 @@
       "revId": "461dba43f31a4b95140ba85e025d63e7d33f74ab",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bb6267ec_4f1ac1bc",
+        "filename": "src/main/java/com/google/gwtorm/jdbc/JdbcSchema.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2015-11-14T00:15:02Z",
+      "side": 1,
+      "message": "We could. I wasn\u0027t focused on those as I wanted a pool exhaustion alert vs. a database failure. Not everything runs in a transaction, there\u0027s a lot of other places we throw an exception. I didn\u0027t want to hunt down all of them and try to add a counter for those. Because I\u0027m lazy. :-\\",
+      "parentUuid": "3b203791_98b5b90c",
+      "range": {
+        "startLine": 67,
+        "startChar": 4,
+        "endLine": 75,
+        "endChar": 5
+      },
+      "revId": "461dba43f31a4b95140ba85e025d63e7d33f74ab",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
