@@ -1,0 +1,21 @@
+To test DialectHANBA a SAP HANA JDBC driver "com.sap.db.ngdbc-<version>.jar" is
+needed. It is not available in a public maven repository. However, the driver
+can be found as described here:
+http://help.sap.com/saphelp_hanaplatform/helpdata/en/ff/15928cf5594d78b841fbbe649f04b4/frameset.htm
+
+To execute tests on HANA, you firstly need to create a test user with an
+associated empty schema in your database. Then you can execute the tests
+using maven with the profile "hana". The following properties need to be set:
+
+hana.driver.jar=<path to HANA JDBC driver>
+hana.url=<url of test database>
+hana.user=<user name>
+hana.password=<password of test user>
+
+So the complete command would be:
+
+mvn package -P hana
+  -Dhana.driver.jar=<path to HANA JDBC driver>
+  -Dhana.url=<url of test database>
+  -Dhana.user=<user name>
+  -Dhana.password=<password of test user>
