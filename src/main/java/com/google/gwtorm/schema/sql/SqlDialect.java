@@ -47,6 +47,7 @@ public abstract class SqlDialect {
     DIALECTS.add(new DialectMySQL());
     DIALECTS.add(new DialectOracle());
     DIALECTS.add(new DialectMaxDB());
+    DIALECTS.add(new DialectHANA());
   }
 
   public static void register(SqlDialect dialect) {
@@ -468,11 +469,20 @@ public abstract class SqlDialect {
   }
 
   /**
-   * get the SQL LIMIT command segment in the given dialect
+   * Get the SQL LIMIT command segment in the given dialect
    * @param limit the limit to apply to the result set (either a number or ?)
    * @return the SQL LIMIT command segment in the given dialect
    */
   public String getLimitSql(String limit) {
     return "LIMIT " + limit;
+  }
+
+  /**
+   * Get the driver specific 'table type' to be used in a CREATE TABLE
+   * statement. When creating a CREATE TABLE statement the 'table type' is
+   * appended after a blank following the CREATE keyword.
+   */
+  public String getTableTypeSql() {
+    return "TABLE";
   }
 }
