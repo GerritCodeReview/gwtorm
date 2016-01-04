@@ -47,6 +47,7 @@ public abstract class SqlDialect {
     DIALECTS.add(new DialectMySQL());
     DIALECTS.add(new DialectOracle());
     DIALECTS.add(new DialectMaxDB());
+    DIALECTS.add(new DialectHANA());
   }
 
   public static void register(SqlDialect dialect) {
@@ -474,5 +475,16 @@ public abstract class SqlDialect {
    */
   public String getLimitSql(String limit) {
     return "LIMIT " + limit;
+  }
+
+  /**
+   * Append driver specific 'table type' to a CREATE TABLE statement. The 'table type'
+   * is appended to the given buffer after the CREATE keywords.
+   *
+   * @param sqlBuffer buffer holding the CREATE TABLE, just after the opening
+   *        "CREATE" keyword
+   */
+  public void appendTableType(StringBuilder sqlBuffer) {
+    sqlBuffer.append("TABLE");
   }
 }
