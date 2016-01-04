@@ -36,8 +36,7 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class SqlDialect {
-  private static final List<SqlDialect> DIALECTS =
-      new CopyOnWriteArrayList<>();
+  private static final List<SqlDialect> DIALECTS = new CopyOnWriteArrayList<>();
 
   static {
     DIALECTS.add(new DialectDB2());
@@ -47,14 +46,15 @@ public abstract class SqlDialect {
     DIALECTS.add(new DialectMySQL());
     DIALECTS.add(new DialectOracle());
     DIALECTS.add(new DialectMaxDB());
+    DIALECTS.add(new DialectHANA());
   }
 
   public static void register(SqlDialect dialect) {
     DIALECTS.add(0, dialect);
   }
 
-  public static SqlDialect getDialectFor(Connection c)
-      throws SQLException, OrmException {
+  public static SqlDialect getDialectFor(Connection c) throws SQLException,
+      OrmException {
     String url = c.getMetaData().getURL();
     for (SqlDialect d : DIALECTS) {
       if (d.handles(url, c)) {
@@ -91,13 +91,14 @@ public abstract class SqlDialect {
 
   public abstract boolean handles(String url, Connection c) throws SQLException;
 
-  /** Select a better dialect definition for this connection.
+  /**
+   * Select a better dialect definition for this connection.
    *
    * @param c the connection
    * @return a dialect instance
    * @throws SQLException
    */
-  public SqlDialect refine(final Connection c) throws SQLException  {
+  public SqlDialect refine(final Connection c) throws SQLException {
     return this;
   }
 
@@ -252,8 +253,8 @@ public abstract class SqlDialect {
    * @param to destination table name
    * @throws OrmException the table could not be renamed.
    */
-  public void renameTable(StatementExecutor e, String from,
-      String to) throws OrmException {
+  public void renameTable(StatementExecutor e, String from, String to)
+      throws OrmException {
     final StringBuilder r = new StringBuilder();
     r.append("ALTER TABLE ");
     r.append(from);
@@ -469,10 +470,22 @@ public abstract class SqlDialect {
 
   /**
    * get the SQL LIMIT command segment in the given dialect
+   *
    * @param limit the limit to apply to the result set (either a number or ?)
    * @return the SQL LIMIT command segment in the given dialect
    */
   public String getLimitSql(String limit) {
     return "LIMIT " + limit;
+  }
+
+  /**
+   * Append driver specific 'table type' to a CREATE TABLE statement. The 'table type'
+   * is appended to the given buffer after the CREATE keywords.
+   *
+   * @param sqlBuffer buffer holding the CREATE TABLE, just after the opening
+   *        "CREATE" keyword
+   */
+  public void appendTableType(StringBuilder sqlBuffer) {
+    sqlBuffer.append("TABLE");
   }
 }
