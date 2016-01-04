@@ -205,7 +205,9 @@ public abstract class RelationModel {
 
   public String getCreateTableSql(final SqlDialect dialect) {
     final StringBuilder r = new StringBuilder();
-    r.append("CREATE TABLE ");
+    r.append("CREATE ");
+    r.append(dialect.getTableTypeSql());
+    r.append(" ");
     r.append(relationName);
     r.append(" (\n");
 
