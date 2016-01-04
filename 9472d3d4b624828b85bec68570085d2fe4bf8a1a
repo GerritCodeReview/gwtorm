@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aaa213bd_c0aa9e41",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/SqlDialect.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 485,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2016-01-04T16:02:00Z",
+      "side": 1,
+      "message": "\"CREATE \" or \"CREATE\" following by a blank?",
+      "range": {
+        "startLine": 485,
+        "startChar": 12,
+        "endLine": 485,
+        "endChar": 20
+      },
+      "revId": "9472d3d4b624828b85bec68570085d2fe4bf8a1a",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aaa213bd_a0af9a4f",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/SqlDialect.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 487,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2016-01-04T16:02:00Z",
+      "side": 1,
+      "message": "Maybe name it getTableTypeSql or just getTableSql()? This would be consistent with the method name on line 476 above. I had to read the implementation to understand what appendTableType() method supposed to do.",
+      "range": {
+        "startLine": 487,
+        "startChar": 14,
+        "endLine": 487,
+        "endChar": 29
+      },
+      "revId": "9472d3d4b624828b85bec68570085d2fe4bf8a1a",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
