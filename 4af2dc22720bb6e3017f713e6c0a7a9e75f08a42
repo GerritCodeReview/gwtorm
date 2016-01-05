@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2a59c3e9_a4a9c29d",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/DialectHANA.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2016-01-05T09:37:09Z",
+      "side": 1,
+      "message": "Nit: no final in parameter list when not strictly needed. This would be also not consistent with the rest of this class.",
+      "range": {
+        "startLine": 140,
+        "startChar": 35,
+        "endLine": 140,
+        "endChar": 40
+      },
+      "revId": "4af2dc22720bb6e3017f713e6c0a7a9e75f08a42",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a5a77de_05b9b2ea",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/DialectHANA.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2016-01-05T09:37:09Z",
+      "side": 1,
+      "message": "Nit: missing blank.",
+      "range": {
+        "startLine": 152,
+        "startChar": 7,
+        "endLine": 152,
+        "endChar": 8
+      },
+      "revId": "4af2dc22720bb6e3017f713e6c0a7a9e75f08a42",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
