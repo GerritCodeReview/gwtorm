@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4a5a77de_c59aba89",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1007114
+      },
+      "writtenOn": "2016-01-05T07:43:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aaa4d3ba_d019dc67",
+      "range": {
+        "startLine": 13,
+        "startChar": 6,
+        "endLine": 13,
+        "endChar": 9
+      },
+      "revId": "9472d3d4b624828b85bec68570085d2fe4bf8a1a",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aaa4d3ba_30f0684a",
         "filename": "src/main/java/com/google/gwtorm/schema/sql/DialectHANA.java",
         "patchSetId": 3
@@ -36,6 +60,24 @@
       "writtenOn": "2016-01-05T00:22:05Z",
       "side": 1,
       "message": "use try-with-resource ?",
+      "revId": "9472d3d4b624828b85bec68570085d2fe4bf8a1a",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a5a77de_e59fb676",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/DialectHANA.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1007114
+      },
+      "writtenOn": "2016-01-05T07:43:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aaa4d3ba_30f0684a",
       "revId": "9472d3d4b624828b85bec68570085d2fe4bf8a1a",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
@@ -59,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "4a5a77de_85a4c2c4",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/DialectHANA.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1007114
+      },
+      "writtenOn": "2016-01-05T07:43:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aaa4d3ba_50f5ec38",
+      "revId": "9472d3d4b624828b85bec68570085d2fe4bf8a1a",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aaa213bd_00c8862d",
         "filename": "src/main/java/com/google/gwtorm/schema/sql/DialectHANA.java",
         "patchSetId": 3
@@ -70,6 +130,24 @@
       "writtenOn": "2016-01-05T00:22:05Z",
       "side": 1,
       "message": "use try-with-resource ?",
+      "revId": "9472d3d4b624828b85bec68570085d2fe4bf8a1a",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a5a77de_a5a9be9d",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/DialectHANA.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1007114
+      },
+      "writtenOn": "2016-01-05T07:43:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aaa213bd_00c8862d",
       "revId": "9472d3d4b624828b85bec68570085d2fe4bf8a1a",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
@@ -99,6 +177,30 @@
     },
     {
       "key": {
+        "uuid": "2a59c3e9_c49abe89",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/SqlDialect.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 485,
+      "author": {
+        "id": 1007114
+      },
+      "writtenOn": "2016-01-05T07:43:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aaa213bd_c0aa9e41",
+      "range": {
+        "startLine": 485,
+        "startChar": 12,
+        "endLine": 485,
+        "endChar": 20
+      },
+      "revId": "9472d3d4b624828b85bec68570085d2fe4bf8a1a",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aaa213bd_a0af9a4f",
         "filename": "src/main/java/com/google/gwtorm/schema/sql/SqlDialect.java",
         "patchSetId": 3
@@ -110,6 +212,30 @@
       "writtenOn": "2016-01-04T16:02:00Z",
       "side": 1,
       "message": "Maybe name it getTableTypeSql or just getTableSql()? This would be consistent with the method name on line 476 above. I had to read the implementation to understand what appendTableType() method supposed to do.",
+      "range": {
+        "startLine": 487,
+        "startChar": 14,
+        "endLine": 487,
+        "endChar": 29
+      },
+      "revId": "9472d3d4b624828b85bec68570085d2fe4bf8a1a",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a59c3e9_e49fba76",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/SqlDialect.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 487,
+      "author": {
+        "id": 1007114
+      },
+      "writtenOn": "2016-01-05T07:43:49Z",
+      "side": 1,
+      "message": "Went for getTableTypeSql which now returns the snippet instead of appending it to the buffer.",
+      "parentUuid": "aaa213bd_a0af9a4f",
       "range": {
         "startLine": 487,
         "startChar": 14,
