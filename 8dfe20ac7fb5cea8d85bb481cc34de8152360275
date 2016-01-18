@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "67313682_169ebc26",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1007114
+      },
+      "writtenOn": "2016-01-18T14:38:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "67313682_563bd40c",
+      "range": {
+        "startLine": 9,
+        "startChar": 50,
+        "endLine": 10,
+        "endChar": 38
+      },
+      "revId": "8dfe20ac7fb5cea8d85bb481cc34de8152360275",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aab8533e_3068c8f6",
         "filename": "README_HANA",
         "patchSetId": 6
@@ -59,6 +83,30 @@
       "writtenOn": "2016-01-18T10:28:33Z",
       "side": 1,
       "message": "put the link in a footnote and reference it from here",
+      "range": {
+        "startLine": 4,
+        "startChar": 0,
+        "endLine": 4,
+        "endChar": 99
+      },
+      "revId": "8dfe20ac7fb5cea8d85bb481cc34de8152360275",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "67313682_369bb837",
+        "filename": "README_HANA",
+        "patchSetId": 6
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1007114
+      },
+      "writtenOn": "2016-01-18T14:38:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "67313682_7638500f",
       "range": {
         "startLine": 4,
         "startChar": 0,
@@ -111,6 +159,30 @@
     },
     {
       "key": {
+        "uuid": "272bbe19_b42580e9",
+        "filename": "README_HANA",
+        "patchSetId": 6
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1007114
+      },
+      "writtenOn": "2016-01-18T14:38:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "67313682_16355c16",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 37
+      },
+      "revId": "8dfe20ac7fb5cea8d85bb481cc34de8152360275",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "272bbe19_b4f6e0b4",
         "filename": "README_HANA",
         "patchSetId": 6
@@ -134,6 +206,30 @@
     },
     {
       "key": {
+        "uuid": "67313682_d6c84430",
+        "filename": "README_HANA",
+        "patchSetId": 6
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1007114
+      },
+      "writtenOn": "2016-01-18T14:38:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "272bbe19_b4f6e0b4",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 41
+      },
+      "revId": "8dfe20ac7fb5cea8d85bb481cc34de8152360275",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "272bbe19_54dc2c37",
         "filename": "src/main/java/com/google/gwtorm/schema/sql/SqlDialect.java",
         "patchSetId": 6
@@ -145,6 +241,30 @@
       "writtenOn": "2016-01-18T10:28:33Z",
       "side": 1,
       "message": "Start sentence with upper-case",
+      "range": {
+        "startLine": 481,
+        "startChar": 5,
+        "endLine": 481,
+        "endChar": 6
+      },
+      "revId": "8dfe20ac7fb5cea8d85bb481cc34de8152360275",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "272bbe19_543bcc0c",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/SqlDialect.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 481,
+      "author": {
+        "id": 1007114
+      },
+      "writtenOn": "2016-01-18T14:38:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "272bbe19_54dc2c37",
       "range": {
         "startLine": 481,
         "startChar": 5,
