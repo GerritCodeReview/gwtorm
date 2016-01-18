@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "67313682_563bd40c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2016-01-18T10:28:33Z",
+      "side": 1,
+      "message": "nit: put the link in a footnote and reference it as \"[1]\" from here.",
+      "range": {
+        "startLine": 9,
+        "startChar": 50,
+        "endLine": 10,
+        "endChar": 38
+      },
+      "revId": "8dfe20ac7fb5cea8d85bb481cc34de8152360275",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aab8533e_3068c8f6",
         "filename": "README_HANA",
         "patchSetId": 6
@@ -25,6 +48,29 @@
     },
     {
       "key": {
+        "uuid": "67313682_7638500f",
+        "filename": "README_HANA",
+        "patchSetId": 6
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2016-01-18T10:28:33Z",
+      "side": 1,
+      "message": "put the link in a footnote and reference it from here",
+      "range": {
+        "startLine": 4,
+        "startChar": 0,
+        "endLine": 4,
+        "endChar": 99
+      },
+      "revId": "8dfe20ac7fb5cea8d85bb481cc34de8152360275",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "eaaecbf8_f2964831",
         "filename": "README_HANA",
         "patchSetId": 6
@@ -36,6 +82,75 @@
       "writtenOn": "2016-01-07T16:04:56Z",
       "side": 1,
       "message": "The HANA JDBC driver can be downloaded as part of the \"SAP HANA Client Software Packages\" available for trial usage under the free SAP HANA developer edition license. It can be downloaded from the SAP Store here [1]:\n\n* click \"Trial Version\", fill in contact information and accept terms and conditions\n* then submit the download form, the SAP Store should now send an email with the download link\n* download the package and unpack it\n* locate the JDBC.tgz or JDBC.zip package under the client folder and unpack it. It contains the HANA JDBC driver named \"ngdbc.jar\".\n\n[1] https://store.sap.com/sap/cpa/ui/resources/store/html/SolutionDetails.html?pid\u003d0000012950\u0026catID\u003d\u0026pcntry\u003dUS\u0026sap-language\u003dEN\u0026_cp_id\u003did-1446242664166-0",
+      "revId": "8dfe20ac7fb5cea8d85bb481cc34de8152360275",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "67313682_16355c16",
+        "filename": "README_HANA",
+        "patchSetId": 6
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2016-01-18T10:28:33Z",
+      "side": 1,
+      "message": "indent example(s) one level",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 37
+      },
+      "revId": "8dfe20ac7fb5cea8d85bb481cc34de8152360275",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "272bbe19_b4f6e0b4",
+        "filename": "README_HANA",
+        "patchSetId": 6
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2016-01-18T10:28:33Z",
+      "side": 1,
+      "message": "indent example(s) one level",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 41
+      },
+      "revId": "8dfe20ac7fb5cea8d85bb481cc34de8152360275",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "272bbe19_54dc2c37",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/SqlDialect.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 481,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2016-01-18T10:28:33Z",
+      "side": 1,
+      "message": "Start sentence with upper-case",
+      "range": {
+        "startLine": 481,
+        "startChar": 5,
+        "endLine": 481,
+        "endChar": 6
+      },
       "revId": "8dfe20ac7fb5cea8d85bb481cc34de8152360275",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
