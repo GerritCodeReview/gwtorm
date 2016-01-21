@@ -22,6 +22,30 @@
       "revId": "3edad4efbaa07be504ddaf2847fd673f2f818645",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e709a6de_9a79edd1",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectHANATest.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1007114
+      },
+      "writtenOn": "2016-01-21T09:42:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a7032ebe_d89a4d55",
+      "range": {
+        "startLine": 60,
+        "startChar": 0,
+        "endLine": 62,
+        "endChar": 62
+      },
+      "revId": "3edad4efbaa07be504ddaf2847fd673f2f818645",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
