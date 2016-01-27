@@ -22,6 +22,30 @@
       "revId": "fa6a7e30262bdbbe41775afbe9039fd3f5e2f08f",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9441fad9_bfdf97fb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2016-01-27T10:27:57Z",
+      "side": 1,
+      "message": "Yes, I saw that.\n\nHowever, we for our internal fork(s) we need to build Gerrit in an \"clean\" environment and in that environment it is much easier to consume artifacts from maven central than from Google repository. if it is in maven central then it gets automatically copied to our corporate nexus server. Otherwise, we have to care to get a library in.\n\nI think this change is not intrusive in any way... it just make our life (at SAP) a bit easier.",
+      "parentUuid": "d420d22f_b9a7bfc8",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 37
+      },
+      "revId": "fa6a7e30262bdbbe41775afbe9039fd3f5e2f08f",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
