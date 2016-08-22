@@ -257,6 +257,10 @@ limitations under the License.
     </license>
   </licenses>
 
+  <properties>
+    <java.version>1.8</java.version>
+  </properties>
+
   <profiles>
     <profile>
       <id>db2</id>
@@ -376,8 +380,8 @@ limitations under the License.
         <configuration>
           <compilerId>javac-with-errorprone</compilerId>
           <forceJavacCompilerUse>true</forceJavacCompilerUse>
-          <source>1.7</source>
-          <target>1.7</target>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
           <encoding>UTF-8</encoding>
         </configuration>
         <dependencies>
@@ -415,7 +419,7 @@ limitations under the License.
           <encoding>UTF-8</encoding>
           <quiet>true</quiet>
           <links>
-            <link>http://java.sun.com/j2se/1.7.0/docs/api</link>
+            <link>http://docs.oracle.com/javase/8/docs/api</link>
           </links>
         </configuration>
         <executions>
