@@ -46,6 +46,30 @@
       "revId": "fa6a7e30262bdbbe41775afbe9039fd3f5e2f08f",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "518b35e0_40470ea0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2016-08-31T09:56:30Z",
+      "side": 1,
+      "message": "If we\u0027re going to use Maven central for gwtorm and gwtjsonrpc it\u0027s probably worth updating the release documentation.  I\u0027ve just spent a non-trivial amount of time trying to get the gwtjsonrpc release to work before remembering about this change.\n\nI\u0027ll work on it later this week when/if I have time.",
+      "parentUuid": "9441fad9_bfdf97fb",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 37
+      },
+      "revId": "fa6a7e30262bdbbe41775afbe9039fd3f5e2f08f",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
