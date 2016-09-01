@@ -447,13 +447,6 @@ limitations under the License.
         </executions>
       </plugin>
     </plugins>
-    <extensions>
-      <extension>
-        <groupId>com.googlesource.gerrit</groupId>
-        <artifactId>gs-maven-wagon</artifactId>
-        <version>3.3</version>
-      </extension>
-    </extensions>
   </build>
 
   <dependencies>
@@ -528,18 +521,16 @@ limitations under the License.
     </dependency>
   </dependencies>
 
-  <pluginRepositories>
-    <pluginRepository>
-      <id>gerrit-maven</id>
-      <url>https://gerrit-maven.commondatastorage.googleapis.com</url>
-    </pluginRepository>
-  </pluginRepositories>
-
   <distributionManagement>
     <repository>
-      <id>gerrit-maven-repository</id>
-      <url>gs://gerrit-maven</url>
+      <id>sonatype-nexus-staging</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
       <uniqueVersion>true</uniqueVersion>
     </repository>
+    <snapshotRepository>
+      <id>sonatype-nexus-staging</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+      <uniqueVersion>true</uniqueVersion>
+    </snapshotRepository>
   </distributionManagement>
 </project>
