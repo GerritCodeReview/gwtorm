@@ -91,7 +91,7 @@ public class DialectH2 extends SqlDialect {
       r.append("ALTER TABLE ");
       r.append(tableName);
       r.append(" ADD CONSTRAINT ");
-      r.append(col.getColumnName() + "_check");
+      r.append(tableName + "_" + col.getColumnName() + "_check");
       r.append(' ');
       r.append(check);
       stmt.execute(r.toString());
