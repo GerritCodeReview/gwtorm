@@ -112,6 +112,7 @@ public abstract class AbstractTestJdbcAccess {
     oneRow = dataProvider.createIterable(new Data(1));
     twoRows = dataProvider.createIterable(new Data(1), new Data(2));
     conn = mock(Connection.class);
+    when(conn.getAutoCommit()).thenReturn(true);
     dialect = createDialect();
     classUnderTest = createJdbcAccess(dialect, conn);
   }

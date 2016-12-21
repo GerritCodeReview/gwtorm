@@ -25,6 +25,7 @@ import com.google.gwtorm.data.PhoneBookDb;
 import com.google.gwtorm.data.PhoneBookDb2;
 import com.google.gwtorm.jdbc.Database;
 import com.google.gwtorm.jdbc.JdbcExecutor;
+import com.google.gwtorm.server.OrmConcurrencyException;
 import com.google.gwtorm.server.OrmDuplicateKeyException;
 import com.google.gwtorm.server.OrmException;
 
@@ -33,8 +34,8 @@ import org.junit.Test;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Collections;
+import java.util.List;
 
 public abstract class SqlDialectTest {
   protected JdbcExecutor executor;
@@ -119,6 +120,149 @@ public abstract class SqlDialectTest {
       assertTrue(e.getCause() instanceof SQLException);
       assertFalse(e instanceof OrmDuplicateKeyException);
       assertContainsString(e.getMessage(), p.people().getRelationName());
+    } finally {
+      p.close();
+    }
+  }
+
+  @Test
+  public void testInsertExistingRowThrowsOrmDuplicateKeyException()
+      throws Exception {
+    PhoneBookDb p = phoneBook.open();
+    try {
+      p.updateSchema(executor);
+
+      Person bob = new Person(new Person.Key("Bob"), 18);
+      p.people().insert(Collections.singleton(bob));
+
+      try {
+        p.people().insert(Collections.singleton(bob));
+        fail("expected OrmDuplicateKeyException");
+      } catch (OrmDuplicateKeyException e) {
+        assertEquals(p.people().getRelationName(), e.getMessage());
+      }
+    } finally {
+      p.close();
+    }
+  }
+
+  @Test
+  public void testInsertExistingRowInTransactionThrowsOrmDuplicateKeyException()
+      throws Exception {
+    PhoneBookDb p = phoneBook.open();
+    try {
+      p.updateSchema(executor);
+
+      Person bob = new Person(new Person.Key("Bob"), 18);
+      p.people().insert(Collections.singleton(bob));
+
+      p.people().beginTransaction(bob.key());
+      try {
+        p.people().insert(Collections.singleton(bob));
+
+        try {
+          p.commit();
+          fail("expected OrmDuplicateKeyException");
+        } catch (OrmDuplicateKeyException e) {
+          assertEquals(p.people().getRelationName(), e.getMessage());
+        }
+      } finally {
+        p.rollback();
+      }
+    } finally {
+      p.close();
+    }
+  }
+
+  @Test
+  public void testUpdateNonexistentRowThrowsOrmConcurrencyException()
+      throws Exception {
+    PhoneBookDb p = phoneBook.open();
+    try {
+      p.updateSchema(executor);
+
+      Person bob = new Person(new Person.Key("Bob"), 18);
+
+      try {
+        p.people().update(Collections.singleton(bob));
+        fail("expected OrmConcurrencyException");
+      } catch (OrmConcurrencyException e) {
+        // Expected.
+      }
+    } finally {
+      p.close();
+    }
+  }
+
+  @Test
+  public void testUpdateNonexistentRowInTransactionThrowsOrmConcurrencyException()
+      throws Exception {
+    PhoneBookDb p = phoneBook.open();
+    try {
+      p.updateSchema(executor);
+
+      Person bob = new Person(new Person.Key("Bob"), 18);
+
+      p.people().beginTransaction(bob.key());
+      try {
+        p.people().update(Collections.singleton(bob));
+
+        try {
+          p.commit();
+          fail("expected OrmConcurrencyException");
+        } catch (OrmConcurrencyException e) {
+          // Expected.
+        }
+      } finally {
+        p.rollback();
+      }
+    } finally {
+      p.close();
+    }
+  }
+
+  @Test
+  public void testDeleteNonexistentRowThrowsOrmConcurrencyException()
+      throws Exception {
+    PhoneBookDb p = phoneBook.open();
+    try {
+      p.updateSchema(executor);
+
+      Person bob = new Person(new Person.Key("Bob"), 18);
+
+      try {
+        p.people().delete(Collections.singleton(bob));
+        fail("expected OrmConcurrencyException");
+      } catch (OrmConcurrencyException e) {
+        // Expected.
+      }
+    } finally {
+      p.close();
+    }
+  }
+
+  @Test
+  public void testDeleteNonexistentRowInTransactionThrowsOrmConcurrencyException()
+      throws Exception {
+    PhoneBookDb p = phoneBook.open();
+    try {
+      p.updateSchema(executor);
+
+      Person bob = new Person(new Person.Key("Bob"), 18);
+
+      p.people().beginTransaction(bob.key());
+      try {
+        p.people().delete(Collections.singleton(bob));
+
+        try {
+          p.commit();
+          fail("expected OrmConcurrencyException");
+        } catch (OrmConcurrencyException e) {
+          // Expected.
+        }
+      } finally {
+        p.rollback();
+      }
     } finally {
       p.close();
     }

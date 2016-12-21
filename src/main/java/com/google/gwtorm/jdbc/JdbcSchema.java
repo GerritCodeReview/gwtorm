@@ -21,6 +21,8 @@ import com.google.gwtorm.schema.SchemaModel;
 import com.google.gwtorm.schema.SequenceModel;
 import com.google.gwtorm.schema.sql.SqlDialect;
 import com.google.gwtorm.server.AbstractSchema;
+import com.google.gwtorm.server.OrmConcurrencyException;
+import com.google.gwtorm.server.OrmDuplicateKeyException;
 import com.google.gwtorm.server.OrmException;
 import com.google.gwtorm.server.Schema;
 import com.google.gwtorm.server.StatementExecutor;
@@ -34,6 +36,7 @@ import java.util.Set;
 public abstract class JdbcSchema extends AbstractSchema {
   private final Database<?> dbDef;
   private Connection conn;
+  private OrmException transactionException;
 
   protected JdbcSchema(final Database<?> d) throws OrmException {
     dbDef = d;
@@ -51,7 +54,18 @@ public abstract class JdbcSchema extends AbstractSchema {
   @Override
   public void commit() throws OrmException {
     try {
-      if (!conn.getAutoCommit()) {
+      if (isInTransaction()) {
+        if (transactionException != null) {
+          OrmException e = transactionException;
+          transactionException = null;
+          if (e instanceof OrmConcurrencyException) {
+            throw new OrmConcurrencyException(e.getMessage(), e);
+          } else if (e instanceof OrmDuplicateKeyException) {
+            throw new OrmDuplicateKeyException(e.getMessage(), e);
+          } else {
+            throw new OrmException(e.getMessage(), e);
+          }
+        }
         conn.commit();
       }
     } catch (SQLException err) {
@@ -69,6 +83,7 @@ public abstract class JdbcSchema extends AbstractSchema {
   public void rollback() throws OrmException {
     try {
       if (!conn.getAutoCommit()) {
+        transactionException = null;
         conn.rollback();
       }
     } catch (SQLException err) {
@@ -242,6 +257,7 @@ public abstract class JdbcSchema extends AbstractSchema {
 
   @Override
   public void close() {
+    transactionException = null;
     if (conn != null) {
       try {
         conn.close();
@@ -249,6 +265,17 @@ public abstract class JdbcSchema extends AbstractSchema {
         // TODO Handle an exception while closing a connection
       }
       conn = null;
+    }
+  }
+
+  boolean isInTransaction() throws SQLException {
+    return !conn.getAutoCommit();
+  }
+
+  void setTransactionException(OrmException ex) {
+    // commit() needs a single cause, so just take the first.
+    if (transactionException == null) {
+      transactionException = Preconditions.checkNotNull(ex);
     }
   }
 }
