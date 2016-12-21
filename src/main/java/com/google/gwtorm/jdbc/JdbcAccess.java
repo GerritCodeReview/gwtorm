@@ -168,7 +168,9 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
         insertIndividually(instances);
       }
     } catch (SQLException e) {
-      throw convertError("insert", e);
+      throwOrDefer(convertError("insert", e));
+    } catch (OrmException e) {
+      throwOrDefer(e);
     }
   }
 
@@ -227,7 +229,9 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
         updateIndividually(instances);
       }
     } catch (SQLException e) {
-      throw convertError("update", e);
+      throwOrDefer(convertError("update", e));
+    } catch (OrmException e) {
+      throwOrDefer(e);
     }
   }
 
@@ -326,11 +330,15 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
 
   @Override
   public void upsert(final Iterable<T> instances) throws OrmException {
-  // Assume update first, it will cheaply tell us if the row is missing.
-  Collection<T> inserts = attemptUpdate(instances);
+    try {
+      // Assume update first, it will cheaply tell us if the row is missing.
+      Collection<T> inserts = attemptUpdate(instances);
 
-    if (inserts != null) {
-      insert(inserts);
+      if (inserts != null) {
+        insert(inserts);
+      }
+    } catch (OrmException e) {
+      throwOrDefer(e);
     }
   }
 
@@ -391,7 +399,9 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
         deleteIndividually(instances);
       }
     } catch (SQLException e) {
-      throw convertError("delete", e);
+      throwOrDefer(convertError("delete", e));
+    } catch (OrmException e) {
+      throwOrDefer(e);
     }
   }
 
@@ -451,6 +461,19 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
     if (numberOfRowsUpdated != cnt) {
         throw new OrmConcurrencyException();
     }
+  }
+
+  private void throwOrDefer(OrmException e) throws OrmException {
+    try {
+      if (!schema.isInTransaction()) {
+        throw e;
+      }
+    } catch (SQLException e2) {
+      // Couldn't determine if we were in a transaction. Assume we are not, and
+      // just rethrow the original exception.
+      throw e; // Not e2.
+    }
+    schema.setTransactionException(e);
   }
 
   protected OrmException convertError(final String op, SQLException err) {

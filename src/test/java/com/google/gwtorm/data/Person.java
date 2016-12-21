@@ -59,6 +59,10 @@ public class Person {
     this.age = age;
   }
 
+  public Key key() {
+    return name;
+  }
+
   public String name() {
     return name.get();
   }
