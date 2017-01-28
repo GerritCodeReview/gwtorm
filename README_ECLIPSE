@@ -53,3 +53,18 @@ Run the following commands:
   alter database gwtorm charset=utf8;
   grant all on gwtorm.* to 'gwtorm'@'localhost';
   flush privileges;
+
+MariaDB
+~~~~~
+
+Enter the mariadb console:
+
+  $ mysql
+
+Run the following commands:
+
+  create user 'gwtorm'@'localhost' identified by 'gwtorm';
+  create database gwtorm;
+  alter database gwtorm charset=utf8;
+  grant all on gwtorm.* to 'gwtorm'@'localhost';
+  flush privileges;
