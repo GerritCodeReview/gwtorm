@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bb927ac5_47934ac9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "Jan 29, 2017 4:00:20 PM",
+      "side": 1,
+      "message": "Changes in gwtorm should not have dependency on changes in gerrit.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 58
+      },
+      "revId": "18aced3ab70ebc0e32da42c2c33c7eb9393a0c0c",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "716fc591_97d5a959",
+        "filename": "README_ECLIPSE",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "Jan 29, 2017 4:00:20 PM",
+      "side": 1,
+      "message": "nit: missing ~",
+      "revId": "18aced3ab70ebc0e32da42c2c33c7eb9393a0c0c",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "261976b5_a36968e7",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/DialectMariaDB.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "Jan 29, 2017 4:00:20 PM",
+      "side": 1,
+      "message": "I\u0027m not sure if we should still attribute copyright to Google Inc.  Looking through the files, all except one with a date after 2011 are attributed to the Android Open Source Project.",
+      "range": {
+        "startLine": 1,
+        "startChar": 3,
+        "endLine": 1,
+        "endChar": 29
+      },
+      "revId": "18aced3ab70ebc0e32da42c2c33c7eb9393a0c0c",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c4c6cf5b_c0732d0f",
+        "filename": "src/main/java/com/google/gwtorm/schema/sql/DialectMariaDB.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "Jan 29, 2017 4:00:20 PM",
+      "side": 1,
+      "message": "Unnecessary final here and below?",
+      "range": {
+        "startLine": 40,
+        "startChar": 8,
+        "endLine": 40,
+        "endChar": 13
+      },
+      "revId": "18aced3ab70ebc0e32da42c2c33c7eb9393a0c0c",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
