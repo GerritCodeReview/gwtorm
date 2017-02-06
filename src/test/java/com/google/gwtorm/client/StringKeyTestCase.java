@@ -99,7 +99,6 @@ public class StringKeyTestCase {
     final String str = "foo";
     final Parent p1 = new Parent(str);
     final Parent p2 = new Parent(str);
-    assertTrue(p1.equals(p1));
     assertTrue(p1.equals(p2));
     assertTrue(p2.equals(p1));
     assertFalse(p1.equals(null));
@@ -128,7 +127,6 @@ public class StringKeyTestCase {
     final String cName = "bar";
     final Child c1 = new Child(new Parent(pName), cName);
     final Child c2 = new Child(new Parent(pName), cName);
-    assertTrue(c1.equals(c1));
     assertTrue(c1.equals(c2));
     assertTrue(c2.equals(c1));
     assertFalse(c1.equals(null));

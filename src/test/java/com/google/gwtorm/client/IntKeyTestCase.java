@@ -97,7 +97,6 @@ public class IntKeyTestCase {
     final int id = 42;
     final Parent p1 = new Parent(id);
     final Parent p2 = new Parent(id);
-    assertTrue(p1.equals(p1));
     assertTrue(p1.equals(p2));
     assertTrue(p2.equals(p1));
     assertFalse(p1.equals(null));
@@ -126,7 +125,6 @@ public class IntKeyTestCase {
     final int cId = 8;
     final Child c1 = new Child(new Parent(pId), cId);
     final Child c2 = new Child(new Parent(pId), cId);
-    assertTrue(c1.equals(c1));
     assertTrue(c1.equals(c2));
     assertTrue(c2.equals(c1));
     assertFalse(c1.equals(null));
