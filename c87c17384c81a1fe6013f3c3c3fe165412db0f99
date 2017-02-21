@@ -16,6 +16,24 @@
       "revId": "c87c17384c81a1fe6013f3c3c3fe165412db0f99",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c493c011_a0ccdd75",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2017-02-21T11:06:21Z",
+      "side": 1,
+      "message": "Wasn\u0027t aware of that, thanks.\n\nThe mvn clean package seems to work OK, although if the issue is going to be fixed in the next release, maybe we should wait for that?\n\nSee also this change on bazel where coincidentally I already asked when error-prone 2.0.18 will be released:\n\nhttps://bazel-review.googlesource.com/#/c/8971/",
+      "parentUuid": "655327ba_58c0ac51",
+      "revId": "c87c17384c81a1fe6013f3c3c3fe165412db0f99",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
