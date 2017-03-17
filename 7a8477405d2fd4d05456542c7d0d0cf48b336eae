@@ -33,6 +33,24 @@
       "revId": "7a8477405d2fd4d05456542c7d0d0cf48b336eae",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8c255a87_61bc06c6",
+        "filename": "src/test/java/com/google/gwtorm/schema/sql/DialectMariaDBTest.java",
+        "patchSetId": 15
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1029953
+      },
+      "writtenOn": "2017-03-17T09:05:22Z",
+      "side": 1,
+      "message": "Thanks, done.",
+      "parentUuid": "8d0ea17f_66feb2df",
+      "revId": "7a8477405d2fd4d05456542c7d0d0cf48b336eae",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
