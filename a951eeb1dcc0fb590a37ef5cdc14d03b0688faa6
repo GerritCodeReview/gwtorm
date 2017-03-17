@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "12eec2e1_bc785c0f",
+        "filename": "README_ECLIPSE",
+        "patchSetId": 14
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2017-03-17T08:34:19Z",
+      "side": 1,
+      "message": "this is identical with the MySQL section above. Why not simply change the line 42 to:\n\n  MySQL and MariaDB",
+      "range": {
+        "startLine": 56,
+        "startChar": 0,
+        "endLine": 70,
+        "endChar": 19
+      },
+      "revId": "a951eeb1dcc0fb590a37ef5cdc14d03b0688faa6",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
