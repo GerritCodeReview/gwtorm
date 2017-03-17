@@ -21,11 +21,10 @@ import java.lang.annotation.Target;
 
 /**
  * Identity of a custom {@link ProtobufCodec} for a {@code Column}.
- * <p>
- * Additional annotation tagged onto a {@code Column} field that carries the
- * name of a custom {@link ProtobufCodec} that should be used to handle that
- * field. The field data will be treated as an opaque binary sequence, so its
- * {@link ProtobufCodec#sizeof(Object)} method must be accurate.
+ *
+ * <p>Additional annotation tagged onto a {@code Column} field that carries the name of a custom
+ * {@link ProtobufCodec} that should be used to handle that field. The field data will be treated as
+ * an opaque binary sequence, so its {@link ProtobufCodec#sizeof(Object)} method must be accurate.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)

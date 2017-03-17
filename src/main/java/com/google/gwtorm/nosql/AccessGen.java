@@ -27,18 +27,16 @@ import com.google.gwtorm.server.CodeGenSupport;
 import com.google.gwtorm.server.GeneratedClassLoader;
 import com.google.gwtorm.server.OrmException;
 import com.google.gwtorm.server.ResultSet;
-
-import org.antlr.runtime.tree.Tree;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import org.antlr.runtime.tree.Tree;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 
 /** Generates a concrete implementation of a {@link NoSqlAccess} extension. */
 class AccessGen implements Opcodes {
@@ -50,8 +48,7 @@ class AccessGen implements Opcodes {
   private static final Type byteArray = Type.getType(byte[].class);
   private static final Type ormException = Type.getType(OrmException.class);
   private static final Type resultSet = Type.getType(ResultSet.class);
-  private static final Type indexKeyBuilder =
-      Type.getType(IndexKeyBuilder.class);
+  private static final Type indexKeyBuilder = Type.getType(IndexKeyBuilder.class);
 
   private static final String F_OBJECT_CODEC = "objectCodec";
   private static final String F_INDEXES = "indexes";
@@ -68,16 +65,17 @@ class AccessGen implements Opcodes {
   private String implClassName;
   private String implTypeName;
 
-  AccessGen(final GeneratedClassLoader loader, final RelationModel rm,
+  AccessGen(
+      final GeneratedClassLoader loader,
+      final RelationModel rm,
       final Class<? extends NoSqlSchema> schemaClazz,
-      @SuppressWarnings("rawtypes")
-      final Class<? extends NoSqlAccess> accessClazz) throws OrmException {
+      @SuppressWarnings("rawtypes") final Class<? extends NoSqlAccess> accessClazz)
+      throws OrmException {
     classLoader = loader;
     model = rm;
 
     try {
-      modelClass =
-          Class.forName(model.getEntityTypeClassName(), true, classLoader);
+      modelClass = Class.forName(model.getEntityTypeClassName(), true, classLoader);
     } catch (ClassNotFoundException cnfe) {
       throw new OrmException("Cannot locate model class", cnfe);
     }
@@ -88,8 +86,7 @@ class AccessGen implements Opcodes {
 
     key = model.getPrimaryKey();
     if (key == null) {
-      throw new OrmException("Relation " + rm.getMethodName()
-          + " has no primary key");
+      throw new OrmException("Relation " + rm.getMethodName() + " has no primary key");
     }
   }
 
@@ -187,52 +184,69 @@ class AccessGen implements Opcodes {
 
   private void init() {
     implClassName =
-        model.getEntityTypeClassName() + "_Access_" + model.getMethodName()
-            + "_" + Util.createRandomName();
+        model.getEntityTypeClassName()
+            + "_Access_"
+            + model.getMethodName()
+            + "_"
+            + Util.createRandomName();
     implTypeName = implClassName.replace('.', '/');
 
     cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
-    cw.visit(V1_3, ACC_PUBLIC | ACC_FINAL | ACC_SUPER, implTypeName, null,
-        accessType.getInternalName(), new String[] {model
-            .getAccessInterfaceName().replace('.', '/')});
+    cw.visit(
+        V1_3,
+        ACC_PUBLIC | ACC_FINAL | ACC_SUPER,
+        implTypeName,
+        null,
+        accessType.getInternalName(),
+        new String[] {model.getAccessInterfaceName().replace('.', '/')});
   }
 
   private void implementStaticFields() {
-    cw.visitField(ACC_PRIVATE | ACC_STATIC, F_OBJECT_CODEC,
-        protobufCodec.getDescriptor(), null, null).visitEnd();
-    cw.visitField(ACC_PRIVATE | ACC_STATIC, F_INDEXES,
-        Type.getType(IndexFunction[].class).getDescriptor(), null, null)
+    cw.visitField(
+            ACC_PRIVATE | ACC_STATIC, F_OBJECT_CODEC, protobufCodec.getDescriptor(), null, null)
+        .visitEnd();
+    cw.visitField(
+            ACC_PRIVATE | ACC_STATIC,
+            F_INDEXES,
+            Type.getType(IndexFunction[].class).getDescriptor(),
+            null,
+            null)
         .visitEnd();
 
     for (final QueryModel q : model.getQueries()) {
       if (needsIndexFunction(q)) {
-        cw.visitField(ACC_PRIVATE | ACC_STATIC, "index_" + q.getName(),
-            indexFunction.getDescriptor(), null, null).visitEnd();
+        cw.visitField(
+                ACC_PRIVATE | ACC_STATIC,
+                "index_" + q.getName(),
+                indexFunction.getDescriptor(),
+                null,
+                null)
+            .visitEnd();
       }
     }
   }
 
   private void implementConstructor() {
     final String consName = "<init>";
-    final String consDesc =
-        Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {schemaType});
-    final MethodVisitor mv =
-        cw.visitMethod(ACC_PUBLIC, consName, consDesc, null, null);
+    final String consDesc = Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {schemaType});
+    final MethodVisitor mv = cw.visitMethod(ACC_PUBLIC, consName, consDesc, null, null);
     mv.visitCode();
     mv.visitVarInsn(ALOAD, 0);
     mv.visitVarInsn(ALOAD, 1);
-    mv.visitMethodInsn(INVOKESPECIAL, accessType.getInternalName(), consName,
-        consDesc);
+    mv.visitMethodInsn(INVOKESPECIAL, accessType.getInternalName(), consName, consDesc);
     mv.visitInsn(RETURN);
     mv.visitMaxs(-1, -1);
     mv.visitEnd();
   }
 
-  private void implementGetString(final String methodName,
-      final String returnValue) {
+  private void implementGetString(final String methodName, final String returnValue) {
     final MethodVisitor mv =
-        cw.visitMethod(ACC_PUBLIC | ACC_FINAL, methodName, Type
-            .getMethodDescriptor(string, new Type[] {}), null, null);
+        cw.visitMethod(
+            ACC_PUBLIC | ACC_FINAL,
+            methodName,
+            Type.getMethodDescriptor(string, new Type[] {}),
+            null,
+            null);
     mv.visitCode();
     mv.visitLdcInsn(returnValue);
     mv.visitInsn(ARETURN);
@@ -242,8 +256,12 @@ class AccessGen implements Opcodes {
 
   private void implementGetRelationID() {
     final MethodVisitor mv =
-        cw.visitMethod(ACC_PUBLIC | ACC_FINAL, "getRelationID", Type
-            .getMethodDescriptor(Type.INT_TYPE, new Type[] {}), null, null);
+        cw.visitMethod(
+            ACC_PUBLIC | ACC_FINAL,
+            "getRelationID",
+            Type.getMethodDescriptor(Type.INT_TYPE, new Type[] {}),
+            null,
+            null);
     mv.visitCode();
     new CodeGenSupport(mv).push(model.getRelationID());
     mv.visitInsn(IRETURN);
@@ -253,11 +271,14 @@ class AccessGen implements Opcodes {
 
   private void implementGetObjectCodec() {
     final MethodVisitor mv =
-        cw.visitMethod(ACC_PUBLIC | ACC_FINAL, "getObjectCodec", Type
-            .getMethodDescriptor(protobufCodec, new Type[] {}), null, null);
+        cw.visitMethod(
+            ACC_PUBLIC | ACC_FINAL,
+            "getObjectCodec",
+            Type.getMethodDescriptor(protobufCodec, new Type[] {}),
+            null,
+            null);
     mv.visitCode();
-    mv.visitFieldInsn(GETSTATIC, implTypeName, F_OBJECT_CODEC, protobufCodec
-        .getDescriptor());
+    mv.visitFieldInsn(GETSTATIC, implTypeName, F_OBJECT_CODEC, protobufCodec.getDescriptor());
     mv.visitInsn(ARETURN);
     mv.visitMaxs(-1, -1);
     mv.visitEnd();
@@ -265,12 +286,15 @@ class AccessGen implements Opcodes {
 
   private void implementGetIndexes() {
     final MethodVisitor mv =
-        cw.visitMethod(ACC_PUBLIC | ACC_FINAL, "getIndexes", Type
-            .getMethodDescriptor(Type.getType(IndexFunction[].class),
-                new Type[] {}), null, null);
+        cw.visitMethod(
+            ACC_PUBLIC | ACC_FINAL,
+            "getIndexes",
+            Type.getMethodDescriptor(Type.getType(IndexFunction[].class), new Type[] {}),
+            null,
+            null);
     mv.visitCode();
-    mv.visitFieldInsn(GETSTATIC, implTypeName, F_INDEXES, Type.getType(
-        IndexFunction[].class).getDescriptor());
+    mv.visitFieldInsn(
+        GETSTATIC, implTypeName, F_INDEXES, Type.getType(IndexFunction[].class).getDescriptor());
     mv.visitInsn(ARETURN);
     mv.visitMaxs(-1, -1);
     mv.visitEnd();
@@ -279,12 +303,19 @@ class AccessGen implements Opcodes {
   private void implementPrimaryKey() {
     final ColumnModel f = key.getField();
     final MethodVisitor mv =
-        cw.visitMethod(ACC_PUBLIC | ACC_FINAL, "primaryKey", Type
-            .getMethodDescriptor(ormKey, new Type[] {object}), null, null);
+        cw.visitMethod(
+            ACC_PUBLIC | ACC_FINAL,
+            "primaryKey",
+            Type.getMethodDescriptor(ormKey, new Type[] {object}),
+            null,
+            null);
     mv.visitCode();
     mv.visitVarInsn(ALOAD, 1);
     mv.visitTypeInsn(CHECKCAST, entityType.getInternalName());
-    mv.visitFieldInsn(GETFIELD, entityType.getInternalName(), f.getFieldName(),
+    mv.visitFieldInsn(
+        GETFIELD,
+        entityType.getInternalName(),
+        f.getFieldName(),
         CodeGenSupport.toType(f).getDescriptor());
     mv.visitInsn(ARETURN);
     mv.visitMaxs(-1, -1);
@@ -295,17 +326,19 @@ class AccessGen implements Opcodes {
     final List<ColumnModel> pCols = Collections.singletonList(key.getField());
     final Type argType = CodeGenSupport.toType(key.getField());
     final MethodVisitor mv =
-        cw.visitMethod(ACC_PUBLIC | ACC_FINAL, "encodePrimaryKey", Type
-            .getMethodDescriptor(Type.VOID_TYPE, new Type[] {indexKeyBuilder,
-                ormKey}), null, null);
+        cw.visitMethod(
+            ACC_PUBLIC | ACC_FINAL,
+            "encodePrimaryKey",
+            Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {indexKeyBuilder, ormKey}),
+            null,
+            null);
     mv.visitCode();
 
     mv.visitVarInsn(ALOAD, 2);
     mv.visitTypeInsn(CHECKCAST, argType.getInternalName());
     mv.visitVarInsn(ASTORE, 2);
 
-    final QueryCGS cgs =
-        new QueryCGS(mv, new Type[] {argType}, pCols, new int[] {2}, 1);
+    final QueryCGS cgs = new QueryCGS(mv, new Type[] {argType}, pCols, new int[] {2}, 1);
     for (ColumnModel f : pCols) {
       IndexFunctionGen.encodeField(new QueryModel.OrderBy(f, false), mv, cgs);
     }
@@ -318,15 +351,21 @@ class AccessGen implements Opcodes {
   private void implementKeyQuery(KeyModel key) {
     final Type keyType = CodeGenSupport.toType(key.getField());
     final MethodVisitor mv =
-        cw.visitMethod(ACC_PUBLIC | ACC_FINAL, key.getName(), Type
-            .getMethodDescriptor(entityType, new Type[] {keyType}), null,
+        cw.visitMethod(
+            ACC_PUBLIC | ACC_FINAL,
+            key.getName(),
+            Type.getMethodDescriptor(entityType, new Type[] {keyType}),
+            null,
             new String[] {Type.getType(OrmException.class).getInternalName()});
     mv.visitCode();
 
     mv.visitVarInsn(ALOAD, 0);
     mv.visitVarInsn(ALOAD, 1);
-    mv.visitMethodInsn(INVOKESPECIAL, accessType.getInternalName(), "get", Type
-        .getMethodDescriptor(object, new Type[] {ormKey}));
+    mv.visitMethodInsn(
+        INVOKESPECIAL,
+        accessType.getInternalName(),
+        "get",
+        Type.getMethodDescriptor(object, new Type[] {ormKey}));
     mv.visitTypeInsn(CHECKCAST, entityType.getInternalName());
 
     mv.visitInsn(ARETURN);
@@ -352,8 +391,11 @@ class AccessGen implements Opcodes {
     }
 
     final MethodVisitor mv =
-        cw.visitMethod(ACC_PUBLIC | ACC_FINAL, info.getName(), Type
-            .getMethodDescriptor(resultSet, pTypes), null,
+        cw.visitMethod(
+            ACC_PUBLIC | ACC_FINAL,
+            info.getName(),
+            Type.getMethodDescriptor(resultSet, pTypes),
+            null,
             new String[] {ormException.getInternalName()});
     mv.visitCode();
 
@@ -364,8 +406,11 @@ class AccessGen implements Opcodes {
     final int fromBuf = nextVar++;
     mv.visitTypeInsn(NEW, indexKeyBuilder.getInternalName());
     mv.visitInsn(DUP);
-    mv.visitMethodInsn(INVOKESPECIAL, indexKeyBuilder.getInternalName(),
-        "<init>", Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {}));
+    mv.visitMethodInsn(
+        INVOKESPECIAL,
+        indexKeyBuilder.getInternalName(),
+        "<init>",
+        Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {}));
     mv.visitVarInsn(ASTORE, fromBuf);
 
     QueryCGS cgs = new QueryCGS(mv, pTypes, pCols, pVars, fromBuf);
@@ -376,8 +421,11 @@ class AccessGen implements Opcodes {
     final int toBuf = nextVar++;
     mv.visitTypeInsn(NEW, indexKeyBuilder.getInternalName());
     mv.visitInsn(DUP);
-    mv.visitMethodInsn(INVOKESPECIAL, indexKeyBuilder.getInternalName(),
-        "<init>", Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {}));
+    mv.visitMethodInsn(
+        INVOKESPECIAL,
+        indexKeyBuilder.getInternalName(),
+        "<init>",
+        Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {}));
     mv.visitVarInsn(ASTORE, toBuf);
 
     cgs = new QueryCGS(mv, pTypes, pCols, pVars, toBuf);
@@ -388,17 +436,23 @@ class AccessGen implements Opcodes {
     //
     mv.visitVarInsn(ALOAD, 0);
     if (needsIndexFunction(info)) {
-      mv.visitFieldInsn(GETSTATIC, implTypeName, "index_" + info.getName(),
-          indexFunction.getDescriptor());
+      mv.visitFieldInsn(
+          GETSTATIC, implTypeName, "index_" + info.getName(), indexFunction.getDescriptor());
     }
 
     mv.visitVarInsn(ALOAD, fromBuf);
-    mv.visitMethodInsn(INVOKEVIRTUAL, indexKeyBuilder.getInternalName(),
-        "toByteArray", Type.getMethodDescriptor(byteArray, new Type[] {}));
+    mv.visitMethodInsn(
+        INVOKEVIRTUAL,
+        indexKeyBuilder.getInternalName(),
+        "toByteArray",
+        Type.getMethodDescriptor(byteArray, new Type[] {}));
 
     mv.visitVarInsn(ALOAD, toBuf);
-    mv.visitMethodInsn(INVOKEVIRTUAL, indexKeyBuilder.getInternalName(),
-        "toByteArray", Type.getMethodDescriptor(byteArray, new Type[] {}));
+    mv.visitMethodInsn(
+        INVOKEVIRTUAL,
+        indexKeyBuilder.getInternalName(),
+        "toByteArray",
+        Type.getMethodDescriptor(byteArray, new Type[] {}));
 
     // Set the limit on the number of results.
     //
@@ -417,16 +471,22 @@ class AccessGen implements Opcodes {
     cgs.push(info.hasOrderBy() ? 1 : 0);
 
     if (needsIndexFunction(info)) {
-      mv.visitMethodInsn(INVOKEVIRTUAL, accessType.getInternalName(),
-          "scanIndex", Type.getMethodDescriptor(resultSet, new Type[] {
-              indexFunction, byteArray, byteArray, Type.INT_TYPE,
-              Type.BOOLEAN_TYPE}));
+      mv.visitMethodInsn(
+          INVOKEVIRTUAL,
+          accessType.getInternalName(),
+          "scanIndex",
+          Type.getMethodDescriptor(
+              resultSet,
+              new Type[] {indexFunction, byteArray, byteArray, Type.INT_TYPE, Type.BOOLEAN_TYPE}));
     } else {
       // No where and no order by clause? Use the primary key instead.
       //
-      mv.visitMethodInsn(INVOKEVIRTUAL, accessType.getInternalName(),
-          "scanPrimaryKey", Type.getMethodDescriptor(resultSet, new Type[] {
-              byteArray, byteArray, Type.INT_TYPE, Type.BOOLEAN_TYPE}));
+      mv.visitMethodInsn(
+          INVOKEVIRTUAL,
+          accessType.getInternalName(),
+          "scanPrimaryKey",
+          Type.getMethodDescriptor(
+              resultSet, new Type[] {byteArray, byteArray, Type.INT_TYPE, Type.BOOLEAN_TYPE}));
     }
 
     mv.visitInsn(ARETURN);
@@ -438,8 +498,9 @@ class AccessGen implements Opcodes {
     return info.hasWhere() || info.hasOrderBy();
   }
 
-  private void encodeFields(QueryModel qm, List<Tree> query, MethodVisitor mv,
-      QueryCGS cgs, boolean fromKey) throws OrmException {
+  private void encodeFields(
+      QueryModel qm, List<Tree> query, MethodVisitor mv, QueryCGS cgs, boolean fromKey)
+      throws OrmException {
     final boolean toKey = !fromKey;
     Tree lastNode = null;
 
@@ -490,9 +551,13 @@ class AccessGen implements Opcodes {
           break;
 
         default:
-          throw new OrmException("Unsupported query token in "
-              + model.getMethodName() + "." + qm.getName() + ": "
-              + node.toStringTree());
+          throw new OrmException(
+              "Unsupported query token in "
+                  + model.getMethodName()
+                  + "."
+                  + qm.getName()
+                  + ": "
+                  + node.toStringTree());
       }
 
       cgs.nextParameter();
@@ -501,13 +566,16 @@ class AccessGen implements Opcodes {
 
   private void checkLastNode(QueryModel qm, Tree lastNode) throws OrmException {
     if (lastNode != null) {
-      throw new OrmException(lastNode.getText() + " must be last operator in "
-          + model.getMethodName() + "." + qm.getName());
+      throw new OrmException(
+          lastNode.getText()
+              + " must be last operator in "
+              + model.getMethodName()
+              + "."
+              + qm.getName());
     }
   }
 
-  private void encodeField(Tree node, MethodVisitor mv, QueryCGS cgs)
-      throws OrmException {
+  private void encodeField(Tree node, MethodVisitor mv, QueryCGS cgs) throws OrmException {
     ColumnModel f = ((QueryParser.Column) node.getChild(0)).getField();
     IndexFunctionGen.encodeField(new QueryModel.OrderBy(f, false), mv, cgs);
   }
@@ -520,29 +588,31 @@ class AccessGen implements Opcodes {
     switch (node.getType()) {
       case 0: // nil node used to join other nodes together
       case QueryParser.WHERE:
-      case QueryParser.AND: {
-        List<Tree> res = new ArrayList<>();
-        for (int i = 0; i < node.getChildCount(); i++) {
-          res.addAll(compareOpsOnly(node.getChild(i)));
+      case QueryParser.AND:
+        {
+          List<Tree> res = new ArrayList<>();
+          for (int i = 0; i < node.getChildCount(); i++) {
+            res.addAll(compareOpsOnly(node.getChild(i)));
+          }
+          return res;
         }
-        return res;
-      }
 
       case QueryParser.GT:
       case QueryParser.GE:
       case QueryParser.EQ:
       case QueryParser.LE:
-      case QueryParser.LT: {
-        final Tree lhs = node.getChild(0);
-        final Tree rhs = node.getChild(1);
-        if (lhs.getType() != QueryParser.ID) {
-          throw new OrmException("Unsupported query token");
+      case QueryParser.LT:
+        {
+          final Tree lhs = node.getChild(0);
+          final Tree rhs = node.getChild(1);
+          if (lhs.getType() != QueryParser.ID) {
+            throw new OrmException("Unsupported query token");
+          }
+          if (rhs.getType() == QueryParser.PLACEHOLDER) {
+            return Collections.singletonList(node);
+          }
+          break;
         }
-        if (rhs.getType() == QueryParser.PLACEHOLDER) {
-          return Collections.singletonList(node);
-        }
-        break;
-      }
 
       case QueryParser.ORDER:
       case QueryParser.LIMIT:
@@ -561,8 +631,8 @@ class AccessGen implements Opcodes {
     private final int bufvar;
     private int currentp;
 
-    private QueryCGS(MethodVisitor method, Type[] pTypes,
-        List<ColumnModel> pCols, int[] pVars, int bufvar) {
+    private QueryCGS(
+        MethodVisitor method, Type[] pTypes, List<ColumnModel> pCols, int[] pVars, int bufvar) {
       super(method);
       this.pTypes = pTypes;
       this.pCols = pCols;

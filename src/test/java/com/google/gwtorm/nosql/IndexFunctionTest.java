@@ -25,7 +25,6 @@ import com.google.gwtorm.schema.RelationModel;
 import com.google.gwtorm.schema.java.JavaSchemaModel;
 import com.google.gwtorm.server.GeneratedClassLoader;
 import com.google.gwtorm.server.OrmException;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -76,8 +75,7 @@ public class IndexFunctionTest {
 
   @Test
   public void testPersonByNameAge_OrderByName() throws Exception {
-    IndexFunction<Person> idx =
-        index("nameAge", "WHERE name=? AND age=? ORDER BY name");
+    IndexFunction<Person> idx = index("nameAge", "WHERE name=? AND age=? ORDER BY name");
     Assert.assertEquals("nameAge", idx.getName());
 
     IndexKeyBuilder b;
@@ -92,8 +90,7 @@ public class IndexFunctionTest {
 
   @Test
   public void testPersonByNameAge_OrderByRegistered() throws Exception {
-    IndexFunction<Person> idx =
-        index("nameAge", "WHERE name=? AND age=? ORDER BY registered");
+    IndexFunction<Person> idx = index("nameAge", "WHERE name=? AND age=? ORDER BY registered");
     Assert.assertEquals("nameAge", idx.getName());
 
     IndexKeyBuilder b;
@@ -104,16 +101,24 @@ public class IndexFunctionTest {
     p.register();
     assertTrue(idx.includes(p));
     idx.encode(b, p);
-    assertEqualToBuilderResult(new byte[] {'q', 0x00, 0x01, // name
-        0x01, 42, 0x00, 0x01, // age
-        0x01, 0x01 // registered
-        }, b);
+    assertEqualToBuilderResult(
+        new byte[] {
+          'q',
+          0x00,
+          0x01, // name
+          0x01,
+          42,
+          0x00,
+          0x01, // age
+          0x01,
+          0x01 // registered
+        },
+        b);
   }
 
   @Test
   public void testPersonByNameRange_OrderByName() throws Exception {
-    IndexFunction<Person> idx =
-        index("nameSuggest", "WHERE name >= ? AND name <= ? ORDER BY name");
+    IndexFunction<Person> idx = index("nameSuggest", "WHERE name >= ? AND name <= ? ORDER BY name");
     assertEquals("nameSuggest", idx.getName());
 
     IndexKeyBuilder b;
@@ -128,8 +133,7 @@ public class IndexFunctionTest {
 
   @Test
   public void testOnlyRegistered() throws Exception {
-    IndexFunction<Person> idx =
-        index("isregistered", "WHERE registered = true ORDER BY name");
+    IndexFunction<Person> idx = index("isregistered", "WHERE registered = true ORDER BY name");
     assertEquals("isregistered", idx.getName());
 
     IndexKeyBuilder b;
@@ -147,8 +151,7 @@ public class IndexFunctionTest {
 
   @Test
   public void testOnlyAge42() throws Exception {
-    IndexFunction<Person> idx =
-        index("isOldEnough", "WHERE age = 42 ORDER BY name");
+    IndexFunction<Person> idx = index("isOldEnough", "WHERE age = 42 ORDER BY name");
     assertEquals("isOldEnough", idx.getName());
 
     IndexKeyBuilder b;
@@ -185,11 +188,11 @@ public class IndexFunctionTest {
   }
 
   @SuppressWarnings("rawtypes")
-  private IndexFunction<Person> index(String name, String query)
-      throws OrmException {
+  private IndexFunction<Person> index(String name, String query) throws OrmException {
     final QueryModel qm = new QueryModel(people, name, query);
-    return new IndexFunctionGen(new GeneratedClassLoader(Person.class
-        .getClassLoader()), qm, Person.class).create();
+    return new IndexFunctionGen(
+            new GeneratedClassLoader(Person.class.getClassLoader()), qm, Person.class)
+        .create();
   }
 
   private static void assertEqualToBuilderResult(byte[] exp, IndexKeyBuilder ic) {
@@ -205,7 +208,8 @@ public class IndexFunctionTest {
     return dst.toString();
   }
 
-  private static final char[] hexchar =
-      {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', //
-          'a', 'b', 'c', 'd', 'e', 'f'};
+  private static final char[] hexchar = {
+    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', //
+    'a', 'b', 'c', 'd', 'e', 'f'
+  };
 }

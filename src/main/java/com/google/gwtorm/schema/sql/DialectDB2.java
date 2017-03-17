@@ -18,7 +18,6 @@ import com.google.gwtorm.schema.ColumnModel;
 import com.google.gwtorm.server.OrmDuplicateKeyException;
 import com.google.gwtorm.server.OrmException;
 import com.google.gwtorm.server.StatementExecutor;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -41,8 +40,7 @@ public class DialectDB2 extends SqlDialect {
   }
 
   @Override
-  public OrmException convertError(String op, String entity,
-      SQLException err) {
+  public OrmException convertError(String op, String entity, SQLException err) {
     switch (getSQLStateInt(err)) {
       case 23505: // DUPLICATE_KEY_1
         return new OrmDuplicateKeyException(entity, err);
@@ -62,9 +60,8 @@ public class DialectDB2 extends SqlDialect {
     Statement s = db.createStatement();
     try {
       ResultSet rs =
-          s.executeQuery("SELECT SEQNAME"
-              + " FROM SYSCAT.SEQUENCES"
-              + " WHERE SEQSCHEMA = CURRENT_SCHEMA");
+          s.executeQuery(
+              "SELECT SEQNAME" + " FROM SYSCAT.SEQUENCES" + " WHERE SEQSCHEMA = CURRENT_SCHEMA");
       try {
         HashSet<String> sequences = new HashSet<>();
         while (rs.next()) {
@@ -83,9 +80,9 @@ public class DialectDB2 extends SqlDialect {
   public Set<String> listTables(Connection db) throws SQLException {
     Statement s = db.createStatement();
     try {
-      ResultSet rs = s.executeQuery("SELECT TABNAME"
-          + " FROM SYSCAT.TABLES"
-          + " WHERE TABSCHEMA = CURRENT_SCHEMA");
+      ResultSet rs =
+          s.executeQuery(
+              "SELECT TABNAME" + " FROM SYSCAT.TABLES" + " WHERE TABSCHEMA = CURRENT_SCHEMA");
       try {
         Set<String> tables = new HashSet<>();
         while (rs.next()) {
@@ -101,10 +98,11 @@ public class DialectDB2 extends SqlDialect {
   }
 
   @Override
-  public Set<String> listIndexes(final Connection db, String tableName)
-      throws SQLException {
-    PreparedStatement s = db.prepareStatement("SELECT distinct INDNAME"
-        + " FROM syscat.indexes WHERE TABNAME = ? AND TABSCHEMA = CURRENT_SCHEMA");
+  public Set<String> listIndexes(final Connection db, String tableName) throws SQLException {
+    PreparedStatement s =
+        db.prepareStatement(
+            "SELECT distinct INDNAME"
+                + " FROM syscat.indexes WHERE TABNAME = ? AND TABSCHEMA = CURRENT_SCHEMA");
     try {
       s.setString(1, tableName.toUpperCase());
       ResultSet rs = s.executeQuery();
@@ -123,8 +121,7 @@ public class DialectDB2 extends SqlDialect {
   }
 
   @Override
-  public void renameTable(StatementExecutor e, String from, String to)
-      throws OrmException {
+  public void renameTable(StatementExecutor e, String from, String to) throws OrmException {
     StringBuilder r = new StringBuilder();
     r.append("RENAME TABLE ");
     r.append(from);
@@ -134,8 +131,9 @@ public class DialectDB2 extends SqlDialect {
   }
 
   @Override
-  public void renameColumn(StatementExecutor stmt, String tableName,
-      String fromColumn, ColumnModel col) throws OrmException {
+  public void renameColumn(
+      StatementExecutor stmt, String tableName, String fromColumn, ColumnModel col)
+      throws OrmException {
     StringBuilder r = new StringBuilder();
     r.append("ALTER TABLE ");
     r.append(tableName);

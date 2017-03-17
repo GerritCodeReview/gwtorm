@@ -19,7 +19,6 @@ import com.google.gwtorm.server.OrmException;
 import com.google.gwtorm.server.Schema;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.UnknownFieldSet;
-
 import java.io.PrintWriter;
 import java.util.Map;
 import java.util.SortedMap;
@@ -29,11 +28,10 @@ import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Toy in-memory implementation of a NoSQL database.
- * <p>
- * Implements a simple NoSQL database with a standard {@link java.util.TreeMap}
- * held inside of this JVM process. All operations occur on the TreeMap, with no
- * durability across database restarts. Therefore this implementation is only
- * suitable for simple tests.
+ *
+ * <p>Implements a simple NoSQL database with a standard {@link java.util.TreeMap} held inside of
+ * this JVM process. All operations occur on the TreeMap, with no durability across database
+ * restarts. Therefore this implementation is only suitable for simple tests.
  *
  * @param <T> type of the application schema.
  */
@@ -50,18 +48,17 @@ abstract class TreeMapDatabase<T extends Schema, S extends TreeMapSchema, A exte
   /**
    * Initialize a new database and generate the implementation.
    *
-   * @param schemaBaseType class that the generated Schema implementation should
-   *        extend in order to provide data store connectivity.
-   * @param accessBaseType class that the generated Access implementations
-   *        should extend in order to provide single-relation access for each
-   *        schema instance.
-   * @param appSchema the application schema interface that must be implemented
-   *        and constructed on demand.
-   * @throws OrmException the schema cannot be created because of an annotation
-   *         error in the interface definitions.
+   * @param schemaBaseType class that the generated Schema implementation should extend in order to
+   *     provide data store connectivity.
+   * @param accessBaseType class that the generated Access implementations should extend in order to
+   *     provide single-relation access for each schema instance.
+   * @param appSchema the application schema interface that must be implemented and constructed on
+   *     demand.
+   * @throws OrmException the schema cannot be created because of an annotation error in the
+   *     interface definitions.
    */
-  protected TreeMapDatabase(final Class<S> schemaBaseType,
-      final Class<A> accessBaseType, final Class<T> appSchema)
+  protected TreeMapDatabase(
+      final Class<S> schemaBaseType, final Class<A> accessBaseType, final Class<T> appSchema)
       throws OrmException {
     super(schemaBaseType, accessBaseType, appSchema);
 

@@ -27,16 +27,14 @@ import com.google.gwtorm.jdbc.JdbcExecutor;
 import com.google.gwtorm.jdbc.JdbcSchema;
 import com.google.gwtorm.jdbc.SimpleDataSource;
 import com.google.gwtorm.server.OrmException;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Properties;
 import java.util.Set;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 public class DialectH2Test extends SqlDialectTest {
   @Before
@@ -49,10 +47,8 @@ public class DialectH2Test extends SqlDialectTest {
     final Properties p = new Properties();
     p.setProperty("driver", org.h2.Driver.class.getName());
     p.setProperty("url", db.getMetaData().getURL());
-    phoneBook =
-        new Database<>(new SimpleDataSource(p), PhoneBookDb.class);
-    phoneBook2 =
-        new Database<>(new SimpleDataSource(p), PhoneBookDb2.class);
+    phoneBook = new Database<>(new SimpleDataSource(p), PhoneBookDb.class);
+    phoneBook2 = new Database<>(new SimpleDataSource(p), PhoneBookDb2.class);
   }
 
   @After
@@ -171,8 +167,7 @@ public class DialectH2Test extends SqlDialectTest {
       final Person bob = new Person(pk, p.nextAddressId());
       p.people().insert(Collections.singleton(bob));
 
-      final Address addr =
-          new Address(new Address.Key(pk, "home"), "some place");
+      final Address addr = new Address(new Address.Key(pk, "home"), "some place");
       p.addresses().insert(Collections.singleton(addr));
     } finally {
       p.close();
@@ -180,8 +175,7 @@ public class DialectH2Test extends SqlDialectTest {
 
     final PhoneBookDb2 p2 = phoneBook2.open();
     try {
-      ((JdbcSchema) p2).renameField(executor, "people", "registered",
-          "isRegistered");
+      ((JdbcSchema) p2).renameField(executor, "people", "registered", "isRegistered");
     } finally {
       p2.close();
     }

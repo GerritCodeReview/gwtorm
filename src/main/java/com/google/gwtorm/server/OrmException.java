@@ -14,9 +14,7 @@
 
 package com.google.gwtorm.server;
 
-/**
- * Any data store read or write error.
- */
+/** Any data store read or write error. */
 @SuppressWarnings("serial")
 public class OrmException extends Exception {
   public OrmException(final String message) {

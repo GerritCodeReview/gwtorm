@@ -26,9 +26,6 @@ import com.google.gwtorm.data.Address;
 import com.google.gwtorm.data.Person;
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.CodedOutputStream;
-
-import org.junit.Test;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -38,19 +35,32 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import org.junit.Test;
 
 public class ProtobufEncoderTest {
-  private static final byte[] testingBin = new byte[] {
-  //
-      // name
-      0x0a, 0x09,
-      // name.name
-      0x0a, 0x07, 0x74, 0x65, 0x73, 0x74, 0x69, 0x6e, 0x67, //
-      // age
-      0x10, (byte) 75, //
-      // registered (true)
-      0x18, 0x01 //
-      //
+  private static final byte[] testingBin =
+      new byte[] {
+        //
+        // name
+        0x0a,
+        0x09,
+        // name.name
+        0x0a,
+        0x07,
+        0x74,
+        0x65,
+        0x73,
+        0x74,
+        0x69,
+        0x6e,
+        0x67, //
+        // age
+        0x10,
+        (byte) 75, //
+        // registered (true)
+        0x18,
+        0x01 //
+        //
       };
 
   @SuppressWarnings("cast")
@@ -72,8 +82,7 @@ public class ProtobufEncoderTest {
 
   @Test
   public void testAddress() {
-    final ProtobufCodec<Address> e =
-        CodecFactory.encoder(Address.class);
+    final ProtobufCodec<Address> e = CodecFactory.encoder(Address.class);
     Address a = e.decode(new byte[0]);
     assertNotNull(a);
     assertNull(a.location());
@@ -122,8 +131,7 @@ public class ProtobufEncoderTest {
   }
 
   @Test
-  public void testEncodeNonArrayByteBuffer()
-      throws UnsupportedEncodingException {
+  public void testEncodeNonArrayByteBuffer() throws UnsupportedEncodingException {
     ProtobufCodec<Person> e = CodecFactory.encoder(Person.class);
 
     Person p = new Person(new Person.Key("testing"), 75);
@@ -159,11 +167,24 @@ public class ProtobufEncoderTest {
     StringList other = e.decode(act);
     assertNotNull(other.list);
     assertEquals(list.list, other.list);
-    assertEquals(asString(new byte[] { //
-        //
-            0x12, 0x03, 'm', 'o', 'e', //
-            0x12, 0x05, 'l', 'a', 'r', 'r', 'y' //
-        }), asString(act));
+    assertEquals(
+        asString(
+            new byte[] { //
+              //
+              0x12,
+              0x03,
+              'm',
+              'o',
+              'e', //
+              0x12,
+              0x05,
+              'l',
+              'a',
+              'r',
+              'r',
+              'y' //
+            }),
+        asString(act));
   }
 
   @Test
@@ -179,11 +200,24 @@ public class ProtobufEncoderTest {
     StringSet other = e.decode(act);
     assertNotNull(other.list);
     assertEquals(list.list, other.list);
-    assertEquals(asString(new byte[] { //
-        //
-            0x0a, 0x05, 'l', 'a', 'r', 'r', 'y', //
-            0x0a, 0x03, 'm', 'o', 'e' //
-        }), asString(act));
+    assertEquals(
+        asString(
+            new byte[] { //
+              //
+              0x0a,
+              0x05,
+              'l',
+              'a',
+              'r',
+              'r',
+              'y', //
+              0x0a,
+              0x03,
+              'm',
+              'o',
+              'e' //
+            }),
+        asString(act));
   }
 
   @Test
@@ -235,7 +269,7 @@ public class ProtobufEncoderTest {
   }
 
   @Test
-  public void testEncodeToStream()throws IOException {
+  public void testEncodeToStream() throws IOException {
     ProtobufCodec<ThingWithEnum> e = CodecFactory.encoder(ThingWithEnum.class);
 
     ThingWithEnum thing = new ThingWithEnum();
@@ -255,8 +289,7 @@ public class ProtobufEncoderTest {
     assertSame(thing.type, other.type);
   }
 
-  private static String asString(byte[] bin)
-      throws UnsupportedEncodingException {
+  private static String asString(byte[] bin) throws UnsupportedEncodingException {
     return new String(bin, "ISO-8859-1");
   }
 
@@ -275,8 +308,7 @@ public class ProtobufEncoderTest {
     SortedSet<String> list;
   }
 
-  static class Item {
-  }
+  static class Item {}
 
   static class ItemCodec extends ProtobufCodec<Item> {
     @Override
@@ -308,7 +340,8 @@ public class ProtobufEncoderTest {
 
   static class ThingWithEnum {
     static enum Type {
-      A, B;
+      A,
+      B;
     }
 
     @Column(id = 1)

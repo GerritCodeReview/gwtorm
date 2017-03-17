@@ -20,20 +20,18 @@ import com.google.gwtorm.protobuf.ProtobufCodec;
 
 /**
  * A single slice of an incrementing counter.
- * <p>
- * <b>This shard class is not thread safe.</b> Implementors using this type must
- * perform synchronization through external mechanisms such as a row-level lock.
- * <p>
- * NoSQL implementations can use this object to store counters and keep track of
- * their values within {@code nextLong(String)}. To improve allocation
- * performance counters may be sliced into shards, with allocation coming out of
- * a randomly selected shard, and each shard being replenished from a master
- * shard when it {@link #isEmpty()}.
+ *
+ * <p><b>This shard class is not thread safe.</b> Implementors using this type must perform
+ * synchronization through external mechanisms such as a row-level lock.
+ *
+ * <p>NoSQL implementations can use this object to store counters and keep track of their values
+ * within {@code nextLong(String)}. To improve allocation performance counters may be sliced into
+ * shards, with allocation coming out of a randomly selected shard, and each shard being replenished
+ * from a master shard when it {@link #isEmpty()}.
  */
 public class CounterShard {
   /** Standard encoder/decoder for this class. */
-  public static final ProtobufCodec<CounterShard> CODEC =
-      CodecFactory.encoder(CounterShard.class);
+  public static final ProtobufCodec<CounterShard> CODEC = CodecFactory.encoder(CounterShard.class);
 
   /** Current value in this shard, this is the next to assign out. */
   @Column(id = 1)
@@ -43,8 +41,7 @@ public class CounterShard {
   @Column(id = 2)
   protected long max;
 
-  protected CounterShard() {
-  }
+  protected CounterShard() {}
 
   /**
    * Create a new shard with a specific starting value, with no maximum.
@@ -59,8 +56,8 @@ public class CounterShard {
    * Create a new shard with a specific starting point and maximum.
    *
    * @param next the first value this shard will hand out.
-   * @param max the highest value the shard will stop at. The shard will not
-   *        actually hand out this value.
+   * @param max the highest value the shard will stop at. The shard will not actually hand out this
+   *     value.
    */
   public CounterShard(long next, long max) {
     this.current = next;
@@ -76,8 +73,7 @@ public class CounterShard {
    * Obtain the next value from this shard.
    *
    * @return the next value
-   * @throws IllegalStateException the shard {@link #isEmpty()} and cannot hand
-   *         out any more values.
+   * @throws IllegalStateException the shard {@link #isEmpty()} and cannot hand out any more values.
    */
   public long next() {
     if (isEmpty()) {

@@ -15,7 +15,6 @@
 package com.google.gwtorm.schema.sql;
 
 import com.google.gwtorm.schema.ColumnModel;
-
 import java.sql.Types;
 
 public class SqlLongTypeInfo extends SqlTypeInfo {

@@ -29,11 +29,6 @@ import com.google.gwtorm.jdbc.Database;
 import com.google.gwtorm.jdbc.JdbcExecutor;
 import com.google.gwtorm.jdbc.JdbcSchema;
 import com.google.gwtorm.jdbc.SimpleDataSource;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -41,6 +36,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 public class PhoneBookDbTestCase {
   private static int runCount;
@@ -206,8 +204,7 @@ public class PhoneBookDbTestCase {
     final Person p1 = new Person(new Person.Key("Bob"), 18);
     sp.insert(Collections.singleton(p1));
 
-    final List<Person> list =
-        sp.get(Collections.singleton(sp.primaryKey(p1))).toList();
+    final List<Person> list = sp.get(Collections.singleton(sp.primaryKey(p1))).toList();
     assertNotNull(list);
     assertEquals(1, list.size());
 
@@ -304,8 +301,7 @@ public class PhoneBookDbTestCase {
     final Person bob1 = new Person(new Person.Key("Bob"), 18);
     schema.people().insert(Collections.singleton(bob1));
 
-    final Person bob2 =
-        schema.people().get(new Person.Key(bob1.name()));
+    final Person bob2 = schema.people().get(new Person.Key(bob1.name()));
     assertNotNull(bob2);
     assertNotSame(bob1, bob2);
     assertEquals(bob1.name(), bob2.name());
@@ -337,8 +333,7 @@ public class PhoneBookDbTestCase {
     all.add(new Person(new Person.Key("Zak"), 33));
     schema.people().insert(all);
 
-    final List<Person> r =
-        schema.people().olderThanDescByName(18).toList();
+    final List<Person> r = schema.people().olderThanDescByName(18).toList();
     assertEquals(2, r.size());
     assertEquals(all.get(2).name(), r.get(0).name());
     assertEquals(all.get(1).name(), r.get(1).name());
@@ -358,8 +353,7 @@ public class PhoneBookDbTestCase {
     assertEquals("N", rs.getString(1));
     assertFalse(rs.next());
     rs.close();
-    assertEquals(bob.isRegistered(), schema.people().all().toList().get(0)
-        .isRegistered());
+    assertEquals(bob.isRegistered(), schema.people().all().toList().get(0).isRegistered());
 
     bob.register();
     schema.people().update(Collections.singleton(bob));
@@ -368,8 +362,7 @@ public class PhoneBookDbTestCase {
     assertEquals("Y", rs.getString(1));
     assertFalse(rs.next());
     rs.close();
-    assertEquals(bob.isRegistered(), schema.people().all().toList().get(0)
-        .isRegistered());
+    assertEquals(bob.isRegistered(), schema.people().all().toList().get(0).isRegistered());
 
     bob.unregister();
     schema.people().update(Collections.singleton(bob));
@@ -378,8 +371,7 @@ public class PhoneBookDbTestCase {
     assertEquals("N", rs.getString(1));
     assertFalse(rs.next());
     rs.close();
-    assertEquals(bob.isRegistered(), schema.people().all().toList().get(0)
-        .isRegistered());
+    assertEquals(bob.isRegistered(), schema.people().all().toList().get(0).isRegistered());
 
     st.close();
   }

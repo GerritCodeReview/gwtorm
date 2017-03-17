@@ -28,16 +28,14 @@ import com.google.gwtorm.nosql.heap.MemoryDatabase;
 import com.google.gwtorm.server.Access;
 import com.google.gwtorm.server.OrmConcurrencyException;
 import com.google.gwtorm.server.OrmException;
-
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-public class NoSqlPhoneBookTest  {
+public class NoSqlPhoneBookTest {
   protected MemoryDatabase<PhoneBookDb> db;
   private List<PhoneBookDb> openSchemas;
 
@@ -166,8 +164,7 @@ public class NoSqlPhoneBookTest  {
     final Person p1 = new Person(new Person.Key("Bob"), 18);
     sp.insert(Collections.singleton(p1));
 
-    final List<Person> list =
-        sp.get(Collections.singleton(sp.primaryKey(p1))).toList();
+    final List<Person> list = sp.get(Collections.singleton(sp.primaryKey(p1))).toList();
     assertNotNull(list);
     assertEquals(1, list.size());
 
@@ -237,8 +234,7 @@ public class NoSqlPhoneBookTest  {
     final Person bob1 = new Person(new Person.Key("Bob"), 18);
     schema.people().insert(Collections.singleton(bob1));
 
-    final Person bob2 =
-        schema.people().get(new Person.Key(bob1.name()));
+    final Person bob2 = schema.people().get(new Person.Key(bob1.name()));
     assertNotNull(bob2);
     assertNotSame(bob1, bob2);
     assertEquals(bob1.name(), bob2.name());
@@ -267,19 +263,16 @@ public class NoSqlPhoneBookTest  {
     final Person bob = new Person(new Person.Key("Bob"), 18);
     schema.people().insert(Collections.singleton(bob));
 
-    assertEquals(bob.isRegistered(), schema.people().all().toList().get(0)
-        .isRegistered());
+    assertEquals(bob.isRegistered(), schema.people().all().toList().get(0).isRegistered());
 
     bob.register();
     schema.people().update(Collections.singleton(bob));
 
-    assertEquals(bob.isRegistered(), schema.people().all().toList().get(0)
-        .isRegistered());
+    assertEquals(bob.isRegistered(), schema.people().all().toList().get(0).isRegistered());
 
     bob.unregister();
     schema.people().update(Collections.singleton(bob));
 
-    assertEquals(bob.isRegistered(), schema.people().all().toList().get(0)
-        .isRegistered());
+    assertEquals(bob.isRegistered(), schema.people().all().toList().get(0).isRegistered());
   }
 }

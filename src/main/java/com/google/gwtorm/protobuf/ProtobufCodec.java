@@ -19,7 +19,6 @@ import com.google.protobuf.ByteString;
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.CodedOutputStream;
 import com.google.protobuf.InvalidProtocolBufferException;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -27,9 +26,9 @@ import java.nio.ByteBuffer;
 
 /**
  * Encode and decode an arbitrary Java object as a Protobuf message.
- * <p>
- * The object must use the {@link Column} annotations to denote the fields that
- * should be encoded or decoded.
+ *
+ * <p>The object must use the {@link Column} annotations to denote the fields that should be encoded
+ * or decoded.
  */
 public abstract class ProtobufCodec<T> {
   /** Encode the object into an immutable byte string. */
@@ -71,10 +70,11 @@ public abstract class ProtobufCodec<T> {
   /** Encode the object into a ByteBuffer. */
   public void encode(T obj, ByteBuffer buf) {
     if (buf.hasArray()) {
-      CodedOutputStream out = CodedOutputStream.newInstance( //
-          buf.array(), //
-          buf.position(), //
-          buf.remaining());
+      CodedOutputStream out =
+          CodedOutputStream.newInstance( //
+              buf.array(), //
+              buf.position(), //
+              buf.remaining());
       try {
         encode(obj, out);
         out.flush();
@@ -96,8 +96,8 @@ public abstract class ProtobufCodec<T> {
 
   /**
    * Encodes the object, prefixed by its encoded length.
-   * <p>
-   * The length is encoded as a raw varint with no tag.
+   *
+   * <p>The length is encoded as a raw varint with no tag.
    *
    * @param obj the object to encode.
    * @param out stream that will receive the object's data.
@@ -116,10 +116,10 @@ public abstract class ProtobufCodec<T> {
 
   /**
    * Encode the object to the supplied output stream.
-   * <p>
-   * The stream {@code out} is not flushed by this method. Callers that need the
-   * entire byte representation after invoking encode must flush the stream to
-   * ensure its intermediate buffers have been written to the backing store.
+   *
+   * <p>The stream {@code out} is not flushed by this method. Callers that need the entire byte
+   * representation after invoking encode must flush the stream to ensure its intermediate buffers
+   * have been written to the backing store.
    *
    * @param obj the object to encode.
    * @param out the stream to encode the object onto.
@@ -205,10 +205,11 @@ public abstract class ProtobufCodec<T> {
   /** Decode a byte buffer into an existing object instance. */
   public void mergeFrom(ByteBuffer buf, T obj) {
     if (buf.hasArray()) {
-      CodedInputStream in = CodedInputStream.newInstance( //
-          buf.array(), //
-          buf.position(), //
-          buf.remaining());
+      CodedInputStream in =
+          CodedInputStream.newInstance( //
+              buf.array(), //
+              buf.position(), //
+              buf.remaining());
       try {
         mergeFrom(in, obj);
       } catch (IOException err) {

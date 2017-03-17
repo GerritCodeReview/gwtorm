@@ -14,16 +14,14 @@
 
 package com.google.gwtorm.schema.java;
 
-import static com.google.gwtorm.schema.java.JavaColumnModel.sort;
 import static com.google.common.collect.Collections2.permutations;
+import static com.google.gwtorm.schema.java.JavaColumnModel.sort;
 import static org.junit.Assert.assertEquals;
 
 import com.google.gwtorm.client.Column;
-
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
-
 import org.junit.Test;
 
 public class DeclaredFieldsOrderTest {
@@ -31,15 +29,19 @@ public class DeclaredFieldsOrderTest {
   private static class C {
     @Column(id = 1)
     private String c;
+
     @Column(id = 2)
     private String b;
+
     @Column(id = 3)
     private String a;
 
     @SuppressWarnings("unused")
     private String d;
+
     @SuppressWarnings("unused")
     private String e;
+
     @SuppressWarnings("unused")
     private String f;
   }

@@ -19,8 +19,7 @@ import java.util.Comparator;
 class HeapKeyComparator implements Comparator<byte[]> {
   static final HeapKeyComparator INSTANCE = new HeapKeyComparator();
 
-  private HeapKeyComparator() {
-  }
+  private HeapKeyComparator() {}
 
   @Override
   public int compare(byte[] a, byte[] b) {

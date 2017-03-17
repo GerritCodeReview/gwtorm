@@ -17,10 +17,6 @@ package com.google.gwtorm.schema.sql;
 import com.google.gwtorm.client.Column;
 import com.google.gwtorm.schema.ColumnModel;
 import com.google.gwtorm.server.CodeGenSupport;
-
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
-
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
@@ -29,6 +25,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 
 public class SqlStringTypeInfo extends SqlTypeInfo {
   @Override
@@ -70,11 +68,15 @@ public class SqlStringTypeInfo extends SqlTypeInfo {
       cgs.pushSqlHandle();
       cgs.pushColumnIndex();
       cgs.pushFieldValue();
-      cgs.mv.visitMethodInsn(Opcodes.INVOKESTATIC, Type
-          .getInternalName(SqlStringTypeInfo.class), "toPreparedStatement",
-          Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {
-              Type.getType(PreparedStatement.class), Type.INT_TYPE,
-              Type.getType(String.class)}));
+      cgs.mv.visitMethodInsn(
+          Opcodes.INVOKESTATIC,
+          Type.getInternalName(SqlStringTypeInfo.class),
+          "toPreparedStatement",
+          Type.getMethodDescriptor(
+              Type.VOID_TYPE,
+              new Type[] {
+                Type.getType(PreparedStatement.class), Type.INT_TYPE, Type.getType(String.class)
+              }));
     }
   }
 
@@ -86,16 +88,18 @@ public class SqlStringTypeInfo extends SqlTypeInfo {
       cgs.fieldSetBegin();
       cgs.pushSqlHandle();
       cgs.pushColumnIndex();
-      cgs.mv.visitMethodInsn(Opcodes.INVOKESTATIC, Type
-          .getInternalName(SqlStringTypeInfo.class), "fromResultSet", Type
-          .getMethodDescriptor(Type.getType(String.class), new Type[] {
-              Type.getType(ResultSet.class), Type.INT_TYPE}));
+      cgs.mv.visitMethodInsn(
+          Opcodes.INVOKESTATIC,
+          Type.getInternalName(SqlStringTypeInfo.class),
+          "fromResultSet",
+          Type.getMethodDescriptor(
+              Type.getType(String.class),
+              new Type[] {Type.getType(ResultSet.class), Type.INT_TYPE}));
       cgs.fieldSetEnd();
     }
   }
 
-  public static String fromResultSet(final ResultSet rs, final int col)
-      throws SQLException {
+  public static String fromResultSet(final ResultSet rs, final int col) throws SQLException {
     final Reader r = rs.getCharacterStream(col);
     if (r == null) {
       return null;
@@ -117,8 +121,8 @@ public class SqlStringTypeInfo extends SqlTypeInfo {
     }
   }
 
-  public static void toPreparedStatement(final PreparedStatement ps,
-      final int col, final String txt) throws SQLException {
+  public static void toPreparedStatement(
+      final PreparedStatement ps, final int col, final String txt) throws SQLException {
     if (txt != null) {
       ps.setCharacterStream(col, new StringReader(txt), txt.length());
     } else {

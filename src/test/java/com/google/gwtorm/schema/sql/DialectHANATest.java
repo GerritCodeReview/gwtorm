@@ -32,16 +32,14 @@ import com.google.gwtorm.jdbc.JdbcSchema;
 import com.google.gwtorm.jdbc.SimpleDataSource;
 import com.google.gwtorm.server.OrmDuplicateKeyException;
 import com.google.gwtorm.server.OrmException;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Properties;
 import java.util.Set;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 public class DialectHANATest extends SqlDialectTest {
   private static final String HANA_URL_KEY = "hana.url";
@@ -204,8 +202,7 @@ public class DialectHANATest extends SqlDialectTest {
 
     PhoneBookDb2 p2 = phoneBook2.open();
     try {
-      ((JdbcSchema) p2).renameField(executor, "people", "registered",
-          "isRegistered");
+      ((JdbcSchema) p2).renameField(executor, "people", "registered", "isRegistered");
     } finally {
       p2.close();
     }

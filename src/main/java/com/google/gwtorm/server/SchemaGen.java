@@ -18,22 +18,19 @@ import com.google.gwtorm.schema.RelationModel;
 import com.google.gwtorm.schema.SchemaModel;
 import com.google.gwtorm.schema.SequenceModel;
 import com.google.gwtorm.schema.Util;
-
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 /** Generates a concrete implementation of a {@link Schema} extension. */
 public class SchemaGen<S extends AbstractSchema> implements Opcodes {
   public interface AccessGenerator {
-    Class<?> create(GeneratedClassLoader loader, RelationModel rm)
-        throws OrmException;
+    Class<?> create(GeneratedClassLoader loader, RelationModel rm) throws OrmException;
   }
 
   private final GeneratedClassLoader classLoader;
@@ -46,9 +43,12 @@ public class SchemaGen<S extends AbstractSchema> implements Opcodes {
   private String implClassName;
   private String implTypeName;
 
-  public SchemaGen(final GeneratedClassLoader loader,
-      final SchemaModel schemaModel, final Class<?> databaseType,
-      final Class<S> superType, final AccessGenerator ag) {
+  public SchemaGen(
+      final GeneratedClassLoader loader,
+      final SchemaModel schemaModel,
+      final Class<?> databaseType,
+      final Class<S> superType,
+      final AccessGenerator ag) {
     classLoader = loader;
     schema = schemaModel;
     databaseClass = databaseType;
@@ -100,16 +100,18 @@ public class SchemaGen<S extends AbstractSchema> implements Opcodes {
       relations.add(new RelationGen(rel, a));
     }
 
-    Collections.sort(relations, new Comparator<RelationGen>() {
-      @Override
-      public int compare(RelationGen a, RelationGen b) {
-        int cmp = a.model.getRelationID() - b.model.getRelationID();
-        if (cmp == 0) {
-          cmp = a.model.getRelationName().compareTo(b.model.getRelationName());
-        }
-        return cmp;
-      }
-    });
+    Collections.sort(
+        relations,
+        new Comparator<RelationGen>() {
+          @Override
+          public int compare(RelationGen a, RelationGen b) {
+            int cmp = a.model.getRelationID() - b.model.getRelationID();
+            if (cmp == 0) {
+              cmp = a.model.getRelationName().compareTo(b.model.getRelationName());
+            }
+            return cmp;
+          }
+        });
   }
 
   private void init() {
@@ -117,9 +119,13 @@ public class SchemaGen<S extends AbstractSchema> implements Opcodes {
     implTypeName = implClassName.replace('.', '/');
 
     cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
-    cw.visit(V1_3, ACC_PUBLIC | ACC_FINAL | ACC_SUPER, implTypeName, null, Type
-        .getInternalName(schemaSuperClass), new String[] {getSchemaClassName()
-        .replace('.', '/')});
+    cw.visit(
+        V1_3,
+        ACC_PUBLIC | ACC_FINAL | ACC_SUPER,
+        implTypeName,
+        null,
+        Type.getInternalName(schemaSuperClass),
+        new String[] {getSchemaClassName().replace('.', '/')});
   }
 
   private void implementRelationFields() {
@@ -134,27 +140,41 @@ public class SchemaGen<S extends AbstractSchema> implements Opcodes {
     final Type dbType = Type.getType(databaseClass);
 
     final MethodVisitor mv =
-        cw.visitMethod(ACC_PUBLIC, consName, Type.getMethodDescriptor(
-            Type.VOID_TYPE, new Type[] {dbType}), null, null);
+        cw.visitMethod(
+            ACC_PUBLIC,
+            consName,
+            Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {dbType}),
+            null,
+            null);
     mv.visitCode();
 
     mv.visitVarInsn(ALOAD, 0);
     mv.visitVarInsn(ALOAD, 1);
-    mv.visitMethodInsn(INVOKESPECIAL, superType.getInternalName(), consName,
-        Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {Type
-            .getType(schemaSuperClass.getDeclaredConstructors()[0]
-                .getParameterTypes()[0])}));
+    mv.visitMethodInsn(
+        INVOKESPECIAL,
+        superType.getInternalName(),
+        consName,
+        Type.getMethodDescriptor(
+            Type.VOID_TYPE,
+            new Type[] {
+              Type.getType(schemaSuperClass.getDeclaredConstructors()[0].getParameterTypes()[0])
+            }));
 
     for (final RelationGen info : relations) {
       mv.visitVarInsn(ALOAD, 0);
       mv.visitTypeInsn(NEW, info.accessType.getInternalName());
       mv.visitInsn(DUP);
       mv.visitVarInsn(ALOAD, 0);
-      mv.visitMethodInsn(INVOKESPECIAL, info.accessType.getInternalName(),
-          consName, Type.getMethodDescriptor(Type.VOID_TYPE,
-              new Type[] {superType}));
-      mv.visitFieldInsn(PUTFIELD, implTypeName, info
-          .getAccessInstanceFieldName(), info.accessType.getDescriptor());
+      mv.visitMethodInsn(
+          INVOKESPECIAL,
+          info.accessType.getInternalName(),
+          consName,
+          Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {superType}));
+      mv.visitFieldInsn(
+          PUTFIELD,
+          implTypeName,
+          info.getAccessInstanceFieldName(),
+          info.accessType.getDescriptor());
     }
 
     mv.visitInsn(RETURN);
@@ -166,18 +186,22 @@ public class SchemaGen<S extends AbstractSchema> implements Opcodes {
     for (final SequenceModel seq : schema.getSequences()) {
       final Type retType = Type.getType(seq.getResultType());
       final MethodVisitor mv =
-          cw
-              .visitMethod(ACC_PUBLIC, seq.getMethodName(), Type
-                  .getMethodDescriptor(retType, new Type[] {}), null,
-                  new String[] {Type.getType(OrmException.class)
-                      .getInternalName()});
+          cw.visitMethod(
+              ACC_PUBLIC,
+              seq.getMethodName(),
+              Type.getMethodDescriptor(retType, new Type[] {}),
+              null,
+              new String[] {Type.getType(OrmException.class).getInternalName()});
       mv.visitCode();
 
       mv.visitVarInsn(ALOAD, 0);
       mv.visitLdcInsn(seq.getSequenceName());
-      mv.visitMethodInsn(INVOKEVIRTUAL, Type.getInternalName(schemaSuperClass),
-          "nextLong", Type.getMethodDescriptor(Type.getType(Long.TYPE),
-              new Type[] {Type.getType(String.class)}));
+      mv.visitMethodInsn(
+          INVOKEVIRTUAL,
+          Type.getInternalName(schemaSuperClass),
+          "nextLong",
+          Type.getMethodDescriptor(
+              Type.getType(Long.TYPE), new Type[] {Type.getType(String.class)}));
       if (retType.getSize() == 1) {
         mv.visitInsn(L2I);
         mv.visitInsn(IRETURN);
@@ -197,9 +221,12 @@ public class SchemaGen<S extends AbstractSchema> implements Opcodes {
 
   private void implementAllRelationsMethod() {
     final MethodVisitor mv =
-        cw.visitMethod(ACC_PUBLIC | ACC_FINAL, "allRelations", Type
-            .getMethodDescriptor(Type.getType(Access[].class), new Type[] {}),
-            null, null);
+        cw.visitMethod(
+            ACC_PUBLIC | ACC_FINAL,
+            "allRelations",
+            Type.getMethodDescriptor(Type.getType(Access[].class), new Type[] {}),
+            null,
+            null);
     mv.visitCode();
 
     final int r = 1;
@@ -214,8 +241,8 @@ public class SchemaGen<S extends AbstractSchema> implements Opcodes {
       cgs.push(index++);
 
       mv.visitVarInsn(ALOAD, 0);
-      mv.visitMethodInsn(INVOKEVIRTUAL, getImplTypeName(), info.model
-          .getMethodName(), info.getDescriptor());
+      mv.visitMethodInsn(
+          INVOKEVIRTUAL, getImplTypeName(), info.model.getMethodName(), info.getDescriptor());
 
       mv.visitInsn(AASTORE);
     }
@@ -236,8 +263,13 @@ public class SchemaGen<S extends AbstractSchema> implements Opcodes {
     }
 
     void implementField() {
-      cw.visitField(ACC_PRIVATE | ACC_FINAL, getAccessInstanceFieldName(),
-          accessType.getDescriptor(), null, null).visitEnd();
+      cw.visitField(
+              ACC_PRIVATE | ACC_FINAL,
+              getAccessInstanceFieldName(),
+              accessType.getDescriptor(),
+              null,
+              null)
+          .visitEnd();
     }
 
     String getAccessInstanceFieldName() {
@@ -246,20 +278,20 @@ public class SchemaGen<S extends AbstractSchema> implements Opcodes {
 
     void implementMethod() {
       final MethodVisitor mv =
-          cw.visitMethod(ACC_PUBLIC | ACC_FINAL, model.getMethodName(),
-              getDescriptor(), null, null);
+          cw.visitMethod(
+              ACC_PUBLIC | ACC_FINAL, model.getMethodName(), getDescriptor(), null, null);
       mv.visitCode();
       mv.visitVarInsn(ALOAD, 0);
-      mv.visitFieldInsn(GETFIELD, implTypeName, getAccessInstanceFieldName(),
-          accessType.getDescriptor());
+      mv.visitFieldInsn(
+          GETFIELD, implTypeName, getAccessInstanceFieldName(), accessType.getDescriptor());
       mv.visitInsn(ARETURN);
       mv.visitMaxs(-1, -1);
       mv.visitEnd();
     }
 
     String getDescriptor() {
-      return Type.getMethodDescriptor(Type.getObjectType(model
-          .getAccessInterfaceName().replace('.', '/')), new Type[] {});
+      return Type.getMethodDescriptor(
+          Type.getObjectType(model.getAccessInterfaceName().replace('.', '/')), new Type[] {});
     }
   }
 }

@@ -16,11 +16,9 @@ package com.google.gwtorm.schema.sql;
 
 import com.google.gwtorm.schema.ColumnModel;
 import com.google.gwtorm.server.CodeGenSupport;
-
+import java.sql.Types;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
-
-import java.sql.Types;
 
 public class SqlCharTypeInfo extends SqlTypeInfo {
   @Override
@@ -49,10 +47,11 @@ public class SqlCharTypeInfo extends SqlTypeInfo {
     cgs.pushSqlHandle();
     cgs.pushColumnIndex();
     cgs.pushFieldValue();
-    cgs.mv.visitMethodInsn(Opcodes.INVOKESTATIC, Type
-        .getInternalName(Character.class), "toString", Type
-        .getMethodDescriptor(Type.getType(String.class),
-            new Type[] {Type.CHAR_TYPE}));
+    cgs.mv.visitMethodInsn(
+        Opcodes.INVOKESTATIC,
+        Type.getInternalName(Character.class),
+        "toString",
+        Type.getMethodDescriptor(Type.getType(String.class), new Type[] {Type.CHAR_TYPE}));
     cgs.invokePreparedStatementSet(getJavaSqlTypeAlias());
   }
 
@@ -63,9 +62,11 @@ public class SqlCharTypeInfo extends SqlTypeInfo {
     cgs.pushColumnIndex();
     cgs.invokeResultSetGet(getJavaSqlTypeAlias());
     cgs.push(0);
-    cgs.mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, Type
-        .getInternalName(String.class), "charAt", Type.getMethodDescriptor(
-        Type.CHAR_TYPE, new Type[] {Type.INT_TYPE}));
+    cgs.mv.visitMethodInsn(
+        Opcodes.INVOKEVIRTUAL,
+        Type.getInternalName(String.class),
+        "charAt",
+        Type.getMethodDescriptor(Type.CHAR_TYPE, new Type[] {Type.INT_TYPE}));
     cgs.fieldSetEnd();
   }
 }

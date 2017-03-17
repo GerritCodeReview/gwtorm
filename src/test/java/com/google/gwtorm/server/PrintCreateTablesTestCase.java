@@ -17,7 +17,6 @@ package com.google.gwtorm.server;
 import com.google.gwtorm.data.PhoneBookDb;
 import com.google.gwtorm.schema.java.JavaSchemaModel;
 import com.google.gwtorm.schema.sql.DialectH2;
-
 import org.junit.Test;
 
 public class PrintCreateTablesTestCase {

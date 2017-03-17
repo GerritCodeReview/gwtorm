@@ -25,19 +25,18 @@ import java.util.List;
 public interface ResultSet<T> extends Iterable<T> {
   /**
    * Obtain an iterator to loop through the results.
-   * <p>
-   * The iterator can be obtained only once. When the iterator completes (
-   * <code>hasNext()</code> returns false) {@link #close()} will be
-   * automatically called.
+   *
+   * <p>The iterator can be obtained only once. When the iterator completes ( <code>hasNext()</code>
+   * returns false) {@link #close()} will be automatically called.
    */
   @Override
   Iterator<T> iterator();
 
   /**
    * Materialize all results as a single list.
-   * <p>
-   * Prior to returning {@link #close()} is invoked. This method must not be
-   * combined with {@link #iterator()} on the same instance.
+   *
+   * <p>Prior to returning {@link #close()} is invoked. This method must not be combined with {@link
+   * #iterator()} on the same instance.
    *
    * @return mutable list of the complete results.
    */
@@ -45,9 +44,9 @@ public interface ResultSet<T> extends Iterable<T> {
 
   /**
    * Close the result, discarding any further results.
-   * <p>
-   * This method may be invoked more than once. Its main use is to stop
-   * obtaining results before the iterator has finished.
+   *
+   * <p>This method may be invoked more than once. Its main use is to stop obtaining results before
+   * the iterator has finished.
    */
   void close();
 }

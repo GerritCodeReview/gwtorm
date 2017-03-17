@@ -20,13 +20,11 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import com.google.gwtorm.server.OrmException;
-
-import org.antlr.runtime.tree.Tree;
-import org.junit.Test;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
+import org.antlr.runtime.tree.Tree;
+import org.junit.Test;
 
 public class QueryParserTest {
   private final class DummyColumn extends ColumnModel {
@@ -65,30 +63,31 @@ public class QueryParserTest {
   }
 
   protected Tree parse(final String str) throws QueryParseException {
-    final RelationModel dummy = new RelationModel() {
-      {
-        final Collection<ColumnModel> c = new ArrayList<>();
-        try {
-          c.add(new DummyColumn(1, "name"));
-          c.add(new DummyColumn(2, "a"));
-          c.add(new DummyColumn(3, "b"));
-          c.add(new DummyColumn(4, "c"));
-          initColumns(c);
-        } catch (OrmException e) {
-          throw new RuntimeException("init columns failure", e);
-        }
-      }
+    final RelationModel dummy =
+        new RelationModel() {
+          {
+            final Collection<ColumnModel> c = new ArrayList<>();
+            try {
+              c.add(new DummyColumn(1, "name"));
+              c.add(new DummyColumn(2, "a"));
+              c.add(new DummyColumn(3, "b"));
+              c.add(new DummyColumn(4, "c"));
+              initColumns(c);
+            } catch (OrmException e) {
+              throw new RuntimeException("init columns failure", e);
+            }
+          }
 
-      @Override
-      public String getAccessInterfaceName() {
-        return getClass().getName();
-      }
+          @Override
+          public String getAccessInterfaceName() {
+            return getClass().getName();
+          }
 
-      @Override
-      public String getEntityTypeClassName() {
-        return getClass().getName();
-      }
-    };
+          @Override
+          public String getEntityTypeClassName() {
+            return getClass().getName();
+          }
+        };
     return QueryParser.parse(dummy, str);
   }
 

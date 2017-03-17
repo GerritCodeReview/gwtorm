@@ -14,7 +14,6 @@
 
 package com.google.gwtorm.server;
 
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -22,9 +21,8 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation marking a method in a {@link Schema} interface as entity access.
- * <p>
- * Access methods must return an interface extending {@link Access}, for
- * example:
+ *
+ * <p>Access methods must return an interface extending {@link Access}, for example:
  *
  * <pre>
  * public interface FooAccess extends Access&lt;Foo, Foo.Key&gt; {
@@ -35,22 +33,20 @@ import java.lang.annotation.Target;
  *   FooAccess foos();
  * }
  * </pre>
- * <p>
- * The table name within the data store will be derived from the relation
- * annotation, or the method name.
+ *
+ * <p>The table name within the data store will be derived from the relation annotation, or the
+ * method name.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Relation {
-  /**
-   * @return the name of the data store table. Defaults to the method name.
-   */
+  /** @return the name of the data store table. Defaults to the method name. */
   String name() default "";
 
   /**
-   * @return the unique ID for this relation. Must be unique among all
-   *         relations, and conform to Protobuf message ID rules. The ID must be
-   *         in the range [1,2^29-1] except 19000 through 19999.
+   * @return the unique ID for this relation. Must be unique among all relations, and conform to
+   *     Protobuf message ID rules. The ID must be in the range [1,2^29-1] except 19000 through
+   *     19999.
    */
   int id();
 }

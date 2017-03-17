@@ -16,7 +16,6 @@ package com.google.gwtorm.jdbc;
 
 import com.google.gwtorm.server.OrmException;
 import com.google.gwtorm.server.StatementExecutor;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;

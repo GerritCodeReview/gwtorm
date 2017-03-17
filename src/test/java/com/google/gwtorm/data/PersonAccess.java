@@ -32,8 +32,7 @@ public interface PersonAccess extends Access<Person, Person.Key> {
   ResultSet<Person> olderThan(int age) throws OrmException;
 
   @Query("WHERE age > ? ORDER BY name DESC")
-  ResultSet<Person> olderThanDescByName(int age)
-      throws OrmException;
+  ResultSet<Person> olderThanDescByName(int age) throws OrmException;
 
   @Query("WHERE name = 'bob' LIMIT ?")
   ResultSet<Person> firstNBob(int n) throws OrmException;

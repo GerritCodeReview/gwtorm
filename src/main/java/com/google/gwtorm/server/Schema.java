@@ -14,32 +14,28 @@
 
 package com.google.gwtorm.server;
 
-
 /**
  * Application database definition and top-level schema access.
- * <p>
- * Applications should extend this interface and declare relation methods for
- * each entity/table used. Relation methods must be marked with the
- * {@link Relation} annotation and return an interface extending {@link Access}.
- * At runtime the application extension of Schema will be automatically
- * implemented with a generated class, providing implementations of the Access
+ *
+ * <p>Applications should extend this interface and declare relation methods for each entity/table
+ * used. Relation methods must be marked with the {@link Relation} annotation and return an
+ * interface extending {@link Access}. At runtime the application extension of Schema will be
+ * automatically implemented with a generated class, providing implementations of the Access
  * extensions from each of the declared relation methods.
- * <p>
- * Instances of a schema should be obtained through the
- * {@link com.google.gwtorm.jdbc.Database} class on a pure-JDBC implementation
- * and through <code>GWT.create()</code> on the GWT client side.
- * <p>
- * In the JDBC implementation each Schema instance wraps around a single JDBC
- * Connection object. Therefore a Schema instance has a 1:1 relationship with an
- * active database handle.
- * <p>
- * A Schema instance (as well as its returned Access instances) is not thread
- * safe. Applications must provide their own synchronization, or ensure that at
- * most 1 thread access a Schema instance (or any returned Access instance) at a
- * time. The safest mapping is 1 schema instance per thread, never shared.
- * <p>
- * For example the OurDb schema creates two tables (identical structure) named
- * <code>someFoos</code> and <code>otherFoos</code>:
+ *
+ * <p>Instances of a schema should be obtained through the {@link com.google.gwtorm.jdbc.Database}
+ * class on a pure-JDBC implementation and through <code>GWT.create()</code> on the GWT client side.
+ *
+ * <p>In the JDBC implementation each Schema instance wraps around a single JDBC Connection object.
+ * Therefore a Schema instance has a 1:1 relationship with an active database handle.
+ *
+ * <p>A Schema instance (as well as its returned Access instances) is not thread safe. Applications
+ * must provide their own synchronization, or ensure that at most 1 thread access a Schema instance
+ * (or any returned Access instance) at a time. The safest mapping is 1 schema instance per thread,
+ * never shared.
+ *
+ * <p>For example the OurDb schema creates two tables (identical structure) named <code>someFoos
+ * </code> and <code>otherFoos</code>:
  *
  * <pre>
  * public interface FooAccess extends Access&lt;Foo, Foo.Key&gt; {
@@ -64,10 +60,10 @@ public interface Schema extends AutoCloseable {
 
   /**
    * Add any missing columns, create any missing tables or sequences.
-   * <p>
-   * This method does not drop any unused columns or tables, leaving them intact
-   * for applications to continue to query after the update. Any unused columns
-   * that are NOT NULL are altered to accept NULL.
+   *
+   * <p>This method does not drop any unused columns or tables, leaving them intact for applications
+   * to continue to query after the update. Any unused columns that are NOT NULL are altered to
+   * accept NULL.
    *
    * @param e executor to perform (or log) the statements.
    * @throws OrmException one or more objects could not be added to the schema.
@@ -76,8 +72,8 @@ public interface Schema extends AutoCloseable {
 
   /**
    * Drop any unused columns, tables, or sequences.
-   * <p>
-   * This method destroys data, as columns may be removed entirely.
+   *
+   * <p>This method destroys data, as columns may be removed entirely.
    *
    * @param e executor to perform (or log) the statements.
    * @throws OrmException one or more drops could not be completed.

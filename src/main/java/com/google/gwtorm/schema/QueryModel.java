@@ -19,36 +19,33 @@ import com.google.gwtorm.schema.sql.SqlBooleanTypeInfo;
 import com.google.gwtorm.schema.sql.SqlDialect;
 import com.google.gwtorm.server.OrmException;
 import com.google.gwtorm.server.Query;
-
-import org.antlr.runtime.CommonToken;
-import org.antlr.runtime.tree.CommonTree;
-import org.antlr.runtime.tree.Tree;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import org.antlr.runtime.CommonToken;
+import org.antlr.runtime.tree.CommonTree;
+import org.antlr.runtime.tree.Tree;
 
 public class QueryModel {
   private final RelationModel model;
   private final String name;
   private final Tree parsedQuery;
 
-  public QueryModel(final RelationModel rel, final String queryName,
-      final Query q) throws OrmException {
+  public QueryModel(final RelationModel rel, final String queryName, final Query q)
+      throws OrmException {
     this(rel, queryName, queryTextOf(queryName, q));
   }
 
-  private static String queryTextOf(String queryName, Query q)
-      throws OrmException {
+  private static String queryTextOf(String queryName, Query q) throws OrmException {
     if (q == null) {
-      throw new OrmException("Query " + queryName + " is missing "
-          + Query.class.getName() + " annotation");
+      throw new OrmException(
+          "Query " + queryName + " is missing " + Query.class.getName() + " annotation");
     }
     return q.value();
   }
 
-  public QueryModel(final RelationModel rel, final String queryName,
-      final String queryText) throws OrmException {
+  public QueryModel(final RelationModel rel, final String queryName, final String queryText)
+      throws OrmException {
     model = rel;
     name = queryName;
 
@@ -107,9 +104,9 @@ public class QueryModel {
         for (int i = 0; i < node.getChildCount(); i++) {
           Tree sortOrder = node.getChild(i);
           Tree id = sortOrder.getChild(0);
-          r.add(new OrderBy(
-              ((QueryParser.Column) id).getField(),
-              sortOrder.getType() == QueryParser.DESC));
+          r.add(
+              new OrderBy(
+                  ((QueryParser.Column) id).getField(), sortOrder.getType() == QueryParser.DESC));
         }
       }
     }
@@ -164,8 +161,7 @@ public class QueryModel {
 
   public boolean hasLimitParameter() {
     final Tree limit = findLimit(parsedQuery);
-    return limit != null
-        && limit.getChild(0).getType() == QueryParser.PLACEHOLDER;
+    return limit != null && limit.getChild(0).getType() == QueryParser.PLACEHOLDER;
   }
 
   public int getStaticLimit() {
@@ -273,29 +269,30 @@ public class QueryModel {
         format(fmt, node.getChild(1));
         break;
 
-      case QueryParser.ID: {
-        final ColumnModel col = ((QueryParser.Column) node).getField();
-        if (!col.isSqlPrimitive()) {
-          throw new IllegalStateException("Unexpanded nested field");
+      case QueryParser.ID:
+        {
+          final ColumnModel col = ((QueryParser.Column) node).getField();
+          if (!col.isSqlPrimitive()) {
+            throw new IllegalStateException("Unexpanded nested field");
+          }
+          fmt.buf.append(fmt.tableAlias);
+          fmt.buf.append('.');
+          fmt.buf.append(col.getColumnName());
+          break;
         }
-        fmt.buf.append(fmt.tableAlias);
-        fmt.buf.append('.');
-        fmt.buf.append(col.getColumnName());
-        break;
-      }
 
       case QueryParser.PLACEHOLDER:
         fmt.buf.append(fmt.dialect.getParameterPlaceHolder(fmt.nthParam++));
         break;
 
       case QueryParser.TRUE:
-        fmt.buf.append(((SqlBooleanTypeInfo) fmt.dialect
-            .getSqlTypeInfo(Boolean.TYPE)).getTrueLiteralValue());
+        fmt.buf.append(
+            ((SqlBooleanTypeInfo) fmt.dialect.getSqlTypeInfo(Boolean.TYPE)).getTrueLiteralValue());
         break;
 
       case QueryParser.FALSE:
-        fmt.buf.append(((SqlBooleanTypeInfo) fmt.dialect
-            .getSqlTypeInfo(Boolean.TYPE)).getFalseLiteralValue());
+        fmt.buf.append(
+            ((SqlBooleanTypeInfo) fmt.dialect.getSqlTypeInfo(Boolean.TYPE)).getFalseLiteralValue());
         break;
 
       case QueryParser.CONSTANT_INTEGER:
@@ -313,8 +310,9 @@ public class QueryModel {
           }
           final ColumnModel col = ((QueryParser.Column) id).getField();
           if (col.isNested()) {
-            for (final Iterator<ColumnModel> cItr =
-                col.getAllLeafColumns().iterator(); cItr.hasNext();) {
+            for (final Iterator<ColumnModel> cItr = col.getAllLeafColumns().iterator();
+                cItr.hasNext();
+                ) {
               fmt.buf.append(fmt.tableAlias);
               fmt.buf.append('.');
               fmt.buf.append(cItr.next().getColumnName());
@@ -363,24 +361,25 @@ public class QueryModel {
       case QueryParser.LE:
       case QueryParser.GT:
       case QueryParser.GE:
-      case QueryParser.EQ: {
-        final Column qpc = (QueryParser.Column) node.getChild(0);
-        final ColumnModel f = qpc.getField();
-        if (f.isNested()) {
-          final CommonTree join;
+      case QueryParser.EQ:
+        {
+          final Column qpc = (QueryParser.Column) node.getChild(0);
+          final ColumnModel f = qpc.getField();
+          if (f.isNested()) {
+            final CommonTree join;
 
-          join = new CommonTree(new CommonToken(QueryParser.AND));
-          for (final ColumnModel c : f.getAllLeafColumns()) {
-            final Tree op;
+            join = new CommonTree(new CommonToken(QueryParser.AND));
+            for (final ColumnModel c : f.getAllLeafColumns()) {
+              final Tree op;
 
-            op = node.dupNode();
-            op.addChild(new QueryParser.Column(qpc, c));
-            op.addChild(node.getChild(1).dupNode());
-            join.addChild(op);
+              op = node.dupNode();
+              op.addChild(new QueryParser.Column(qpc, c));
+              op.addChild(node.getChild(1).dupNode());
+              join.addChild(op);
+            }
+            return join;
           }
-          return join;
         }
-      }
     }
 
     final Tree r = node.dupNode();

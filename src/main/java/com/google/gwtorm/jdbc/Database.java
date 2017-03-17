@@ -26,24 +26,21 @@ import com.google.gwtorm.server.SchemaConstructorGen;
 import com.google.gwtorm.server.SchemaFactory;
 import com.google.gwtorm.server.SchemaGen;
 import com.google.gwtorm.server.StandardKeyEncoder;
-
 import java.sql.Connection;
 import java.sql.SQLException;
-
 import javax.sql.DataSource;
 
 /**
  * Constructor for application {@link Schema} extensions.
- * <p>
- * Applications should use the Database class to create instances of their
- * Schema extension interface, and thus open and connect to the JDBC data store.
- * <p>
- * Creating a new Database instance is expensive, due to the type analysis and
- * code generation performed to implement the Schema and Access interfaces.
- * Applications should create and cache their Database instance for the live of
- * the application.
- * <p>
- * Database instances are thread-safe, but returned Schema instances are not.
+ *
+ * <p>Applications should use the Database class to create instances of their Schema extension
+ * interface, and thus open and connect to the JDBC data store.
+ *
+ * <p>Creating a new Database instance is expensive, due to the type analysis and code generation
+ * performed to implement the Schema and Access interfaces. Applications should create and cache
+ * their Database instance for the live of the application.
+ *
+ * <p>Database instances are thread-safe, but returned Schema instances are not.
  *
  * @param <T>
  */
@@ -62,11 +59,10 @@ public class Database<T extends Schema> implements SchemaFactory<T> {
    *
    * @param ds JDBC connection information
    * @param schema application extension of the Schema interface to implement.
-   * @throws OrmException the schema interface is incorrectly defined, or the
-   *         driver class is not available through the current class loader.
+   * @throws OrmException the schema interface is incorrectly defined, or the driver class is not
+   *     available through the current class loader.
    */
-  public Database(final DataSource ds, final Class<T> schema)
-      throws OrmException {
+  public Database(final DataSource ds, final Class<T> schema) throws OrmException {
     dataSource = ds;
 
     SqlDialect dialect;
@@ -89,16 +85,21 @@ public class Database<T extends Schema> implements SchemaFactory<T> {
   }
 
   @SuppressWarnings({"unchecked", "rawtypes"})
-  private Class<T> generate(final SqlDialect dialect,
-      final GeneratedClassLoader loader) throws OrmException {
-    return new SchemaGen(loader, schemaModel, getClass(), JdbcSchema.class,
-        new SchemaGen.AccessGenerator() {
-          @Override
-          public Class<?> create(GeneratedClassLoader loader, RelationModel rm)
-              throws OrmException {
-            return new AccessGen(loader, rm, dialect).create();
-          }
-        }).create();
+  private Class<T> generate(final SqlDialect dialect, final GeneratedClassLoader loader)
+      throws OrmException {
+    return new SchemaGen(
+            loader,
+            schemaModel,
+            getClass(),
+            JdbcSchema.class,
+            new SchemaGen.AccessGenerator() {
+              @Override
+              public Class<?> create(GeneratedClassLoader loader, RelationModel rm)
+                  throws OrmException {
+                return new AccessGen(loader, rm, dialect).create();
+              }
+            })
+        .create();
   }
 
   SqlDialect getDialect() {
@@ -113,9 +114,8 @@ public class Database<T extends Schema> implements SchemaFactory<T> {
    * Open a new connection to the database and get a Schema wrapper.
    *
    * @return a new JDBC connection, wrapped up in the application's Schema.
-   * @throws OrmException the connection could not be opened to the database.
-   *         The JDBC exception detail should be examined to determine the root
-   *         cause of the connection failure.
+   * @throws OrmException the connection could not be opened to the database. The JDBC exception
+   *     detail should be examined to determine the root cause of the connection failure.
    */
   @Override
   public T open() throws OrmException {

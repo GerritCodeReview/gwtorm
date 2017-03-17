@@ -14,7 +14,6 @@
 
 package com.google.gwtorm.server;
 
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -22,17 +21,17 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation marking a method in an {@link Access} interface as a query.
- * <p>
- * Query methods must return a parameterized {@link ResultSet}, for example:
+ *
+ * <p>Query methods must return a parameterized {@link ResultSet}, for example:
  *
  * <pre>
  * public interface FooAccess extends Access&lt;Foo, Foo.Key&gt; {
  *   &#064;Query(&quot;WHERE a=?&quot;)
  *   ResultSet&lt;Foo&gt; find(int a) throws OrmException;
  * }
- *</pre>
- *<p>
- * Query strings must conform to the following grammar:
+ * </pre>
+ *
+ * <p>Query strings must conform to the following grammar:
  *
  * <pre>
  * [WHERE &lt;condition&gt; [AND &lt;condition&gt; ...]]
@@ -42,16 +41,13 @@ import java.lang.annotation.Target;
  * &lt;condition&gt; := &lt;property&gt; { &lt; | &lt;= | &gt; | &gt;= | = } &lt;value&gt;
  * &lt;value&gt; := { ? | true | false | &lt;int&gt; | &lt;string&gt; }
  * </pre>
- * <p>
- * Method parameters are bound in order to the placeholders (?) declared in the
- * query conditions. The type of the limit placeholder parameter (if used in the
- * query) must be <code>int</code>.
+ *
+ * <p>Method parameters are bound in order to the placeholders (?) declared in the query conditions.
+ * The type of the limit placeholder parameter (if used in the query) must be <code>int</code>.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Query {
-  /**
-   * @return the query clause. Defaults to "", matching all entities, no order.
-   */
+  /** @return the query clause. Defaults to "", matching all entities, no order. */
   String value() default "";
 }

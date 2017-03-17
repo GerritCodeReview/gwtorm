@@ -60,8 +60,7 @@ public class Address {
   @Column(id = 3, notNull = false)
   protected byte[] photo;
 
-  protected Address() {
-  }
+  protected Address() {}
 
   public Address(final Address.Key city, final String where) {
     this.city = city;

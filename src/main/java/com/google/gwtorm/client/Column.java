@@ -21,11 +21,10 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation marking an entity field for persistence in the data store.
- * <p>
- * Fields marked with <code>Column</code> must not be final and must not be
- * private. Fields which might be accessed cross-packages (such as those
- * declared in a common Key type like {@link StringKey}) must be declared with
- * public access so generated code can access them directly.
+ *
+ * <p>Fields marked with <code>Column</code> must not be final and must not be private. Fields which
+ * might be accessed cross-packages (such as those declared in a common Key type like {@link
+ * StringKey}) must be declared with public access so generated code can access them directly.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
@@ -36,18 +35,12 @@ public @interface Column {
   /** @return unique identity of this field within its parent object. */
   int id();
 
-  /**
-   * @return name of the column in the data store. Defaults to the field name.
-   */
+  /** @return name of the column in the data store. Defaults to the field name. */
   String name() default "";
 
-  /**
-   * @return maximum length (in characters). Only valid for String.
-   */
+  /** @return maximum length (in characters). Only valid for String. */
   int length() default 0;
 
-  /**
-   * @return is a value required. Defaults to true (NOT NULL).
-   */
+  /** @return is a value required. Defaults to true (NOT NULL). */
   boolean notNull() default true;
 }

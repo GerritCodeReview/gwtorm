@@ -28,19 +28,17 @@ import com.google.gwtorm.jdbc.JdbcExecutor;
 import com.google.gwtorm.jdbc.JdbcSchema;
 import com.google.gwtorm.jdbc.SimpleDataSource;
 import com.google.gwtorm.server.OrmException;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Properties;
 import java.util.Set;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 public class DialectOracleSQLTest extends SqlDialectTest {
-  private final static String ORACLE_DRIVER = "oracle.jdbc.driver.OracleDriver";
+  private static final String ORACLE_DRIVER = "oracle.jdbc.driver.OracleDriver";
 
   @Before
   public void setUp() throws Exception {
@@ -54,8 +52,7 @@ public class DialectOracleSQLTest extends SqlDialectTest {
     final String user = "gwtorm"; // Oracle schema=user name=database
     final String pass = "gwtorm";
 
-    db = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:"
-        + sid, user, pass);
+    db = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:" + sid, user, pass);
     executor = new JdbcExecutor(db);
     dialect = new DialectOracle().refine(db);
 
@@ -64,10 +61,8 @@ public class DialectOracleSQLTest extends SqlDialectTest {
     p.setProperty("url", db.getMetaData().getURL());
     p.setProperty("user", user);
     p.setProperty("password", pass);
-    phoneBook =
-        new Database<>(new SimpleDataSource(p), PhoneBookDb.class);
-    phoneBook2 =
-        new Database<>(new SimpleDataSource(p), PhoneBookDb2.class);
+    phoneBook = new Database<>(new SimpleDataSource(p), PhoneBookDb.class);
+    phoneBook2 = new Database<>(new SimpleDataSource(p), PhoneBookDb2.class);
   }
 
   @After
@@ -192,8 +187,7 @@ public class DialectOracleSQLTest extends SqlDialectTest {
       final Person bob = new Person(pk, p.nextAddressId());
       p.people().insert(Collections.singleton(bob));
 
-      final Address addr =
-          new Address(new Address.Key(pk, "home"), "some place");
+      final Address addr = new Address(new Address.Key(pk, "home"), "some place");
       p.addresses().insert(Collections.singleton(addr));
     } finally {
       p.close();
@@ -201,8 +195,7 @@ public class DialectOracleSQLTest extends SqlDialectTest {
 
     final PhoneBookDb2 p2 = phoneBook2.open();
     try {
-      ((JdbcSchema) p2).renameField(executor, "people", "registered",
-          "isRegistered");
+      ((JdbcSchema) p2).renameField(executor, "people", "registered", "isRegistered");
     } finally {
       p2.close();
     }

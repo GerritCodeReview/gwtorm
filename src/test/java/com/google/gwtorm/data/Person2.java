@@ -16,7 +16,6 @@ package com.google.gwtorm.data;
 
 import com.google.gwtorm.client.Column;
 
-
 public class Person2 {
   @Column(id = 1)
   protected Person.Key name;

@@ -19,18 +19,17 @@ import com.google.gwtorm.server.Schema;
 
 /**
  * Toy in-memory implementation of a NoSQL database.
- * <p>
- * Implements a simple NoSQL database with a standard {@link java.util.TreeMap}
- * held inside of this JVM process. All operations occur on the TreeMap, with no
- * durability across database restarts. Therefore this implementation is only
- * suitable for simple tests.
+ *
+ * <p>Implements a simple NoSQL database with a standard {@link java.util.TreeMap} held inside of
+ * this JVM process. All operations occur on the TreeMap, with no durability across database
+ * restarts. Therefore this implementation is only suitable for simple tests.
  *
  * @param <T> type of the application schema.
  * @see FileDatabase
  */
 @SuppressWarnings("rawtypes")
-public class MemoryDatabase<T extends Schema> extends
-    TreeMapDatabase<T, TreeMapSchema, TreeMapAccess> {
+public class MemoryDatabase<T extends Schema>
+    extends TreeMapDatabase<T, TreeMapSchema, TreeMapAccess> {
 
   /**
    * Create the database and implement the application's schema interface.

@@ -17,14 +17,12 @@ package com.google.gwtorm.server;
 import com.google.common.util.concurrent.CheckedFuture;
 import com.google.common.util.concurrent.Futures;
 import com.google.gwtorm.client.Key;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class AbstractAccess<E, K extends Key<?>>
-    implements Access<E, K> {
+public abstract class AbstractAccess<E, K extends Key<?>> implements Access<E, K> {
   private static final int MAX_TRIES = 10;
 
   @Override
@@ -69,9 +67,8 @@ public abstract class AbstractAccess<E, K extends Key<?>>
   }
 
   @Override
-  public E atomicUpdate(final K key, final AtomicUpdate<E> update)
-      throws OrmException {
-    for (int attempts = 1;; attempts++) {
+  public E atomicUpdate(final K key, final AtomicUpdate<E> update) throws OrmException {
+    for (int attempts = 1; ; attempts++) {
       try {
         final E obj = get(key);
         if (obj == null) {

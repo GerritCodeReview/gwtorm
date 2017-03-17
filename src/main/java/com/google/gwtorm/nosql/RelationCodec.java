@@ -19,7 +19,6 @@ import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.CodedOutputStream;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.WireFormat;
-
 import java.io.EOFException;
 import java.io.IOException;
 
@@ -28,10 +27,9 @@ public class RelationCodec<T> extends ProtobufCodec<T> {
   /**
    * Pop the field number from the stream and return it.
    *
-   * @param in the stream to pop the field number from. The caller is
-   *        responsible for making sure the underlying stream had a mark set for
-   *        at least 8 bytes so the tag can be examined, reset, and later read
-   *        again during mergeFrom or decode.
+   * @param in the stream to pop the field number from. The caller is responsible for making sure
+   *     the underlying stream had a mark set for at least 8 bytes so the tag can be examined,
+   *     reset, and later read again during mergeFrom or decode.
    * @return the field number of the relation.
    * @throws IOException the stream cannot be read.
    */
@@ -71,7 +69,7 @@ public class RelationCodec<T> extends ProtobufCodec<T> {
   @Override
   public void mergeFrom(CodedInputStream in, T obj) throws IOException {
     boolean found = false;
-    for (;;) {
+    for (; ; ) {
       int tag = in.readTag();
       if (tag == 0) {
         if (found) {
@@ -91,8 +89,8 @@ public class RelationCodec<T> extends ProtobufCodec<T> {
           in.popLimit(oldLimit);
           found = true;
         } else {
-          throw new InvalidProtocolBufferException("Field " + fieldId
-              + " should be length delimited (wire type 2)");
+          throw new InvalidProtocolBufferException(
+              "Field " + fieldId + " should be length delimited (wire type 2)");
         }
       } else {
         in.skipField(tag);

@@ -18,21 +18,17 @@ import java.io.Serializable;
 
 /**
  * Abstract key type composed of other keys.
- * <p>
- * Applications should subclass this type to create their own entity-specific
- * key classes.
+ *
+ * <p>Applications should subclass this type to create their own entity-specific key classes.
  *
  * @param <P> the parent key type. Use {@link Key} if no parent key is needed.
  */
 @SuppressWarnings("serial")
-public abstract class CompoundKey<P extends Key<?>> implements Key<P>,
-    Serializable {
+public abstract class CompoundKey<P extends Key<?>> implements Key<P>, Serializable {
   /** @return the member key components, minus the parent key. */
   public abstract Key<?>[] members();
 
-  /**
-   * @return the parent key instance; null if this is a root level key.
-   */
+  /** @return the parent key instance; null if this is a root level key. */
   @Override
   public P getParentKey() {
     return null;

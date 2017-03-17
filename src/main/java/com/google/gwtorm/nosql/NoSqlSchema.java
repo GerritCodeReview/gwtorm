@@ -21,8 +21,7 @@ import com.google.gwtorm.server.StatementExecutor;
 
 /** Internal base class for implementations of {@link Schema}. */
 public abstract class NoSqlSchema extends AbstractSchema {
-  protected NoSqlSchema(final NoSqlDatabase<?, ?, ?> d) {
-  }
+  protected NoSqlSchema(final NoSqlDatabase<?, ?, ?> d) {}
 
   @Override
   public void pruneSchema(StatementExecutor e) throws OrmException {

@@ -20,15 +20,12 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import com.google.gwtorm.server.StandardKeyEncoder;
-
 import org.junit.Before;
 import org.junit.Test;
 
-
 public class StringKeyTestCase {
   @SuppressWarnings("serial")
-  private abstract static class StringKeyImpl<T extends Key<?>> extends
-      StringKey<T> {
+  private abstract static class StringKeyImpl<T extends Key<?>> extends StringKey<T> {
     @Column(id = 1)
     String name;
 

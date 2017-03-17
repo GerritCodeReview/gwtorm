@@ -28,19 +28,18 @@ import com.google.gwtorm.jdbc.JdbcExecutor;
 import com.google.gwtorm.jdbc.JdbcSchema;
 import com.google.gwtorm.jdbc.SimpleDataSource;
 import com.google.gwtorm.server.OrmException;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Properties;
 import java.util.Set;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 public class DialectDB2Test extends SqlDialectTest {
-  private final static String DB2_DRIVER = "com.ibm.db2.jcc.DB2Driver";
+  private static final String DB2_DRIVER = "com.ibm.db2.jcc.DB2Driver";
+
   @Before
   public void setUp() throws Exception {
     try {
@@ -53,8 +52,7 @@ public class DialectDB2Test extends SqlDialectTest {
     final String user = "gwtorm"; // user
     final String pass = "gwtorm"; // pwd
 
-    db = DriverManager.getConnection("jdbc:db2://127.0.0.1:50001/"
-        + database, user, pass);
+    db = DriverManager.getConnection("jdbc:db2://127.0.0.1:50001/" + database, user, pass);
     executor = new JdbcExecutor(db);
     dialect = new DialectDB2().refine(db);
 
@@ -63,10 +61,8 @@ public class DialectDB2Test extends SqlDialectTest {
     p.setProperty("url", db.getMetaData().getURL());
     p.setProperty("user", user);
     p.setProperty("password", pass);
-    phoneBook =
-        new Database<>(new SimpleDataSource(p), PhoneBookDb.class);
-    phoneBook2 =
-        new Database<>(new SimpleDataSource(p), PhoneBookDb2.class);
+    phoneBook = new Database<>(new SimpleDataSource(p), PhoneBookDb.class);
+    phoneBook2 = new Database<>(new SimpleDataSource(p), PhoneBookDb2.class);
   }
 
   @After
@@ -196,8 +192,7 @@ public class DialectDB2Test extends SqlDialectTest {
       final Person bob = new Person(pk, nextAddressId);
       p.people().insert(Collections.singleton(bob));
 
-      final Address addr =
-          new Address(new Address.Key(pk, "home"), "some place");
+      final Address addr = new Address(new Address.Key(pk, "home"), "some place");
       p.addresses().insert(Collections.singleton(addr));
     } finally {
       p.close();

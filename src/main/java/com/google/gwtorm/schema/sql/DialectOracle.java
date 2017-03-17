@@ -18,7 +18,6 @@ import com.google.gwtorm.schema.ColumnModel;
 import com.google.gwtorm.server.OrmDuplicateKeyException;
 import com.google.gwtorm.server.OrmException;
 import com.google.gwtorm.server.StatementExecutor;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -44,6 +43,7 @@ public class DialectOracle extends SqlDialect {
   public boolean canDetermineIndividualBatchUpdateCounts() {
     return false;
   }
+
   @Override
   public boolean canDetermineTotalBatchUpdateCount() {
     return false;
@@ -69,10 +69,10 @@ public class DialectOracle extends SqlDialect {
   }
 
   @Override
-  public Set<String> listIndexes(final Connection db, String tableName)
-      throws SQLException {
-    PreparedStatement s = db.prepareStatement("SELECT distinct index_name"
-        + " FROM user_indexes WHERE table_name = ?");
+  public Set<String> listIndexes(final Connection db, String tableName) throws SQLException {
+    PreparedStatement s =
+        db.prepareStatement(
+            "SELECT distinct index_name" + " FROM user_indexes WHERE table_name = ?");
     try {
       s.setString(1, tableName.toUpperCase());
       ResultSet rs = s.executeQuery();
@@ -110,8 +110,8 @@ public class DialectOracle extends SqlDialect {
   }
 
   @Override
-  public void addColumn(StatementExecutor stmt, String tableName,
-      ColumnModel col) throws OrmException {
+  public void addColumn(StatementExecutor stmt, String tableName, ColumnModel col)
+      throws OrmException {
     final StringBuilder r = new StringBuilder();
     r.append("ALTER TABLE ");
     r.append(tableName);
@@ -123,8 +123,9 @@ public class DialectOracle extends SqlDialect {
   }
 
   @Override
-  public void renameColumn(StatementExecutor e, String tableName,
-      String fromColumn, ColumnModel col) throws OrmException {
+  public void renameColumn(
+      StatementExecutor e, String tableName, String fromColumn, ColumnModel col)
+      throws OrmException {
     StringBuffer sb = new StringBuffer();
     sb.append("ALTER TABLE ");
     sb.append(tableName);

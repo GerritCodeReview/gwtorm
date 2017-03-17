@@ -23,7 +23,6 @@ import com.google.gwtorm.server.PrimaryKey;
 import com.google.gwtorm.server.Query;
 import com.google.gwtorm.server.Relation;
 import com.google.gwtorm.server.ResultSet;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -41,21 +40,23 @@ class JavaRelationModel extends RelationModel {
     initName(method.getName(), m.getAnnotation(Relation.class));
 
     accessType = method.getReturnType();
-    if (accessType.getInterfaces().length != 1
-        || accessType.getInterfaces()[0] != Access.class) {
-      throw new OrmException("Method " + method.getName() + " in "
-          + method.getDeclaringClass().getName()
-          + " must return a direct extension of " + Access.class);
+    if (accessType.getInterfaces().length != 1 || accessType.getInterfaces()[0] != Access.class) {
+      throw new OrmException(
+          "Method "
+              + method.getName()
+              + " in "
+              + method.getDeclaringClass().getName()
+              + " must return a direct extension of "
+              + Access.class);
     }
 
     final Type gt = accessType.getGenericInterfaces()[0];
     if (!(gt instanceof ParameterizedType)) {
-      throw new OrmException(accessType.getName()
-          + " must specify entity type parameter for " + Access.class);
+      throw new OrmException(
+          accessType.getName() + " must specify entity type parameter for " + Access.class);
     }
 
-    entityType =
-        (Class<?>) ((ParameterizedType) gt).getActualTypeArguments()[0];
+    entityType = (Class<?>) ((ParameterizedType) gt).getActualTypeArguments()[0];
 
     initColumns();
     initQueriesAndKeys();
@@ -82,18 +83,18 @@ class JavaRelationModel extends RelationModel {
           continue;
         }
         if (m.getReturnType() != entityType) {
-          throw new OrmException("PrimaryKey " + m.getName() + " must return "
-              + entityType.getName());
+          throw new OrmException(
+              "PrimaryKey " + m.getName() + " must return " + entityType.getName());
         }
         initPrimaryKey(m.getName(), m.getAnnotation(PrimaryKey.class));
 
       } else if (m.getAnnotation(Query.class) != null) {
         if (!ResultSet.class.isAssignableFrom(m.getReturnType())
             || !(m.getGenericReturnType() instanceof ParameterizedType)
-            || ((ParameterizedType) m.getGenericReturnType())
-                .getActualTypeArguments()[0] != entityType) {
-          throw new OrmException("Query " + m.getName() + " must return"
-              + " ResultSet<" + entityType.getName() + ">");
+            || ((ParameterizedType) m.getGenericReturnType()).getActualTypeArguments()[0]
+                != entityType) {
+          throw new OrmException(
+              "Query " + m.getName() + " must return" + " ResultSet<" + entityType.getName() + ">");
         }
         addQuery(new QueryModel(this, m.getName(), m.getAnnotation(Query.class)));
       }

@@ -18,26 +18,20 @@ import java.io.Serializable;
 
 /**
  * Abstract key type using a single short value.
- * <p>
- * Applications should subclass this type to create their own entity-specific
- * key classes.
+ *
+ * <p>Applications should subclass this type to create their own entity-specific key classes.
  *
  * @param <P> the parent key type. Use {@link Key} if no parent key is needed.
  */
 @SuppressWarnings("serial")
-public abstract class ShortKey<P extends Key<?>> implements Key<P>,
-    Serializable {
-  /**
-   * @return id of the entity instance.
-   */
+public abstract class ShortKey<P extends Key<?>> implements Key<P>, Serializable {
+  /** @return id of the entity instance. */
   public abstract short get();
 
   /** @param newValue the new value of this key. */
   protected abstract void set(short newValue);
 
-  /**
-   * @return the parent key instance; null if this is a root level key.
-   */
+  /** @return the parent key instance; null if this is a root level key. */
   @Override
   public P getParentKey() {
     return null;

@@ -15,14 +15,13 @@
 package com.google.gwtorm.server;
 
 import com.google.gwtorm.client.KeyUtil.Encoder;
-
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
 public class StandardKeyEncoder extends Encoder {
-  private static final char[] hexc =
-      {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D',
-          'E', 'F'};
+  private static final char[] hexc = {
+    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
+  };
   private static final char safe[];
   private static final byte hexb[];
 
@@ -39,21 +38,15 @@ public class StandardKeyEncoder extends Encoder {
     safe[')'] = ')';
     safe['/'] = '/';
     safe[' '] = '+';
-    for (char c = '0'; c <= '9'; c++)
-      safe[c] = c;
-    for (char c = 'A'; c <= 'Z'; c++)
-      safe[c] = c;
-    for (char c = 'a'; c <= 'z'; c++)
-      safe[c] = c;
+    for (char c = '0'; c <= '9'; c++) safe[c] = c;
+    for (char c = 'A'; c <= 'Z'; c++) safe[c] = c;
+    for (char c = 'a'; c <= 'z'; c++) safe[c] = c;
 
     hexb = new byte['f' + 1];
     Arrays.fill(hexb, (byte) -1);
-    for (char i = '0'; i <= '9'; i++)
-      hexb[i] = (byte) (i - '0');
-    for (char i = 'A'; i <= 'F'; i++)
-      hexb[i] = (byte) ((i - 'A') + 10);
-    for (char i = 'a'; i <= 'f'; i++)
-      hexb[i] = (byte) ((i - 'a') + 10);
+    for (char i = '0'; i <= '9'; i++) hexb[i] = (byte) (i - '0');
+    for (char i = 'A'; i <= 'F'; i++) hexb[i] = (byte) ((i - 'A') + 10);
+    for (char i = 'a'; i <= 'f'; i++) hexb[i] = (byte) ((i - 'a') + 10);
   }
 
   @Override
@@ -89,7 +82,7 @@ public class StandardKeyEncoder extends Encoder {
     final byte[] b = new byte[e.length()];
     int bPtr = 0;
     try {
-      for (int i = 0; i < e.length();) {
+      for (int i = 0; i < e.length(); ) {
         final char c = e.charAt(i);
         if (c == '%' && i + 2 < e.length()) {
           final int v = (hexb[e.charAt(i + 1)] << 4) | hexb[e.charAt(i + 2)];

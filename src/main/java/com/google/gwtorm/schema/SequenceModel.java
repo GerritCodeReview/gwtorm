@@ -24,15 +24,14 @@ public class SequenceModel {
   protected Sequence sequence;
   protected Class<?> returnType;
 
-  public SequenceModel(final String method, final Sequence seq,
-      final Class<?> type) throws OrmException {
+  public SequenceModel(final String method, final Sequence seq, final Class<?> type)
+      throws OrmException {
     if (seq == null) {
-      throw new OrmException("Method " + method + " is missing "
-          + Sequence.class.getName() + " annotation");
+      throw new OrmException(
+          "Method " + method + " is missing " + Sequence.class.getName() + " annotation");
     }
     if (type != Integer.TYPE && type != Long.TYPE) {
-      throw new OrmException("Sequence method " + method
-          + " must return int or long");
+      throw new OrmException("Sequence method " + method + " must return int or long");
     }
 
     sequence = seq;

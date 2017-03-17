@@ -14,7 +14,6 @@
 
 package com.google.gwtorm.jdbc;
 
-
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.doNothing;
@@ -32,13 +31,6 @@ import com.google.gwtorm.server.ListResultSet;
 import com.google.gwtorm.server.OrmConcurrencyException;
 import com.google.gwtorm.server.OrmException;
 import com.google.gwtorm.server.ResultSet;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
-import org.mockito.stubbing.OngoingStubbing;
-
 import java.sql.BatchUpdateException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -47,6 +39,11 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
+import org.mockito.stubbing.OngoingStubbing;
 
 @RunWith(Parameterized.class)
 public abstract class AbstractTestJdbcAccess {
@@ -67,7 +64,7 @@ public abstract class AbstractTestJdbcAccess {
 
   protected SQLException sqlException = null;
 
-  static abstract class IterableProvider<T> {
+  abstract static class IterableProvider<T> {
     abstract Iterable<T> createIterable(T... ts);
   }
 
@@ -102,12 +99,13 @@ public abstract class AbstractTestJdbcAccess {
 
   @Parameters
   public static Collection<Object[]> data() {
-    return Arrays.asList(new Object[][] { {LIST_PROVIDER},
-        {UNMODIFIABLE_LIST_PROVIDER}, {LIST_RESULT_SET_PROVIDER},});
+    return Arrays.asList(
+        new Object[][] {
+          {LIST_PROVIDER}, {UNMODIFIABLE_LIST_PROVIDER}, {LIST_RESULT_SET_PROVIDER},
+        });
   }
 
-  public AbstractTestJdbcAccess(IterableProvider<Data> dataProvider)
-      throws SQLException {
+  public AbstractTestJdbcAccess(IterableProvider<Data> dataProvider) throws SQLException {
     noData = dataProvider.createIterable();
     oneRow = dataProvider.createIterable(new Data(1));
     twoRows = dataProvider.createIterable(new Data(1), new Data(2));
@@ -119,8 +117,8 @@ public abstract class AbstractTestJdbcAccess {
 
   protected abstract SqlDialect createDialect() throws SQLException;
 
-  private PreparedStatement stubStatementWithUpdateCounts(String command,
-      final int... updateCounts) throws SQLException {
+  private PreparedStatement stubStatementWithUpdateCounts(String command, final int... updateCounts)
+      throws SQLException {
     PreparedStatement ps = mock(PreparedStatement.class);
 
     // batching
@@ -162,8 +160,7 @@ public abstract class AbstractTestJdbcAccess {
     return classUnderTest;
   }
 
-  private static JdbcSchema setupSchema(final SqlDialect dialect,
-      final Connection conn) {
+  private static JdbcSchema setupSchema(final SqlDialect dialect, final Connection conn) {
     @SuppressWarnings("rawtypes")
     Database db = mock(Database.class);
     try {
@@ -186,8 +183,8 @@ public abstract class AbstractTestJdbcAccess {
     assertExpectedIdsUsed(ps, ids);
   }
 
-  protected static void assertUsedNonBatchingOnly(PreparedStatement ps,
-      int... ids) throws SQLException {
+  protected static void assertUsedNonBatchingOnly(PreparedStatement ps, int... ids)
+      throws SQLException {
     verify(ps, never()).addBatch();
     verify(ps, never()).executeBatch();
     verify(ps, times(ids.length)).executeUpdate();
@@ -198,14 +195,13 @@ public abstract class AbstractTestJdbcAccess {
     verifyZeroInteractions(insert);
   }
 
-  protected abstract void assertCorrectUpdating(PreparedStatement ps,
-      int... ids) throws SQLException;
+  protected abstract void assertCorrectUpdating(PreparedStatement ps, int... ids)
+      throws SQLException;
 
-  protected abstract void assertCorrectAttempting(PreparedStatement ps,
-      int... ids) throws SQLException;
+  protected abstract void assertCorrectAttempting(PreparedStatement ps, int... ids)
+      throws SQLException;
 
-  private static void assertExpectedIdsUsed(PreparedStatement ps, int... ids)
-      throws SQLException {
+  private static void assertExpectedIdsUsed(PreparedStatement ps, int... ids) throws SQLException {
     for (int id : ids) {
       verify(ps).setInt(1, id);
     }
@@ -228,8 +224,7 @@ public abstract class AbstractTestJdbcAccess {
   @Test
   public void testInsertOneException() throws SQLException {
     sqlException = new BatchUpdateException();
-    PreparedStatement insert =
-        stubStatementThrowExceptionOnExecute(INSERT, sqlException);
+    PreparedStatement insert = stubStatementThrowExceptionOnExecute(INSERT, sqlException);
     try {
       classUnderTest.insert(oneRow);
       fail("missingException");
@@ -258,8 +253,7 @@ public abstract class AbstractTestJdbcAccess {
   @Test
   public void testUpdateOneException() throws SQLException {
     sqlException = new BatchUpdateException();
-    PreparedStatement update =
-        stubStatementThrowExceptionOnExecute(UPDATE, sqlException);
+    PreparedStatement update = stubStatementThrowExceptionOnExecute(UPDATE, sqlException);
     try {
       classUnderTest.update(oneRow);
       fail("missingException");
@@ -272,8 +266,7 @@ public abstract class AbstractTestJdbcAccess {
   }
 
   @Test
-  public void testUpdateTwoConcurrentlyModifiedException() throws SQLException,
-      OrmException {
+  public void testUpdateTwoConcurrentlyModifiedException() throws SQLException, OrmException {
     PreparedStatement update = stubStatementWithUpdateCounts(UPDATE, 0, 0);
     try {
       classUnderTest.update(twoRows);
@@ -303,8 +296,7 @@ public abstract class AbstractTestJdbcAccess {
   @Test
   public void upsertOneException() throws SQLException {
     SQLException exception = new BatchUpdateException();
-    PreparedStatement update =
-        stubStatementThrowExceptionOnExecute(UPDATE, exception);
+    PreparedStatement update = stubStatementThrowExceptionOnExecute(UPDATE, exception);
     try {
       classUnderTest.upsert(oneRow);
       fail("missingException");
@@ -328,8 +320,7 @@ public abstract class AbstractTestJdbcAccess {
   }
 
   @Test
-  public void testUpsertTwoNotExistingZeroLengthArray() throws SQLException,
-      OrmException {
+  public void testUpsertTwoNotExistingZeroLengthArray() throws SQLException, OrmException {
     PreparedStatement update = stubStatementWithUpdateCounts(UPDATE);
     PreparedStatement insert = stubStatementWithUpdateCounts(INSERT, 1, 1);
 
@@ -373,8 +364,7 @@ public abstract class AbstractTestJdbcAccess {
   }
 
   @Test
-  public void testUpsertTwoUpdateCountsAreNull() throws SQLException,
-      OrmException {
+  public void testUpsertTwoUpdateCountsAreNull() throws SQLException, OrmException {
     PreparedStatement update = stubStatementWithUpdateCounts(UPDATE, null);
     PreparedStatement insert = stubStatementWithUpdateCounts(INSERT, 1, 1);
 
@@ -427,7 +417,6 @@ public abstract class AbstractTestJdbcAccess {
     public Access<?, ?>[] allRelations() {
       throw new UnsupportedOperationException();
     }
-
   }
 
   static class Data {
@@ -449,9 +438,7 @@ public abstract class AbstractTestJdbcAccess {
       public void fromString(String in) {
         throw new UnsupportedOperationException();
       }
-
     }
-
   }
 
   private static class DataJdbcAccess extends JdbcAccess<Data, Data.DataKey> {
@@ -496,26 +483,22 @@ public abstract class AbstractTestJdbcAccess {
     }
 
     @Override
-    protected void bindOneInsert(PreparedStatement ps, Data entity)
-        throws SQLException {
+    protected void bindOneInsert(PreparedStatement ps, Data entity) throws SQLException {
       ps.setInt(1, entity.id);
     }
 
     @Override
-    protected void bindOneUpdate(PreparedStatement ps, Data entity)
-        throws SQLException {
+    protected void bindOneUpdate(PreparedStatement ps, Data entity) throws SQLException {
       ps.setInt(1, entity.id);
     }
 
     @Override
-    protected void bindOneDelete(PreparedStatement ps, Data entity)
-        throws SQLException {
+    protected void bindOneDelete(PreparedStatement ps, Data entity) throws SQLException {
       ps.setInt(1, entity.id);
     }
 
     @Override
-    protected void bindOneFetch(java.sql.ResultSet rs, Data entity)
-        throws SQLException {
+    protected void bindOneFetch(java.sql.ResultSet rs, Data entity) throws SQLException {
       throw new UnsupportedOperationException();
     }
 
@@ -528,7 +511,5 @@ public abstract class AbstractTestJdbcAccess {
     public ResultSet<Data> iterateAllEntities() throws OrmException {
       throw new UnsupportedOperationException();
     }
-
   }
-
 }

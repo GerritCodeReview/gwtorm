@@ -22,7 +22,6 @@ import com.google.gwtorm.server.Access;
 import com.google.gwtorm.server.ListResultSet;
 import com.google.gwtorm.server.OrmConcurrencyException;
 import com.google.gwtorm.server.OrmException;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -32,8 +31,7 @@ import java.util.Collections;
 import java.util.List;
 
 /** Internal base class for implementations of {@link Access}. */
-public abstract class JdbcAccess<T, K extends Key<?>> extends
-    AbstractAccess<T, K> {
+public abstract class JdbcAccess<T, K extends Key<?>> extends AbstractAccess<T, K> {
   private final JdbcSchema schema;
 
   protected JdbcAccess(final JdbcSchema s) {
@@ -66,30 +64,30 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
       case 0:
         // Nothing requested, nothing to return.
         //
-        return new ListResultSet<>(Collections.<T> emptyList());
+        return new ListResultSet<>(Collections.<T>emptyList());
 
-      case 1: {
-        // Only one key requested, use a faster equality lookup.
-        //
-        final T entity = get(keySet.iterator().next());
-        if (entity != null) {
-          return new ListResultSet<>(Collections.singletonList(entity));
+      case 1:
+        {
+          // Only one key requested, use a faster equality lookup.
+          //
+          final T entity = get(keySet.iterator().next());
+          if (entity != null) {
+            return new ListResultSet<>(Collections.singletonList(entity));
+          }
+          return new ListResultSet<>(Collections.<T>emptyList());
         }
-        return new ListResultSet<>(Collections.<T> emptyList());
-      }
 
       default:
         return getBySqlIn(keySet);
     }
   }
 
-  protected com.google.gwtorm.server.ResultSet<T> getBySqlIn(
-      final Collection<K> keys) throws OrmException {
+  protected com.google.gwtorm.server.ResultSet<T> getBySqlIn(final Collection<K> keys)
+      throws OrmException {
     return super.get(keys);
   }
 
-  protected PreparedStatement prepareStatement(final String sql)
-      throws OrmException {
+  protected PreparedStatement prepareStatement(final String sql) throws OrmException {
     try {
       return schema.getConnection().prepareStatement(sql);
     } catch (SQLException e) {
@@ -97,8 +95,8 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
     }
   }
 
-  protected PreparedStatement prepareBySqlIn(final String sql,
-      final Collection<K> keys) throws OrmException {
+  protected PreparedStatement prepareBySqlIn(final String sql, final Collection<K> keys)
+      throws OrmException {
     final int n = keys.size();
     final StringBuilder buf = new StringBuilder(sql.length() + n << 1 + 1);
     buf.append(sql);
@@ -138,15 +136,15 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
     }
   }
 
-  protected com.google.gwtorm.server.ResultSet<T> queryList(
-      final PreparedStatement ps) throws OrmException {
+  protected com.google.gwtorm.server.ResultSet<T> queryList(final PreparedStatement ps)
+      throws OrmException {
     final ResultSet rs;
     try {
       rs = ps.executeQuery();
       if (!rs.next()) {
         rs.close();
         ps.close();
-        return new ListResultSet<>(Collections.<T> emptyList());
+        return new ListResultSet<>(Collections.<T>emptyList());
       }
     } catch (SQLException err) {
       try {
@@ -174,8 +172,8 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
     }
   }
 
-  private void insertIndividually(Iterable<T> instances) throws SQLException,
-      OrmConcurrencyException {
+  private void insertIndividually(Iterable<T> instances)
+      throws SQLException, OrmConcurrencyException {
     PreparedStatement ps = null;
     try {
       boolean concurrencyViolationDetected = false;
@@ -199,8 +197,8 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
     }
   }
 
-  private void insertAsBatch(final Iterable<T> instances) throws SQLException,
-      OrmConcurrencyException {
+  private void insertAsBatch(final Iterable<T> instances)
+      throws SQLException, OrmConcurrencyException {
     PreparedStatement ps = null;
     try {
       int cnt = 0;
@@ -235,8 +233,8 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
     }
   }
 
-  private void updateIndividually(Iterable<T> instances) throws SQLException,
-      OrmConcurrencyException {
+  private void updateIndividually(Iterable<T> instances)
+      throws SQLException, OrmConcurrencyException {
     PreparedStatement ps = null;
     try {
       boolean concurrencyViolationDetected = false;
@@ -260,8 +258,8 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
     }
   }
 
-  private void updateAsBatch(final Iterable<T> instances) throws SQLException,
-      OrmConcurrencyException {
+  private void updateAsBatch(final Iterable<T> instances)
+      throws SQLException, OrmConcurrencyException {
     PreparedStatement ps = null;
     try {
       int cnt = 0;
@@ -285,11 +283,9 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
    * Attempt to update instances.
    *
    * @param instances the instances to attempt to update
-   * @return collection of instances that cannot be updated as they are not yet
-   *         existing
+   * @return collection of instances that cannot be updated as they are not yet existing
    */
-  private Collection<T> attemptUpdate(final Iterable<T> instances)
-      throws OrmException {
+  private Collection<T> attemptUpdate(final Iterable<T> instances) throws OrmException {
     if (schema.getDialect().canDetermineIndividualBatchUpdateCounts()) {
       return attemptUpdateAsBatch(instances);
     } else {
@@ -297,8 +293,7 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
     }
   }
 
-  private Collection<T> attemptUpdatesIndividually(Iterable<T> instances)
-      throws OrmException {
+  private Collection<T> attemptUpdatesIndividually(Iterable<T> instances) throws OrmException {
     Collection<T> inserts = null;
     try {
       PreparedStatement ps = null;
@@ -314,7 +309,8 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
             if (inserts == null) {
               inserts = new ArrayList<>();
             }
-            inserts.add(o);          }
+            inserts.add(o);
+          }
           allInstances.add(o);
         }
       } finally {
@@ -342,8 +338,7 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
     }
   }
 
-  private Collection<T> attemptUpdateAsBatch(final Iterable<T> instances)
-      throws OrmException {
+  private Collection<T> attemptUpdateAsBatch(final Iterable<T> instances) throws OrmException {
     Collection<T> inserts = null;
     try {
       PreparedStatement ps = null;
@@ -405,8 +400,8 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
     }
   }
 
-  private void deleteIndividually(Iterable<T> instances) throws SQLException,
-      OrmConcurrencyException {
+  private void deleteIndividually(Iterable<T> instances)
+      throws SQLException, OrmConcurrencyException {
     PreparedStatement ps = null;
     try {
       boolean concurrencyViolationDetected = false;
@@ -430,8 +425,8 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
     }
   }
 
-  private void deleteAsBatch(final Iterable<T> instances) throws SQLException,
-      OrmConcurrencyException {
+  private void deleteAsBatch(final Iterable<T> instances)
+      throws SQLException, OrmConcurrencyException {
     PreparedStatement ps = null;
     try {
       int cnt = 0;
@@ -459,7 +454,7 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
 
     final int numberOfRowsUpdated = schema.getDialect().executeBatch(ps);
     if (numberOfRowsUpdated != cnt) {
-        throw new OrmConcurrencyException();
+      throw new OrmConcurrencyException();
     }
   }
 
@@ -497,15 +492,11 @@ public abstract class JdbcAccess<T, K extends Key<?>> extends
 
   protected abstract String getDeleteOneSql();
 
-  protected abstract void bindOneInsert(PreparedStatement ps, T entity)
-      throws SQLException;
+  protected abstract void bindOneInsert(PreparedStatement ps, T entity) throws SQLException;
 
-  protected abstract void bindOneUpdate(PreparedStatement ps, T entity)
-      throws SQLException;
+  protected abstract void bindOneUpdate(PreparedStatement ps, T entity) throws SQLException;
 
-  protected abstract void bindOneDelete(PreparedStatement ps, T entity)
-      throws SQLException;
+  protected abstract void bindOneDelete(PreparedStatement ps, T entity) throws SQLException;
 
-  protected abstract void bindOneFetch(ResultSet rs, T entity)
-      throws SQLException;
+  protected abstract void bindOneFetch(ResultSet rs, T entity) throws SQLException;
 }

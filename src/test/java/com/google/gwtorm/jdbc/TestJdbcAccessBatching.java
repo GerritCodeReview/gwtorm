@@ -18,30 +18,25 @@ import static org.mockito.Mockito.CALLS_REAL_METHODS;
 import static org.mockito.Mockito.mock;
 
 import com.google.gwtorm.schema.sql.SqlDialect;
-
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
 @RunWith(Parameterized.class)
 public class TestJdbcAccessBatching extends AbstractTestJdbcAccess {
 
-  public TestJdbcAccessBatching(IterableProvider<Data> dataProvider)
-      throws SQLException {
+  public TestJdbcAccessBatching(IterableProvider<Data> dataProvider) throws SQLException {
     super(dataProvider);
   }
 
   @Override
-  protected void assertCorrectUpdating(PreparedStatement ps,
-      int ... ids) throws SQLException {
+  protected void assertCorrectUpdating(PreparedStatement ps, int... ids) throws SQLException {
     assertUsedBatchingOnly(ps, ids);
   }
 
   @Override
-  protected void assertCorrectAttempting(PreparedStatement ps,
-      int ... ids) throws SQLException {
+  protected void assertCorrectAttempting(PreparedStatement ps, int... ids) throws SQLException {
     assertUsedBatchingOnly(ps, ids);
   }
 
@@ -49,5 +44,4 @@ public class TestJdbcAccessBatching extends AbstractTestJdbcAccess {
   protected SqlDialect createDialect() {
     return mock(SqlDialect.class, CALLS_REAL_METHODS);
   }
-
 }

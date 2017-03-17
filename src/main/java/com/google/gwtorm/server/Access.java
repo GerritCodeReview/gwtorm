@@ -17,38 +17,34 @@ package com.google.gwtorm.server;
 import com.google.common.util.concurrent.CheckedFuture;
 import com.google.gwtorm.client.Column;
 import com.google.gwtorm.client.Key;
-
 import java.util.Map;
 
 /**
  * Data access interface for an entity type.
- * <p>
- * Applications should extend this interface for each entity type they need to
- * access. At runtime the application extension will be automatically
- * implemented with a generated class, providing concrete implementations for
- * all methods.
- * <p>
- * Instances should be acquired through the application's extension interface of
- * {@link Schema}.
- * <p>
- * Applications should implement a query method using the {@link PrimaryKey}
- * annotation, for example:
+ *
+ * <p>Applications should extend this interface for each entity type they need to access. At runtime
+ * the application extension will be automatically implemented with a generated class, providing
+ * concrete implementations for all methods.
+ *
+ * <p>Instances should be acquired through the application's extension interface of {@link Schema}.
+ *
+ * <p>Applications should implement a query method using the {@link PrimaryKey} annotation, for
+ * example:
  *
  * <pre>
  * public interface FooAccess extends Access&lt;Foo, Foo.Key&gt; {
  *   &#064;PrimaryKey(&quot;key&quot;)
  *   Foo byKey(Foo.Key k) throws OrmException;
  * }
- *</pre>
- *<p>
- * otherwise the primaryKey, get, update and delete operations declared by this
- * interface will be unsupported.
+ * </pre>
  *
- * @param <T> type of the entity. Any object type is suitable, so long as at
- *        least one field uses a {@link Column} annotation.
- * @param <K> type of the primary key of entity. If the primary key is a
- *        primitive type then use Key directly, otherwise use a Key
- *        implementation. Entity specific key subclasses are recommended.
+ * <p>otherwise the primaryKey, get, update and delete operations declared by this interface will be
+ * unsupported.
+ *
+ * @param <T> type of the entity. Any object type is suitable, so long as at least one field uses a
+ *     {@link Column} annotation.
+ * @param <K> type of the primary key of entity. If the primary key is a primitive type then use Key
+ *     directly, otherwise use a Key implementation. Entity specific key subclasses are recommended.
  */
 public interface Access<T extends Object, K extends Key<?>> {
   /** @return the name of this relation. */
@@ -68,8 +64,8 @@ public interface Access<T extends Object, K extends Key<?>> {
    * Obtain the primary key of an entity instance.
    *
    * @param entity the entity to get the key of; must not be null.
-   * @return the primary key. Null if this entity has no primary key declared,
-   *         or if the primary key does not implement the Key interface.
+   * @return the primary key. Null if this entity has no primary key declared, or if the primary key
+   *     does not implement the Key interface.
    */
   K primaryKey(T entity);
 
@@ -83,10 +79,10 @@ public interface Access<T extends Object, K extends Key<?>> {
 
   /**
    * Lookup a single entity via its primary key.
-   * <p>
-   * This method is only implemented if the entity's primary key is defined to
-   * be an implementation of the {@link Key} interface. Otherwise the method
-   * throws {@link UnsupportedOperationException}.
+   *
+   * <p>This method is only implemented if the entity's primary key is defined to be an
+   * implementation of the {@link Key} interface. Otherwise the method throws {@link
+   * UnsupportedOperationException}.
    *
    * @param key the primary key instance; must not be null.
    * @return the entity; null if no entity has this key.
@@ -97,33 +93,31 @@ public interface Access<T extends Object, K extends Key<?>> {
 
   /**
    * Lookup a single entity asynchronously via its primary key.
-   * <p>
-   * This method is only implemented if the entity's primary key is defined to
-   * be an implementation of the {@link Key} interface. Otherwise the method
-   * throws {@link UnsupportedOperationException}.
+   *
+   * <p>This method is only implemented if the entity's primary key is defined to be an
+   * implementation of the {@link Key} interface. Otherwise the method throws {@link
+   * UnsupportedOperationException}.
    *
    * @param key the primary key instance; must not be null.
-   * @return a {@link CheckedFuture} for the entity; the
-   *         {@link CheckedFuture#get()} will return null if no entity has
-   *         this key.
+   * @return a {@link CheckedFuture} for the entity; the {@link CheckedFuture#get()} will return
+   *     null if no entity has this key.
    * @throws UnsupportedOperationException the key type doesn't implement Key.
    */
   CheckedFuture<T, OrmException> getAsync(K key);
 
   /**
    * Lookup multiple entities via their primary key.
-   * <p>
-   * This method is only implemented if the entity's primary key is defined to
-   * be an implementation of the {@link Key} interface. Otherwise the method
-   * throws {@link UnsupportedOperationException}.
-   * <p>
-   * This method is a batch form of {@link #get(Key)} and may be optimized to
-   * reduce round-trips to the data store.
+   *
+   * <p>This method is only implemented if the entity's primary key is defined to be an
+   * implementation of the {@link Key} interface. Otherwise the method throws {@link
+   * UnsupportedOperationException}.
+   *
+   * <p>This method is a batch form of {@link #get(Key)} and may be optimized to reduce round-trips
+   * to the data store.
    *
    * @param keys collection of zero or more keys to perform lookup with.
-   * @return collection of all matching entities; this may be a smaller result
-   *         than the keys supplied if one or more of the keys does not match an
-   *         existing entity.
+   * @return collection of all matching entities; this may be a smaller result than the keys
+   *     supplied if one or more of the keys does not match an existing entity.
    * @throws OrmException the data lookup failed.
    * @throws UnsupportedOperationException the key type doesn't implement Key.
    */
@@ -183,14 +177,13 @@ public interface Access<T extends Object, K extends Key<?>> {
 
   /**
    * Atomically update a single entity.
-   * <p>
-   * If the entity does not exist, the method returns {@code null} without
-   * invoking {@code update}.
-   * <p>
-   * If the entity exists, the method invokes {@code update} with a current copy
-   * of the entity. The update function should edit the passed instance
-   * in-place. The return value will be returned to the caller, but is otherwise
-   * ignored by this update function.
+   *
+   * <p>If the entity does not exist, the method returns {@code null} without invoking {@code
+   * update}.
+   *
+   * <p>If the entity exists, the method invokes {@code update} with a current copy of the entity.
+   * The update function should edit the passed instance in-place. The return value will be returned
+   * to the caller, but is otherwise ignored by this update function.
    *
    * @param key key which identifies the entity.
    * @param update the update function.

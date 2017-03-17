@@ -28,14 +28,12 @@ import com.google.gwtorm.jdbc.JdbcExecutor;
 import com.google.gwtorm.server.OrmConcurrencyException;
 import com.google.gwtorm.server.OrmDuplicateKeyException;
 import com.google.gwtorm.server.OrmException;
-
-import org.junit.Test;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.junit.Test;
 
 public abstract class SqlDialectTest {
   protected JdbcExecutor executor;
@@ -84,8 +82,7 @@ public abstract class SqlDialectTest {
   }
 
   @Test
-  public void testThrowsOrmDuplicateKeyExceptionWhenTryingToInsertDuplicates()
-      throws Exception {
+  public void testThrowsOrmDuplicateKeyExceptionWhenTryingToInsertDuplicates() throws Exception {
     PhoneBookDb p = phoneBook.open();
     try {
       p.updateSchema(executor);
@@ -126,8 +123,7 @@ public abstract class SqlDialectTest {
   }
 
   @Test
-  public void testInsertExistingRowThrowsOrmDuplicateKeyException()
-      throws Exception {
+  public void testInsertExistingRowThrowsOrmDuplicateKeyException() throws Exception {
     PhoneBookDb p = phoneBook.open();
     try {
       p.updateSchema(executor);
@@ -147,8 +143,7 @@ public abstract class SqlDialectTest {
   }
 
   @Test
-  public void testInsertExistingRowInTransactionThrowsOrmDuplicateKeyException()
-      throws Exception {
+  public void testInsertExistingRowInTransactionThrowsOrmDuplicateKeyException() throws Exception {
     PhoneBookDb p = phoneBook.open();
     try {
       p.updateSchema(executor);
@@ -175,8 +170,7 @@ public abstract class SqlDialectTest {
   }
 
   @Test
-  public void testUpdateNonexistentRowThrowsOrmConcurrencyException()
-      throws Exception {
+  public void testUpdateNonexistentRowThrowsOrmConcurrencyException() throws Exception {
     PhoneBookDb p = phoneBook.open();
     try {
       p.updateSchema(executor);
@@ -222,8 +216,7 @@ public abstract class SqlDialectTest {
   }
 
   @Test
-  public void testDeleteNonexistentRowThrowsOrmConcurrencyException()
-      throws Exception {
+  public void testDeleteNonexistentRowThrowsOrmConcurrencyException() throws Exception {
     PhoneBookDb p = phoneBook.open();
     try {
       p.updateSchema(executor);

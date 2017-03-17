@@ -19,7 +19,6 @@ import com.google.gwtorm.schema.RelationModel;
 import com.google.gwtorm.server.OrmDuplicateKeyException;
 import com.google.gwtorm.server.OrmException;
 import com.google.gwtorm.server.StatementExecutor;
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -51,8 +50,7 @@ public class DialectPostgreSQL extends SqlDialect {
   }
 
   @Override
-  public OrmException convertError(final String op, final String entity,
-      final SQLException err) {
+  public OrmException convertError(final String op, final String entity, final SQLException err) {
     switch (getSQLStateInt(err)) {
       case 23505: // UNIQUE CONSTRAINT VIOLATION
         return new OrmDuplicateKeyException(entity, err);
@@ -72,14 +70,15 @@ public class DialectPostgreSQL extends SqlDialect {
   }
 
   @Override
-  public void appendCreateTableStorage(final StringBuilder sqlBuffer,
-      final RelationModel relationModel) {
+  public void appendCreateTableStorage(
+      final StringBuilder sqlBuffer, final RelationModel relationModel) {
     sqlBuffer.append("WITH (OIDS = FALSE)");
   }
 
   @Override
-  public void renameColumn(StatementExecutor stmt, String tableName,
-      String fromColumn, ColumnModel col) throws OrmException {
+  public void renameColumn(
+      StatementExecutor stmt, String tableName, String fromColumn, ColumnModel col)
+      throws OrmException {
     final StringBuilder r = new StringBuilder();
     r.append("ALTER TABLE ");
     r.append(tableName);
@@ -94,8 +93,7 @@ public class DialectPostgreSQL extends SqlDialect {
   public Set<String> listSequences(Connection db) throws SQLException {
     Statement s = db.createStatement();
     try {
-      ResultSet rs =
-          s.executeQuery("SELECT relname FROM pg_class WHERE relkind = 'S'");
+      ResultSet rs = s.executeQuery("SELECT relname FROM pg_class WHERE relkind = 'S'");
       try {
         HashSet<String> sequences = new HashSet<>();
         while (rs.next()) {
@@ -112,8 +110,8 @@ public class DialectPostgreSQL extends SqlDialect {
 
   private static class Pre82 extends DialectPostgreSQL {
     @Override
-    public void appendCreateTableStorage(final StringBuilder sqlBuffer,
-        final RelationModel relationModel) {
+    public void appendCreateTableStorage(
+        final StringBuilder sqlBuffer, final RelationModel relationModel) {
       sqlBuffer.append("WITHOUT OIDS");
     }
   }

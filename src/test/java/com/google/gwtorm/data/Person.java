@@ -17,15 +17,13 @@ package com.google.gwtorm.data;
 import com.google.gwtorm.client.Column;
 import com.google.gwtorm.client.StringKey;
 
-
 public class Person {
   @SuppressWarnings("serial")
   public static class Key extends StringKey<com.google.gwtorm.client.Key<?>> {
     @Column(id = 1, length = 20)
     protected String name;
 
-    protected Key() {
-    }
+    protected Key() {}
 
     public Key(final String name) {
       this.name = name;
@@ -51,8 +49,7 @@ public class Person {
   @Column(id = 3)
   protected boolean registered;
 
-  protected Person() {
-  }
+  protected Person() {}
 
   public Person(final Key key, final int age) {
     this.name = key;

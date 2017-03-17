@@ -16,10 +16,6 @@ package com.google.gwtorm.schema.sql;
 
 import com.google.gwtorm.schema.ColumnModel;
 import com.google.gwtorm.server.CodeGenSupport;
-
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -28,6 +24,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 
 public class SqlByteArrayTypeInfo extends SqlTypeInfo {
   @Override
@@ -56,11 +54,15 @@ public class SqlByteArrayTypeInfo extends SqlTypeInfo {
     cgs.pushSqlHandle();
     cgs.pushColumnIndex();
     cgs.pushFieldValue();
-    cgs.mv.visitMethodInsn(Opcodes.INVOKESTATIC, Type
-        .getInternalName(SqlByteArrayTypeInfo.class), "toPreparedStatement",
-        Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {
-            Type.getType(PreparedStatement.class), Type.INT_TYPE,
-            Type.getType(byte[].class)}));
+    cgs.mv.visitMethodInsn(
+        Opcodes.INVOKESTATIC,
+        Type.getInternalName(SqlByteArrayTypeInfo.class),
+        "toPreparedStatement",
+        Type.getMethodDescriptor(
+            Type.VOID_TYPE,
+            new Type[] {
+              Type.getType(PreparedStatement.class), Type.INT_TYPE, Type.getType(byte[].class)
+            }));
   }
 
   @Override
@@ -68,15 +70,16 @@ public class SqlByteArrayTypeInfo extends SqlTypeInfo {
     cgs.fieldSetBegin();
     cgs.pushSqlHandle();
     cgs.pushColumnIndex();
-    cgs.mv.visitMethodInsn(Opcodes.INVOKESTATIC, Type
-        .getInternalName(SqlByteArrayTypeInfo.class), "fromResultSet", Type
-        .getMethodDescriptor(Type.getType(byte[].class), new Type[] {
-            Type.getType(ResultSet.class), Type.INT_TYPE}));
+    cgs.mv.visitMethodInsn(
+        Opcodes.INVOKESTATIC,
+        Type.getInternalName(SqlByteArrayTypeInfo.class),
+        "fromResultSet",
+        Type.getMethodDescriptor(
+            Type.getType(byte[].class), new Type[] {Type.getType(ResultSet.class), Type.INT_TYPE}));
     cgs.fieldSetEnd();
   }
 
-  public static byte[] fromResultSet(final ResultSet rs, final int col)
-      throws SQLException {
+  public static byte[] fromResultSet(final ResultSet rs, final int col) throws SQLException {
     final InputStream r = rs.getBinaryStream(col);
     if (r == null) {
       return null;
@@ -98,8 +101,8 @@ public class SqlByteArrayTypeInfo extends SqlTypeInfo {
     }
   }
 
-  public static void toPreparedStatement(final PreparedStatement ps,
-      final int col, final byte[] raw) throws SQLException {
+  public static void toPreparedStatement(
+      final PreparedStatement ps, final int col, final byte[] raw) throws SQLException {
     if (raw != null) {
       ps.setBinaryStream(col, new ByteArrayInputStream(raw), raw.length);
     } else {

@@ -14,20 +14,17 @@
 
 package com.google.gwtorm.server;
 
-/**
- * Atomically updates exactly one entity.
- */
+/** Atomically updates exactly one entity. */
 public interface AtomicUpdate<T> {
   /**
    * Update the one object, in place.
-   * <p>
-   * This method may be called multiple times, up until the retry limit.
    *
-   * @param row a fresh copy of the object. The updater should modify it in
-   *        place and return, the caller will attempt to rewrite it into the
-   *        database.
-   * @return return value for the application code calling the atomic update;
-   *         should be either {@code instance} or {@code null}.
+   * <p>This method may be called multiple times, up until the retry limit.
+   *
+   * @param row a fresh copy of the object. The updater should modify it in place and return, the
+   *     caller will attempt to rewrite it into the database.
+   * @return return value for the application code calling the atomic update; should be either
+   *     {@code instance} or {@code null}.
    */
   T update(T row);
 }

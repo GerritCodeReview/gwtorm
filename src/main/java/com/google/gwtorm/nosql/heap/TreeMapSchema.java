@@ -21,12 +21,11 @@ import com.google.gwtorm.server.ListResultSet;
 import com.google.gwtorm.server.OrmException;
 import com.google.gwtorm.server.ResultSet;
 import com.google.gwtorm.server.Schema;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 /** Base implementation for {@link Schema} in a {@link TreeMapDatabase}. */
 public abstract class TreeMapSchema extends GenericSchema {
@@ -48,8 +47,7 @@ public abstract class TreeMapSchema extends GenericSchema {
   }
 
   @Override
-  public ResultSet<Row> scan(byte[] fromKey, byte[] toKey, int limit,
-      boolean order) {
+  public ResultSet<Row> scan(byte[] fromKey, byte[] toKey, int limit, boolean order) {
     db.lock.lock();
     try {
       final List<Row> res = new ArrayList<>();
@@ -91,8 +89,7 @@ public abstract class TreeMapSchema extends GenericSchema {
   }
 
   @Override
-  public void atomicUpdate(byte[] key, AtomicUpdate<byte[]> update)
-      throws OrmException {
+  public void atomicUpdate(byte[] key, AtomicUpdate<byte[]> update) throws OrmException {
     db.lock.lock();
     try {
       final byte[] oldData = fetchRow(key);

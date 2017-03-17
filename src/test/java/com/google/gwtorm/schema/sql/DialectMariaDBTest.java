@@ -21,11 +21,9 @@ import com.google.gwtorm.data.PhoneBookDb2;
 import com.google.gwtorm.jdbc.Database;
 import com.google.gwtorm.jdbc.JdbcExecutor;
 import com.google.gwtorm.jdbc.SimpleDataSource;
-
-import org.junit.Before;
-
 import java.sql.DriverManager;
 import java.util.Properties;
+import org.junit.Before;
 
 public class DialectMariaDBTest extends DialectMySQLTest {
   @Before
@@ -51,9 +49,7 @@ public class DialectMariaDBTest extends DialectMySQLTest {
     p.setProperty("url", db.getMetaData().getURL());
     p.setProperty("user", user);
     p.setProperty("password", pass);
-    phoneBook =
-        new Database<>(new SimpleDataSource(p), PhoneBookDb.class);
-    phoneBook2 =
-        new Database<>(new SimpleDataSource(p), PhoneBookDb2.class);
+    phoneBook = new Database<>(new SimpleDataSource(p), PhoneBookDb.class);
+    phoneBook2 = new Database<>(new SimpleDataSource(p), PhoneBookDb2.class);
   }
 }

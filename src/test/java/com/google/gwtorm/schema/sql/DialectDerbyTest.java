@@ -28,11 +28,6 @@ import com.google.gwtorm.jdbc.JdbcExecutor;
 import com.google.gwtorm.jdbc.JdbcSchema;
 import com.google.gwtorm.jdbc.SimpleDataSource;
 import com.google.gwtorm.server.OrmException;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -42,6 +37,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 public class DialectDerbyTest extends SqlDialectTest {
 
@@ -57,10 +55,8 @@ public class DialectDerbyTest extends SqlDialectTest {
     p.setProperty("driver", org.apache.derby.jdbc.EmbeddedDriver.class.getName());
     p.setProperty("url", db.getMetaData().getURL());
 
-    phoneBook =
-        new Database<>(new SimpleDataSource(p), PhoneBookDb.class);
-    phoneBook2 =
-        new Database<>(new SimpleDataSource(p), PhoneBookDb2.class);
+    phoneBook = new Database<>(new SimpleDataSource(p), PhoneBookDb.class);
+    phoneBook2 = new Database<>(new SimpleDataSource(p), PhoneBookDb2.class);
   }
 
   @After
@@ -175,8 +171,7 @@ public class DialectDerbyTest extends SqlDialectTest {
       final Person bob = new Person(pk, p.nextAddressId());
       p.people().insert(Collections.singleton(bob));
 
-      final Address addr =
-          new Address(new Address.Key(pk, "home"), "some place");
+      final Address addr = new Address(new Address.Key(pk, "home"), "some place");
       p.addresses().insert(Collections.singleton(addr));
     } finally {
       p.close();
@@ -193,11 +188,11 @@ public class DialectDerbyTest extends SqlDialectTest {
      * for more information about the restriction of the RENAME COLUMN command.
      */
     String sqlCatalog =
-          "select c.constraintname, ch.checkdefinition"
-        + " from sys.sysconstraints c, sys.systables t, sys.syschecks ch"
-        + " WHERE c.tableid = t.tableid"
-        + "   and t.tablename = ?"
-        + "   and c.constraintid = ch.constraintid";
+        "select c.constraintname, ch.checkdefinition"
+            + " from sys.sysconstraints c, sys.systables t, sys.syschecks ch"
+            + " WHERE c.tableid = t.tableid"
+            + "   and t.tablename = ?"
+            + "   and c.constraintid = ch.constraintid";
     PreparedStatement ps = db.prepareStatement(sqlCatalog);
     String tableName = "PEOPLE";
     ps.setString(1, tableName);
@@ -210,20 +205,19 @@ public class DialectDerbyTest extends SqlDialectTest {
           constraintNames.add(rs.getString(1));
           checkDefs.add(rs.getString(2).replace("registered", "is_registered"));
           break;
-         }
+        }
       }
       rs.close();
       ps.close();
       if (constraintNames.isEmpty()) {
         fail("Constraint not found");
       }
-      for (String c: constraintNames) {
+      for (String c : constraintNames) {
         execute("alter table " + tableName + " drop check " + c);
       }
-      ((JdbcSchema) p2).renameField(executor, "people", "registered",
-          "isRegistered");
-      for (String cd: checkDefs) {
-        execute("alter table " + tableName + " add check "+ cd);
+      ((JdbcSchema) p2).renameField(executor, "people", "registered", "isRegistered");
+      for (String cd : checkDefs) {
+        execute("alter table " + tableName + " add check " + cd);
       }
     } catch (OrmException e) {
       fail(e.getMessage());

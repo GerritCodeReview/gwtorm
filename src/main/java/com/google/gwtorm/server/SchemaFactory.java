@@ -14,7 +14,6 @@
 
 package com.google.gwtorm.server;
 
-
 /**
  * Creates new application Schema instances on demand.
  *
@@ -25,9 +24,8 @@ public interface SchemaFactory<S extends Schema> {
    * Open a new connection to the database and get a Schema wrapper.
    *
    * @return a new connection, wrapped up in the application's Schema.
-   * @throws OrmException the connection could not be opened to the database.
-   *         The exception detail should be examined to determine the root cause
-   *         of the connection failure.
+   * @throws OrmException the connection could not be opened to the database. The exception detail
+   *     should be examined to determine the root cause of the connection failure.
    */
   S open() throws OrmException;
 }

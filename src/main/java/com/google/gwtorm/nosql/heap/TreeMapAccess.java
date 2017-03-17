@@ -19,8 +19,7 @@ import com.google.gwtorm.nosql.generic.GenericAccess;
 import com.google.gwtorm.server.Access;
 
 /** Base implementation for {@link Access} in a {@link TreeMapDatabase}. */
-public abstract class TreeMapAccess<T, K extends Key<?>> extends
-    GenericAccess<T, K> {
+public abstract class TreeMapAccess<T, K extends Key<?>> extends GenericAccess<T, K> {
   protected TreeMapAccess(final TreeMapSchema s) {
     super(s);
   }

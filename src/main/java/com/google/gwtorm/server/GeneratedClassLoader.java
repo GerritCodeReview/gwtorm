@@ -14,7 +14,6 @@
 
 package com.google.gwtorm.server;
 
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -23,12 +22,11 @@ import java.lang.reflect.Method;
 
 /**
  * Hacked ClassLoader to inject generated code into the parent.
- * <p>
- * This ClassLoader allows our code generators to inject their generated classes
- * into the parent ClassLoader, which should be the same ClassLoader that
- * defined the application's Schema interface extension. This is necessary to
- * ensure the generated classes can access protected and default-access fields
- * within the entities.
+ *
+ * <p>This ClassLoader allows our code generators to inject their generated classes into the parent
+ * ClassLoader, which should be the same ClassLoader that defined the application's Schema interface
+ * extension. This is necessary to ensure the generated classes can access protected and
+ * default-access fields within the entities.
  */
 public class GeneratedClassLoader extends ClassLoader {
   private static final boolean debugCodeGen;
@@ -41,8 +39,8 @@ public class GeneratedClassLoader extends ClassLoader {
     Method m;
     try {
       m =
-          ClassLoader.class.getDeclaredMethod("defineClass", String.class,
-              byte[].class, Integer.TYPE, Integer.TYPE);
+          ClassLoader.class.getDeclaredMethod(
+              "defineClass", String.class, byte[].class, Integer.TYPE, Integer.TYPE);
       m.setAccessible(true);
     } catch (SecurityException e) {
       throw new LinkageError("No defineClass in ClassLoader");
@@ -56,11 +54,9 @@ public class GeneratedClassLoader extends ClassLoader {
     super(parent);
   }
 
-  public void defineClass(final String name, final byte[] code)
-      throws OrmException {
+  public void defineClass(final String name, final byte[] code) throws OrmException {
     if (debugCodeGen) {
-      final File outClassFile =
-          new File("generated_classes/" + name.replace('.', '/') + ".class");
+      final File outClassFile = new File("generated_classes/" + name.replace('.', '/') + ".class");
       outClassFile.getParentFile().mkdirs();
       try {
         final FileOutputStream out = new FileOutputStream(outClassFile);
@@ -75,8 +71,7 @@ public class GeneratedClassLoader extends ClassLoader {
     }
 
     try {
-      defineClass.invoke(getParent(), name, code, Integer.valueOf(0), Integer
-          .valueOf(code.length));
+      defineClass.invoke(getParent(), name, code, Integer.valueOf(0), Integer.valueOf(code.length));
     } catch (IllegalArgumentException e) {
       throw new OrmException("Unable to inject class " + name, e);
     } catch (SecurityException e) {

@@ -18,7 +18,6 @@ import com.google.gwtorm.schema.ColumnModel;
 import com.google.gwtorm.server.OrmDuplicateKeyException;
 import com.google.gwtorm.server.OrmException;
 import com.google.gwtorm.server.StatementExecutor;
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -70,8 +69,9 @@ public class DialectDerby extends SqlDialect {
   }
 
   @Override
-  public void renameColumn(StatementExecutor e, String tableName,
-      String fromColumn, ColumnModel col) throws OrmException {
+  public void renameColumn(
+      StatementExecutor e, String tableName, String fromColumn, ColumnModel col)
+      throws OrmException {
     StringBuffer sb = new StringBuffer();
     sb.append("RENAME COLUMN ");
     sb.append(tableName);
@@ -83,8 +83,7 @@ public class DialectDerby extends SqlDialect {
   }
 
   @Override
-  public void renameTable(StatementExecutor e, String from, String to)
-      throws OrmException {
+  public void renameTable(StatementExecutor e, String from, String to) throws OrmException {
     final StringBuilder r = new StringBuilder();
     r.append("RENAME TABLE ");
     r.append(from);

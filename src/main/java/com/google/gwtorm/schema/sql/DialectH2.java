@@ -18,7 +18,6 @@ import com.google.gwtorm.schema.ColumnModel;
 import com.google.gwtorm.server.OrmDuplicateKeyException;
 import com.google.gwtorm.server.OrmException;
 import com.google.gwtorm.server.StatementExecutor;
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -34,8 +33,7 @@ public class DialectH2 extends SqlDialect {
   }
 
   @Override
-  public OrmException convertError(final String op, final String entity,
-      final SQLException err) {
+  public OrmException convertError(final String op, final String entity, final SQLException err) {
     switch (getSQLStateInt(err)) {
       case 23001: // UNIQUE CONSTRAINT VIOLATION
       case 23505: // DUPLICATE_KEY_1
@@ -56,9 +54,10 @@ public class DialectH2 extends SqlDialect {
     Statement s = db.createStatement();
     try {
       ResultSet rs =
-          s.executeQuery("SELECT SEQUENCE_NAME"
-              + " FROM INFORMATION_SCHEMA.SEQUENCES"
-              + " WHERE SEQUENCE_SCHEMA = 'PUBLIC'");
+          s.executeQuery(
+              "SELECT SEQUENCE_NAME"
+                  + " FROM INFORMATION_SCHEMA.SEQUENCES"
+                  + " WHERE SEQUENCE_SCHEMA = 'PUBLIC'");
       try {
         HashSet<String> sequences = new HashSet<>();
         while (rs.next()) {
@@ -74,8 +73,8 @@ public class DialectH2 extends SqlDialect {
   }
 
   @Override
-  public void addColumn(StatementExecutor stmt, String tableName,
-      ColumnModel col) throws OrmException {
+  public void addColumn(StatementExecutor stmt, String tableName, ColumnModel col)
+      throws OrmException {
     final StringBuilder r = new StringBuilder();
     r.append("ALTER TABLE ");
     r.append(tableName);
@@ -99,8 +98,9 @@ public class DialectH2 extends SqlDialect {
   }
 
   @Override
-  public void renameColumn(StatementExecutor stmt, String tableName,
-      String fromColumn, ColumnModel col) throws OrmException {
+  public void renameColumn(
+      StatementExecutor stmt, String tableName, String fromColumn, ColumnModel col)
+      throws OrmException {
     final StringBuilder r = new StringBuilder();
     r.append("ALTER TABLE ");
     r.append(tableName);

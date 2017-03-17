@@ -20,7 +20,6 @@ import com.google.gwtorm.schema.sql.SqlDialect;
 import com.google.gwtorm.server.OrmException;
 import com.google.gwtorm.server.PrimaryKey;
 import com.google.gwtorm.server.Relation;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -46,11 +45,10 @@ public abstract class RelationModel {
     queries = Lists.newArrayList();
   }
 
-  protected void initName(final String method, final Relation rel)
-      throws OrmException {
+  protected void initName(final String method, final Relation rel) throws OrmException {
     if (rel == null) {
-      throw new OrmException("Method " + method + " is missing "
-          + Relation.class.getName() + " annotation");
+      throw new OrmException(
+          "Method " + method + " is missing " + Relation.class.getName() + " annotation");
     }
     relation = rel;
     methodName = method;
@@ -64,8 +62,8 @@ public abstract class RelationModel {
         throw new OrmException("Duplicate fields " + field.getFieldName());
       }
       if (columnsById.put(field.getColumnID(), field) != null) {
-        throw new OrmException("Duplicate @Column id " + field.getColumnID()
-            + " in " + field.getPathToFieldName());
+        throw new OrmException(
+            "Duplicate @Column id " + field.getColumnID() + " in " + field.getPathToFieldName());
       }
 
       if (field.isNested()) {
@@ -81,9 +79,16 @@ public abstract class RelationModel {
   private void registerColumn(final ColumnModel nc) throws OrmException {
     final ColumnModel name = columnsByColumnName.put(nc.getColumnName(), nc);
     if (name != null) {
-      throw new OrmException("Duplicate columns " + nc.getColumnName() + " in "
-          + getMethodName() + ":\n" + "prior " + name.getPathToFieldName()
-          + "\n next  " + nc.getPathToFieldName());
+      throw new OrmException(
+          "Duplicate columns "
+              + nc.getColumnName()
+              + " in "
+              + getMethodName()
+              + ":\n"
+              + "prior "
+              + name.getPathToFieldName()
+              + "\n next  "
+              + nc.getPathToFieldName());
     }
   }
 
@@ -95,8 +100,7 @@ public abstract class RelationModel {
 
     final ColumnModel field = getField(annotation.value());
     if (field == null) {
-      throw new OrmException("Field " + annotation.value() + " not in "
-          + getEntityTypeClassName());
+      throw new OrmException("Field " + annotation.value() + " not in " + getEntityTypeClassName());
     }
 
     primaryKey = new KeyModel(name, field);
@@ -108,13 +112,15 @@ public abstract class RelationModel {
   protected void addQuery(final QueryModel q) throws OrmException {
     for (QueryModel e : queries) {
       if (e.getName().equals(q.getName())) {
-        throw new OrmException("Duplicate query " + q.getName() //
-            + " in " + getAccessInterfaceName());
+        throw new OrmException(
+            "Duplicate query "
+                + q.getName() //
+                + " in "
+                + getAccessInterfaceName());
       }
     }
     queries.add(q);
   }
-
 
   public String getMethodName() {
     return methodName;
@@ -176,7 +182,7 @@ public abstract class RelationModel {
     if (getPrimaryKey() != null) {
       return getPrimaryKey().getAllLeafColumns();
     }
-    return Collections.<ColumnModel> emptyList();
+    return Collections.<ColumnModel>emptyList();
   }
 
   public Collection<QueryModel> getQueries() {
@@ -211,14 +217,13 @@ public abstract class RelationModel {
     r.append(relationName);
     r.append(" (\n");
 
-    for (final Iterator<ColumnModel> i = getColumns().iterator(); i.hasNext();) {
+    for (final Iterator<ColumnModel> i = getColumns().iterator(); i.hasNext(); ) {
       final ColumnModel col = i.next();
       r.append(col.getColumnName());
       r.append(" ");
       r.append(dialect.getSqlTypeInfo(col).getSqlType(col, dialect));
 
-      String check =
-          dialect.getSqlTypeInfo(col).getCheckConstraint(col, dialect);
+      String check = dialect.getSqlTypeInfo(col).getCheckConstraint(col, dialect);
       if (check != null) {
         r.append(' ');
         r.append(check);
@@ -231,8 +236,7 @@ public abstract class RelationModel {
 
     if (!getPrimaryKeyColumns().isEmpty()) {
       r.append(",PRIMARY KEY(");
-      for (final Iterator<ColumnModel> i = getPrimaryKeyColumns().iterator(); i
-          .hasNext();) {
+      for (final Iterator<ColumnModel> i = getPrimaryKeyColumns().iterator(); i.hasNext(); ) {
         final ColumnModel col = i.next();
         r.append(col.getColumnName());
         if (i.hasNext()) {
@@ -250,7 +254,7 @@ public abstract class RelationModel {
   public String getSelectSql(final SqlDialect dialect, final String tableAlias) {
     final StringBuilder r = new StringBuilder();
     r.append("SELECT ");
-    for (final Iterator<ColumnModel> i = getColumns().iterator(); i.hasNext();) {
+    for (final Iterator<ColumnModel> i = getColumns().iterator(); i.hasNext(); ) {
       final ColumnModel col = i.next();
       r.append(tableAlias);
       r.append('.');
@@ -271,7 +275,7 @@ public abstract class RelationModel {
     r.append("INSERT INTO ");
     r.append(relationName);
     r.append("(");
-    for (final Iterator<ColumnModel> i = getColumns().iterator(); i.hasNext();) {
+    for (final Iterator<ColumnModel> i = getColumns().iterator(); i.hasNext(); ) {
       final ColumnModel col = i.next();
       r.append(col.getColumnName());
       if (i.hasNext()) {
@@ -280,7 +284,7 @@ public abstract class RelationModel {
     }
     r.append(")VALUES(");
     int nth = 1;
-    for (final Iterator<ColumnModel> i = getColumns().iterator(); i.hasNext();) {
+    for (final Iterator<ColumnModel> i = getColumns().iterator(); i.hasNext(); ) {
       i.next();
       r.append(dialect.getParameterPlaceHolder(nth++));
       if (i.hasNext()) {
@@ -302,7 +306,7 @@ public abstract class RelationModel {
     cols = new ArrayList<>();
     cols.addAll(getDependentColumns());
     cols.addAll(getRowVersionColumns());
-    for (final Iterator<ColumnModel> i = cols.iterator(); i.hasNext();) {
+    for (final Iterator<ColumnModel> i = cols.iterator(); i.hasNext(); ) {
       final ColumnModel col = i.next();
       r.append(col.getColumnName());
       r.append("=");
@@ -316,7 +320,7 @@ public abstract class RelationModel {
     cols = new ArrayList<>();
     cols.addAll(getPrimaryKeyColumns());
     cols.addAll(getRowVersionColumns());
-    for (final Iterator<ColumnModel> i = cols.iterator(); i.hasNext();) {
+    for (final Iterator<ColumnModel> i = cols.iterator(); i.hasNext(); ) {
       final ColumnModel col = i.next();
       r.append(col.getColumnName());
       r.append("=");
@@ -337,7 +341,7 @@ public abstract class RelationModel {
     final List<ColumnModel> cols = new ArrayList<>();
     cols.addAll(getPrimaryKeyColumns());
     cols.addAll(getRowVersionColumns());
-    for (final Iterator<ColumnModel> i = cols.iterator(); i.hasNext();) {
+    for (final Iterator<ColumnModel> i = cols.iterator(); i.hasNext(); ) {
       final ColumnModel col = i.next();
       r.append(col.getColumnName());
       r.append("=");

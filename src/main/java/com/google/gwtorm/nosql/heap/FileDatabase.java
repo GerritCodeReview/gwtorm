@@ -16,7 +16,6 @@ package com.google.gwtorm.nosql.heap;
 
 import com.google.gwtorm.server.OrmException;
 import com.google.gwtorm.server.Schema;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -32,19 +31,18 @@ import java.util.Map;
 
 /**
  * Tiny NoSQL database stored on the local filesystem.
- * <p>
- * This is a simple NoSQL implementation intended only for development/debugging
- * purposes. It is not capable of supporting any production traffic. Large data
- * sets will cause the implementation to fall over, as all records are stored in
- * memory.
- * <p>
- * Although some effort is made to persist data to disk during updates, and
- * reload it during construction, durability of stored data is not guaranteed.
+ *
+ * <p>This is a simple NoSQL implementation intended only for development/debugging purposes. It is
+ * not capable of supporting any production traffic. Large data sets will cause the implementation
+ * to fall over, as all records are stored in memory.
+ *
+ * <p>Although some effort is made to persist data to disk during updates, and reload it during
+ * construction, durability of stored data is not guaranteed.
  *
  * @param <T> type of the application schema.
  */
-public class FileDatabase<T extends Schema> extends
-    TreeMapDatabase<T, FileDatabase.LoggingSchema, FileDatabase.LoggingAccess> {
+public class FileDatabase<T extends Schema>
+    extends TreeMapDatabase<T, FileDatabase.LoggingSchema, FileDatabase.LoggingAccess> {
   private static final int MAX_LOG_SIZE = 50000;
 
   private final File heapFile;
@@ -56,14 +54,13 @@ public class FileDatabase<T extends Schema> extends
   /**
    * Create the database and implement the application's schema interface.
    *
-   * @param path path prefix for the data files. File suffixes will be added to
-   *        this name to name the database's various files.
+   * @param path path prefix for the data files. File suffixes will be added to this name to name
+   *     the database's various files.
    * @param schema the application schema this database will open.
-   * @throws OrmException the schema cannot be queried, or the existing database
-   *         files are not readable.
+   * @throws OrmException the schema cannot be queried, or the existing database files are not
+   *     readable.
    */
-  public FileDatabase(final File path, final Class<T> schema)
-      throws OrmException {
+  public FileDatabase(final File path, final Class<T> schema) throws OrmException {
     super(LoggingSchema.class, LoggingAccess.class, schema);
 
     heapFile = new File(path.getAbsolutePath() + ".nosql_db");
@@ -105,9 +102,10 @@ public class FileDatabase<T extends Schema> extends
 
       final DataInputStream in;
       try {
-        in = new DataInputStream( //
-            new BufferedInputStream( //
-                new FileInputStream(heapFile)));
+        in =
+            new DataInputStream( //
+                new BufferedInputStream( //
+                    new FileInputStream(heapFile)));
       } catch (FileNotFoundException e) {
         return;
       }
@@ -136,36 +134,39 @@ public class FileDatabase<T extends Schema> extends
 
       final DataInputStream in;
       try {
-        in = new DataInputStream( //
-            new BufferedInputStream( //
-                new FileInputStream(logFile)));
+        in =
+            new DataInputStream( //
+                new BufferedInputStream( //
+                    new FileInputStream(logFile)));
       } catch (FileNotFoundException e) {
         return;
       }
 
       try {
-        for (;; logRecords++) {
+        for (; ; logRecords++) {
           final int op = in.read();
           if (op < 0) {
             break;
           }
 
           switch (op) {
-            case 0: {
-              final byte[] key = new byte[in.readInt()];
-              in.readFully(key);
-              table.remove(key);
-              break;
-            }
+            case 0:
+              {
+                final byte[] key = new byte[in.readInt()];
+                in.readFully(key);
+                table.remove(key);
+                break;
+              }
 
-            case 1: {
-              final byte[] key = new byte[in.readInt()];
-              final byte[] val = new byte[in.readInt()];
-              in.readFully(key);
-              in.readFully(val);
-              table.put(key, val);
-              break;
-            }
+            case 1:
+              {
+                final byte[] key = new byte[in.readInt()];
+                final byte[] val = new byte[in.readInt()];
+                in.readFully(key);
+                in.readFully(val);
+                table.put(key, val);
+                break;
+              }
 
             default:
               throw new OrmException("Unknown log command " + op);
@@ -220,9 +221,10 @@ public class FileDatabase<T extends Schema> extends
       final File tmp = newTempFile();
       boolean ok = false;
       try {
-        DataOutputStream out = new DataOutputStream( //
-            new BufferedOutputStream( //
-                new FileOutputStream(tmp)));
+        DataOutputStream out =
+            new DataOutputStream( //
+                new BufferedOutputStream( //
+                    new FileOutputStream(tmp)));
         try {
           out.writeInt(table.size());
           for (Map.Entry<byte[], byte[]> ent : table.entrySet()) {
@@ -270,7 +272,7 @@ public class FileDatabase<T extends Schema> extends
     return File.createTempFile("heap_", "_db", heapFile.getParentFile());
   }
 
-  public static abstract class LoggingSchema extends TreeMapSchema {
+  public abstract static class LoggingSchema extends TreeMapSchema {
     private final FileDatabase<?> db;
 
     protected LoggingSchema(FileDatabase<?> db) {
@@ -302,7 +304,7 @@ public class FileDatabase<T extends Schema> extends
   }
 
   @SuppressWarnings("rawtypes")
-  public static abstract class LoggingAccess extends TreeMapAccess {
+  public abstract static class LoggingAccess extends TreeMapAccess {
     protected LoggingAccess(LoggingSchema s) {
       super(s);
     }

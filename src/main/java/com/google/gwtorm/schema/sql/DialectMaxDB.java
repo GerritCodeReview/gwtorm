@@ -18,7 +18,6 @@ import com.google.gwtorm.schema.ColumnModel;
 import com.google.gwtorm.server.OrmDuplicateKeyException;
 import com.google.gwtorm.server.OrmException;
 import com.google.gwtorm.server.StatementExecutor;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -56,8 +55,7 @@ public class DialectMaxDB extends SqlDialect {
     final Statement s = conn.createStatement();
     try {
       // lists sequences from schema associated with the current connection only
-      final ResultSet rs =
-          s.executeQuery("SELECT sequence_name FROM sequences");
+      final ResultSet rs = s.executeQuery("SELECT sequence_name FROM sequences");
       try {
         HashSet<String> sequences = new HashSet<>();
         while (rs.next()) {
@@ -73,8 +71,9 @@ public class DialectMaxDB extends SqlDialect {
   }
 
   @Override
-  public void renameColumn(StatementExecutor e, String tableName,
-      String fromColumn, ColumnModel col) throws OrmException {
+  public void renameColumn(
+      StatementExecutor e, String tableName, String fromColumn, ColumnModel col)
+      throws OrmException {
     final StringBuilder s = new StringBuilder();
     s.append("RENAME COLUMN ");
     s.append(tableName).append(".").append(fromColumn);
@@ -106,8 +105,7 @@ public class DialectMaxDB extends SqlDialect {
   }
 
   @Override
-  public void renameTable(StatementExecutor e, String from, String to)
-      throws OrmException {
+  public void renameTable(StatementExecutor e, String from, String to) throws OrmException {
     final StringBuilder r = new StringBuilder();
     r.append("RENAME TABLE ");
     r.append(from);
@@ -115,5 +113,4 @@ public class DialectMaxDB extends SqlDialect {
     r.append(to);
     e.execute(r.toString());
   }
-
 }

@@ -32,16 +32,14 @@ import com.google.gwtorm.jdbc.JdbcSchema;
 import com.google.gwtorm.jdbc.SimpleDataSource;
 import com.google.gwtorm.server.OrmDuplicateKeyException;
 import com.google.gwtorm.server.OrmException;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Properties;
 import java.util.Set;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 public class DialectMaxDBTest extends SqlDialectTest {
   private static final String MAXDB_URL_KEY = "maxdb.url";
@@ -70,10 +68,8 @@ public class DialectMaxDBTest extends SqlDialectTest {
     p.setProperty("url", db.getMetaData().getURL());
     p.setProperty("user", user);
     p.setProperty("password", pass);
-    phoneBook =
-        new Database<>(new SimpleDataSource(p), PhoneBookDb.class);
-    phoneBook2 =
-        new Database<>(new SimpleDataSource(p), PhoneBookDb2.class);
+    phoneBook = new Database<>(new SimpleDataSource(p), PhoneBookDb.class);
+    phoneBook2 = new Database<>(new SimpleDataSource(p), PhoneBookDb2.class);
   }
 
   private void drop(String drop) {
@@ -198,8 +194,7 @@ public class DialectMaxDBTest extends SqlDialectTest {
       final Person bob = new Person(pk, p.nextAddressId());
       p.people().insert(asList(bob));
 
-      final Address addr =
-          new Address(new Address.Key(pk, "home"), "some place");
+      final Address addr = new Address(new Address.Key(pk, "home"), "some place");
       p.addresses().insert(asList(addr));
     } finally {
       p.close();
@@ -207,8 +202,7 @@ public class DialectMaxDBTest extends SqlDialectTest {
 
     final PhoneBookDb2 p2 = phoneBook2.open();
     try {
-      ((JdbcSchema) p2).renameField(executor, "people", "registered",
-          "isRegistered");
+      ((JdbcSchema) p2).renameField(executor, "people", "registered", "isRegistered");
     } finally {
       p2.close();
     }
@@ -271,8 +265,8 @@ public class DialectMaxDBTest extends SqlDialectTest {
         Person joe = new Person(joePk, p.nextAddressId());
         joe.setAge(40);
         try {
-        p.people().insert(asList(joe));
-        fail();
+          p.people().insert(asList(joe));
+          fail();
         } catch (OrmDuplicateKeyException duprec) {
           fail();
         } catch (OrmException noDuprec) {

@@ -21,10 +21,8 @@ import com.google.gwtorm.server.OrmException;
 import com.google.gwtorm.server.Relation;
 import com.google.gwtorm.server.Schema;
 import com.google.gwtorm.server.Sequence;
-
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
-
 
 public class JavaSchemaModel extends SchemaModel {
   private final Class<?> schema;
@@ -33,14 +31,12 @@ public class JavaSchemaModel extends SchemaModel {
     schema = schemaInterface;
 
     if (!schema.isInterface()) {
-      throw new OrmException("Schema " + schema.getName()
-          + " must be an interface");
+      throw new OrmException("Schema " + schema.getName() + " must be an interface");
     }
 
-    if (schema.getInterfaces().length != 1
-        || schema.getInterfaces()[0] != Schema.class) {
-      throw new OrmException("Schema " + schema.getName()
-          + " must only extend " + Schema.class.getName());
+    if (schema.getInterfaces().length != 1 || schema.getInterfaces()[0] != Schema.class) {
+      throw new OrmException(
+          "Schema " + schema.getName() + " must only extend " + Schema.class.getName());
     }
 
     for (final Method m : schema.getDeclaredMethods()) {

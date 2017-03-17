@@ -20,7 +20,6 @@ import com.google.gwtorm.client.RowVersion;
 import com.google.gwtorm.schema.ColumnModel;
 import com.google.gwtorm.schema.Util;
 import com.google.gwtorm.server.OrmException;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
@@ -28,7 +27,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 
 public class JavaColumnModel extends ColumnModel {
   public static List<Field> getDeclaredFields(Class<?> in) {
@@ -69,25 +67,38 @@ public class JavaColumnModel extends ColumnModel {
     initName(fieldName, field.getAnnotation(Column.class));
 
     if (Modifier.isPrivate(field.getModifiers())) {
-      throw new OrmException("Field " + field.getName() + " of "
-          + field.getDeclaringClass().getName() + " must not be private");
+      throw new OrmException(
+          "Field "
+              + field.getName()
+              + " of "
+              + field.getDeclaringClass().getName()
+              + " must not be private");
     }
     if (Modifier.isFinal(field.getModifiers())) {
-      throw new OrmException("Field " + field.getName() + " of "
-          + field.getDeclaringClass().getName() + " must not be final");
+      throw new OrmException(
+          "Field "
+              + field.getName()
+              + " of "
+              + field.getDeclaringClass().getName()
+              + " must not be final");
     }
 
     rowVersion = field.getAnnotation(RowVersion.class) != null;
     if (rowVersion && field.getType() != Integer.TYPE) {
-      throw new OrmException("Field " + field.getName() + " of "
-          + field.getDeclaringClass().getName() + " must have type 'int'");
+      throw new OrmException(
+          "Field "
+              + field.getName()
+              + " of "
+              + field.getDeclaringClass().getName()
+              + " must have type 'int'");
     }
 
     initNested();
   }
 
-  public JavaColumnModel(Field f, final String fieldPath, final int columnId,
-      final Class<?> columnType) throws OrmException {
+  public JavaColumnModel(
+      Field f, final String fieldPath, final int columnId, final Class<?> columnType)
+      throws OrmException {
     this.field = f;
     this.fieldName = fieldPath;
     this.columnName = fieldPath;

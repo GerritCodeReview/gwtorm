@@ -14,46 +14,41 @@
 
 package com.google.gwtorm.nosql;
 
-
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 
 /**
  * Encoder support for {@link IndexFunction} computed strings.
- * <p>
- * This class provides a string that may contain multiple values, using
- * delimiters between fields and big-endian encoded numerics. Sorting the
- * resulting strings using unsigned byte orderings produces a stable sorting.
- * <p>
- * The encoding used by this class relies on having 258 tokens. To get the extra
- * 2 tokens within a 256 byte range, escapes are used according to the following
- * simple table:
+ *
+ * <p>This class provides a string that may contain multiple values, using delimiters between fields
+ * and big-endian encoded numerics. Sorting the resulting strings using unsigned byte orderings
+ * produces a stable sorting.
+ *
+ * <p>The encoding used by this class relies on having 258 tokens. To get the extra 2 tokens within
+ * a 256 byte range, escapes are used according to the following simple table:
+ *
  * <ul>
- * <li>delimiter = \x00\x01
- * <li>byte \x00 = \x00\xff
- * <li>byte \xff = \xff\x00
- * <li>infinity = \xff\xff
+ *   <li>delimiter = \x00\x01
+ *   <li>byte \x00 = \x00\xff
+ *   <li>byte \xff = \xff\x00
+ *   <li>infinity = \xff\xff
  * </ul>
- * <p>
- * Integers are encoded as variable length big-endian values, skipping leading
- * zero bytes, prefixed by the number of bytes used to encode them. Therefore 0
- * is encoded as "\x00", and 256 is encoded as "\x02\x01\x00". Negative values
- * are encoded in their twos complement encoding and therefore sort after the
- * maximum positive value.
- * <p>
- * Strings and byte arrays supplied by the caller have their \x00 and \xff
- * values escaped according to the table above, but are otherwise written as-is
- * without a length prefix.
- * <p>
- * Callers are responsible for inserting {@link #delimiter()} markers at the
- * appropriate positions in the sequence.
+ *
+ * <p>Integers are encoded as variable length big-endian values, skipping leading zero bytes,
+ * prefixed by the number of bytes used to encode them. Therefore 0 is encoded as "\x00", and 256 is
+ * encoded as "\x02\x01\x00". Negative values are encoded in their twos complement encoding and
+ * therefore sort after the maximum positive value.
+ *
+ * <p>Strings and byte arrays supplied by the caller have their \x00 and \xff values escaped
+ * according to the table above, but are otherwise written as-is without a length prefix.
+ *
+ * <p>Callers are responsible for inserting {@link #delimiter()} markers at the appropriate
+ * positions in the sequence.
  */
 public class IndexKeyBuilder {
   private final ByteArrayOutputStream buf = new ByteArrayOutputStream();
 
-  /**
-   * Add a delimiter marker to the string.
-   */
+  /** Add a delimiter marker to the string. */
   public void delimiter() {
     buf.write(0x00);
     buf.write(0x01);
@@ -61,8 +56,8 @@ public class IndexKeyBuilder {
 
   /**
    * Add the special infinity symbol to the string.
-   * <p>
-   * The infinity symbol sorts after all other values in the same position.
+   *
+   * <p>The infinity symbol sorts after all other values in the same position.
    */
   public void infinity() {
     buf.write(0xff);
@@ -71,9 +66,8 @@ public class IndexKeyBuilder {
 
   /**
    * Add \0 to the string.
-   * <p>
-   * \0 can be used during searches to enforce greater then or less then clauses
-   * in a query.
+   *
+   * <p>\0 can be used during searches to enforce greater then or less then clauses in a query.
    */
   public void nul() {
     buf.write(0x00);
@@ -81,9 +75,9 @@ public class IndexKeyBuilder {
 
   /**
    * Add a raw sequence of bytes.
-   * <p>
-   * The bytes 0x00 and 0xff are escaped by this method according to the
-   * encoding table described in the class documentation.
+   *
+   * <p>The bytes 0x00 and 0xff are escaped by this method according to the encoding table described
+   * in the class documentation.
    *
    * @param bin array to copy from.
    * @param pos first index to copy.
@@ -125,9 +119,9 @@ public class IndexKeyBuilder {
 
   /**
    * Add a raw sequence of bytes.
-   * <p>
-   * The bytes 0x00 and 0xff are escaped by this method according to the
-   * encoding table described in the class documentation.
+   *
+   * <p>The bytes 0x00 and 0xff are escaped by this method according to the encoding table described
+   * in the class documentation.
    *
    * @param bin the complete array to copy.
    */
@@ -204,9 +198,9 @@ public class IndexKeyBuilder {
 
   /**
    * Add a byte array as-is, without escaping.
-   * <p>
-   * This should only be used the byte array came from a prior index key and the
-   * caller is trying to create a new key with this key embedded at the end.
+   *
+   * <p>This should only be used the byte array came from a prior index key and the caller is trying
+   * to create a new key with this key embedded at the end.
    *
    * @param bin the binary to append as-is, without further escaping.
    */

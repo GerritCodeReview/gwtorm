@@ -14,7 +14,6 @@
 
 package com.google.gwtorm.server;
 
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -28,8 +27,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface PrimaryKey {
-  /**
-   * @return name of the field in the entity which contains the primary key.
-   */
+  /** @return name of the field in the entity which contains the primary key. */
   String value();
 }

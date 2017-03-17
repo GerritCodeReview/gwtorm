@@ -20,12 +20,11 @@ public class KeyUtil {
 
   /**
    * Set the encoder implementation to a valid implementation.
-   * <p>
-   * Server-side code needs to set the encoder to a
-   * {@link com.google.gwtorm.server.StandardKeyEncoder} instance prior to
-   * invoking any methods in this class. Typically this is done by the
-   * {@link com.google.gwtorm.server.SchemaFactory} implementation's static
-   * initializer.
+   *
+   * <p>Server-side code needs to set the encoder to a {@link
+   * com.google.gwtorm.server.StandardKeyEncoder} instance prior to invoking any methods in this
+   * class. Typically this is done by the {@link com.google.gwtorm.server.SchemaFactory}
+   * implementation's static initializer.
    */
   public static void setEncoderImpl(final Encoder e) {
     ENCODER_IMPL = e;
@@ -37,8 +36,8 @@ public class KeyUtil {
    * @param <T> type of the key entity.
    * @param a first key to test; may be null.
    * @param b second key to test; may be null.
-   * @return true if both <code>a</code> and <code>b</code> are null, or if both
-   *         are not-null and <code>a.equals(b)</code> is true. Otherwise false.
+   * @return true if both <code>a</code> and <code>b</code> are null, or if both are not-null and
+   *     <code>a.equals(b)</code> is true. Otherwise false.
    */
   public static <T extends Key<?>> boolean eq(final T a, final T b) {
     if (a == b) {
@@ -52,11 +51,10 @@ public class KeyUtil {
 
   /**
    * Encode a string to be safe for use within a URL like string.
-   * <p>
-   * The returned encoded string has URL component characters escaped with hex
-   * escapes (e.g. ' ' is '+' and '%' is '%25'). The special character '/' is
-   * left literal. The comma character (',') is always encoded, permitting
-   * multiple encoded string values to be joined together safely.
+   *
+   * <p>The returned encoded string has URL component characters escaped with hex escapes (e.g. ' '
+   * is '+' and '%' is '%25'). The special character '/' is left literal. The comma character (',')
+   * is always encoded, permitting multiple encoded string values to be joined together safely.
    *
    * @param e the string to encode, must not be null.
    * @return the encoded string.
@@ -90,17 +88,16 @@ public class KeyUtil {
     if (comma < 0 && parent != null) {
       throw new IllegalArgumentException("Not enough components: " + in);
     }
-    assert(parent != null);
+    assert (parent != null);
     parent.fromString(in.substring(0, comma));
     return decode(in.substring(comma + 1));
   }
 
-  public static abstract class Encoder {
+  public abstract static class Encoder {
     public abstract String encode(String e);
 
     public abstract String decode(String e);
   }
 
-  private KeyUtil() {
-  }
+  private KeyUtil() {}
 }

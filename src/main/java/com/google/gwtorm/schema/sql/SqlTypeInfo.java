@@ -16,21 +16,16 @@ package com.google.gwtorm.schema.sql;
 
 import com.google.gwtorm.schema.ColumnModel;
 import com.google.gwtorm.server.CodeGenSupport;
-
+import java.sql.PreparedStatement;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
-import java.sql.PreparedStatement;
-
-
 public abstract class SqlTypeInfo {
-  protected SqlTypeInfo() {
-  }
+  protected SqlTypeInfo() {}
 
   public abstract String getSqlType(ColumnModel column, SqlDialect dialect);
 
-  public String getCheckConstraint(final ColumnModel column,
-      final SqlDialect dialect) {
+  public String getCheckConstraint(final ColumnModel column, final SqlDialect dialect) {
     return null;
   }
 
@@ -49,10 +44,11 @@ public abstract class SqlTypeInfo {
     cgs.pushSqlHandle();
     cgs.pushColumnIndex();
     cgs.push(getSqlTypeConstant());
-    cgs.mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, Type
-        .getInternalName(PreparedStatement.class), "setNull", Type
-        .getMethodDescriptor(Type.VOID_TYPE, new Type[] {Type.INT_TYPE,
-            Type.INT_TYPE}));
+    cgs.mv.visitMethodInsn(
+        Opcodes.INVOKEINTERFACE,
+        Type.getInternalName(PreparedStatement.class),
+        "setNull",
+        Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {Type.INT_TYPE, Type.INT_TYPE}));
   }
 
   public void generateResultSetGet(final CodeGenSupport cgs) {

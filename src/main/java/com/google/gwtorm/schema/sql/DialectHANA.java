@@ -19,7 +19,6 @@ import com.google.gwtorm.schema.ColumnModel;
 import com.google.gwtorm.server.OrmDuplicateKeyException;
 import com.google.gwtorm.server.OrmException;
 import com.google.gwtorm.server.StatementExecutor;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -33,40 +32,44 @@ import java.util.Set;
 public class DialectHANA extends SqlDialect {
 
   public DialectHANA() {
-    types.put(String.class, new SqlStringTypeInfo() {
-      @Override
-      public String getSqlType(ColumnModel col, SqlDialect dialect) {
-        Column column = col.getColumnAnnotation();
-        StringBuilder r = new StringBuilder();
+    types.put(
+        String.class,
+        new SqlStringTypeInfo() {
+          @Override
+          public String getSqlType(ColumnModel col, SqlDialect dialect) {
+            Column column = col.getColumnAnnotation();
+            StringBuilder r = new StringBuilder();
 
-        if (column.length() <= 0) {
-          r.append("NVARCHAR(255)");
-          if (col.isNotNull()) {
-            r.append(" DEFAULT ''");
+            if (column.length() <= 0) {
+              r.append("NVARCHAR(255)");
+              if (col.isNotNull()) {
+                r.append(" DEFAULT ''");
+              }
+            } else if (column.length() <= 5000) {
+              r.append("NVARCHAR(" + column.length() + ")");
+              if (col.isNotNull()) {
+                r.append(" DEFAULT ''");
+              }
+            } else {
+              r.append("NCLOB");
+            }
+
+            if (col.isNotNull()) {
+              r.append(" NOT NULL");
+            }
+
+            return r.toString();
           }
-        } else if (column.length() <= 5000) {
-          r.append("NVARCHAR(" + column.length() + ")");
-          if (col.isNotNull()) {
-            r.append(" DEFAULT ''");
+        });
+    types.put(
+        Boolean.TYPE,
+        new SqlBooleanTypeInfo() {
+          @Override
+          public String getCheckConstraint(ColumnModel column, SqlDialect dialect) {
+            // check constraints are not supported by HANA
+            return null;
           }
-        } else {
-          r.append("NCLOB");
-        }
-
-        if (col.isNotNull()) {
-          r.append(" NOT NULL");
-        }
-
-        return r.toString();
-      }
-    });
-    types.put(Boolean.TYPE, new SqlBooleanTypeInfo() {
-      @Override
-      public String getCheckConstraint(ColumnModel column, SqlDialect dialect) {
-        // check constraints are not supported by HANA
-        return null;
-      }
-    });
+        });
     typeNames.put(Types.INTEGER, "INTEGER");
   }
 
@@ -85,8 +88,7 @@ public class DialectHANA extends SqlDialect {
   }
 
   @Override
-  public void dropColumn(StatementExecutor e, String tableName, String column)
-      throws OrmException {
+  public void dropColumn(StatementExecutor e, String tableName, String column) throws OrmException {
     StringBuilder r = new StringBuilder();
     r.append("ALTER TABLE ");
     r.append(tableName);
@@ -112,14 +114,12 @@ public class DialectHANA extends SqlDialect {
   }
 
   @Override
-  public Set<String> listIndexes(Connection db, String tableName)
-      throws SQLException {
+  public Set<String> listIndexes(Connection db, String tableName) throws SQLException {
     return listNamesFromSystemTable(db, "INDEX_NAME", "INDEXES");
   }
 
   @Override
-  public Set<String> listColumns(Connection db, String tableName)
-      throws SQLException {
+  public Set<String> listColumns(Connection db, String tableName) throws SQLException {
     String sql =
         "SELECT COLUMN_NAME FROM TABLE_COLUMNS"
             + " WHERE SCHEMA_NAME = CURRENT_SCHEMA AND TABLE_NAME = ?";
@@ -144,8 +144,8 @@ public class DialectHANA extends SqlDialect {
     return names;
   }
 
-  private static Set<String> listNamesFromSystemTable(Connection db,
-      String columnName, String tableName) throws SQLException {
+  private static Set<String> listNamesFromSystemTable(
+      Connection db, String columnName, String tableName) throws SQLException {
     StringBuilder r = new StringBuilder();
     r.append("SELECT ");
     r.append(columnName);
@@ -159,8 +159,7 @@ public class DialectHANA extends SqlDialect {
   }
 
   @Override
-  public void renameTable(StatementExecutor e, String from, String to)
-      throws OrmException {
+  public void renameTable(StatementExecutor e, String from, String to) throws OrmException {
     StringBuilder r = new StringBuilder();
     r.append("RENAME TABLE ");
     r.append(from);
@@ -188,8 +187,9 @@ public class DialectHANA extends SqlDialect {
   }
 
   @Override
-  public void renameColumn(StatementExecutor e, String tableName,
-      String fromColumn, ColumnModel col) throws OrmException {
+  public void renameColumn(
+      StatementExecutor e, String tableName, String fromColumn, ColumnModel col)
+      throws OrmException {
     StringBuilder s = new StringBuilder();
     s.append("RENAME COLUMN ");
     s.append(tableName).append(".").append(fromColumn);

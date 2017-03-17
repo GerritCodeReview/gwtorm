@@ -26,7 +26,6 @@ import com.google.gwtorm.server.OrmDuplicateKeyException;
 import com.google.gwtorm.server.OrmException;
 import com.google.gwtorm.server.Schema;
 import com.google.gwtorm.server.StatementExecutor;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashSet;
@@ -111,8 +110,7 @@ public abstract class JdbcSchema extends AbstractSchema {
     }
   }
 
-  private void createSequences(final StatementExecutor e) throws OrmException,
-      SQLException {
+  private void createSequences(final StatementExecutor e) throws OrmException, SQLException {
     final SqlDialect dialect = dbDef.getDialect();
     final SchemaModel model = dbDef.getSchemaModel();
 
@@ -124,8 +122,7 @@ public abstract class JdbcSchema extends AbstractSchema {
     }
   }
 
-  private void createRelations(final StatementExecutor e) throws SQLException,
-      OrmException {
+  private void createRelations(final StatementExecutor e) throws SQLException, OrmException {
     final SqlDialect dialect = dbDef.getDialect();
     final SchemaModel model = dbDef.getSchemaModel();
     Set<String> have = dialect.listTables(getConnection());
@@ -139,8 +136,9 @@ public abstract class JdbcSchema extends AbstractSchema {
   private void addColumns(final StatementExecutor e, final RelationModel rel)
       throws SQLException, OrmException {
     final SqlDialect dialect = dbDef.getDialect();
-    Set<String> have = dialect.listColumns( //
-        getConnection(), rel.getRelationName().toLowerCase());
+    Set<String> have =
+        dialect.listColumns( //
+            getConnection(), rel.getRelationName().toLowerCase());
     for (final ColumnModel c : rel.getColumns()) {
       if (!have.contains(c.getColumnName().toLowerCase())) {
         dialect.addColumn(e, rel.getRelationName(), c);
@@ -148,16 +146,15 @@ public abstract class JdbcSchema extends AbstractSchema {
     }
   }
 
-  public void renameTable(final StatementExecutor e, String from, String to)
-      throws OrmException {
+  public void renameTable(final StatementExecutor e, String from, String to) throws OrmException {
     Preconditions.checkNotNull(e);
     Preconditions.checkNotNull(from);
     Preconditions.checkNotNull(to);
     getDialect().renameTable(e, from, to);
   }
 
-  public void renameField(final StatementExecutor e, String table, String from,
-      String to) throws OrmException {
+  public void renameField(final StatementExecutor e, String table, String from, String to)
+      throws OrmException {
     final RelationModel rel = findRelationModel(table);
     if (rel == null) {
       throw new OrmException("Relation " + table + " not defined");
@@ -169,8 +166,8 @@ public abstract class JdbcSchema extends AbstractSchema {
     getDialect().renameColumn(e, table, from, col);
   }
 
-  public void renameColumn(final StatementExecutor e, String table, String from,
-      String to) throws OrmException {
+  public void renameColumn(final StatementExecutor e, String table, String from, String to)
+      throws OrmException {
     final RelationModel rel = findRelationModel(table);
     if (rel == null) {
       throw new OrmException("Relation " + table + " not defined");
@@ -205,8 +202,7 @@ public abstract class JdbcSchema extends AbstractSchema {
     }
   }
 
-  private void pruneSequences(final StatementExecutor e) throws SQLException,
-      OrmException {
+  private void pruneSequences(final StatementExecutor e) throws SQLException, OrmException {
     final SqlDialect dialect = dbDef.getDialect();
     final SchemaModel model = dbDef.getSchemaModel();
     HashSet<String> want = new HashSet<>();
@@ -220,8 +216,7 @@ public abstract class JdbcSchema extends AbstractSchema {
     }
   }
 
-  private void pruneRelations(final StatementExecutor e) throws SQLException,
-      OrmException {
+  private void pruneRelations(final StatementExecutor e) throws SQLException, OrmException {
     final SqlDialect dialect = dbDef.getDialect();
     final SchemaModel model = dbDef.getSchemaModel();
     HashSet<String> want = new HashSet<>();
@@ -242,8 +237,9 @@ public abstract class JdbcSchema extends AbstractSchema {
     for (final ColumnModel c : rel.getColumns()) {
       want.add(c.getColumnName().toLowerCase());
     }
-    for (String column : dialect.listColumns( //
-        getConnection(), rel.getRelationName().toLowerCase())) {
+    for (String column :
+        dialect.listColumns( //
+            getConnection(), rel.getRelationName().toLowerCase())) {
       if (!want.contains(column)) {
         dialect.dropColumn(e, rel.getRelationName(), column);
       }

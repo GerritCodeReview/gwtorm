@@ -21,14 +21,6 @@ import com.google.gwtorm.schema.Util;
 import com.google.gwtorm.server.CodeGenSupport;
 import com.google.gwtorm.server.GeneratedClassLoader;
 import com.google.gwtorm.server.OrmException;
-
-import org.antlr.runtime.tree.Tree;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -36,13 +28,18 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import org.antlr.runtime.tree.Tree;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.Label;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 
 /** Generates {@link IndexFunction} implementations. */
 class IndexFunctionGen<T> implements Opcodes {
   private static final Type string = Type.getType(String.class);
   private static final Type object = Type.getType(Object.class);
-  private static final Type indexKeyBuilder =
-      Type.getType(IndexKeyBuilder.class);
+  private static final Type indexKeyBuilder = Type.getType(IndexKeyBuilder.class);
 
   private final GeneratedClassLoader classLoader;
   private final QueryModel query;
@@ -55,8 +52,7 @@ class IndexFunctionGen<T> implements Opcodes {
   private String implClassName;
   private String implTypeName;
 
-  IndexFunctionGen(final GeneratedClassLoader loader, final QueryModel qm,
-      final Class<T> t) {
+  IndexFunctionGen(final GeneratedClassLoader loader, final QueryModel qm, final Class<T> t) {
     classLoader = loader;
     query = qm;
 
@@ -149,21 +145,23 @@ class IndexFunctionGen<T> implements Opcodes {
   private void init() {
     superTypeName = Type.getInternalName(IndexFunction.class);
     implClassName =
-        pojo.getName() + "_IndexFunction_" + query.getName() + "_"
-            + Util.createRandomName();
+        pojo.getName() + "_IndexFunction_" + query.getName() + "_" + Util.createRandomName();
     implTypeName = implClassName.replace('.', '/');
 
     cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
-    cw.visit(V1_3, ACC_PUBLIC | ACC_FINAL | ACC_SUPER, implTypeName, null,
-        superTypeName, new String[] {});
+    cw.visit(
+        V1_3,
+        ACC_PUBLIC | ACC_FINAL | ACC_SUPER,
+        implTypeName,
+        null,
+        superTypeName,
+        new String[] {});
   }
 
   private void implementConstructor() {
     final String consName = "<init>";
-    final String consDesc =
-        Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {});
-    final MethodVisitor mv =
-        cw.visitMethod(ACC_PUBLIC, consName, consDesc, null, null);
+    final String consDesc = Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {});
+    final MethodVisitor mv = cw.visitMethod(ACC_PUBLIC, consName, consDesc, null, null);
     mv.visitCode();
 
     mv.visitVarInsn(ALOAD, 0);
@@ -176,9 +174,12 @@ class IndexFunctionGen<T> implements Opcodes {
 
   private void implementGetName() {
     final MethodVisitor mv =
-        cw.visitMethod(ACC_PUBLIC | ACC_FINAL, "getName", Type
-            .getMethodDescriptor(Type.getType(String.class), new Type[] {}),
-            null, null);
+        cw.visitMethod(
+            ACC_PUBLIC | ACC_FINAL,
+            "getName",
+            Type.getMethodDescriptor(Type.getType(String.class), new Type[] {}),
+            null,
+            null);
     mv.visitCode();
     mv.visitLdcInsn(query.getName());
     mv.visitInsn(ARETURN);
@@ -188,8 +189,12 @@ class IndexFunctionGen<T> implements Opcodes {
 
   private void implementIncludes() throws OrmException {
     final MethodVisitor mv =
-        cw.visitMethod(ACC_PUBLIC, "includes", Type.getMethodDescriptor(
-            Type.BOOLEAN_TYPE, new Type[] {object}), null, null);
+        cw.visitMethod(
+            ACC_PUBLIC,
+            "includes",
+            Type.getMethodDescriptor(Type.BOOLEAN_TYPE, new Type[] {object}),
+            null,
+            null);
     mv.visitCode();
     final IncludeCGS cgs = new IncludeCGS(mv);
     cgs.setEntityType(pojoType);
@@ -219,8 +224,8 @@ class IndexFunctionGen<T> implements Opcodes {
     mv.visitEnd();
   }
 
-  private static void checkNotNullFields(Collection<ColumnModel> myFields,
-      Set<ColumnModel> checked, MethodVisitor mv, IncludeCGS cgs)
+  private static void checkNotNullFields(
+      Collection<ColumnModel> myFields, Set<ColumnModel> checked, MethodVisitor mv, IncludeCGS cgs)
       throws OrmException {
     for (ColumnModel f : myFields) {
       if (f.isNested()) {
@@ -231,8 +236,8 @@ class IndexFunctionGen<T> implements Opcodes {
     }
   }
 
-  private static void checkNotNullScalar(MethodVisitor mv,
-      Set<ColumnModel> checked, IncludeCGS cgs, ColumnModel f)
+  private static void checkNotNullScalar(
+      MethodVisitor mv, Set<ColumnModel> checked, IncludeCGS cgs, ColumnModel f)
       throws OrmException {
     checkParentNotNull(f.getParent(), checked, mv, cgs);
     cgs.setFieldReference(f);
@@ -247,36 +252,40 @@ class IndexFunctionGen<T> implements Opcodes {
         break;
 
       case Type.ARRAY:
-      case Type.OBJECT: {
-        if (f.getPrimitiveType() == byte[].class) {
-          cgs.pushFieldValue();
-          mv.visitJumpInsn(IFNULL, cgs.no);
+      case Type.OBJECT:
+        {
+          if (f.getPrimitiveType() == byte[].class) {
+            cgs.pushFieldValue();
+            mv.visitJumpInsn(IFNULL, cgs.no);
 
-        } else if (f.getPrimitiveType() == String.class) {
-          cgs.pushFieldValue();
-          mv.visitJumpInsn(IFNULL, cgs.no);
+          } else if (f.getPrimitiveType() == String.class) {
+            cgs.pushFieldValue();
+            mv.visitJumpInsn(IFNULL, cgs.no);
 
-        } else if (f.getPrimitiveType() == java.sql.Timestamp.class
-            || f.getPrimitiveType() == java.util.Date.class
-            || f.getPrimitiveType() == java.sql.Date.class) {
-          cgs.pushFieldValue();
-          mv.visitJumpInsn(IFNULL, cgs.no);
+          } else if (f.getPrimitiveType() == java.sql.Timestamp.class
+              || f.getPrimitiveType() == java.util.Date.class
+              || f.getPrimitiveType() == java.sql.Date.class) {
+            cgs.pushFieldValue();
+            mv.visitJumpInsn(IFNULL, cgs.no);
 
-        } else {
-          throw new OrmException("Type " + f.getPrimitiveType()
-              + " not supported for field " + f.getPathToFieldName());
+          } else {
+            throw new OrmException(
+                "Type "
+                    + f.getPrimitiveType()
+                    + " not supported for field "
+                    + f.getPathToFieldName());
+          }
+          break;
         }
-        break;
-      }
 
       default:
-        throw new OrmException("Type " + f.getPrimitiveType()
-            + " not supported for field " + f.getPathToFieldName());
+        throw new OrmException(
+            "Type " + f.getPrimitiveType() + " not supported for field " + f.getPathToFieldName());
     }
   }
 
-  private static void checkParentNotNull(ColumnModel f,
-      Set<ColumnModel> checked, MethodVisitor mv, IncludeCGS cgs) {
+  private static void checkParentNotNull(
+      ColumnModel f, Set<ColumnModel> checked, MethodVisitor mv, IncludeCGS cgs) {
     if (f != null && checked.add(f)) {
       checkParentNotNull(f.getParent(), checked, mv, cgs);
       cgs.setFieldReference(f);
@@ -285,10 +294,9 @@ class IndexFunctionGen<T> implements Opcodes {
     }
   }
 
-  private void checkConstants(Tree node, MethodVisitor mv, IncludeCGS cgs)
-      throws OrmException {
+  private void checkConstants(Tree node, MethodVisitor mv, IncludeCGS cgs) throws OrmException {
     switch (node.getType()) {
-      // These don't impact the constant evaluation
+        // These don't impact the constant evaluation
       case QueryParser.ORDER:
       case QueryParser.LIMIT:
         break;
@@ -305,52 +313,55 @@ class IndexFunctionGen<T> implements Opcodes {
       case QueryParser.LE:
       case QueryParser.GT:
       case QueryParser.GE:
-      case QueryParser.EQ: {
-        final Tree lhs = node.getChild(0);
-        final Tree rhs = node.getChild(1);
-        if (lhs.getType() != QueryParser.ID) {
-          throw new OrmException("Unsupported query token");
-        }
+      case QueryParser.EQ:
+        {
+          final Tree lhs = node.getChild(0);
+          final Tree rhs = node.getChild(1);
+          if (lhs.getType() != QueryParser.ID) {
+            throw new OrmException("Unsupported query token");
+          }
 
-        cgs.setFieldReference(((QueryParser.Column) lhs).getField());
-        switch (rhs.getType()) {
-          case QueryParser.PLACEHOLDER:
-            // Parameter evaluated at runtime
-            break;
+          cgs.setFieldReference(((QueryParser.Column) lhs).getField());
+          switch (rhs.getType()) {
+            case QueryParser.PLACEHOLDER:
+              // Parameter evaluated at runtime
+              break;
 
-          case QueryParser.TRUE:
-            cgs.pushFieldValue();
-            mv.visitJumpInsn(IFEQ, cgs.no);
-            break;
-
-          case QueryParser.FALSE:
-            cgs.pushFieldValue();
-            mv.visitJumpInsn(IFNE, cgs.no);
-            break;
-
-          case QueryParser.CONSTANT_INTEGER:
-            cgs.pushFieldValue();
-            cgs.push(Integer.parseInt(rhs.getText()));
-            mv.visitJumpInsn(IF_ICMPNE, cgs.no);
-            break;
-
-          case QueryParser.CONSTANT_STRING:
-            if (cgs.getFieldReference().getPrimitiveType() == Character.TYPE) {
-              cgs.push(dequote(rhs.getText()).charAt(0));
+            case QueryParser.TRUE:
               cgs.pushFieldValue();
-              mv.visitJumpInsn(IF_ICMPNE, cgs.no);
-            } else {
-              mv.visitLdcInsn(dequote(rhs.getText()));
-              cgs.pushFieldValue();
-              mv.visitMethodInsn(INVOKEVIRTUAL, string.getInternalName(),
-                  "equals", Type.getMethodDescriptor(Type.BOOLEAN_TYPE,
-                      new Type[] {object}));
               mv.visitJumpInsn(IFEQ, cgs.no);
-            }
-            break;
+              break;
+
+            case QueryParser.FALSE:
+              cgs.pushFieldValue();
+              mv.visitJumpInsn(IFNE, cgs.no);
+              break;
+
+            case QueryParser.CONSTANT_INTEGER:
+              cgs.pushFieldValue();
+              cgs.push(Integer.parseInt(rhs.getText()));
+              mv.visitJumpInsn(IF_ICMPNE, cgs.no);
+              break;
+
+            case QueryParser.CONSTANT_STRING:
+              if (cgs.getFieldReference().getPrimitiveType() == Character.TYPE) {
+                cgs.push(dequote(rhs.getText()).charAt(0));
+                cgs.pushFieldValue();
+                mv.visitJumpInsn(IF_ICMPNE, cgs.no);
+              } else {
+                mv.visitLdcInsn(dequote(rhs.getText()));
+                cgs.pushFieldValue();
+                mv.visitMethodInsn(
+                    INVOKEVIRTUAL,
+                    string.getInternalName(),
+                    "equals",
+                    Type.getMethodDescriptor(Type.BOOLEAN_TYPE, new Type[] {object}));
+                mv.visitJumpInsn(IFEQ, cgs.no);
+              }
+              break;
+          }
+          break;
         }
-        break;
-      }
 
       default:
         throw new OrmException("Unsupported query token " + node.toStringTree());
@@ -363,8 +374,12 @@ class IndexFunctionGen<T> implements Opcodes {
 
   private void implementEncode() throws OrmException {
     final MethodVisitor mv =
-        cw.visitMethod(ACC_PUBLIC, "encode", Type.getMethodDescriptor(
-            Type.VOID_TYPE, new Type[] {indexKeyBuilder, object}), null, null);
+        cw.visitMethod(
+            ACC_PUBLIC,
+            "encode",
+            Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {indexKeyBuilder, object}),
+            null,
+            null);
     mv.visitCode();
     final EncodeCGS cgs = new EncodeCGS(mv);
     cgs.setEntityType(pojoType);
@@ -380,8 +395,9 @@ class IndexFunctionGen<T> implements Opcodes {
     mv.visitEnd();
   }
 
-  static void encodeFields(Collection<QueryModel.OrderBy> myFields,
-      final MethodVisitor mv, final EncodeCGS cgs) throws OrmException {
+  static void encodeFields(
+      Collection<QueryModel.OrderBy> myFields, final MethodVisitor mv, final EncodeCGS cgs)
+      throws OrmException {
     Iterator<QueryModel.OrderBy> i = myFields.iterator();
     while (i.hasNext()) {
       QueryModel.OrderBy f = i.next();
@@ -392,8 +408,8 @@ class IndexFunctionGen<T> implements Opcodes {
     }
   }
 
-  static void encodeField(QueryModel.OrderBy f, final MethodVisitor mv,
-      final EncodeCGS cgs) throws OrmException {
+  static void encodeField(QueryModel.OrderBy f, final MethodVisitor mv, final EncodeCGS cgs)
+      throws OrmException {
     if (f.column.isNested()) {
       encodeFields(orderByLeaves(Collections.singletonList(f)), mv, cgs);
     } else {
@@ -401,8 +417,8 @@ class IndexFunctionGen<T> implements Opcodes {
     }
   }
 
-  private static void encodeScalar(QueryModel.OrderBy f, final MethodVisitor mv,
-      final EncodeCGS cgs) throws OrmException {
+  private static void encodeScalar(
+      QueryModel.OrderBy f, final MethodVisitor mv, final EncodeCGS cgs) throws OrmException {
     String method = f.descending ? "desc" : "add";
     ColumnModel c = f.column;
     cgs.setFieldReference(c);
@@ -416,56 +432,73 @@ class IndexFunctionGen<T> implements Opcodes {
         cgs.pushBuilder();
         cgs.pushFieldValue();
         mv.visitInsn(I2L);
-        mv.visitMethodInsn(INVOKEVIRTUAL, indexKeyBuilder.getInternalName(),
-            method, Type.getMethodDescriptor(Type.VOID_TYPE,
-                new Type[] {Type.LONG_TYPE}));
+        mv.visitMethodInsn(
+            INVOKEVIRTUAL,
+            indexKeyBuilder.getInternalName(),
+            method,
+            Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {Type.LONG_TYPE}));
         break;
 
       case Type.LONG:
         cgs.pushBuilder();
         cgs.pushFieldValue();
-        mv.visitMethodInsn(INVOKEVIRTUAL, indexKeyBuilder.getInternalName(),
-            method, Type.getMethodDescriptor(Type.VOID_TYPE,
-                new Type[] {Type.LONG_TYPE}));
+        mv.visitMethodInsn(
+            INVOKEVIRTUAL,
+            indexKeyBuilder.getInternalName(),
+            method,
+            Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {Type.LONG_TYPE}));
         break;
 
       case Type.ARRAY:
-      case Type.OBJECT: {
-        if (c.getPrimitiveType() == byte[].class) {
-          cgs.pushBuilder();
-          cgs.pushFieldValue();
-          mv.visitMethodInsn(INVOKEVIRTUAL, indexKeyBuilder.getInternalName(),
-              method, Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {Type
-                  .getType(byte[].class)}));
+      case Type.OBJECT:
+        {
+          if (c.getPrimitiveType() == byte[].class) {
+            cgs.pushBuilder();
+            cgs.pushFieldValue();
+            mv.visitMethodInsn(
+                INVOKEVIRTUAL,
+                indexKeyBuilder.getInternalName(),
+                method,
+                Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {Type.getType(byte[].class)}));
 
-        } else if (c.getPrimitiveType() == String.class) {
-          cgs.pushBuilder();
-          cgs.pushFieldValue();
-          mv.visitMethodInsn(INVOKEVIRTUAL, indexKeyBuilder.getInternalName(),
-              method, Type.getMethodDescriptor(Type.VOID_TYPE,
-                  new Type[] {string}));
+          } else if (c.getPrimitiveType() == String.class) {
+            cgs.pushBuilder();
+            cgs.pushFieldValue();
+            mv.visitMethodInsn(
+                INVOKEVIRTUAL,
+                indexKeyBuilder.getInternalName(),
+                method,
+                Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {string}));
 
-        } else if (c.getPrimitiveType() == java.sql.Timestamp.class
-            || c.getPrimitiveType() == java.util.Date.class
-            || c.getPrimitiveType() == java.sql.Date.class) {
-          cgs.pushBuilder();
-          cgs.pushFieldValue();
-          String tsType = Type.getType(c.getPrimitiveType()).getInternalName();
-          mv.visitMethodInsn(INVOKEVIRTUAL, tsType, "getTime", Type
-              .getMethodDescriptor(Type.LONG_TYPE, new Type[] {}));
-          mv.visitMethodInsn(INVOKEVIRTUAL, indexKeyBuilder.getInternalName(),
-              method, Type.getMethodDescriptor(Type.VOID_TYPE,
-                  new Type[] {Type.LONG_TYPE}));
-        } else {
-          throw new OrmException("Type " + c.getPrimitiveType()
-              + " not supported for field " + c.getPathToFieldName());
+          } else if (c.getPrimitiveType() == java.sql.Timestamp.class
+              || c.getPrimitiveType() == java.util.Date.class
+              || c.getPrimitiveType() == java.sql.Date.class) {
+            cgs.pushBuilder();
+            cgs.pushFieldValue();
+            String tsType = Type.getType(c.getPrimitiveType()).getInternalName();
+            mv.visitMethodInsn(
+                INVOKEVIRTUAL,
+                tsType,
+                "getTime",
+                Type.getMethodDescriptor(Type.LONG_TYPE, new Type[] {}));
+            mv.visitMethodInsn(
+                INVOKEVIRTUAL,
+                indexKeyBuilder.getInternalName(),
+                method,
+                Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {Type.LONG_TYPE}));
+          } else {
+            throw new OrmException(
+                "Type "
+                    + c.getPrimitiveType()
+                    + " not supported for field "
+                    + c.getPathToFieldName());
+          }
+          break;
         }
-        break;
-      }
 
       default:
-        throw new OrmException("Type " + c.getPrimitiveType()
-            + " not supported for field " + c.getPathToFieldName());
+        throw new OrmException(
+            "Type " + c.getPrimitiveType() + " not supported for field " + c.getPathToFieldName());
     }
   }
 
@@ -489,20 +522,29 @@ class IndexFunctionGen<T> implements Opcodes {
 
     void infinity() {
       pushBuilder();
-      mv.visitMethodInsn(INVOKEVIRTUAL, indexKeyBuilder.getInternalName(),
-          "infinity", Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {}));
+      mv.visitMethodInsn(
+          INVOKEVIRTUAL,
+          indexKeyBuilder.getInternalName(),
+          "infinity",
+          Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {}));
     }
 
     void delimiter() {
       pushBuilder();
-      mv.visitMethodInsn(INVOKEVIRTUAL, indexKeyBuilder.getInternalName(),
-          "delimiter", Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {}));
+      mv.visitMethodInsn(
+          INVOKEVIRTUAL,
+          indexKeyBuilder.getInternalName(),
+          "delimiter",
+          Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {}));
     }
 
     void nul() {
       pushBuilder();
-      mv.visitMethodInsn(INVOKEVIRTUAL, indexKeyBuilder.getInternalName(),
-          "nul", Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {}));
+      mv.visitMethodInsn(
+          INVOKEVIRTUAL,
+          indexKeyBuilder.getInternalName(),
+          "nul",
+          Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {}));
     }
 
     void pushBuilder() {

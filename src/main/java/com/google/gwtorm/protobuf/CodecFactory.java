@@ -17,7 +17,6 @@ package com.google.gwtorm.protobuf;
 import com.google.gwtorm.client.Column;
 import com.google.gwtorm.server.GeneratedClassLoader;
 import com.google.gwtorm.server.OrmException;
-
 import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -29,18 +28,17 @@ public final class CodecFactory {
 
   /**
    * Create an implementation to encode/decode an arbitrary object.
-   * <p>
-   * The object must use the {@link Column} annotations to denote the fields
-   * that should be encoded or decoded.
+   *
+   * <p>The object must use the {@link Column} annotations to denote the fields that should be
+   * encoded or decoded.
    *
    * @param <T> type of the object to be supported.
    * @param type the object type.
    * @return an encoder for this object type.
-   * @throws IllegalArgumentException the object's fields aren't declared
-   *         properly. This is a programming error that cannot be recovered.
+   * @throws IllegalArgumentException the object's fields aren't declared properly. This is a
+   *     programming error that cannot be recovered.
    */
-  public static <T> ProtobufCodec<T> encoder(Class<T> type)
-      throws IllegalStateException {
+  public static <T> ProtobufCodec<T> encoder(Class<T> type) throws IllegalStateException {
     final GeneratedClassLoader loader = newLoader(type);
     ProtobufCodec<T> encoder = null;
     String cacheName = encoders.get(type);
@@ -52,8 +50,8 @@ public final class CodecFactory {
       try {
         encoder = gen.create();
       } catch (OrmException e) {
-        throw new IllegalArgumentException("Class " + type.getName()
-            + " cannot be supported on protobuf", e);
+        throw new IllegalArgumentException(
+            "Class " + type.getName() + " cannot be supported on protobuf", e);
       }
       encoders.put(type, encoder.getClass().getName());
     }
@@ -77,6 +75,5 @@ public final class CodecFactory {
     }
   }
 
-  private CodecFactory() {
-  }
+  private CodecFactory() {}
 }

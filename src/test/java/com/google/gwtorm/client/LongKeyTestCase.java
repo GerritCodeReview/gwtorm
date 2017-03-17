@@ -20,15 +20,12 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import com.google.gwtorm.server.StandardKeyEncoder;
-
 import org.junit.Before;
 import org.junit.Test;
 
-
 public class LongKeyTestCase {
   @SuppressWarnings("serial")
-  private abstract static class LongKeyImpl<T extends Key<?>> extends
-      LongKey<T> {
+  private abstract static class LongKeyImpl<T extends Key<?>> extends LongKey<T> {
     @Column(id = 1)
     long id;
 

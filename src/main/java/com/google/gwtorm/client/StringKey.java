@@ -18,26 +18,21 @@ import java.io.Serializable;
 
 /**
  * Abstract key type using a single string value.
- * <p>
- * Applications should subclass this type to create their own entity-specific
- * key classes.
+ *
+ * <p>Applications should subclass this type to create their own entity-specific key classes.
  *
  * @param <P> the parent key type. Use {@link Key} if no parent key is needed.
  */
 @SuppressWarnings("serial")
-public abstract class StringKey<P extends Key<?>> implements Key<P>,
-    Serializable, Comparable<StringKey<?>> {
-  /**
-   * @return name of the entity instance.
-   */
+public abstract class StringKey<P extends Key<?>>
+    implements Key<P>, Serializable, Comparable<StringKey<?>> {
+  /** @return name of the entity instance. */
   public abstract String get();
 
   /** @param newValue the new value of this key. */
   protected abstract void set(String newValue);
 
-  /**
-   * @return the parent key instance; null if this is a root level key.
-   */
+  /** @return the parent key instance; null if this is a root level key. */
   @Override
   public P getParentKey() {
     return null;
@@ -60,8 +55,7 @@ public abstract class StringKey<P extends Key<?>> implements Key<P>,
     }
 
     final StringKey<P> q = cast(b);
-    return get().equals(q.get())
-        && KeyUtil.eq(getParentKey(), q.getParentKey());
+    return get().equals(q.get()) && KeyUtil.eq(getParentKey(), q.getParentKey());
   }
 
   @Override

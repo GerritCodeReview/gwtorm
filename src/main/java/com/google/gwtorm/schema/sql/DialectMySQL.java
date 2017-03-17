@@ -20,7 +20,6 @@ import com.google.gwtorm.schema.SequenceModel;
 import com.google.gwtorm.server.OrmDuplicateKeyException;
 import com.google.gwtorm.server.OrmException;
 import com.google.gwtorm.server.StatementExecutor;
-
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -34,46 +33,50 @@ import java.util.Set;
 /** Dialect for <a href="http://www.mysql.com/">MySQL</a> */
 public class DialectMySQL extends SqlDialect {
   public DialectMySQL() {
-    types.put(String.class, new SqlStringTypeInfo() {
-      @Override
-      public String getSqlType(final ColumnModel col, final SqlDialect dialect) {
-        final Column column = col.getColumnAnnotation();
-        final StringBuilder r = new StringBuilder();
+    types.put(
+        String.class,
+        new SqlStringTypeInfo() {
+          @Override
+          public String getSqlType(final ColumnModel col, final SqlDialect dialect) {
+            final Column column = col.getColumnAnnotation();
+            final StringBuilder r = new StringBuilder();
 
-        if (column.length() <= 0) {
-          r.append("VARCHAR(255) BINARY");
-          if (col.isNotNull()) {
-            r.append(" DEFAULT ''");
+            if (column.length() <= 0) {
+              r.append("VARCHAR(255) BINARY");
+              if (col.isNotNull()) {
+                r.append(" DEFAULT ''");
+              }
+            } else if (column.length() <= 255) {
+              r.append("VARCHAR(" + column.length() + ") BINARY");
+              if (col.isNotNull()) {
+                r.append(" DEFAULT ''");
+              }
+            } else {
+              r.append(dialect.getSqlTypeName(Types.LONGVARCHAR));
+            }
+
+            if (col.isNotNull()) {
+              r.append(" NOT NULL");
+            }
+
+            return r.toString();
           }
-        } else if (column.length() <= 255) {
-          r.append("VARCHAR(" + column.length() + ") BINARY");
-          if (col.isNotNull()) {
-            r.append(" DEFAULT ''");
+        });
+    types.put(
+        Timestamp.class,
+        new SqlTimestampTypeInfo() {
+          @Override
+          public String getSqlType(ColumnModel col, SqlDialect dialect) {
+            final StringBuilder r = new StringBuilder();
+            r.append(dialect.getSqlTypeName(getSqlTypeConstant()));
+            if (col.isNotNull()) {
+              r.append(" NOT NULL");
+            } else {
+              r.append(" NULL DEFAULT NULL");
+            }
+            return r.toString();
           }
-        } else {
-          r.append(dialect.getSqlTypeName(Types.LONGVARCHAR));
-        }
-
-        if (col.isNotNull()) {
-          r.append(" NOT NULL");
-        }
-
-        return r.toString();
-      }
-    });
-    types.put(Timestamp.class, new SqlTimestampTypeInfo() {
-      @Override
-      public String getSqlType(ColumnModel col, SqlDialect dialect) {
-        final StringBuilder r = new StringBuilder();
-        r.append(dialect.getSqlTypeName(getSqlTypeConstant()));
-        if (col.isNotNull()) {
-          r.append(" NOT NULL");
-        } else {
-          r.append(" NULL DEFAULT NULL");
-        }
-        return r.toString();
-      }
-    });
+        });
   }
 
   @Override
@@ -106,13 +109,11 @@ public class DialectMySQL extends SqlDialect {
   }
 
   @Override
-  public long nextLong(final Connection conn, final String seqname)
-      throws OrmException {
+  public long nextLong(final Connection conn, final String seqname) throws OrmException {
     try {
       final Statement st = conn.createStatement();
       try {
-        st.execute("INSERT INTO " + seqname + "(s)VALUES(NULL)",
-            Statement.RETURN_GENERATED_KEYS);
+        st.execute("INSERT INTO " + seqname + "(s)VALUES(NULL)", Statement.RETURN_GENERATED_KEYS);
         final long r;
         final ResultSet rs = st.getGeneratedKeys();
         try {
@@ -168,8 +169,7 @@ public class DialectMySQL extends SqlDialect {
     }
   }
 
-  private boolean isSequence(Connection db, String tableName)
-      throws SQLException {
+  private boolean isSequence(Connection db, String tableName) throws SQLException {
     final DatabaseMetaData meta = db.getMetaData();
     if (meta.storesUpperCaseIdentifiers()) {
       tableName = tableName.toUpperCase();
@@ -195,8 +195,7 @@ public class DialectMySQL extends SqlDialect {
   }
 
   @Override
-  public void renameTable(StatementExecutor e, String from,
-      String to) throws OrmException {
+  public void renameTable(StatementExecutor e, String from, String to) throws OrmException {
     final StringBuilder r = new StringBuilder();
     r.append("RENAME TABLE ");
     r.append(from);
@@ -207,8 +206,9 @@ public class DialectMySQL extends SqlDialect {
   }
 
   @Override
-  public void renameColumn(StatementExecutor stmt, String tableName,
-      String fromColumn, ColumnModel col) throws OrmException {
+  public void renameColumn(
+      StatementExecutor stmt, String tableName, String fromColumn, ColumnModel col)
+      throws OrmException {
     StringBuffer r = new StringBuffer();
     r.append("ALTER TABLE ");
     r.append(tableName);

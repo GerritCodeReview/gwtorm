@@ -28,7 +28,6 @@ import com.google.gwtorm.server.OrmDuplicateKeyException;
 import com.google.gwtorm.server.OrmException;
 import com.google.gwtorm.server.ResultSet;
 import com.google.protobuf.ByteString;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -38,8 +37,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 /** Base implementation for {@link Access} in a {@link GenericDatabase}. */
-public abstract class GenericAccess<T, K extends Key<?>> extends
-    NoSqlAccess<T, K> {
+public abstract class GenericAccess<T, K extends Key<?>> extends NoSqlAccess<T, K> {
   /** Maximum number of results to cache to improve updates on upsert. */
   private static final int MAX_SZ = 64;
 
@@ -54,12 +52,13 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
   @SuppressWarnings("serial")
   protected LinkedHashMap<K, byte[]> cache() {
     if (cache == null) {
-      cache = new LinkedHashMap<K, byte[]>(8) {
-        @Override
-        protected boolean removeEldestEntry(Entry<K, byte[]> entry) {
-          return MAX_SZ <= size();
-        }
-      };
+      cache =
+          new LinkedHashMap<K, byte[]>(8) {
+            @Override
+            protected boolean removeEldestEntry(Entry<K, byte[]> entry) {
+              return MAX_SZ <= size();
+            }
+          };
     }
     return cache;
   }
@@ -70,8 +69,7 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
    * @param key the primary key instance; must not be null.
    * @return the entity; null if no entity has this key.
    * @throws OrmException the data lookup failed.
-   * @throws OrmDuplicateKeyException more than one row was identified in the
-   *         key scan.
+   * @throws OrmDuplicateKeyException more than one row was identified in the key scan.
    */
   @Override
   public T get(K key) throws OrmException, OrmDuplicateKeyException {
@@ -87,29 +85,31 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
 
   @Override
   public ResultSet<T> get(final Iterable<K> keys) throws OrmException {
-    final ResultSet<Row> rs = db.fetchRows(new Iterable<byte[]>() {
-      @Override
-      public Iterator<byte[]> iterator() {
-        return new Iterator<byte[]>() {
-          private final Iterator<K> i = keys.iterator();
+    final ResultSet<Row> rs =
+        db.fetchRows(
+            new Iterable<byte[]>() {
+              @Override
+              public Iterator<byte[]> iterator() {
+                return new Iterator<byte[]>() {
+                  private final Iterator<K> i = keys.iterator();
 
-          @Override
-          public boolean hasNext() {
-            return i.hasNext();
-          }
+                  @Override
+                  public boolean hasNext() {
+                    return i.hasNext();
+                  }
 
-          @Override
-          public byte[] next() {
-            return dataRowKey(i.next());
-          }
+                  @Override
+                  public byte[] next() {
+                    return dataRowKey(i.next());
+                  }
 
-          @Override
-          public void remove() {
-            throw new UnsupportedOperationException();
-          }
-        };
-      }
-    });
+                  @Override
+                  public void remove() {
+                    throw new UnsupportedOperationException();
+                  }
+                };
+              }
+            });
 
     final Iterator<Row> i = rs.iterator();
     return new AbstractResultSet<T>() {
@@ -139,15 +139,15 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
    * @param fromKey key to start the scan on. This is inclusive.
    * @param toKey key to stop the scan on. This is exclusive.
    * @param limit maximum number of results to return.
-   * @param order if true the order will be preserved, false if the result order
-   *        order can be arbitrary.
-   * @return result set for the requested range. The result set may be lazily
-   *         filled, or filled completely.
+   * @param order if true the order will be preserved, false if the result order order can be
+   *     arbitrary.
+   * @return result set for the requested range. The result set may be lazily filled, or filled
+   *     completely.
    * @throws OrmException an error occurred preventing the scan from completing.
    */
   @Override
-  protected ResultSet<T> scanPrimaryKey(byte[] fromKey, byte[] toKey,
-      int limit, boolean order) throws OrmException {
+  protected ResultSet<T> scanPrimaryKey(byte[] fromKey, byte[] toKey, int limit, boolean order)
+      throws OrmException {
     IndexKeyBuilder b;
 
     b = new IndexKeyBuilder();
@@ -193,15 +193,16 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
    * @param fromKey key to start the scan on. This is inclusive.
    * @param toKey key to stop the scan on. This is exclusive.
    * @param limit maximum number of results to return.
-   * @param order if true the order will be preserved, false if the result order
-   *        order can be arbitrary.
-   * @return result set for the requested range. The result set may be lazily
-   *         filled, or filled completely.
+   * @param order if true the order will be preserved, false if the result order order can be
+   *     arbitrary.
+   * @return result set for the requested range. The result set may be lazily filled, or filled
+   *     completely.
    * @throws OrmException an error occurred preventing the scan from completing.
    */
   @Override
-  protected ResultSet<T> scanIndex(IndexFunction<T> idx, byte[] fromKey,
-      byte[] toKey, int limit, boolean order) throws OrmException {
+  protected ResultSet<T> scanIndex(
+      IndexFunction<T> idx, byte[] fromKey, byte[] toKey, int limit, boolean order)
+      throws OrmException {
     final long now = System.currentTimeMillis();
     IndexKeyBuilder b;
 
@@ -224,7 +225,8 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
     final ArrayList<T> res = new ArrayList<>();
     byte[] lastKey = fromKey;
 
-    SCAN: for (;;) {
+    SCAN:
+    for (; ; ) {
       List<CandidateRow> scanned;
       if (0 < limit) {
         scanned = new ArrayList<>(limit);
@@ -275,7 +277,9 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
           // drop the row out of the index.
           //
           if (!idxRow.hasData()) {
-            db.maybeFossilCollectIndexRow(now, idxRow.getIndexKey(), //
+            db.maybeFossilCollectIndexRow(
+                now,
+                idxRow.getIndexKey(), //
                 idxRow.getIndexRow());
             continue;
           }
@@ -293,7 +297,9 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
               break SCAN;
             }
           } else {
-            db.maybeFossilCollectIndexRow(now, idxRow.getIndexKey(), //
+            db.maybeFossilCollectIndexRow(
+                now,
+                idxRow.getIndexKey(), //
                 idxRow.getIndexRow());
           }
         }
@@ -387,15 +393,14 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
 
   /**
    * Insert secondary index rows for an object about to be written.
-   * <p>
-   * Insert or update operations should invoke this method before the main data
-   * row is written, allowing the secondary index rows to be put into the data
-   * store before the main data row arrives. Compatible scan implementations
-   * (such as {@link #scanIndex(IndexFunction, byte[], byte[], int, boolean)}
-   * above) will ignore these rows for a short time period.
    *
-   * @param oldObj an old copy of the object; if non-null this may be used to
-   *        avoid writing unnecessary secondary index rows that already exist.
+   * <p>Insert or update operations should invoke this method before the main data row is written,
+   * allowing the secondary index rows to be put into the data store before the main data row
+   * arrives. Compatible scan implementations (such as {@link #scanIndex(IndexFunction, byte[],
+   * byte[], int, boolean)} above) will ignore these rows for a short time period.
+   *
+   * @param oldObj an old copy of the object; if non-null this may be used to avoid writing
+   *     unnecessary secondary index rows that already exist.
    * @param newObj the new (or updated) object being stored. Must not be null.
    * @throws OrmException the data store is unable to update an index row.
    */
@@ -414,11 +419,10 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
   /**
    * Remove old secondary index rows that are no longer valid for an object.
    *
-   * @param oldObj an old copy of the object, prior to the current update taking
-   *        place. If null the method does nothing and simply returns.
-   * @param newObj the new copy of the object. Index rows that are still valid
-   *        for {@code #newObj} are left alone. If null, all index rows for
-   *        {@code oldObj} are removed.
+   * @param oldObj an old copy of the object, prior to the current update taking place. If null the
+   *     method does nothing and simply returns.
+   * @param newObj the new copy of the object. Index rows that are still valid for {@code #newObj}
+   *     are left alone. If null, all index rows for {@code oldObj} are removed.
    * @throws OrmException the data store is unable to remove an index row.
    */
   protected void pruneOldIndexes(final T oldObj, T newObj) throws OrmException {
@@ -445,8 +449,7 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
   }
 
   @Override
-  public T atomicUpdate(K key, final AtomicUpdate<T> update)
-      throws OrmException {
+  public T atomicUpdate(K key, final AtomicUpdate<T> update) throws OrmException {
     final IndexKeyBuilder b = new IndexKeyBuilder();
     b.add(getRelationName());
     b.delimiter();
@@ -455,28 +458,30 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
     try {
       @SuppressWarnings("unchecked")
       final T[] res = (T[]) new Object[3];
-      db.atomicUpdate(b.toByteArray(), new AtomicUpdate<byte[]>() {
-        @Override
-        public byte[] update(byte[] data) {
-          if (data != null) {
-            final T oldObj = getObjectCodec().decode(data);
-            final T newObj = getObjectCodec().decode(data);
-            res[0] = update.update(newObj);
-            res[1] = oldObj;
-            res[2] = newObj;
-            try {
-              writeNewIndexes(oldObj, newObj);
-            } catch (OrmException err) {
-              throw new IndexException(err);
-            }
-            return getObjectCodec().encodeToByteString(newObj).toByteArray();
+      db.atomicUpdate(
+          b.toByteArray(),
+          new AtomicUpdate<byte[]>() {
+            @Override
+            public byte[] update(byte[] data) {
+              if (data != null) {
+                final T oldObj = getObjectCodec().decode(data);
+                final T newObj = getObjectCodec().decode(data);
+                res[0] = update.update(newObj);
+                res[1] = oldObj;
+                res[2] = newObj;
+                try {
+                  writeNewIndexes(oldObj, newObj);
+                } catch (OrmException err) {
+                  throw new IndexException(err);
+                }
+                return getObjectCodec().encodeToByteString(newObj).toByteArray();
 
-          } else {
-            res[0] = null;
-            return null;
-          }
-        }
-      });
+              } else {
+                res[0] = null;
+                return null;
+              }
+            }
+          });
       if (res[0] != null) {
         pruneOldIndexes(res[1], res[2]);
       }
@@ -488,10 +493,10 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
 
   /**
    * Determine if an object still matches the index row.
-   * <p>
-   * This method checks that the object's fields still match the criteria
-   * necessary for it to be part of the index defined by {@code f}. It also
-   * formats the index key and validates it is still identical to {@code exp}.
+   *
+   * <p>This method checks that the object's fields still match the criteria necessary for it to be
+   * part of the index defined by {@code f}. It also formats the index key and validates it is still
+   * identical to {@code exp}.
    *
    * @param f the function that defines the index.
    * @param obj the object instance being tested; must not be null.
@@ -504,9 +509,9 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
 
   /**
    * Generate the row key for the object's primary data row.
-   * <p>
-   * The default implementation uses the relation name, a delimiter, and then
-   * the encoded primary key.
+   *
+   * <p>The default implementation uses the relation name, a delimiter, and then the encoded primary
+   * key.
    *
    * @param key key of the object.
    * @return the object's data row key.
@@ -521,14 +526,13 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
 
   /**
    * Generate the row key for an object's secondary index row.
-   * <p>
-   * The default implementation uses the relation name, '.', the index name, a
-   * delimiter, the indexed fields encoded, a delimiter, and then the encoded
-   * primary key (without the relation name prefix).
-   * <p>
-   * The object's primary key is always appended onto the end of the secondary
-   * index row key to ensure that objects with the same field values still get
-   * distinct rows in the secondary index.
+   *
+   * <p>The default implementation uses the relation name, '.', the index name, a delimiter, the
+   * indexed fields encoded, a delimiter, and then the encoded primary key (without the relation
+   * name prefix).
+   *
+   * <p>The object's primary key is always appended onto the end of the secondary index row key to
+   * ensure that objects with the same field values still get distinct rows in the secondary index.
    *
    * @param idx function that describes the index.
    * @param obj the object the index record should reference.
@@ -548,9 +552,9 @@ public abstract class GenericAccess<T, K extends Key<?>> extends
 
   /**
    * Generate the data to store in a secondary index row for an object.
-   * <p>
-   * The default implementation of this method stores the encoded primary key,
-   * and the current system timestamp.
+   *
+   * <p>The default implementation of this method stores the encoded primary key, and the current
+   * system timestamp.
    *
    * @param obj the object the index record should reference.
    * @return the encoded secondary index row data.

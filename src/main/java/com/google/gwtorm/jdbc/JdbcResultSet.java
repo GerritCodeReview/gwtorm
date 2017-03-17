@@ -17,7 +17,6 @@ package com.google.gwtorm.jdbc;
 import com.google.gwtorm.client.Key;
 import com.google.gwtorm.server.AbstractResultSet;
 import com.google.gwtorm.server.OrmRuntimeException;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;

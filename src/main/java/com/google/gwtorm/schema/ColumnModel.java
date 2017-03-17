@@ -16,7 +16,6 @@ package com.google.gwtorm.schema;
 
 import com.google.gwtorm.client.Column;
 import com.google.gwtorm.server.OrmException;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,14 +35,13 @@ public abstract class ColumnModel {
   protected boolean notNull;
 
   protected ColumnModel() {
-    nestedColumns = Collections.<ColumnModel> emptyList();
+    nestedColumns = Collections.<ColumnModel>emptyList();
   }
 
-  protected void initName(final String fieldName, final Column col)
-      throws OrmException {
+  protected void initName(final String fieldName, final Column col) throws OrmException {
     if (col == null) {
-      throw new OrmException("Field " + fieldName + " is missing "
-          + Column.class.getName() + " annotation");
+      throw new OrmException(
+          "Field " + fieldName + " is missing " + Column.class.getName() + " annotation");
     }
     column = col;
     origName = Util.any(column.name(), Util.makeSqlFriendly(fieldName));
@@ -71,8 +69,8 @@ public abstract class ColumnModel {
     Set<Integer> ids = new HashSet<>();
     for (final ColumnModel c : nestedColumns) {
       if (!ids.add(c.columnId)) {
-        throw new OrmException("Duplicate @Column id " + c.columnId + " in "
-            + c.getPathToFieldName());
+        throw new OrmException(
+            "Duplicate @Column id " + c.columnId + " in " + c.getPathToFieldName());
       }
     }
   }

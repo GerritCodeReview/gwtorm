@@ -20,7 +20,6 @@ import com.google.gwtorm.schema.SequenceModel;
 import com.google.gwtorm.server.OrmException;
 import com.google.gwtorm.server.Sequence;
 import com.google.gwtorm.server.StatementExecutor;
-
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
@@ -36,8 +35,7 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class SqlDialect {
-  private static final List<SqlDialect> DIALECTS =
-      new CopyOnWriteArrayList<>();
+  private static final List<SqlDialect> DIALECTS = new CopyOnWriteArrayList<>();
 
   static {
     DIALECTS.add(new DialectDB2());
@@ -55,8 +53,7 @@ public abstract class SqlDialect {
     DIALECTS.add(0, dialect);
   }
 
-  public static SqlDialect getDialectFor(Connection c)
-      throws SQLException, OrmException {
+  public static SqlDialect getDialectFor(Connection c) throws SQLException, OrmException {
     String url = c.getMetaData().getURL();
     for (SqlDialect d : DIALECTS) {
       if (d.handles(url, c)) {
@@ -93,13 +90,14 @@ public abstract class SqlDialect {
 
   public abstract boolean handles(String url, Connection c) throws SQLException;
 
-  /** Select a better dialect definition for this connection.
+  /**
+   * Select a better dialect definition for this connection.
    *
    * @param c the connection
    * @return a dialect instance
    * @throws SQLException
    */
-  public SqlDialect refine(final Connection c) throws SQLException  {
+  public SqlDialect refine(final Connection c) throws SQLException {
     return this;
   }
 
@@ -154,16 +152,14 @@ public abstract class SqlDialect {
    * @param err the driver specific exception.
    * @return an OrmException the caller can throw.
    */
-  public OrmException convertError(final String op, final String entity,
-      final SQLException err) {
+  public OrmException convertError(final String op, final String entity, final SQLException err) {
     if (err.getCause() == null && err.getNextException() != null) {
       err.initCause(err.getNextException());
     }
     return new OrmException(op + " failure on " + entity, err);
   }
 
-  public long nextLong(final Connection conn, final String poolName)
-      throws OrmException {
+  public long nextLong(final Connection conn, final String poolName) throws OrmException {
     final String query = getNextSequenceValueSql(poolName);
     try {
       final Statement st = conn.createStatement();
@@ -217,13 +213,12 @@ public abstract class SqlDialect {
   /**
    * Append driver specific storage parameters to a CREATE TABLE statement.
    *
-   * @param sqlBuffer buffer holding the CREATE TABLE, just after the closing
-   *        parenthesis after the column list.
+   * @param sqlBuffer buffer holding the CREATE TABLE, just after the closing parenthesis after the
+   *     column list.
    * @param relationModel the model of the table being generated.
    */
-  public void appendCreateTableStorage(final StringBuilder sqlBuffer,
-      final RelationModel relationModel) {
-  }
+  public void appendCreateTableStorage(
+      final StringBuilder sqlBuffer, final RelationModel relationModel) {}
 
   /**
    * List all tables in the current database schema.
@@ -254,8 +249,7 @@ public abstract class SqlDialect {
    * @param to destination table name
    * @throws OrmException the table could not be renamed.
    */
-  public void renameTable(StatementExecutor e, String from,
-      String to) throws OrmException {
+  public void renameTable(StatementExecutor e, String from, String to) throws OrmException {
     final StringBuilder r = new StringBuilder();
     r.append("ALTER TABLE ");
     r.append(from);
@@ -273,8 +267,7 @@ public abstract class SqlDialect {
    * @return set of declared indexes, in lowercase.
    * @throws SQLException the indexes cannot be listed.
    */
-  public Set<String> listIndexes(final Connection db, String tableName)
-      throws SQLException {
+  public Set<String> listIndexes(final Connection db, String tableName) throws SQLException {
     final DatabaseMetaData meta = db.getMetaData();
     if (meta.storesUpperCaseIdentifiers()) {
       tableName = tableName.toUpperCase();
@@ -301,8 +294,7 @@ public abstract class SqlDialect {
    * @return set of declared sequences, in lowercase.
    * @throws SQLException the sequence objects cannot be listed.
    */
-  public abstract Set<String> listSequences(final Connection db)
-      throws SQLException;
+  public abstract Set<String> listSequences(final Connection db) throws SQLException;
 
   /**
    * List all columns in the given table name.
@@ -312,8 +304,7 @@ public abstract class SqlDialect {
    * @return set of declared columns, in lowercase.
    * @throws SQLException the columns cannot be listed from the relation.
    */
-  public Set<String> listColumns(final Connection db, String tableName)
-      throws SQLException {
+  public Set<String> listColumns(final Connection db, String tableName) throws SQLException {
     final DatabaseMetaData meta = db.getMetaData();
     if (meta.storesUpperCaseIdentifiers()) {
       tableName = tableName.toUpperCase();
@@ -366,8 +357,7 @@ public abstract class SqlDialect {
    * @param column name of the column to drop.
    * @throws OrmException the column could not be added.
    */
-  public void dropColumn(StatementExecutor e, String tableName, String column)
-      throws OrmException {
+  public void dropColumn(StatementExecutor e, String tableName, String column) throws OrmException {
     final StringBuilder r = new StringBuilder();
     r.append("ALTER TABLE ");
     r.append(tableName);
@@ -385,8 +375,9 @@ public abstract class SqlDialect {
    * @param col destination column definition
    * @throws OrmException the column could not be renamed.
    */
-  public abstract void renameColumn(StatementExecutor e, String tableName,
-      String fromColumn, ColumnModel col) throws OrmException;
+  public abstract void renameColumn(
+      StatementExecutor e, String tableName, String fromColumn, ColumnModel col)
+      throws OrmException;
 
   /**
    * Drop one index from a table.
@@ -396,8 +387,7 @@ public abstract class SqlDialect {
    * @param name index name.
    * @throws OrmException the index could not be renamed.
    */
-  public void dropIndex(StatementExecutor e, String tableName, String name)
-      throws OrmException {
+  public void dropIndex(StatementExecutor e, String tableName, String name) throws OrmException {
     e.execute(getDropIndexSql(tableName, name));
   }
 
@@ -408,25 +398,22 @@ public abstract class SqlDialect {
   protected abstract String getNextSequenceValueSql(String seqname);
 
   /**
-   * Does the array returned by the PreparedStatement.executeBatch method return
-   * the exact number of rows updated for every row in the batch?
+   * Does the array returned by the PreparedStatement.executeBatch method return the exact number of
+   * rows updated for every row in the batch?
    *
-   * @return <code>true</code> if the executeBatch method returns the number of
-   *         rows affected for every row in the batch; <code>false</code> if it
-   *         may return Statement.SUCESS_NO_INFO
+   * @return <code>true</code> if the executeBatch method returns the number of rows affected for
+   *     every row in the batch; <code>false</code> if it may return Statement.SUCESS_NO_INFO
    */
   public boolean canDetermineIndividualBatchUpdateCounts() {
     return true;
-
   }
 
   /**
-   * Can the total number of rows updated by the PreparedStatement.executeBatch
-   * be determined exactly by the SQLDialect.executeBatch method?
+   * Can the total number of rows updated by the PreparedStatement.executeBatch be determined
+   * exactly by the SQLDialect.executeBatch method?
    *
-   * @return <code>true</code> if the SQlDialect.executeBatch method can exactly
-   *         determine the total number of rows updated by a batch;
-   *         <code>false</code> otherwise
+   * @return <code>true</code> if the SQlDialect.executeBatch method can exactly determine the total
+   *     number of rows updated by a batch; <code>false</code> otherwise
    * @see #executeBatch(PreparedStatement)
    */
   public boolean canDetermineTotalBatchUpdateCount() {
@@ -434,11 +421,11 @@ public abstract class SqlDialect {
   }
 
   /**
-   * Executes a prepared statement batch and returns the total number of rows
-   * successfully updated or inserted. This method is intended to be overridden.
+   * Executes a prepared statement batch and returns the total number of rows successfully updated
+   * or inserted. This method is intended to be overridden.
    *
-   * If the canDetermineTotalBatchUpdateCount returns false for a particular
-   * SQLDialect, this method should throw an UnsupportedOperationException.
+   * <p>If the canDetermineTotalBatchUpdateCount returns false for a particular SQLDialect, this
+   * method should throw an UnsupportedOperationException.
    *
    * @param ps the prepared statement with the batch to be executed
    * @return the total number of rows affected
@@ -462,8 +449,7 @@ public abstract class SqlDialect {
   /**
    * Some databases don't support delimiters (semicolons) in scripts.
    *
-   * @return <code>true</code> statement delimiter is accepted,
-   *         <code>false</code> otherwise
+   * @return <code>true</code> statement delimiter is accepted, <code>false</code> otherwise
    */
   public boolean isStatementDelimiterSupported() {
     return true;
@@ -471,6 +457,7 @@ public abstract class SqlDialect {
 
   /**
    * Get the SQL LIMIT command segment in the given dialect
+   *
    * @param limit the limit to apply to the result set (either a number or ?)
    * @return the SQL LIMIT command segment in the given dialect
    */
@@ -479,9 +466,8 @@ public abstract class SqlDialect {
   }
 
   /**
-   * Get the driver specific 'table type' to be used in a CREATE TABLE
-   * statement. When creating a CREATE TABLE statement the 'table type' is
-   * appended after a blank following the CREATE keyword.
+   * Get the driver specific 'table type' to be used in a CREATE TABLE statement. When creating a
+   * CREATE TABLE statement the 'table type' is appended after a blank following the CREATE keyword.
    */
   public String getTableTypeSql() {
     return "TABLE";

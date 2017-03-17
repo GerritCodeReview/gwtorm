@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
-
 import javax.sql.DataSource;
 
 /** A simple non-pooling DataSource representation. */
@@ -40,14 +39,13 @@ public class SimpleDataSource implements DataSource {
 
   /**
    * Create a non-pooling data source.
-   * <p>
-   * The JDBC properties information must define at least <code>url</code> and
-   * <code>driver</code>, but may also include driver specific properties such
-   * as <code>username</code> and <code>password</code>.
+   *
+   * <p>The JDBC properties information must define at least <code>url</code> and <code>driver
+   * </code>, but may also include driver specific properties such as <code>username</code> and
+   * <code>password</code>.
    *
    * @param dbInfo JDBC connection information. The property table is copied.
-   * @throws SQLException the driver class is not available through the current
-   *         class loader.
+   * @throws SQLException the driver class is not available through the current class loader.
    */
   public SimpleDataSource(final Properties dbInfo) throws SQLException {
     connectionInfo = new Properties();
@@ -90,8 +88,7 @@ public class SimpleDataSource implements DataSource {
     logWriter = new PrintWriter(System.out);
   }
 
-  private static SQLException badClasspath(final String classpath,
-      final MalformedURLException e1) {
+  private static SQLException badClasspath(final String classpath, final MalformedURLException e1) {
     final SQLException sqle;
     sqle = new SQLException("Invalid driver classpath " + classpath);
     sqle.initCause(e1);
@@ -107,8 +104,7 @@ public class SimpleDataSource implements DataSource {
   }
 
   @Override
-  public Connection getConnection(String user, String password)
-      throws SQLException {
+  public Connection getConnection(String user, String password) throws SQLException {
     if (driver != null) {
       final Properties info = new Properties(connectionInfo);
       if (user != null) {
@@ -138,8 +134,7 @@ public class SimpleDataSource implements DataSource {
   }
 
   @Override
-  public void setLoginTimeout(int seconds) {
-  }
+  public void setLoginTimeout(int seconds) {}
 
   @Override
   public boolean isWrapperFor(Class<?> iface) {
@@ -156,8 +151,8 @@ public class SimpleDataSource implements DataSource {
     throw new SQLFeatureNotSupportedException();
   }
 
-  private static synchronized Driver loadDriver(final String driver,
-      final ClassLoader loader) throws SQLException {
+  private static synchronized Driver loadDriver(final String driver, final ClassLoader loader)
+      throws SQLException {
     // I've seen some drivers (*cough* Informix *cough*) which won't load
     // on multiple threads at the same time. Forcing our code to synchronize
     // around loading the driver ensures we won't ever ask for the same driver

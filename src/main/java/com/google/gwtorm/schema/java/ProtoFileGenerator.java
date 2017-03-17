@@ -18,9 +18,6 @@ import com.google.gwtorm.client.Column;
 import com.google.gwtorm.schema.ColumnModel;
 import com.google.gwtorm.schema.RelationModel;
 import com.google.gwtorm.schema.Util;
-
-import org.objectweb.asm.Type;
-
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,6 +25,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import org.objectweb.asm.Type;
 
 class ProtoFileGenerator {
   private static final Comparator<ColumnModel> COLUMN_COMPARATOR =
@@ -86,18 +84,28 @@ class ProtoFileGenerator {
     out.print("message Any" + schemaName + "PrimaryKey {\n");
     for (RelationModel r : sortRelations(rels)) {
       ColumnModel pk = r.getPrimaryKey().getField();
-      out.print("\toptional " + getType(pk) + " "
-          + r.getRelationName().toLowerCase() + " = " + r.getRelationID()
-          + ";\n");
+      out.print(
+          "\toptional "
+              + getType(pk)
+              + " "
+              + r.getRelationName().toLowerCase()
+              + " = "
+              + r.getRelationID()
+              + ";\n");
     }
     out.print("}\n");
     out.print("\n");
 
     out.print("message Any" + schemaName + " {\n");
     for (RelationModel r : sortRelations(rels)) {
-      out.print("\toptional " + getMessageName(r) + " "
-          + r.getRelationName().toLowerCase() + " = " + r.getRelationID()
-          + ";\n");
+      out.print(
+          "\toptional "
+              + getMessageName(r)
+              + " "
+              + r.getRelationName().toLowerCase()
+              + " = "
+              + r.getRelationID()
+              + ";\n");
     }
     out.print("}\n");
   }
@@ -121,8 +129,7 @@ class ProtoFileGenerator {
     out.print("}\n\n");
   }
 
-  private void generateMessage(ColumnModel parent, PrintWriter out,
-      boolean required) {
+  private void generateMessage(ColumnModel parent, PrintWriter out, boolean required) {
     // Handle base cases
     if (!parent.isNested()) {
       return;
@@ -186,8 +193,7 @@ class ProtoFileGenerator {
     return list;
   }
 
-  private static List<RelationModel> sortRelations(
-      Collection<RelationModel> rels) {
+  private static List<RelationModel> sortRelations(Collection<RelationModel> rels) {
     ArrayList<RelationModel> list = new ArrayList<>(rels);
     Collections.sort(list, RELATION_COMPARATOR);
     return list;
@@ -210,22 +216,21 @@ class ProtoFileGenerator {
       case Type.LONG:
         return "int64";
       case Type.ARRAY:
-      case Type.OBJECT: {
-        if (clazz == byte[].class) {
-          return "bytes";
-        } else if (clazz == String.class) {
-          return "string";
-        } else if (clazz == java.sql.Timestamp.class) {
-          return "fixed64";
-        } else {
-          throw new RuntimeException("Type " + clazz
-              + " not supported on protobuf!");
+      case Type.OBJECT:
+        {
+          if (clazz == byte[].class) {
+            return "bytes";
+          } else if (clazz == String.class) {
+            return "string";
+          } else if (clazz == java.sql.Timestamp.class) {
+            return "fixed64";
+          } else {
+            throw new RuntimeException("Type " + clazz + " not supported on protobuf!");
+          }
         }
-      }
 
       default:
-        throw new RuntimeException("Type " + clazz
-            + " not supported on protobuf!");
+        throw new RuntimeException("Type " + clazz + " not supported on protobuf!");
     }
   }
 }

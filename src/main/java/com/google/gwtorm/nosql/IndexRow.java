@@ -20,20 +20,17 @@ import com.google.gwtorm.protobuf.ProtobufCodec;
 
 /**
  * Data value stored in a NoSQL secondary index row.
- * <p>
- * Instances of this object can be used inside of the data portion of a
- * secondary index row, and may either contain the key of the primary data row,
- * or a copy of the primary object data.
- * <p>
- * The {@link #timestamp} field can be used to fossil collect secondary index
- * rows that no longer match the primary data row and which are older than the
- * longest expected transaction. These fossil rows may have occurred due to an
- * aborted, but partially applied transaction.
+ *
+ * <p>Instances of this object can be used inside of the data portion of a secondary index row, and
+ * may either contain the key of the primary data row, or a copy of the primary object data.
+ *
+ * <p>The {@link #timestamp} field can be used to fossil collect secondary index rows that no longer
+ * match the primary data row and which are older than the longest expected transaction. These
+ * fossil rows may have occurred due to an aborted, but partially applied transaction.
  */
 public class IndexRow {
   /** Standard encoder/decoder for this class. */
-  public static final ProtobufCodec<IndexRow> CODEC =
-      CodecFactory.encoder(IndexRow.class);
+  public static final ProtobufCodec<IndexRow> CODEC = CodecFactory.encoder(IndexRow.class);
 
   /**
    * Create an index row to reference the primary data row by key.
@@ -51,9 +48,9 @@ public class IndexRow {
 
   /**
    * Clock of the last time this index row was touched.
-   * <p>
-   * Invalid rows older than a certain time interval may be subject to automatic
-   * background pruning during data retrieval operations.
+   *
+   * <p>Invalid rows older than a certain time interval may be subject to automatic background
+   * pruning during data retrieval operations.
    */
   @Column(id = 1)
   protected long timestamp;

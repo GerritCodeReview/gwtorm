@@ -15,16 +15,14 @@
 package com.google.gwtorm.server;
 
 import com.google.gwtorm.schema.ColumnModel;
-
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
-
 import java.lang.reflect.Method;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 
 public class CodeGenSupport implements Opcodes {
   public final MethodVisitor mv;
@@ -128,17 +126,20 @@ public class CodeGenSupport implements Opcodes {
     final Method m;
     try {
       m =
-          PreparedStatement.class.getMethod("set" + sqlTypeName, Integer.TYPE,
-              ResultSet.class.getMethod("get" + sqlTypeName, Integer.TYPE)
-                  .getReturnType());
+          PreparedStatement.class.getMethod(
+              "set" + sqlTypeName,
+              Integer.TYPE,
+              ResultSet.class.getMethod("get" + sqlTypeName, Integer.TYPE).getReturnType());
     } catch (SecurityException e) {
       throw new RuntimeException("java.sql has no " + sqlTypeName);
     } catch (NoSuchMethodException e) {
       throw new RuntimeException("java.sql has no " + sqlTypeName, e);
     }
-    mv.visitMethodInsn(INVOKEINTERFACE, Type
-        .getInternalName(PreparedStatement.class), m.getName(), Type
-        .getMethodDescriptor(m));
+    mv.visitMethodInsn(
+        INVOKEINTERFACE,
+        Type.getInternalName(PreparedStatement.class),
+        m.getName(),
+        Type.getMethodDescriptor(m));
   }
 
   public void invokeResultSetGet(final String sqlTypeName) {
@@ -150,8 +151,11 @@ public class CodeGenSupport implements Opcodes {
     } catch (NoSuchMethodException e) {
       throw new RuntimeException("java.sql has no " + sqlTypeName, e);
     }
-    mv.visitMethodInsn(INVOKEINTERFACE, Type.getInternalName(ResultSet.class),
-        m.getName(), Type.getMethodDescriptor(m));
+    mv.visitMethodInsn(
+        INVOKEINTERFACE,
+        Type.getInternalName(ResultSet.class),
+        m.getName(),
+        Type.getMethodDescriptor(m));
   }
 
   public void fieldSetBegin() {
@@ -167,8 +171,8 @@ public class CodeGenSupport implements Opcodes {
       mv.visitInsn(DUP);
       mv.visitVarInsn(ASTORE, dupOnSet);
     }
-    mv.visitFieldInsn(PUTFIELD, c.getInternalName(), col.getFieldName(),
-        toType(col).getDescriptor());
+    mv.visitFieldInsn(
+        PUTFIELD, c.getInternalName(), col.getFieldName(), toType(col).getDescriptor());
   }
 
   public void setDupOnFieldSetEnd(final int varIdx) {
@@ -185,8 +189,7 @@ public class CodeGenSupport implements Opcodes {
       appendGetField(c.getParent());
     }
     final Type t = containerClass(c);
-    mv.visitFieldInsn(GETFIELD, t.getInternalName(), c.getFieldName(),
-        toType(c).getDescriptor());
+    mv.visitFieldInsn(GETFIELD, t.getInternalName(), c.getFieldName(), toType(c).getDescriptor());
   }
 
   private Type containerClass(final ColumnModel c) {

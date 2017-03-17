@@ -25,13 +25,6 @@ import com.google.gwtorm.server.Access;
 import com.google.gwtorm.server.CodeGenSupport;
 import com.google.gwtorm.server.GeneratedClassLoader;
 import com.google.gwtorm.server.OrmException;
-
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -39,6 +32,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.Label;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 
 /** Generates a concrete implementation of an {@link Access} extension. */
 class AccessGen implements Opcodes {
@@ -68,13 +66,11 @@ class AccessGen implements Opcodes {
   private String implTypeName;
   private Type entityType;
 
-  AccessGen(final GeneratedClassLoader loader,
-      final RelationModel rm, final SqlDialect sd) {
+  AccessGen(final GeneratedClassLoader loader, final RelationModel rm, final SqlDialect sd) {
     classLoader = loader;
     model = rm;
     dialect = sd;
-    entityType =
-        Type.getObjectType(model.getEntityTypeClassName().replace('.', '/'));
+    entityType = Type.getObjectType(model.getEntityTypeClassName().replace('.', '/'));
   }
 
   public Class<?> create() throws OrmException {
@@ -106,8 +102,8 @@ class AccessGen implements Opcodes {
 
     if (model.getPrimaryKey() != null) {
       implementKeyQuery(model.getPrimaryKey());
-      if ((model.getPrimaryKey().getField().isNested() || !model
-          .getPrimaryKey().getField().getPrimitiveType().isPrimitive())
+      if ((model.getPrimaryKey().getField().isNested()
+              || !model.getPrimaryKey().getField().getPrimitiveType().isPrimitive())
           && model.getPrimaryKey().getAllLeafColumns().size() == 1) {
         overrideGetMany();
       }
@@ -134,21 +130,27 @@ class AccessGen implements Opcodes {
   private void init() {
     superTypeName = Type.getInternalName(JdbcAccess.class);
     implClassName =
-        model.getEntityTypeClassName() + "_Access_" + model.getMethodName()
-            + "_" + Util.createRandomName();
+        model.getEntityTypeClassName()
+            + "_Access_"
+            + model.getMethodName()
+            + "_"
+            + Util.createRandomName();
     implTypeName = implClassName.replace('.', '/');
 
     cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
-    cw.visit(V1_3, ACC_PUBLIC | ACC_FINAL | ACC_SUPER, implTypeName, null,
-        superTypeName, new String[] {model.getAccessInterfaceName().replace(
-            '.', '/')});
+    cw.visit(
+        V1_3,
+        ACC_PUBLIC | ACC_FINAL | ACC_SUPER,
+        implTypeName,
+        null,
+        superTypeName,
+        new String[] {model.getAccessInterfaceName().replace('.', '/')});
   }
 
   private void implementConstructor() {
     final String consName = "<init>";
     final String consDesc =
-        Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {Type
-            .getType(JdbcSchema.class)});
+        Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {Type.getType(JdbcSchema.class)});
     final MethodVisitor mv;
     mv = cw.visitMethod(ACC_PUBLIC, consName, consDesc, null, null);
     mv.visitCode();
@@ -160,12 +162,14 @@ class AccessGen implements Opcodes {
     mv.visitEnd();
   }
 
-  private void implementGetString(final String methodName,
-      final String returnValue) {
+  private void implementGetString(final String methodName, final String returnValue) {
     final MethodVisitor mv =
-        cw.visitMethod(ACC_PUBLIC | ACC_FINAL, methodName, Type
-            .getMethodDescriptor(Type.getType(String.class), new Type[] {}),
-            null, null);
+        cw.visitMethod(
+            ACC_PUBLIC | ACC_FINAL,
+            methodName,
+            Type.getMethodDescriptor(Type.getType(String.class), new Type[] {}),
+            null,
+            null);
     mv.visitCode();
     mv.visitLdcInsn(returnValue);
     mv.visitInsn(ARETURN);
@@ -175,8 +179,12 @@ class AccessGen implements Opcodes {
 
   private void implementGetRelationID() {
     final MethodVisitor mv =
-        cw.visitMethod(ACC_PUBLIC | ACC_FINAL, "getRelationID", Type
-            .getMethodDescriptor(Type.INT_TYPE, new Type[] {}), null, null);
+        cw.visitMethod(
+            ACC_PUBLIC | ACC_FINAL,
+            "getRelationID",
+            Type.getMethodDescriptor(Type.INT_TYPE, new Type[] {}),
+            null,
+            null);
     mv.visitCode();
     new CodeGenSupport(mv).push(model.getRelationID());
     mv.visitInsn(IRETURN);
@@ -184,12 +192,14 @@ class AccessGen implements Opcodes {
     mv.visitEnd();
   }
 
-  private void implementMissingGetString(final String methodName,
-      final String why) {
+  private void implementMissingGetString(final String methodName, final String why) {
     final MethodVisitor mv =
-        cw.visitMethod(ACC_PUBLIC | ACC_FINAL, methodName, Type
-            .getMethodDescriptor(Type.getType(String.class), new Type[] {}),
-            null, null);
+        cw.visitMethod(
+            ACC_PUBLIC | ACC_FINAL,
+            methodName,
+            Type.getMethodDescriptor(Type.getType(String.class), new Type[] {}),
+            null,
+            null);
     mv.visitCode();
     throwUnsupported(mv, model.getMethodName() + " does not support " + why);
     mv.visitInsn(RETURN);
@@ -202,25 +212,34 @@ class AccessGen implements Opcodes {
     mv.visitTypeInsn(NEW, eType.getInternalName());
     mv.visitInsn(DUP);
     mv.visitLdcInsn(message);
-    mv.visitMethodInsn(INVOKESPECIAL, eType.getInternalName(), "<init>", Type
-        .getMethodDescriptor(Type.VOID_TYPE, new Type[] {Type
-            .getType(String.class)}));
+    mv.visitMethodInsn(
+        INVOKESPECIAL,
+        eType.getInternalName(),
+        "<init>",
+        Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {Type.getType(String.class)}));
     mv.visitInsn(ATHROW);
   }
 
   private void implementPrimaryKey() {
     final KeyModel pk = model.getPrimaryKey();
     final MethodVisitor mv =
-        cw.visitMethod(ACC_PUBLIC | ACC_FINAL, "primaryKey", Type
-            .getMethodDescriptor(Type.getType(Key.class), new Type[] {Type
-                .getType(Object.class)}), null, null);
+        cw.visitMethod(
+            ACC_PUBLIC | ACC_FINAL,
+            "primaryKey",
+            Type.getMethodDescriptor(
+                Type.getType(Key.class), new Type[] {Type.getType(Object.class)}),
+            null,
+            null);
     mv.visitCode();
     if (pk != null && pk.getField().isNested()) {
       final ColumnModel pkf = pk.getField();
       mv.visitVarInsn(ALOAD, 1);
       mv.visitTypeInsn(CHECKCAST, entityType.getInternalName());
-      mv.visitFieldInsn(GETFIELD, entityType.getInternalName(), pkf
-          .getFieldName(), CodeGenSupport.toType(pkf).getDescriptor());
+      mv.visitFieldInsn(
+          GETFIELD,
+          entityType.getInternalName(),
+          pkf.getFieldName(),
+          CodeGenSupport.toType(pkf).getDescriptor());
     } else {
       mv.visitInsn(ACONST_NULL);
     }
@@ -233,18 +252,24 @@ class AccessGen implements Opcodes {
     final KeyModel pk = model.getPrimaryKey();
 
     final MethodVisitor mv =
-        cw.visitMethod(ACC_PUBLIC | ACC_FINAL, "get", Type.getMethodDescriptor(
-            Type.getType(Object.class), new Type[] {Type.getType(Key.class)}),
-            null, new String[] {Type.getType(OrmException.class)
-                .getInternalName()});
+        cw.visitMethod(
+            ACC_PUBLIC | ACC_FINAL,
+            "get",
+            Type.getMethodDescriptor(
+                Type.getType(Object.class), new Type[] {Type.getType(Key.class)}),
+            null,
+            new String[] {Type.getType(OrmException.class).getInternalName()});
     mv.visitCode();
     if (pk != null && pk.getField().isNested()) {
       final Type keyType = CodeGenSupport.toType(pk.getField());
       mv.visitVarInsn(ALOAD, 0);
       mv.visitVarInsn(ALOAD, 1);
       mv.visitTypeInsn(CHECKCAST, keyType.getInternalName());
-      mv.visitMethodInsn(INVOKEVIRTUAL, implTypeName, pk.getName(), Type
-          .getMethodDescriptor(entityType, new Type[] {keyType}));
+      mv.visitMethodInsn(
+          INVOKEVIRTUAL,
+          implTypeName,
+          pk.getName(),
+          Type.getMethodDescriptor(entityType, new Type[] {keyType}));
       mv.visitInsn(ARETURN);
     } else {
       throwUnsupported(mv, model.getMethodName() + " does not support get(Key)");
@@ -255,13 +280,19 @@ class AccessGen implements Opcodes {
 
   private void implementNewEntityInstance() {
     final MethodVisitor mv =
-        cw.visitMethod(ACC_PUBLIC | ACC_FINAL, "newEntityInstance", Type
-            .getMethodDescriptor(Type.getType(Object.class), new Type[] {}),
-            null, null);
+        cw.visitMethod(
+            ACC_PUBLIC | ACC_FINAL,
+            "newEntityInstance",
+            Type.getMethodDescriptor(Type.getType(Object.class), new Type[] {}),
+            null,
+            null);
     mv.visitCode();
     mv.visitTypeInsn(NEW, entityType.getInternalName());
     mv.visitInsn(DUP);
-    mv.visitMethodInsn(INVOKESPECIAL, entityType.getInternalName(), "<init>",
+    mv.visitMethodInsn(
+        INVOKESPECIAL,
+        entityType.getInternalName(),
+        "<init>",
         Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {}));
     mv.visitInsn(ARETURN);
     mv.visitMaxs(-1, -1);
@@ -270,11 +301,14 @@ class AccessGen implements Opcodes {
 
   private void implementBindOne(final DmlType type) {
     final MethodVisitor mv =
-        cw.visitMethod(ACC_PUBLIC | ACC_FINAL, type.methodName, Type
-            .getMethodDescriptor(Type.VOID_TYPE, new Type[] {
-                Type.getType(PreparedStatement.class),
-                Type.getType(Object.class)}), null, new String[] {Type.getType(
-            SQLException.class).getInternalName()});
+        cw.visitMethod(
+            ACC_PUBLIC | ACC_FINAL,
+            type.methodName,
+            Type.getMethodDescriptor(
+                Type.VOID_TYPE,
+                new Type[] {Type.getType(PreparedStatement.class), Type.getType(Object.class)}),
+            null,
+            new String[] {Type.getType(SQLException.class).getInternalName()});
     mv.visitCode();
 
     if (type != DmlType.INSERT && model.getPrimaryKey() == null) {
@@ -331,8 +365,8 @@ class AccessGen implements Opcodes {
     mv.visitEnd();
   }
 
-  private void doBindOne(final MethodVisitor mv, final CodeGenSupport cgs,
-      final ColumnModel field) {
+  private void doBindOne(
+      final MethodVisitor mv, final CodeGenSupport cgs, final ColumnModel field) {
     if (field.isNested() && field.isNotNull()) {
       for (final ColumnModel c : field.getAllLeafColumns()) {
         doBindOne(mv, cgs, c);
@@ -368,11 +402,14 @@ class AccessGen implements Opcodes {
 
   private void implementBindOneFetch() {
     final MethodVisitor mv =
-        cw.visitMethod(ACC_PUBLIC | ACC_FINAL, "bindOneFetch", Type
-            .getMethodDescriptor(Type.VOID_TYPE, new Type[] {
-                Type.getType(ResultSet.class), Type.getType(Object.class)}),
-            null, new String[] {Type.getType(SQLException.class)
-                .getInternalName()});
+        cw.visitMethod(
+            ACC_PUBLIC | ACC_FINAL,
+            "bindOneFetch",
+            Type.getMethodDescriptor(
+                Type.VOID_TYPE,
+                new Type[] {Type.getType(ResultSet.class), Type.getType(Object.class)}),
+            null,
+            new String[] {Type.getType(SQLException.class).getInternalName()});
     mv.visitCode();
 
     mv.visitVarInsn(ALOAD, 2);
@@ -382,8 +419,7 @@ class AccessGen implements Opcodes {
     final CodeGenSupport cgs = new CodeGenSupport(mv);
     cgs.setEntityType(entityType);
 
-    if (model.getPrimaryKey() != null
-        && model.getPrimaryKey().getField().isNested()) {
+    if (model.getPrimaryKey() != null && model.getPrimaryKey().getField().isNested()) {
       final ColumnModel pkf = model.getPrimaryKey().getField();
       final Type vType = CodeGenSupport.toType(pkf);
       final int oldIdx = cgs.getColumnIndex();
@@ -391,8 +427,11 @@ class AccessGen implements Opcodes {
       cgs.fieldSetBegin();
       mv.visitTypeInsn(NEW, vType.getInternalName());
       mv.visitInsn(DUP);
-      mv.visitMethodInsn(INVOKESPECIAL, vType.getInternalName(), "<init>", Type
-          .getMethodDescriptor(Type.VOID_TYPE, new Type[] {}));
+      mv.visitMethodInsn(
+          INVOKESPECIAL,
+          vType.getInternalName(),
+          "<init>",
+          Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {}));
       cgs.fieldSetEnd();
       cgs.resetColumnIndex(oldIdx);
     }
@@ -410,8 +449,11 @@ class AccessGen implements Opcodes {
     mv.visitEnd();
   }
 
-  private void doFetchOne(final MethodVisitor mv, final CodeGenSupport cgs,
-      final ColumnModel field, final int reportLiveInto) {
+  private void doFetchOne(
+      final MethodVisitor mv,
+      final CodeGenSupport cgs,
+      final ColumnModel field,
+      final int reportLiveInto) {
     if (field.isNested()) {
       int oldIdx = cgs.getColumnIndex();
       final Type vType = CodeGenSupport.toType(field);
@@ -429,8 +471,11 @@ class AccessGen implements Opcodes {
       cgs.fieldSetBegin();
       mv.visitTypeInsn(NEW, vType.getInternalName());
       mv.visitInsn(DUP);
-      mv.visitMethodInsn(INVOKESPECIAL, vType.getInternalName(), "<init>", Type
-          .getMethodDescriptor(Type.VOID_TYPE, new Type[] {}));
+      mv.visitMethodInsn(
+          INVOKESPECIAL,
+          vType.getInternalName(),
+          "<init>",
+          Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {}));
       cgs.fieldSetEnd();
 
       cgs.resetColumnIndex(oldIdx);
@@ -465,8 +510,7 @@ class AccessGen implements Opcodes {
 
     } else {
       final int dupTo;
-      if (reportLiveInto >= 0
-          && CodeGenSupport.toType(field).getSort() == Type.OBJECT) {
+      if (reportLiveInto >= 0 && CodeGenSupport.toType(field).getSort() == Type.OBJECT) {
         dupTo = cgs.newLocal();
       } else {
         dupTo = -1;
@@ -484,9 +528,11 @@ class AccessGen implements Opcodes {
           cgs.freeLocal(dupTo);
         } else {
           cgs.pushSqlHandle();
-          mv.visitMethodInsn(INVOKEINTERFACE, Type.getType(ResultSet.class)
-              .getInternalName(), "wasNull", Type.getMethodDescriptor(
-              Type.BOOLEAN_TYPE, new Type[] {}));
+          mv.visitMethodInsn(
+              INVOKEINTERFACE,
+              Type.getType(ResultSet.class).getInternalName(),
+              "wasNull",
+              Type.getMethodDescriptor(Type.BOOLEAN_TYPE, new Type[] {}));
           mv.visitJumpInsn(IFNE, wasnull);
         }
         mv.visitIincInsn(reportLiveInto, 1);
@@ -501,8 +547,7 @@ class AccessGen implements Opcodes {
     query.append(model.getSelectSql(dialect, REL_ALIAS));
     query.append(" WHERE ");
     int nth = 1;
-    for (final Iterator<ColumnModel> i = info.getAllLeafColumns().iterator(); i
-        .hasNext();) {
+    for (final Iterator<ColumnModel> i = info.getAllLeafColumns().iterator(); i.hasNext(); ) {
       final ColumnModel c = i.next();
       query.append(REL_ALIAS);
       query.append('.');
@@ -515,39 +560,46 @@ class AccessGen implements Opcodes {
     }
 
     final MethodVisitor mv =
-        cw.visitMethod(ACC_PUBLIC | ACC_FINAL, info.getName(), Type
-            .getMethodDescriptor(entityType, new Type[] {keyType}), null,
+        cw.visitMethod(
+            ACC_PUBLIC | ACC_FINAL,
+            info.getName(),
+            Type.getMethodDescriptor(entityType, new Type[] {keyType}),
+            null,
             new String[] {Type.getType(OrmException.class).getInternalName()});
     mv.visitCode();
 
     final int keyvar = 1, psvar = keyvar + keyType.getSize();
     mv.visitVarInsn(ALOAD, 0);
     mv.visitLdcInsn(query.toString());
-    mv.visitMethodInsn(INVOKEVIRTUAL, superTypeName, "prepareStatement", Type
-        .getMethodDescriptor(Type.getType(PreparedStatement.class),
-            new Type[] {Type.getType(String.class)}));
+    mv.visitMethodInsn(
+        INVOKEVIRTUAL,
+        superTypeName,
+        "prepareStatement",
+        Type.getMethodDescriptor(
+            Type.getType(PreparedStatement.class), new Type[] {Type.getType(String.class)}));
     mv.visitVarInsn(ASTORE, psvar);
 
-    final CodeGenSupport cgs = new CodeGenSupport(mv) {
-      @Override
-      public void pushSqlHandle() {
-        mv.visitVarInsn(ALOAD, psvar);
-      }
+    final CodeGenSupport cgs =
+        new CodeGenSupport(mv) {
+          @Override
+          public void pushSqlHandle() {
+            mv.visitVarInsn(ALOAD, psvar);
+          }
 
-      @Override
-      public void pushFieldValue() {
-        appendGetField(getFieldReference());
-      }
+          @Override
+          public void pushFieldValue() {
+            appendGetField(getFieldReference());
+          }
 
-      @Override
-      protected void appendGetField(final ColumnModel c) {
-        if (c.getParent() == null) {
-          loadVar(keyType, keyvar);
-        } else {
-          super.appendGetField(c);
-        }
-      }
-    };
+          @Override
+          protected void appendGetField(final ColumnModel c) {
+            if (c.getParent() == null) {
+              loadVar(keyType, keyvar);
+            } else {
+              super.appendGetField(c);
+            }
+          }
+        };
     for (final ColumnModel c : info.getAllLeafColumns()) {
       cgs.setFieldReference(c);
       dialect.getSqlTypeInfo(c).generatePreparedStatementSet(cgs);
@@ -555,9 +607,12 @@ class AccessGen implements Opcodes {
 
     mv.visitVarInsn(ALOAD, 0);
     mv.visitVarInsn(ALOAD, psvar);
-    mv.visitMethodInsn(INVOKEVIRTUAL, superTypeName, "queryOne", Type
-        .getMethodDescriptor(Type.getType(Object.class), new Type[] {Type
-            .getType(PreparedStatement.class)}));
+    mv.visitMethodInsn(
+        INVOKEVIRTUAL,
+        superTypeName,
+        "queryOne",
+        Type.getMethodDescriptor(
+            Type.getType(Object.class), new Type[] {Type.getType(PreparedStatement.class)}));
     mv.visitTypeInsn(CHECKCAST, entityType.getInternalName());
     mv.visitInsn(ARETURN);
     mv.visitMaxs(-1, -1);
@@ -576,10 +631,13 @@ class AccessGen implements Opcodes {
     query.append(" IN");
 
     final MethodVisitor mv =
-        cw.visitMethod(ACC_PUBLIC | ACC_FINAL, "getBySqlIn", Type
-            .getMethodDescriptor(Type
-                .getType(com.google.gwtorm.server.ResultSet.class),
-                new Type[] {Type.getType(Collection.class)}), null,
+        cw.visitMethod(
+            ACC_PUBLIC | ACC_FINAL,
+            "getBySqlIn",
+            Type.getMethodDescriptor(
+                Type.getType(com.google.gwtorm.server.ResultSet.class),
+                new Type[] {Type.getType(Collection.class)}),
+            null,
             new String[] {Type.getType(OrmException.class).getInternalName()});
     mv.visitCode();
 
@@ -592,15 +650,21 @@ class AccessGen implements Opcodes {
     mv.visitVarInsn(ALOAD, 0);
     mv.visitLdcInsn(query.toString());
     mv.visitVarInsn(ALOAD, keyset);
-    mv.visitMethodInsn(INVOKEVIRTUAL, superTypeName, "prepareBySqlIn", Type
-        .getMethodDescriptor(Type.getType(PreparedStatement.class), new Type[] {
-            Type.getType(String.class), Type.getType(Collection.class)}));
+    mv.visitMethodInsn(
+        INVOKEVIRTUAL,
+        superTypeName,
+        "prepareBySqlIn",
+        Type.getMethodDescriptor(
+            Type.getType(PreparedStatement.class),
+            new Type[] {Type.getType(String.class), Type.getType(Collection.class)}));
     mv.visitVarInsn(ASTORE, psvar);
 
     mv.visitVarInsn(ALOAD, keyset);
-    mv.visitMethodInsn(INVOKEINTERFACE, Type.getInternalName(Collection.class),
-        "iterator", Type.getMethodDescriptor(Type.getType(Iterator.class),
-            new Type[] {}));
+    mv.visitMethodInsn(
+        INVOKEINTERFACE,
+        Type.getInternalName(Collection.class),
+        "iterator",
+        Type.getMethodDescriptor(Type.getType(Iterator.class), new Type[] {}));
     mv.visitVarInsn(ASTORE, itrvar);
 
     mv.visitInsn(ICONST_1);
@@ -610,43 +674,48 @@ class AccessGen implements Opcodes {
     final Label again = new Label();
     mv.visitLabel(again);
     mv.visitVarInsn(ALOAD, itrvar);
-    mv.visitMethodInsn(INVOKEINTERFACE, Type.getInternalName(Iterator.class),
-        "hasNext", Type.getMethodDescriptor(Type.BOOLEAN_TYPE, new Type[] {}));
+    mv.visitMethodInsn(
+        INVOKEINTERFACE,
+        Type.getInternalName(Iterator.class),
+        "hasNext",
+        Type.getMethodDescriptor(Type.BOOLEAN_TYPE, new Type[] {}));
     mv.visitJumpInsn(IFEQ, endbind);
 
     mv.visitVarInsn(ALOAD, itrvar);
-    mv.visitMethodInsn(INVOKEINTERFACE, Type.getInternalName(Iterator.class),
-        "next", Type.getMethodDescriptor(Type.getType(Object.class),
-            new Type[] {}));
-    mv.visitTypeInsn(CHECKCAST, CodeGenSupport.toType(pk.getField())
-        .getInternalName());
+    mv.visitMethodInsn(
+        INVOKEINTERFACE,
+        Type.getInternalName(Iterator.class),
+        "next",
+        Type.getMethodDescriptor(Type.getType(Object.class), new Type[] {}));
+    mv.visitTypeInsn(CHECKCAST, CodeGenSupport.toType(pk.getField()).getInternalName());
     mv.visitVarInsn(ASTORE, keyvar);
 
-    final CodeGenSupport cgs = new CodeGenSupport(mv) {
-      @Override
-      public void pushSqlHandle() {
-        mv.visitVarInsn(ALOAD, psvar);
-      }
+    final CodeGenSupport cgs =
+        new CodeGenSupport(mv) {
+          @Override
+          public void pushSqlHandle() {
+            mv.visitVarInsn(ALOAD, psvar);
+          }
 
-      @Override
-      public void pushFieldValue() {
-        appendGetField(getFieldReference());
-      }
+          @Override
+          public void pushFieldValue() {
+            appendGetField(getFieldReference());
+          }
 
-      @Override
-      public void pushColumnIndex() {
-        mv.visitVarInsn(ILOAD, colvar);
-      }
+          @Override
+          public void pushColumnIndex() {
+            mv.visitVarInsn(ILOAD, colvar);
+          }
 
-      @Override
-      protected void appendGetField(final ColumnModel c) {
-        if (c.getParent() == null) {
-          mv.visitVarInsn(ALOAD, keyvar);
-        } else {
-          super.appendGetField(c);
-        }
-      }
-    };
+          @Override
+          protected void appendGetField(final ColumnModel c) {
+            if (c.getParent() == null) {
+              mv.visitVarInsn(ALOAD, keyvar);
+            } else {
+              super.appendGetField(c);
+            }
+          }
+        };
 
     cgs.setFieldReference(pkcol);
     dialect.getSqlTypeInfo(pkcol).generatePreparedStatementSet(cgs);
@@ -656,8 +725,12 @@ class AccessGen implements Opcodes {
     mv.visitLabel(endbind);
     mv.visitVarInsn(ALOAD, 0);
     mv.visitVarInsn(ALOAD, psvar);
-    mv.visitMethodInsn(INVOKEVIRTUAL, superTypeName, "queryList", Type
-        .getMethodDescriptor(Type.getType(com.google.gwtorm.server.ResultSet.class),
+    mv.visitMethodInsn(
+        INVOKEVIRTUAL,
+        superTypeName,
+        "queryList",
+        Type.getMethodDescriptor(
+            Type.getType(com.google.gwtorm.server.ResultSet.class),
             new Type[] {Type.getType(PreparedStatement.class)}));
     mv.visitInsn(ARETURN);
     mv.visitMaxs(-1, -1);
@@ -683,42 +756,48 @@ class AccessGen implements Opcodes {
 
     final int psvar = nextVar++;
     final MethodVisitor mv =
-        cw.visitMethod(ACC_PUBLIC | ACC_FINAL, info.getName(), Type
-            .getMethodDescriptor(Type
-                .getType(com.google.gwtorm.server.ResultSet.class), pTypes),
-            null, new String[] {Type.getType(OrmException.class)
-                .getInternalName()});
+        cw.visitMethod(
+            ACC_PUBLIC | ACC_FINAL,
+            info.getName(),
+            Type.getMethodDescriptor(
+                Type.getType(com.google.gwtorm.server.ResultSet.class), pTypes),
+            null,
+            new String[] {Type.getType(OrmException.class).getInternalName()});
     mv.visitCode();
 
     mv.visitVarInsn(ALOAD, 0);
     mv.visitLdcInsn(info.getSelectSql(dialect, REL_ALIAS));
-    mv.visitMethodInsn(INVOKEVIRTUAL, superTypeName, "prepareStatement", Type
-        .getMethodDescriptor(Type.getType(PreparedStatement.class),
-            new Type[] {Type.getType(String.class)}));
+    mv.visitMethodInsn(
+        INVOKEVIRTUAL,
+        superTypeName,
+        "prepareStatement",
+        Type.getMethodDescriptor(
+            Type.getType(PreparedStatement.class), new Type[] {Type.getType(String.class)}));
     mv.visitVarInsn(ASTORE, psvar);
 
     final int argIdx[] = new int[] {0};
-    final CodeGenSupport cgs = new CodeGenSupport(mv) {
-      @Override
-      public void pushSqlHandle() {
-        mv.visitVarInsn(ALOAD, psvar);
-      }
+    final CodeGenSupport cgs =
+        new CodeGenSupport(mv) {
+          @Override
+          public void pushSqlHandle() {
+            mv.visitVarInsn(ALOAD, psvar);
+          }
 
-      @Override
-      public void pushFieldValue() {
-        appendGetField(getFieldReference());
-      }
+          @Override
+          public void pushFieldValue() {
+            appendGetField(getFieldReference());
+          }
 
-      @Override
-      protected void appendGetField(final ColumnModel c) {
-        final int n = argIdx[0];
-        if (c == pCols.get(n)) {
-          loadVar(pTypes[n], pVars[n]);
-        } else {
-          super.appendGetField(c);
-        }
-      }
-    };
+          @Override
+          protected void appendGetField(final ColumnModel c) {
+            final int n = argIdx[0];
+            if (c == pCols.get(n)) {
+              loadVar(pTypes[n], pVars[n]);
+            } else {
+              super.appendGetField(c);
+            }
+          }
+        };
     for (final ColumnModel c : pCols) {
       if (c.isNested()) {
         for (final ColumnModel n : c.getAllLeafColumns()) {
@@ -737,18 +816,19 @@ class AccessGen implements Opcodes {
         mv.visitVarInsn(ALOAD, psvar);
         if (hasLimitParam) {
           if (dialect.selectHasLimit()) {
-            CodeGenSupport cgs2 = new CodeGenSupport(mv) {
-              @Override
-              public void pushSqlHandle() {
-                mv.visitVarInsn(ALOAD, psvar);
-              }
+            CodeGenSupport cgs2 =
+                new CodeGenSupport(mv) {
+                  @Override
+                  public void pushSqlHandle() {
+                    mv.visitVarInsn(ALOAD, psvar);
+                  }
 
-              @Override
-              public void pushFieldValue() {
-                final int n = argIdx[0];
-                loadVar(pTypes[n], pVars[n]);
-              }
-            };
+                  @Override
+                  public void pushFieldValue() {
+                    final int n = argIdx[0];
+                    loadVar(pTypes[n], pVars[n]);
+                  }
+                };
             cgs2.resetColumnIndex(cgs.getColumnIndex() + 1);
             dialect.getSqlTypeInfo(Integer.TYPE).generatePreparedStatementSet(cgs2);
           }
@@ -756,16 +836,22 @@ class AccessGen implements Opcodes {
         } else {
           cgs.push(info.getStaticLimit());
         }
-        mv.visitMethodInsn(INVOKEINTERFACE, Type.getType(
-            PreparedStatement.class).getInternalName(), "setMaxRows", Type
-            .getMethodDescriptor(Type.VOID_TYPE, new Type[] {Type.INT_TYPE}));
+        mv.visitMethodInsn(
+            INVOKEINTERFACE,
+            Type.getType(PreparedStatement.class).getInternalName(),
+            "setMaxRows",
+            Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {Type.INT_TYPE}));
       }
     }
 
     mv.visitVarInsn(ALOAD, 0);
     mv.visitVarInsn(ALOAD, psvar);
-    mv.visitMethodInsn(INVOKEVIRTUAL, superTypeName, "queryList", Type
-        .getMethodDescriptor(Type.getType(com.google.gwtorm.server.ResultSet.class),
+    mv.visitMethodInsn(
+        INVOKEVIRTUAL,
+        superTypeName,
+        "queryList",
+        Type.getMethodDescriptor(
+            Type.getType(com.google.gwtorm.server.ResultSet.class),
             new Type[] {Type.getType(PreparedStatement.class)}));
     mv.visitInsn(ARETURN);
     mv.visitMaxs(-1, -1);

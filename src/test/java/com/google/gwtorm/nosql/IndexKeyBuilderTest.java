@@ -18,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-public class IndexKeyBuilderTest  {
+public class IndexKeyBuilderTest {
 
   @Test
   public void testInt() {
@@ -85,7 +85,8 @@ public class IndexKeyBuilderTest  {
     return dst.toString();
   }
 
-  private static final char[] hexchar =
-      {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', //
-          'a', 'b', 'c', 'd', 'e', 'f'};
+  private static final char[] hexchar = {
+    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', //
+    'a', 'b', 'c', 'd', 'e', 'f'
+  };
 }

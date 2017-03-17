@@ -16,12 +16,10 @@ package com.google.gwtorm.schema.sql;
 
 import com.google.gwtorm.schema.ColumnModel;
 import com.google.gwtorm.server.CodeGenSupport;
-
+import java.sql.Types;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
-
-import java.sql.Types;
 
 public class SqlBooleanTypeInfo extends SqlTypeInfo {
   @Override
@@ -37,8 +35,7 @@ public class SqlBooleanTypeInfo extends SqlTypeInfo {
   }
 
   @Override
-  public String getCheckConstraint(final ColumnModel column,
-      final SqlDialect dialect) {
+  public String getCheckConstraint(final ColumnModel column, final SqlDialect dialect) {
     final String name = column.getColumnName();
     final String t = getTrueLiteralValue();
     final String f = getFalseLiteralValue();
@@ -95,9 +92,11 @@ public class SqlBooleanTypeInfo extends SqlTypeInfo {
     cgs.pushSqlHandle();
     cgs.pushColumnIndex();
     cgs.invokeResultSetGet(getJavaSqlTypeAlias());
-    cgs.mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, Type
-        .getInternalName(String.class), "equals", Type.getMethodDescriptor(
-        Type.BOOLEAN_TYPE, new Type[] {Type.getType(Object.class)}));
+    cgs.mv.visitMethodInsn(
+        Opcodes.INVOKEVIRTUAL,
+        Type.getInternalName(String.class),
+        "equals",
+        Type.getMethodDescriptor(Type.BOOLEAN_TYPE, new Type[] {Type.getType(Object.class)}));
     cgs.fieldSetEnd();
   }
 }
