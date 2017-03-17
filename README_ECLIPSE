@@ -39,8 +39,8 @@ When prompted for the password, enter 'gwtorm'.
 It may be necessary to run the commands as the postgres user.  In this
 case, prefix the commands with `sudo -u postgres`.
 
-MySQL
-~~~~~
+MySQL and MariaDB
+~~~~~~~~~~~~~~~~~
 
 Enter the mysql console:
 
