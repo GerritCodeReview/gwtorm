@@ -26,6 +26,10 @@ limitations under the License.
   <description>Tiny ORM</description>
   <url>https://gerrit.googlesource.com/gwtorm</url>
 
+  <prerequisites>
+    <maven>3.0</maven>
+  </prerequisites>
+
   <scm>
     <url>https://gerrit.googlesource.com/gwtorm</url>
     <connection>https://gerrit.googlesource.com/gwtorm</connection>
