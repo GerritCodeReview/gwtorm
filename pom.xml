@@ -301,7 +301,7 @@ limitations under the License.
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.19.1</version>
+          <version>2.20</version>
           <configuration>
             <additionalClasspathElements>
               <additionalClasspathElement>${maxdb.driver.jar}</additionalClasspathElement>
@@ -318,7 +318,7 @@ limitations under the License.
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
-            <version>2.19.1</version>
+            <version>2.20</version>
             <configuration>
               <additionalClasspathElements>
                 <additionalClasspathElement>${hana.driver.jar}</additionalClasspathElement>
@@ -406,7 +406,7 @@ limitations under the License.
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
-        <version>3.0.0</version>
+        <version>3.0.1</version>
         <executions>
           <execution>
             <goals>
@@ -418,7 +418,7 @@ limitations under the License.
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.10.3</version>
+        <version>2.10.4</version>
         <configuration>
           <encoding>UTF-8</encoding>
           <quiet>true</quiet>
@@ -439,7 +439,7 @@ limitations under the License.
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
-        <version>1.10</version>
+        <version>3.0.0</version>
         <executions>
           <execution>
             <id>add-antlr-source</id>
