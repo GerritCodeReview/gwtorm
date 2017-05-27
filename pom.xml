@@ -462,21 +462,21 @@ limitations under the License.
     <dependency>
       <groupId>org.ow2.asm</groupId>
       <artifactId>asm</artifactId>
-      <version>4.1</version>
+      <version>5.1</version>
       <scope>compile</scope>
     </dependency>
 
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <version>15.0</version>
+      <version>21.0</version>
       <scope>compile</scope>
     </dependency>
 
     <dependency>
       <groupId>org.antlr</groupId>
       <artifactId>antlr</artifactId>
-      <version>3.1.1</version>
+      <version>3.5.2</version>
       <scope>compile</scope>
     </dependency>
 
@@ -504,14 +504,14 @@ limitations under the License.
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
-      <version>1.3.168</version>
+      <version>1.3.176</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>postgresql</groupId>
       <artifactId>postgresql</artifactId>
-      <version>9.1-901-1.jdbc4</version>
+      <version>9.4.1211</version>
       <scope>test</scope>
     </dependency>
 
@@ -532,7 +532,7 @@ limitations under the License.
     <dependency>
       <groupId>com.google.protobuf</groupId>
       <artifactId>protobuf-java</artifactId>
-      <version>2.5.0</version>
+      <version>3.0.0-beta-2</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>
