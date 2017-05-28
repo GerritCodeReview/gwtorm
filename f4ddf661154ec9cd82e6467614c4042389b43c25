@@ -22,6 +22,30 @@
       "revId": "f4ddf661154ec9cd82e6467614c4042389b43c25",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "747bbe97_b5c422cc",
+        "filename": "pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 512,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2017-05-28T11:36:50Z",
+      "side": 1,
+      "message": "\u003e Patch Set 2:\n\u003e \n\u003e \u003e Looks OK; have you built this and included it in Gerrit?\n\u003e \n\u003e Nope.",
+      "parentUuid": "f4b8230e_c35cc5bd",
+      "range": {
+        "startLine": 512,
+        "startChar": 15,
+        "endLine": 512,
+        "endChar": 25
+      },
+      "revId": "f4ddf661154ec9cd82e6467614c4042389b43c25",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
