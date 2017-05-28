@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f4b8230e_c35cc5bd",
+        "filename": "pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 512,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2017-05-28T11:21:42Z",
+      "side": 1,
+      "message": "You missed to update the group id:\n\n  \u003cgroupId\u003eorg.postgresql\u003c/groupId\u003e\n    \u003cartifactId\u003epostgresql\u003c/artifactId\u003e\n    \u003cversion\u003e9.4.1211\u003c/version\u003e\n    [...]\n\nhe artifact was moved. Without reflecting the update in group name, the build is failing with:\n\n  [ERROR] Failed to execute goal on project gwtorm: Could not resolve dependencies for project com.google.gerrit:gwtorm:jar:1.19-SNAPSHOT: Could not find artifact postgresql:postgresql:jar:9.4.1211\n  in central (https://repo.maven.apache.org/maven2) -\u003e [Help 1]\n\nThis raises the question how you\u0027ve verified this change?",
+      "range": {
+        "startLine": 512,
+        "startChar": 15,
+        "endLine": 512,
+        "endChar": 25
+      },
+      "revId": "f4ddf661154ec9cd82e6467614c4042389b43c25",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
