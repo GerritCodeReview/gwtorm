@@ -26,6 +26,7 @@ import java.util.Properties;
 import org.junit.Before;
 
 public class DialectMariaDBTest extends DialectMySQLTest {
+  @Override
   @Before
   public void setUp() throws Exception {
     Class.forName(org.mariadb.jdbc.Driver.class.getName());
