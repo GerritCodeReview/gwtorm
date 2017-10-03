@@ -87,7 +87,7 @@ public class DialectMySQL extends SqlDialect {
   @Override
   public String getCreateSequenceSql(final SequenceModel seq) {
     final StringBuilder r = new StringBuilder();
-    r.append("CREATE TABLE ");
+    r.append("CREATE TABLE IF NOT EXISTS ");
     r.append(seq.getSequenceName());
     r.append("(s SERIAL)");
     return r.toString();
@@ -95,7 +95,7 @@ public class DialectMySQL extends SqlDialect {
 
   @Override
   public String getDropSequenceSql(String name) {
-    return "DROP TABLE " + name;
+    return "DROP TABLE IF EXISTS " + name;
   }
 
   @Override
