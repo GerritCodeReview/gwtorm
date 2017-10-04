@@ -57,7 +57,7 @@ public class DialectMySQLTest extends SqlDialectTest {
     dialect = new DialectMySQL().refine(db);
 
     final Properties p = new Properties();
-    p.setProperty("driver", com.mysql.cj.jdbc.Driver.class.getName());
+    p.setProperty("driver", com.mysql.jdbc.Driver.class.getName());
     p.setProperty("url", db.getMetaData().getURL());
     p.setProperty("user", user);
     p.setProperty("password", pass);
