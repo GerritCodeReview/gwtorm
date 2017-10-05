@@ -40,7 +40,7 @@ import org.junit.Test;
 public class DialectMySQLTest extends SqlDialectTest {
   @Before
   public void setUp() throws Exception {
-    Class.forName(com.mysql.jdbc.Driver.class.getName());
+    Class.forName(com.mysql.cj.jdbc.Driver.class.getName());
 
     final String host = "localhost";
     final String database = "gwtorm";
