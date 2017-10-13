@@ -80,6 +80,22 @@ public class DialectMySQL extends SqlDialect {
   }
 
   @Override
+  public boolean canDetermineIndividualBatchUpdateCounts() {
+    return false;
+  }
+
+  @Override
+  public boolean canDetermineTotalBatchUpdateCount() {
+    return true;
+  }
+
+  @Override
+  public int executeBatch(PreparedStatement ps) throws SQLException {
+    ps.executeBatch();
+    return ps.getUpdateCount(); // total number of rows updated (on MaxDB)
+  }
+
+  @Override
   public boolean handles(String url, Connection c) {
     return url.startsWith("jdbc:mysql:");
   }
