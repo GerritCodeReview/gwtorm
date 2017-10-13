@@ -47,7 +47,7 @@ public class DialectMySQLTest extends SqlDialectTest {
     final String user = "gwtorm";
     final String pass = "gwtorm";
 
-    final String url = "jdbc:mysql://" + host + "/" + database;
+    final String url = "jdbc:mysql://" + host + "/" + database + "?nullNamePatternMatchesAll=true";
     try {
       db = DriverManager.getConnection(url, user, pass);
     } catch (Throwable t) {

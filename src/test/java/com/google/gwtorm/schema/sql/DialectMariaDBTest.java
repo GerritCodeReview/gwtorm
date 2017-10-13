@@ -32,9 +32,9 @@ public class DialectMariaDBTest extends DialectMySQLTest {
     Class.forName(org.mariadb.jdbc.Driver.class.getName());
 
     final String host = "localhost";
-    final String database = "gwtorm";
-    final String user = "gwtorm";
-    final String pass = "gwtorm";
+    final String database = "gwtorm2";
+    final String user = "gwtorm2";
+    final String pass = "gwtorm2";
 
     final String url = "jdbc:mariadb://" + host + "/" + database;
     try {

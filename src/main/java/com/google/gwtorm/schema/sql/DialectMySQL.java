@@ -22,6 +22,7 @@ import com.google.gwtorm.server.OrmException;
 import com.google.gwtorm.server.StatementExecutor;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -78,6 +79,27 @@ public class DialectMySQL extends SqlDialect {
           }
         });
   }
+
+  /*@Override
+  public int executeBatch(PreparedStatement ps) throws SQLException {
+    ps.executeBatch();
+    return Util.truncateAndConvertToInt(executeLargeBatch()); ps.getUpdateCount(); // total number of rows updated (on MaxDB)
+  }
+
+  public int executeBatch(PreparedStatement ps) throws SQLException {
+    final int[] updateCounts = ps.executeBatch();
+    if (updateCounts == null) {
+      throw new SQLException("No rows affected");
+    }
+    int totalUpdateCount = 0;
+    for (int i = 0; i < updateCounts.length; i++) {
+      int updateCount = updateCounts[i];
+      if (updateCount > 0) {
+        totalUpdateCount += updateCount;
+      }
+    }
+    return totalUpdateCount;
+  }*/
 
   @Override
   public boolean handles(String url, Connection c) {
@@ -139,12 +161,14 @@ public class DialectMySQL extends SqlDialect {
     final ResultSet rs = db.getMetaData().getTables(null, null, null, types);
     try {
       HashSet<String> tables = new HashSet<>();
+      String name = "";
       while (rs.next()) {
-        final String name = rs.getString("TABLE_NAME");
+        name = rs.getString("TABLE_NAME");
         if (!isSequence(db, name)) {
           tables.add(name.toLowerCase());
         }
       }
+      System.out.println(tables);
       return tables;
     } finally {
       rs.close();
@@ -157,12 +181,14 @@ public class DialectMySQL extends SqlDialect {
     final ResultSet rs = db.getMetaData().getTables(null, null, null, types);
     try {
       HashSet<String> sequences = new HashSet<>();
+      String name = "";
       while (rs.next()) {
-        final String name = rs.getString("TABLE_NAME");
+        name = rs.getString("TABLE_NAME");
         if (isSequence(db, name)) {
           sequences.add(name.toLowerCase());
         }
       }
+      System.out.println(sequences);
       return sequences;
     } finally {
       rs.close();

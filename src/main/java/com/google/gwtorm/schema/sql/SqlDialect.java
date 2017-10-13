@@ -443,6 +443,7 @@ public abstract class SqlDialect {
         totalUpdateCount += updateCount;
       }
     }
+    System.out.println(totalUpdateCount);
     return totalUpdateCount;
   }
 

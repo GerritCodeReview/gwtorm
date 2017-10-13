@@ -518,7 +518,7 @@ limitations under the License.
     <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
-      <version>5.1.41</version>
+      <version>8.0.8-dmr</version>
       <scope>test</scope>
     </dependency>
 
