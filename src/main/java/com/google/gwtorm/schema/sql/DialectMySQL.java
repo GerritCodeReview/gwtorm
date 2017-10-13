@@ -22,6 +22,7 @@ import com.google.gwtorm.server.OrmException;
 import com.google.gwtorm.server.StatementExecutor;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -78,6 +79,27 @@ public class DialectMySQL extends SqlDialect {
           }
         });
   }
+
+  /*@Override
+  public int executeBatch(PreparedStatement ps) throws SQLException {
+    ps.executeBatch();
+    return Util.truncateAndConvertToInt(executeLargeBatch()); ps.getUpdateCount(); // total number of rows updated (on MaxDB)
+  }
+
+  public int executeBatch(PreparedStatement ps) throws SQLException {
+    final int[] updateCounts = ps.executeBatch();
+    if (updateCounts == null) {
+      throw new SQLException("No rows affected");
+    }
+    int totalUpdateCount = 0;
+    for (int i = 0; i < updateCounts.length; i++) {
+      int updateCount = updateCounts[i];
+      if (updateCount > 0) {
+        totalUpdateCount += updateCount;
+      }
+    }
+    return totalUpdateCount;
+  }*/
 
   @Override
   public boolean handles(String url, Connection c) {
