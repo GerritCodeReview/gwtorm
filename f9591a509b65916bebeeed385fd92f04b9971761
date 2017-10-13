@@ -22,6 +22,30 @@
       "revId": "f9591a509b65916bebeeed385fd92f04b9971761",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bb472b52_adc8b37a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2017-10-13T08:18:30Z",
+      "side": 1,
+      "message": "Yes, but I don\u0027t have time to do it right now.\n\nI\u0027ve just seen that guava 23 is available, so it might be better to upgrade to that here and also in gerrit core, before making version 19 and using that in gerrit core.",
+      "parentUuid": "de6e0cb9_70be4519",
+      "range": {
+        "startLine": 10,
+        "startChar": 19,
+        "endLine": 11,
+        "endChar": 0
+      },
+      "revId": "f9591a509b65916bebeeed385fd92f04b9971761",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
     }
   ]
 }
