@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "00be5a74_e5605800",
+        "filename": "pom.xml",
+        "patchSetId": 7
+      },
+      "lineNbr": 481,
+      "author": {
+        "id": 1029953
+      },
+      "writtenOn": "2017-10-14T14:09:19Z",
+      "side": 1,
+      "message": "This update is causing\n\n[ERROR] COMPILATION ERROR : \n[INFO] -------------------------------------------------------------\n[ERROR] /Users/xxx/Documents/workspace/gwtorm/src/main/java/com/google/gwtorm/schema/QueryModel.java:[17,44] package com.google.gwtorm.schema.QueryParser does not exist\n[ERROR] /Users/xxx/Documents/workspace/gwtorm/src/main/java/com/google/gwtorm/nosql/IndexFunctionGen.java:[19,32] cannot find symbol\n  symbol:   class QueryParser\n  location: package com.google.gwtorm.schema\n[ERROR] /Users/xxx/Documents/workspace/gwtorm/src/main/java/com/google/gwtorm/nosql/AccessGen.java:[23,32] cannot find symbol\n  symbol:   class QueryParser\n  location: package com.google.gwtorm.schema\n[INFO] 3 errors \n[INFO] -------------------------------------------------------------\n[INFO] ------------------------------------------------------------------------\n[INFO] BUILD FAILURE\n[INFO] ------------------------------------------------------------------------\n[INFO] Total time: 2.691 s\n[INFO] Finished at: 2017-10-14T14:46:16+01:00\n[INFO] Final Memory: 29M/308M\n[INFO] ------------------------------------------------------------------------\n[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.7.0:compile (default-compile) on project gwtorm: Compilation failure: Compilation failure: \n[ERROR] /Users/xxx/Documents/workspace/gwtorm/src/main/java/com/google/gwtorm/schema/QueryModel.java:[17,44] package com.google.gwtorm.schema.QueryParser does not exist\n[ERROR] /Users/xxx/Documents/workspace/gwtorm/src/main/java/com/google/gwtorm/nosql/IndexFunctionGen.java:[19,32] cannot find symbol\n[ERROR]   symbol:   class QueryParser\n[ERROR]   location: package com.google.gwtorm.schema\n[ERROR] /Users/xxx/Documents/workspace/gwtorm/src/main/java/com/google/gwtorm/nosql/AccessGen.java:[23,32] cannot find symbol\n[ERROR]   symbol:   class QueryParser\n[ERROR]   location: package com.google.gwtorm.schema\n[ERROR] -\u003e [Help 1]\n[ERROR] \n[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.\n[ERROR] Re-run Maven using the -X switch to enable full debug logging.\n[ERROR] \n[ERROR] For more information about the errors and possible solutions, please read the following articles:\n[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException",
+      "range": {
+        "startLine": 476,
+        "startChar": 0,
+        "endLine": 481,
+        "endChar": 17
+      },
+      "revId": "a181c076ad9ed5c0efd8f03596d395f8e461268e",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
