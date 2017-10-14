@@ -135,12 +135,11 @@ public class DialectMySQL extends SqlDialect {
 
   @Override
   public Set<String> listTables(final Connection db) throws SQLException {
-    final String[] types = new String[] {"TABLE"};
-    final ResultSet rs = db.getMetaData().getTables(null, null, null, types);
+    final ResultSet rs = db.getMetaData().getTables(null, null, "%", null);
     try {
       HashSet<String> tables = new HashSet<>();
       while (rs.next()) {
-        final String name = rs.getString("TABLE_NAME");
+        final String name = rs.getString(3);
         if (!isSequence(db, name)) {
           tables.add(name.toLowerCase());
         }
@@ -153,12 +152,11 @@ public class DialectMySQL extends SqlDialect {
 
   @Override
   public Set<String> listSequences(final Connection db) throws SQLException {
-    final String[] types = new String[] {"TABLE"};
-    final ResultSet rs = db.getMetaData().getTables(null, null, null, types);
+    final ResultSet rs = db.getMetaData().getTables(null, null, "%", null);
     try {
       HashSet<String> sequences = new HashSet<>();
       while (rs.next()) {
-        final String name = rs.getString("TABLE_NAME");
+        final String name = rs.getString(3);
         if (isSequence(db, name)) {
           sequences.add(name.toLowerCase());
         }
