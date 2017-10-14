@@ -189,7 +189,7 @@ compare_op
  ;
 
 field
-  : n=qualifiedFieldName -> ID<Column>[(Tree)n.tree, relationModel]
+  : n=qualifiedFieldName -> ID<Column>[(Tree)n.getTree(), relationModel]
   ;
 
 qualifiedFieldName
