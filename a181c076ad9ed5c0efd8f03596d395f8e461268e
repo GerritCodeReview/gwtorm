@@ -22,6 +22,30 @@
       "revId": "a181c076ad9ed5c0efd8f03596d395f8e461268e",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "443337e8_c62093c4",
+        "filename": "pom.xml",
+        "patchSetId": 7
+      },
+      "lineNbr": 481,
+      "author": {
+        "id": 1029953
+      },
+      "writtenOn": "2017-10-14T14:09:57Z",
+      "side": 1,
+      "message": "By that i mean, also updating antlr3-maven-plugin to 3.5.2 too.",
+      "parentUuid": "00be5a74_e5605800",
+      "range": {
+        "startLine": 476,
+        "startChar": 0,
+        "endLine": 481,
+        "endChar": 17
+      },
+      "revId": "a181c076ad9ed5c0efd8f03596d395f8e461268e",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
