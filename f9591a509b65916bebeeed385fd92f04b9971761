@@ -46,6 +46,30 @@
       "revId": "f9591a509b65916bebeeed385fd92f04b9971761",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c9df4b40_4eb3a491",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1026112
+      },
+      "writtenOn": "2017-10-24T07:21:15Z",
+      "side": 1,
+      "message": "\u003e I\u0027ve just seen that guava 23 is available, so it might be better to upgrade to that here and also in gerrit core, before making version 19 and using that in gerrit core.\n\nShould we go for that now when doing all the library upgrades?",
+      "parentUuid": "bb472b52_adc8b37a",
+      "range": {
+        "startLine": 10,
+        "startChar": 19,
+        "endLine": 11,
+        "endChar": 0
+      },
+      "revId": "f9591a509b65916bebeeed385fd92f04b9971761",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
     }
   ]
 }
