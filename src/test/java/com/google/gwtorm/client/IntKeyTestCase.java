@@ -19,7 +19,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
-import com.google.gwtorm.server.StandardKeyEncoder;
 import org.junit.Before;
 import org.junit.Test;
 

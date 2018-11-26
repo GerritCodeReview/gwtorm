@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.gwtorm.server;
+package com.google.gwtorm.client;
 
 import com.google.gwtorm.client.KeyUtil.Encoder;
 import java.io.UnsupportedEncodingException;

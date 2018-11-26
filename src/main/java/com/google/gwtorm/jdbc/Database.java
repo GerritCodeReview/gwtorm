@@ -25,7 +25,6 @@ import com.google.gwtorm.server.Schema;
 import com.google.gwtorm.server.SchemaConstructorGen;
 import com.google.gwtorm.server.SchemaFactory;
 import com.google.gwtorm.server.SchemaGen;
-import com.google.gwtorm.server.StandardKeyEncoder;
 import java.sql.Connection;
 import java.sql.SQLException;
 import javax.sql.DataSource;
@@ -45,9 +44,6 @@ import javax.sql.DataSource;
  * @param <T>
  */
 public class Database<T extends Schema> implements SchemaFactory<T> {
-  static {
-    KeyUtil.setEncoderImpl(new StandardKeyEncoder());
-  }
 
   private final DataSource dataSource;
   private final JavaSchemaModel schemaModel;

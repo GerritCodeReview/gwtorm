@@ -16,7 +16,7 @@ package com.google.gwtorm.client;
 
 /** Common utility functions for {@link Key} implementors. */
 public class KeyUtil {
-  private static Encoder ENCODER_IMPL;
+  private static Encoder ENCODER_IMPL = new StandardKeyEncoder();
 
   /**
    * Set the encoder implementation to a valid implementation.

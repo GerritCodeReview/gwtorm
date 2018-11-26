@@ -24,7 +24,6 @@ import com.google.gwtorm.server.Schema;
 import com.google.gwtorm.server.SchemaConstructorGen;
 import com.google.gwtorm.server.SchemaFactory;
 import com.google.gwtorm.server.SchemaGen;
-import com.google.gwtorm.server.StandardKeyEncoder;
 
 /**
  * Base class for NoSQL typed databases.
@@ -49,9 +48,6 @@ import com.google.gwtorm.server.StandardKeyEncoder;
 @SuppressWarnings("rawtypes")
 public abstract class NoSqlDatabase<T extends Schema, S extends NoSqlSchema, A extends NoSqlAccess>
     implements SchemaFactory<T> {
-  static {
-    KeyUtil.setEncoderImpl(new StandardKeyEncoder());
-  }
 
   private final SchemaModel schemaModel;
   private final SchemaFactory<T> implFactory;
