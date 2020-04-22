@@ -85,6 +85,16 @@ public class DialectMySQL extends SqlDialect {
   }
 
   @Override
+  public boolean canDetermineIndividualBatchUpdateCounts() {
+    return false;
+  }
+
+  @Override
+  public boolean canDetermineTotalBatchUpdateCount() {
+    return false;
+  }
+
+  @Override
   public String getCreateSequenceSql(final SequenceModel seq) {
     final StringBuilder r = new StringBuilder();
     r.append("CREATE TABLE ");
