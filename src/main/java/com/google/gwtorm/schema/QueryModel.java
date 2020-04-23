@@ -311,8 +311,7 @@ public class QueryModel {
           final ColumnModel col = ((QueryParser.Column) id).getField();
           if (col.isNested()) {
             for (final Iterator<ColumnModel> cItr = col.getAllLeafColumns().iterator();
-                cItr.hasNext();
-                ) {
+                cItr.hasNext(); ) {
               fmt.buf.append(fmt.tableAlias);
               fmt.buf.append('.');
               fmt.buf.append(cItr.next().getColumnName());

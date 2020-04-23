@@ -14,7 +14,6 @@
 
 package com.google.gwtorm.jdbc;
 
-import com.google.gwtorm.client.KeyUtil;
 import com.google.gwtorm.schema.RelationModel;
 import com.google.gwtorm.schema.SchemaModel;
 import com.google.gwtorm.schema.java.JavaSchemaModel;
