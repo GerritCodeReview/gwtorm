@@ -388,6 +388,7 @@ limitations under the License.
           <showWarnings>true</showWarnings>
           <compilerArgs>
             <arg>-Xlint:deprecation</arg>
+            <arg>-XepExcludedPaths:.*/gwtorm/target/generated-sources/.*/.*</arg>
           </compilerArgs>
           <source>${java.version}</source>
           <target>${java.version}</target>
