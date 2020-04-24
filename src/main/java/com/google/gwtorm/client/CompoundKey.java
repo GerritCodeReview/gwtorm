@@ -73,7 +73,7 @@ public abstract class CompoundKey<P extends Key<?>> implements Key<P>, Serializa
 
   @Override
   public String toString() {
-    final StringBuffer r = new StringBuffer();
+    final StringBuilder r = new StringBuilder();
     boolean first = true;
     if (getParentKey() != null) {
       r.append(KeyUtil.encode(getParentKey().toString()));

@@ -126,7 +126,7 @@ public class DialectOracle extends SqlDialect {
   public void renameColumn(
       StatementExecutor e, String tableName, String fromColumn, ColumnModel col)
       throws OrmException {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     sb.append("ALTER TABLE ");
     sb.append(tableName);
     sb.append(" RENAME COLUMN ");

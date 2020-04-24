@@ -59,7 +59,7 @@ public abstract class LongKey<P extends Key<?>> implements Key<P>, Serializable 
 
   @Override
   public String toString() {
-    final StringBuffer r = new StringBuffer();
+    final StringBuilder r = new StringBuilder();
     if (getParentKey() != null) {
       r.append(getParentKey().toString());
       r.append(',');

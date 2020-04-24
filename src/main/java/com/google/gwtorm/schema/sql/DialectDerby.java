@@ -72,7 +72,7 @@ public class DialectDerby extends SqlDialect {
   public void renameColumn(
       StatementExecutor e, String tableName, String fromColumn, ColumnModel col)
       throws OrmException {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     sb.append("RENAME COLUMN ");
     sb.append(tableName);
     sb.append('.');

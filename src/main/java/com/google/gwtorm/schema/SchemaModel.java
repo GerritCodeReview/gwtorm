@@ -66,7 +66,7 @@ public abstract class SchemaModel {
   }
 
   public String getCreateDatabaseSql(final SqlDialect dialect) {
-    final StringBuffer r = new StringBuffer();
+    final StringBuilder r = new StringBuilder();
 
     for (final SequenceModel seq : getSequences()) {
       r.append(seq.getCreateSequenceSql(dialect));

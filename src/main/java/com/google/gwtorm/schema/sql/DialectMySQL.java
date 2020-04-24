@@ -209,7 +209,7 @@ public class DialectMySQL extends SqlDialect {
   public void renameColumn(
       StatementExecutor stmt, String tableName, String fromColumn, ColumnModel col)
       throws OrmException {
-    StringBuffer r = new StringBuffer();
+    StringBuilder r = new StringBuilder();
     r.append("ALTER TABLE ");
     r.append(tableName);
     r.append(" CHANGE ");
