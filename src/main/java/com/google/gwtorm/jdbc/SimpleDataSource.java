@@ -14,7 +14,11 @@
 
 package com.google.gwtorm.jdbc;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -85,7 +89,7 @@ public class SimpleDataSource implements DataSource {
       driver = null;
     }
 
-    logWriter = new PrintWriter(System.out);
+    logWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(System.out, UTF_8)));
   }
 
   private static SQLException badClasspath(final String classpath, final MalformedURLException e1) {
