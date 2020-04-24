@@ -27,7 +27,7 @@ import org.antlr.runtime.tree.Tree;
 import org.junit.Test;
 
 public class QueryParserTest {
-  private final class DummyColumn extends ColumnModel {
+  private static final class DummyColumn extends ColumnModel {
     private String name;
 
     DummyColumn(final int id, final String n) {

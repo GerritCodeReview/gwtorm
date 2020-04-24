@@ -624,7 +624,7 @@ class AccessGen implements Opcodes {
     return Collections.emptyList();
   }
 
-  private final class QueryCGS extends IndexFunctionGen.EncodeCGS {
+  private static final class QueryCGS extends IndexFunctionGen.EncodeCGS {
     private final Type[] pTypes;
     private final List<ColumnModel> pCols;
     private final int[] pVars;
