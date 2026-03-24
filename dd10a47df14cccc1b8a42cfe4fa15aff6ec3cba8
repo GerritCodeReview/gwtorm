@@ -1,6 +1,7 @@
 {
   "comments": [
     {
+      "unresolved": false,
       "key": {
         "uuid": "7a751b3d_cecc23cb",
         "filename": "/COMMIT_MSG",
@@ -20,10 +21,10 @@
         "endChar": 48
       },
       "revId": "dd10a47df14cccc1b8a42cfe4fa15aff6ec3cba8",
-      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
-      "unresolved": false
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
     },
     {
+      "unresolved": false,
       "key": {
         "uuid": "9a072fcb_b7ccc8c9",
         "filename": "/COMMIT_MSG",
@@ -44,8 +45,24 @@
         "endChar": 48
       },
       "revId": "dd10a47df14cccc1b8a42cfe4fa15aff6ec3cba8",
-      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
-      "unresolved": false
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "817844a3_a87dd571",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4701392
+      },
+      "writtenOn": "2026-03-24T11:50:22Z",
+      "side": 1,
+      "message": "Vote",
+      "revId": "dd10a47df14cccc1b8a42cfe4fa15aff6ec3cba8",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
     }
   ]
 }
